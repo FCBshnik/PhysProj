@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using NLog;
+using Phys.Lib.Core.Validation;
 
 namespace Phys.Lib.Core.Users
 {
@@ -8,17 +9,36 @@ namespace Phys.Lib.Core.Users
         private static readonly ILogger log = LogManager.GetLogger("users");
 
         private readonly IDb db;
-        private readonly IValidator<CreateUserData> validator;
+        private readonly IValidation validation;
 
-        public Users(IDb db, IValidator<CreateUserData> validator)
+        public Users(IDb db, IValidation validation)
         {
             this.db = db;
-            this.validator = validator;
+            this.validation = validation;
+        }
+
+        public UserDbo Login(string userName, string password)
+        {
+            var user = db.Users.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
+            if (user == null)
+            {
+                log.Info($"login '{userName}' failed: user not found");
+                throw new ValidationException("login failed");
+            }
+
+            if (!string.Equals(UserPassword.HashPassword(password), user.PasswordHash))
+            {
+                log.Info($"login '{userName}' failed: invalid password");
+                throw new ValidationException("login failed");
+            }
+
+            log.Info($"login '{userName}' succeed");
+            return user;
         }
 
         public UserDbo Create(CreateUserData data)
         {
-            validator.ValidateAndThrow(data);
+            validation.Validate(data);
 
             var user = new UserDbo
             {

@@ -8,7 +8,7 @@ namespace Phys.Lib.Core
         {
             if (value is null) throw new ArgumentNullException(nameof(value));
 
-            var code = Regex.Replace(value, @"[^\w]", "-").Replace('_', '-').Trim();
+            var code = Regex.Replace(value, @"[^\w]", "-").Replace('_', '-').ToLowerInvariant().Trim();
 
             return code;
         }

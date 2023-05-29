@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Lib.Cli", "Phys.Lib.Cl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin\Phys.Lib.Api.Admin.csproj", "{A71533D2-3809-4B8D-BD54-37A0AA494613}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{BE91FB56-F9F0-4F56-A9DD-B30907BF771C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE91FB56-F9F0-4F56-A9DD-B30907BF771C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE91FB56-F9F0-4F56-A9DD-B30907BF771C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A71533D2-3809-4B8D-BD54-37A0AA494613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A71533D2-3809-4B8D-BD54-37A0AA494613}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A71533D2-3809-4B8D-BD54-37A0AA494613}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A71533D2-3809-4B8D-BD54-37A0AA494613}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{BFAA9965-84CE-45A7-A24D-D38D4AAD0AD0} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
 		{BA3EEC26-D90E-45DD-BEEB-7F44D0202444} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
 		{BE91FB56-F9F0-4F56-A9DD-B30907BF771C} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
+		{A71533D2-3809-4B8D-BD54-37A0AA494613} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {616FF1DB-DD01-46E8-A34F-B45851EEE112}

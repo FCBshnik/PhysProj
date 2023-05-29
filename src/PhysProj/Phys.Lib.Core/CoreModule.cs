@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Phys.Lib.Core.Users;
+using Phys.Lib.Core.Validation;
 
 namespace Phys.Lib.Core
 {
@@ -9,20 +9,14 @@ namespace Phys.Lib.Core
         {
             builder.RegisterType<App>().AsSelf().SingleInstance();
 
+            builder.RegisterType<Validator>().AsImplementedInterfaces().SingleInstance();
+
             builder.RegisterTypes(new[] { typeof(Users.Users) })
                 .AsImplementedInterfaces()
                 .AsSelf()
                 .SingleInstance();
 
-            RegisterValidators(builder);
-        }
-
-        private void RegisterValidators(ContainerBuilder builder)
-        {
-            builder.RegisterTypes(new[] { typeof(UserValidator) })
-                .AsImplementedInterfaces()
-                .AsSelf()
-                .SingleInstance();
+            builder.RegisterModule(new ValidationModule(ThisAssembly));
         }
     }
 }
