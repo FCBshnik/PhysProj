@@ -3,12 +3,7 @@ using FluentValidation;
 
 namespace Phys.Lib.Core.Validation
 {
-    public interface IValidation
-    {
-        void Validate<T>(T value);
-    }
-
-    public class Validator : IValidation
+    public class Validator : IValidator
     {
         private readonly ILifetimeScope scope;
 

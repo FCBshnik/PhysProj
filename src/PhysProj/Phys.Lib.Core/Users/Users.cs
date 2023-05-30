@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using NLog;
+﻿using NLog;
 using Phys.Lib.Core.Validation;
 
 namespace Phys.Lib.Core.Users
@@ -9,9 +8,9 @@ namespace Phys.Lib.Core.Users
         private static readonly ILogger log = LogManager.GetLogger("users");
 
         private readonly IDb db;
-        private readonly IValidation validation;
+        private readonly IValidator validation;
 
-        public Users(IDb db, IValidation validation)
+        public Users(IDb db, IValidator validation)
         {
             this.db = db;
             this.validation = validation;
@@ -23,13 +22,13 @@ namespace Phys.Lib.Core.Users
             if (user == null)
             {
                 log.Info($"login '{userName}' failed: user not found");
-                throw new ValidationException("login failed");
+                throw new FluentValidation.ValidationException("login failed");
             }
 
             if (!string.Equals(UserPasswordHasher.HashPassword(password), user.PasswordHash))
             {
                 log.Info($"login '{userName}' failed: invalid password");
-                throw new ValidationException("login failed");
+                throw new FluentValidation.ValidationException("login failed");
             }
 
             log.Info($"login '{userName}' succeed");
