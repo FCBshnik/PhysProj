@@ -26,7 +26,7 @@ namespace Phys.Lib.Core.Users
                 throw new ValidationException("login failed");
             }
 
-            if (!string.Equals(UserPassword.HashPassword(password), user.PasswordHash))
+            if (!string.Equals(UserPasswordHasher.HashPassword(password), user.PasswordHash))
             {
                 log.Info($"login '{userName}' failed: invalid password");
                 throw new ValidationException("login failed");
@@ -43,10 +43,10 @@ namespace Phys.Lib.Core.Users
             var user = new UserDbo
             {
                 Id = db.NewId(),
-                Code = Code.FromString(data.Name),
+                Code = data.Code,
                 Name = data.Name,
-                NameLowerCase = data.Name.ToLowerInvariant(),
-                PasswordHash = UserPassword.HashPassword(data.Password),
+                NameLowerCase = data.NameLowerCase,
+                PasswordHash = UserPasswordHasher.HashPassword(data.Password),
                 Roles = new List<string> { data.Role.Code },
             };
 

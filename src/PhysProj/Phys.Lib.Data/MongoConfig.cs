@@ -6,7 +6,7 @@ using Phys.Lib.Core.Users;
 
 namespace Phys.Lib.Data
 {
-    internal static class DbConfig
+    internal static class MongoConfig
     {
         private static readonly IBsonSerializer idSerializer = new StringSerializer(BsonType.ObjectId);
 
@@ -14,7 +14,7 @@ namespace Phys.Lib.Data
         {
             ConfigureConventions();
 
-            BsonClassMap.RegisterClassMap<UserDbo>(m => 
+            BsonClassMap.RegisterClassMap<UserDbo>(m =>
             {
                 m.AutoMap();
                 m.MapIdProperty(u => u.Id).SetSerializer(idSerializer);
@@ -23,9 +23,9 @@ namespace Phys.Lib.Data
 
         private static void ConfigureConventions()
         {
-            var conventions = new ConventionPack 
-            { 
-                new CamelCaseElementNameConvention(), 
+            var conventions = new ConventionPack
+            {
+                new CamelCaseElementNameConvention(),
                 new IgnoreIfNullConvention(true),
                 new IgnoreExtraElementsConvention(true)
             };

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using CommandLine;
+using Microsoft.Extensions.Configuration;
 using NLog;
 using Phys.Lib.Cli;
 using Phys.Lib.Core;
@@ -23,9 +24,13 @@ internal class Program
 
     private static IContainer BuildContainer(object options)
     {
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
         var builder = new ContainerBuilder();
 
-        builder.RegisterModule(new DbModule());
+        builder.RegisterModule(new DbModule(config.GetConnectionString("mongo")));
         builder.RegisterModule(new CoreModule());
         builder.RegisterModule(new CliModule());
         builder.RegisterInstance(options).AsSelf().SingleInstance();

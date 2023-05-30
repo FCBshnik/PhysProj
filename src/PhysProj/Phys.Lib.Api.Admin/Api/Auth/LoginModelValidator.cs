@@ -2,9 +2,9 @@
 
 namespace Phys.Lib.Api.Admin.Api.Auth
 {
-    public class LoginValidator : AbstractValidator<LoginModel>
+    public class LoginModelValidator : AbstractValidator<LoginModel>
     {
-        public LoginValidator()
+        public LoginModelValidator()
         {
             RuleFor(u => u.UserName).NotNull();
             RuleFor(u => u.Password).NotNull();

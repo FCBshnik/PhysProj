@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Phys.Lib.Core.Users
 {
-    public static class UserPassword
+    public static class UserPasswordHasher
     {
         const int keySize = 64;
         const int iterations = 34649;

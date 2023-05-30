@@ -2,7 +2,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using NLog.Web;
+using Phys.Lib.Api.Admin.Api;
 using Phys.Lib.Api.Admin.Api.Auth;
+using Phys.Lib.Api.Admin.Api.Health;
 using Phys.Lib.Api.Admin.Filters;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
@@ -19,7 +21,7 @@ namespace Phys.Lib.Api.Admin
             ConsoleUtils.OnRun();
 
             var builder = WebApplication.CreateBuilder(args);
-            
+
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
 
@@ -27,11 +29,11 @@ namespace Phys.Lib.Api.Admin
             builder.Services.AddAuthorization();
 
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+            builder.Host.ConfigureContainer<ContainerBuilder>(b =>
             {
-                builder.RegisterModule(new DbModule());
-                builder.RegisterModule(new CoreModule());
-                builder.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
+                b.RegisterModule(new DbModule(builder.Configuration.GetConnectionString("mongo")));
+                b.RegisterModule(new CoreModule());
+                b.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
             });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -50,7 +52,8 @@ namespace Phys.Lib.Api.Admin
             app.UseHttpsRedirection();
             app.UseAuthorization();
 
-            AuthEndpoint.Map(app.MapGroup("api/auth").AddEndpointFilter<ValidationErrorFilter>());
+            app.MapEndpoint("api/auth", AuthEndpoint.Map);
+            app.MapEndpoint("api/health", HealthEndpoint.Map);
 
             app.Run();
         }
