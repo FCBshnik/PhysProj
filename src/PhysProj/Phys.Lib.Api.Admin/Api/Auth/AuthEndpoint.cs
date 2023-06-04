@@ -13,11 +13,14 @@ namespace Phys.Lib.Api.Admin.Api.Auth
                 app.Validator.Validate(model);
 
                 var user = app.Users.Login(model.UserName, model.Password);
-                if (user == null)
-                    return Results.BadRequest(new ErrorModel("login-failed", "Invalid username or password"));
+                if (user.Fail)
+                    return Results.BadRequest(new ErrorModel(ErrorCode.LoginFailed, user.Error));
 
-                return Results.Ok();
-            });
+                return Results.Ok(new LoginSuccessModel { UserName = user.Value.Name, Token = "token" });
+            })
+            .Produces<LoginSuccessModel>(200)
+            .ProducesError()
+            .WithName("Login");
         }
     }
 }

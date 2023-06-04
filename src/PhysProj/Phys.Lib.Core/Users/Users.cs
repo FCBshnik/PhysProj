@@ -16,23 +16,23 @@ namespace Phys.Lib.Core.Users
             this.validation = validation;
         }
 
-        public UserDbo Login(string userName, string password)
+        public Result<UserDbo> Login(string userName, string password)
         {
             var user = db.Users.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
             if (user == null)
             {
                 log.Info($"login '{userName}' failed: user not found");
-                throw new FluentValidation.ValidationException("login failed");
+                return Result.Fail<UserDbo>("login failed");
             }
 
             if (!string.Equals(UserPasswordHasher.HashPassword(password), user.PasswordHash))
             {
                 log.Info($"login '{userName}' failed: invalid password");
-                throw new FluentValidation.ValidationException("login failed");
+                return Result.Fail<UserDbo>("login failed");
             }
 
-            log.Info($"login '{userName}' succeed");
-            return user;
+            log.Info($"login: {user}");
+            return Result.Ok(user);
         }
 
         public UserDbo Create(CreateUserData data)
@@ -50,7 +50,7 @@ namespace Phys.Lib.Core.Users
             };
 
             user = db.Users.Create(user);
-            log.Info($"created user {user}");
+            log.Info($"created user: {user}");
             return user;
         }
     }

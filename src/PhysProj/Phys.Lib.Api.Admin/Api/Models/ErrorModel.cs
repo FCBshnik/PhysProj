@@ -2,11 +2,11 @@
 {
     public record ErrorModel
     {
-        public string Code { get; set; }
+        public ErrorCode Code { get; set; }
 
         public string Message { get; set; }
 
-        public ErrorModel(string code, string message)
+        public ErrorModel(ErrorCode code, string message)
         {
             Code = code;
             Message = message;

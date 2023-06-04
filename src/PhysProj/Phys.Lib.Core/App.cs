@@ -5,7 +5,9 @@ namespace Phys.Lib.Core
 {
     public class App
     {
-        public App(IUsers users, IValidator validator)
+        public App(
+            IUsers users,
+            IValidator validator)
         {
             Users = users;
             Validator = validator;

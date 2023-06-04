@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Admin\appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Clients\CSharp\AdminApiClient.cs" Link="Admin\AdminApiClient.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Admin\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CliWrap" Version="3.6.3" />
+    <PackageReference Include="Fluid.Core" Version="2.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="Testcontainers.MongoDb" Version="3.2.0" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="NSwag.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NSwag.json</DependentUpon>
+    </Compile>
+    <Compile Update="OpenApi.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OpenApi.json</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NSwag.json">
+      <Generator>NSwagCodeGenerator</Generator>
+      <LastGenOutput>NSwag.cs</LastGenOutput>
+    </None>
+    <None Update="OpenApi.json">
+      <Generator>OpenApiCodeGenerator</Generator>
+      <LastGenOutput>OpenApi.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

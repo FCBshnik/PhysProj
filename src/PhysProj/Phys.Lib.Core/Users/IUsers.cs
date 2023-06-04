@@ -4,6 +4,6 @@
     {
         UserDbo Create(CreateUserData data);
 
-        UserDbo Login(string userName, string password);
+        Result<UserDbo> Login(string userName, string password);
     }
 }
