@@ -1,73 +1,27 @@
-using CliWrap;
-using Fluid;
 using PhysLib.Admin.Client;
-using Testcontainers.MongoDb;
 using Xunit.Abstractions;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
-    public class AdminTests : IDisposable
+    public class AdminTests : ApiTests
     {
-        private readonly ITestOutputHelper output;
+        private const string url = "https://localhost:17188/";
 
-        private const string apiUrl = "https://localhost:17188/";
-
-        private CancellationTokenSource cts = new CancellationTokenSource();
-
-        private MongoDbContainer mongo = new MongoDbBuilder()
-                .WithImage("mongo:4.4.18")
-                .Build();
-
-        private HttpClient http = new HttpClient {  Timeout = TimeSpan.FromSeconds(1)};
         private AdminApiClient client;
 
         private FileInfo appPath = new FileInfo($"C:\\@yan\\dev\\projects\\physics\\git\\src\\PhysProj\\Phys.Lib.Api.Admin\\bin\\Debug\\net8.0\\Phys.Lib.Api.Admin.dll");
 
-        public AdminTests(ITestOutputHelper output)
+        public AdminTests(ITestOutputHelper output) : base(output)
         {
-            this.output = output;
-            Init().Wait();
         }
 
-        public void Dispose()
+        public override async Task Init()
         {
-            Log("disposing");
+            await base.Init();
 
-            cts.Cancel();
-            mongo.DisposeAsync().AsTask().Wait();
-            http.Dispose();
+            StartApp(url, appPath.FullName);
 
-            Log("disposed");
-        }
-
-        private async Task Init()
-        {
-            Log("initializing");
-
-            await mongo.StartAsync();
-
-            var mongoUrl = mongo.GetConnectionString();
-
-            var parser = new FluidParser();
-            var ctx = new TemplateContext(new { mongoUrl = mongoUrl, apiUrl = apiUrl });
-            var appSettings = parser.Parse(File.ReadAllText("Admin/appsettings.json")).Render(ctx);
-            var testSettingsFile = new FileInfo("appsettings.test.admin.json");
-            File.WriteAllText(testSettingsFile.FullName, appSettings);
-
-            _ = Cli.Wrap("dotnet")
-                .WithArguments(a =>
-                {
-                    a.Add(appPath.FullName);
-                    a.Add("--appsettings").Add(testSettingsFile.FullName);
-                })
-                .WithWorkingDirectory(appPath.Directory.FullName)
-                .ExecuteAsync(cts.Token);
-
-            await Task.Delay(2000);
-
-            client = new AdminApiClient(apiUrl, http);
-
-            Log("initialized");
+            client = new AdminApiClient(url, http);
         }
 
         [Fact]
@@ -96,11 +50,6 @@ namespace Phys.Lib.Tests.Api.Admin
             }));
 
             Assert.Equal(ErrorCode.LoginFailed, result.Result.Code);
-        }
-
-        private void Log(string message)
-        {
-            output.WriteLine($"{DateTime.UtcNow}: {message}");
         }
     }
 }

@@ -23,8 +23,6 @@ namespace Phys.Tools.ClientGen
                 CSharpGeneratorSettings =
                 {
                     Namespace = $"PhysLib.{clientName}.Client",
-                    EnforceFlagEnums = false,
-                    //EnumNameGenerator =
                 }
             };
 
