@@ -45,6 +45,8 @@ namespace Phys.Lib.Tests.Api
             http.Dispose();
         }
 
+        protected string GetMongoUrl() => mongo.GetConnectionString();
+
         protected void StartApp(string url, string appPath)
         {
             if (url is null) throw new ArgumentNullException(nameof(url));
@@ -53,9 +55,8 @@ namespace Phys.Lib.Tests.Api
             if (!appFile.Exists)
                 throw new InvalidOperationException($"App file '{appPath}' not found");
 
-            var mongoUrl = mongo.GetConnectionString();
             var parser = new FluidParser();
-            var ctx = new TemplateContext(new { mongoUrl = mongoUrl, apiUrl = url });
+            var ctx = new TemplateContext(new { mongoUrl = GetMongoUrl(), apiUrl = url });
             var appSettings = parser.Parse(File.ReadAllText("appsettings.test.json")).Render(ctx);
             var testSettingsFile = new FileInfo($"appsettings.test.{appFile.Directory.Name}.json");
             File.WriteAllText(testSettingsFile.FullName, appSettings);

@@ -1,3 +1,9 @@
+using Autofac;
+using Fluid;
+using MongoDB.Driver;
+using Phys.Lib.Core;
+using Phys.Lib.Core.Users;
+using Phys.Lib.Data;
 using PhysLib.Admin.Client;
 using Xunit.Abstractions;
 
@@ -21,7 +27,28 @@ namespace Phys.Lib.Tests.Api.Admin
 
             StartApp(url, appPath.FullName);
 
+            var container = BuildContainer();
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var app = scope.Resolve<App>();
+                InitDb(app);
+            }
+
             client = new AdminApiClient(url, http);
+        }
+
+        private void InitDb(App app)
+        {
+            app.Users.Create(new CreateUserData { Name = "user", Password = "123456", Role = UserRole.User });
+            app.Users.Create(new CreateUserData { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
+        }
+
+        private IContainer BuildContainer()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new DbModule(GetMongoUrl()));
+            builder.RegisterModule(new CoreModule());
+            return builder.Build();
         }
 
         [Fact]
@@ -31,6 +58,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
             await HealthCheck();
             await LoginFailed();
+            await LoginSuccess();
 
             Log("tested");
         }
@@ -50,6 +78,18 @@ namespace Phys.Lib.Tests.Api.Admin
             }));
 
             Assert.Equal(ErrorCode.LoginFailed, result.Result.Code);
+        }
+
+        private async Task LoginSuccess()
+        {
+            var result = await client.LoginAsync(new LoginModel
+            {
+                UserName = "user",
+                Password = "123456"
+            });
+
+            Assert.Equal("user", result.UserName);
+            Assert.NotEmpty(result.Token);
         }
     }
 }

@@ -36,6 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
+    <ProjectReference Include="..\Phys.Lib.Data\Phys.Lib.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="NSwag.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
