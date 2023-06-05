@@ -12,9 +12,9 @@ namespace Phys.Lib.Tests.Api.Admin
     {
         private const string url = "https://localhost:17188/";
 
-        private AdminApiClient client;
+        private AdminApiClient? client;
 
-        private FileInfo appPath = new FileInfo($"C:\\@yan\\dev\\projects\\physics\\git\\src\\PhysProj\\Phys.Lib.Api.Admin\\bin\\Debug\\net8.0\\Phys.Lib.Api.Admin.dll");
+        private FileInfo projectPath => new FileInfo(Path.Combine(solutionDir.FullName, "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin.csproj"));
 
         public AdminTests(ITestOutputHelper output) : base(output)
         {
@@ -24,7 +24,7 @@ namespace Phys.Lib.Tests.Api.Admin
         {
             await base.Init();
 
-            StartApp(url, appPath.FullName);
+            StartApp(url, projectPath);
 
             var container = BuildContainer();
             using (var scope = container.BeginLifetimeScope())
