@@ -22,7 +22,7 @@ namespace Phys.Tools.ClientGen
                 ClassName = className,
                 CSharpGeneratorSettings =
                 {
-                    Namespace = $"PhysLib.{clientName}.Client",
+                    Namespace = $"Phys.Lib.{clientName}.Client",
                 }
             };
 

@@ -16,12 +16,29 @@ namespace Phys.Lib.Core.Users
             this.validation = validation;
         }
 
-        public Result<UserDbo> Login(string userName, string password)
+        public UserDbo? FindByName(string userName)
         {
+            if (userName == null) throw new ArgumentNullException(nameof(userName));
+
+            return db.Users.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
+        }
+
+        public Result<UserDbo> Login(string userName, string password, UserRole withRole)
+        {
+            if (userName == null) throw new ArgumentNullException(nameof(userName));
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (withRole == null) throw new ArgumentNullException(nameof(withRole));
+
             var user = db.Users.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
             if (user == null)
             {
                 log.Info($"login '{userName}' failed: user not found");
+                return Result.Fail<UserDbo>("login failed");
+            }
+
+            if (!user.HasRole(withRole))
+            {
+                log.Info($"login '{userName}' failed: not in role");
                 return Result.Fail<UserDbo>("login failed");
             }
 

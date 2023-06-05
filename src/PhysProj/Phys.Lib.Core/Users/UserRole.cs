@@ -16,6 +16,8 @@
 
         public override string ToString() => Code;
 
+        public static implicit operator string(UserRole role) => role.Code;
+
         public static UserRole Parse(string role)
         {
             if (!roles.ContainsKey(role))

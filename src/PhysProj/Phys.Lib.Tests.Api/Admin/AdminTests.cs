@@ -1,10 +1,9 @@
 using Autofac;
-using Fluid;
-using MongoDB.Driver;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Data;
-using PhysLib.Admin.Client;
+using Phys.Lib.Admin.Client;
+using System.Net;
 using Xunit.Abstractions;
 
 namespace Phys.Lib.Tests.Api.Admin
@@ -58,7 +57,11 @@ namespace Phys.Lib.Tests.Api.Admin
 
             await HealthCheck();
             await LoginFailed();
-            await LoginSuccess();
+            await LoginAsUserFailed();
+            var token = await LoginAsAdminSuccess();
+            await GetUserInfoUnauthorized();
+            http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            await GetUserInfoAuthorized();
 
             Log("tested");
         }
@@ -73,23 +76,49 @@ namespace Phys.Lib.Tests.Api.Admin
         {
             var result = await Assert.ThrowsAsync<ApiException<ErrorModel>>(async () => await client.LoginAsync(new LoginModel
             {
-                UserName = "badUserName",
+                Username = "badUserName",
                 Password = "badUserPassword"
             }));
 
             Assert.Equal(ErrorCode.LoginFailed, result.Result.Code);
         }
 
-        private async Task LoginSuccess()
+        private async Task LoginAsUserFailed()
+        {
+            var result = await Assert.ThrowsAsync<ApiException<ErrorModel>>(async () => await client.LoginAsync(new LoginModel
+            {
+                Username = "user",
+                Password = "123456"
+            }));
+
+            Assert.Equal(ErrorCode.LoginFailed, result.Result.Code);
+        }
+
+        private async Task<string> LoginAsAdminSuccess()
         {
             var result = await client.LoginAsync(new LoginModel
             {
-                UserName = "user",
-                Password = "123456"
+                Username = "admin",
+                Password = "123qwe"
             });
 
-            Assert.Equal("user", result.UserName);
             Assert.NotEmpty(result.Token);
+
+            return result.Token;
+        }
+
+        private async Task GetUserInfoUnauthorized()
+        {
+            var result = await Assert.ThrowsAsync<ApiException>(client.GetUserInfoAsync);
+
+            Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
+        }
+
+        private async Task GetUserInfoAuthorized()
+        {
+            var result = await client.GetUserInfoAsync();
+
+            Assert.Equal("admin", result.Name);
         }
     }
 }

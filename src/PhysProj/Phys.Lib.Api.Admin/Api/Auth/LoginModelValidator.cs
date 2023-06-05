@@ -6,7 +6,7 @@ namespace Phys.Lib.Api.Admin.Api.Auth
     {
         public LoginModelValidator()
         {
-            RuleFor(u => u.UserName).NotNull();
+            RuleFor(u => u.Username).NotNull();
             RuleFor(u => u.Password).NotNull();
         }
     }

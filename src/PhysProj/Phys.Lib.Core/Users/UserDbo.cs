@@ -16,6 +16,8 @@ namespace Phys.Lib.Core.Users
 
         public List<string> Roles { get; init; } = CollectionUtils.Empty<string>();
 
+        public bool HasRole(string role) => Roles.Contains(role, StringComparer.OrdinalIgnoreCase);
+
         public override string ToString() => $"{Id} ({Name}, {string.Join(",", Roles)})";
     }
 }

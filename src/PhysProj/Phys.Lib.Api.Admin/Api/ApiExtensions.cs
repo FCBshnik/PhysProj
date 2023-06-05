@@ -15,6 +15,11 @@ namespace Phys.Lib.Api.Admin.Api
             return builder;
         }
 
+        public static RouteHandlerBuilder ProducesOk<T>(this RouteHandlerBuilder builder)
+        {
+            return builder.Produces<T>(200);
+        }
+
         public static RouteHandlerBuilder ProducesOk(this RouteHandlerBuilder builder)
         {
             return builder.Produces<OkModel>(200);
@@ -23,6 +28,11 @@ namespace Phys.Lib.Api.Admin.Api
         public static RouteHandlerBuilder ProducesError(this RouteHandlerBuilder builder)
         {
             return builder.Produces<ErrorModel>(400);
+        }
+
+        public static RouteHandlerBuilder Authorize(this RouteHandlerBuilder builder)
+        {
+            return builder.RequireAuthorization("admin");
         }
     }
 }

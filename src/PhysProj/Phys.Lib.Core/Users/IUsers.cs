@@ -4,6 +4,8 @@
     {
         UserDbo Create(CreateUserData data);
 
-        Result<UserDbo> Login(string userName, string password);
+        Result<UserDbo> Login(string userName, string password, UserRole withRole);
+
+        UserDbo? FindByName(string userName);
     }
 }
