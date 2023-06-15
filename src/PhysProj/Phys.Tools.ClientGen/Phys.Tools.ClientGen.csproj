@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="13.19.0" />
+    <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="13.19.0" />
   </ItemGroup>
 
 </Project>
