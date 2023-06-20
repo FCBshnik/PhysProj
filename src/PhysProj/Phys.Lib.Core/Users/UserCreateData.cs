@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Users
 {
-    public record CreateUserData
+    public record UserCreateData
     {
         public required string Name { get; init; }
 

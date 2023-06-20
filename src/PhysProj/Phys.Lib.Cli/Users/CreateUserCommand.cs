@@ -13,7 +13,7 @@ namespace Phys.Lib.Cli.Users
 
         public void Run(CreateUserOptions options)
         {
-            var userData = new CreateUserData
+            var userData = new UserCreateData
             {
                 Name = options.Name,
                 Password = options.Password,

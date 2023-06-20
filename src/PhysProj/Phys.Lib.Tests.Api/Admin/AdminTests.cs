@@ -38,8 +38,8 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private void InitDb(IUsers users)
         {
-            users.Create(new CreateUserData { Name = "user", Password = "123456", Role = UserRole.User });
-            users.Create(new CreateUserData { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
+            users.Create(new UserCreateData { Name = "user", Password = "123456", Role = UserRole.User });
+            users.Create(new UserCreateData { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
         }
 
         private IContainer BuildContainer()

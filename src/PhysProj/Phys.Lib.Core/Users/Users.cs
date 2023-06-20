@@ -52,7 +52,7 @@ namespace Phys.Lib.Core.Users
             return Result.Ok(user);
         }
 
-        public UserDbo Create(CreateUserData data)
+        public UserDbo Create(UserCreateData data)
         {
             validation.Validate(data);
 

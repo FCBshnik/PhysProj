@@ -4,7 +4,7 @@ namespace Phys.Lib.Tests.Unit.Users
 {
     public class CreateUserTests
     {
-        private static readonly CreateUserDataValidator.UserNameValidator userNameValidator = new CreateUserDataValidator.UserNameValidator();
+        private static readonly UserCreateDataValidator.UserNameValidator userNameValidator = new UserCreateDataValidator.UserNameValidator();
 
         [Theory]
         [InlineData("ya", false)]

@@ -2,7 +2,7 @@
 {
     public interface IUsers
     {
-        UserDbo Create(CreateUserData data);
+        UserDbo Create(UserCreateData data);
 
         Result<UserDbo> Login(string userName, string password, UserRole withRole);
 
