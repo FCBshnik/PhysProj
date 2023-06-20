@@ -1,8 +1,7 @@
-﻿using CommandLine;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Api.Admin.Api.Models;
-using Phys.Lib.Core;
 using Phys.Lib.Core.Users;
+using Phys.Lib.Core.Validation;
 
 namespace Phys.Lib.Api.Admin.Api.Auth
 {
@@ -10,11 +9,11 @@ namespace Phys.Lib.Api.Admin.Api.Auth
     {
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapPost("login", ([FromBody]LoginModel model, [FromServices]App app) =>
+            builder.MapPost("login", ([FromBody]LoginModel model, [FromServices]IValidator validator, [FromServices]IUsers users) =>
             {
-                app.Validator.Validate(model);
+                validator.Validate(model);
 
-                var user = app.Users.Login(model.Username, model.Password, UserRole.Admin);
+                var user = users.Login(model.Username, model.Password, UserRole.Admin);
                 if (user.Fail)
                     return Results.BadRequest(new ErrorModel(ErrorCode.LoginFailed, user.Error));
 

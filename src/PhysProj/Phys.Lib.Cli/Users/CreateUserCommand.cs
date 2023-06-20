@@ -1,15 +1,14 @@
-﻿using Phys.Lib.Core;
-using Phys.Lib.Core.Users;
+﻿using Phys.Lib.Core.Users;
 
 namespace Phys.Lib.Cli.Users
 {
     internal class CreateUserCommand : ICommand<CreateUserOptions>
     {
-        private readonly App app;
+        private readonly IUsers users;
 
-        public CreateUserCommand(App app)
+        public CreateUserCommand(IUsers users)
         {
-            this.app = app;
+            this.users = users;
         }
 
         public void Run(CreateUserOptions options)
@@ -21,7 +20,7 @@ namespace Phys.Lib.Cli.Users
                 Role = UserRole.Parse(options.Role),
             };
 
-            app.Users.Create(userData);
+            users.Create(userData);
         }
     }
 }

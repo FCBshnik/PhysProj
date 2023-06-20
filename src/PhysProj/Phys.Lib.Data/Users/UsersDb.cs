@@ -5,36 +5,34 @@ namespace Phys.Lib.Data.Users
 {
     internal class UsersDb : Collection<UserDbo>, IUsersDb
     {
-        private readonly IMongoCollection<UserDbo> collection;
-
-        public UsersDb(IMongoCollection<UserDbo> collection)
+        public UsersDb(IMongoCollection<UserDbo> collection) : base(collection)
         {
-            this.collection = collection;
         }
 
         public UserDbo Create(UserDbo user)
         {
-            collection.InsertOne(user);
-            return user;
+            return Insert(user);
         }
 
         public List<UserDbo> Find(UsersQuery query)
         {
-            var filter = Filter.Empty;
+            var filter = filterBuilder.Empty;
 
             if (query.Code != null)
-                filter = Filter.And(filter, Filter.Eq(u => u.Code, query.Code));
+                filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
             if (query.NameLowerCase != null)
-                filter = Filter.And(filter, Filter.Eq(u => u.NameLowerCase, query.NameLowerCase));
+                filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.NameLowerCase, query.NameLowerCase));
 
-            return collection.Find(filter).ToList();
+            var sort = sortBuilder.Descending(i => i.Id);
+
+            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
 
         public UserDbo Get(string id)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
 
-            return collection.Find(Filter.Eq(u => u.Id, id)).FirstOrDefault();
+            return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
         }
     }
 }

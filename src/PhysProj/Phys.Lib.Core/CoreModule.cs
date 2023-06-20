@@ -7,11 +7,9 @@ namespace Phys.Lib.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<App>().AsSelf().SingleInstance();
-
             builder.RegisterType<Validator>().AsImplementedInterfaces().SingleInstance();
 
-            builder.RegisterTypes(new[] { typeof(Users.Users) })
+            builder.RegisterTypes(new[] { typeof(Users.Users), typeof(Authors.Authors) })
                 .AsImplementedInterfaces()
                 .AsSelf()
                 .SingleInstance();

@@ -7,20 +7,20 @@ namespace Phys.Lib.Core.Users
     {
         private static readonly ILogger log = LogManager.GetLogger("users");
 
-        private readonly IDb db;
+        private readonly IUsersDb db;
         private readonly IValidator validation;
 
-        public Users(IDb db, IValidator validation)
+        public Users(IUsersDb db, IValidator validation)
         {
             this.db = db;
             this.validation = validation;
         }
 
-        public UserDbo? FindByName(string userName)
+        public UserDbo? GetByName(string userName)
         {
             if (userName == null) throw new ArgumentNullException(nameof(userName));
 
-            return db.Users.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
+            return db.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
         }
 
         public Result<UserDbo> Login(string userName, string password, UserRole withRole)
@@ -29,7 +29,7 @@ namespace Phys.Lib.Core.Users
             if (password == null) throw new ArgumentNullException(nameof(password));
             if (withRole == null) throw new ArgumentNullException(nameof(withRole));
 
-            var user = db.Users.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
+            var user = db.Find(new UsersQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
             if (user == null)
             {
                 log.Info($"login '{userName}' failed: user not found");
@@ -58,7 +58,6 @@ namespace Phys.Lib.Core.Users
 
             var user = new UserDbo
             {
-                Id = db.NewId(),
                 Code = data.Code,
                 Name = data.Name,
                 NameLowerCase = data.NameLowerCase,
@@ -66,7 +65,7 @@ namespace Phys.Lib.Core.Users
                 Roles = new List<string> { data.Role.Code },
             };
 
-            user = db.Users.Create(user);
+            user = db.Create(user);
             log.Info($"created user: {user}");
             return user;
         }

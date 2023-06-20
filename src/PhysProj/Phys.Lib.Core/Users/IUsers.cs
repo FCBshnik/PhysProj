@@ -6,6 +6,6 @@
 
         Result<UserDbo> Login(string userName, string password, UserRole withRole);
 
-        UserDbo? FindByName(string userName);
+        UserDbo? GetByName(string userName);
     }
 }

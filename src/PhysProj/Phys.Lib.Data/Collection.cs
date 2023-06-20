@@ -4,6 +4,21 @@ namespace Phys.Lib.Data
 {
     internal class Collection<T>
     {
-        protected FilterDefinitionBuilder<T> Filter => Builders<T>.Filter;
+        protected FilterDefinitionBuilder<T> filterBuilder => Builders<T>.Filter;
+        protected UpdateDefinitionBuilder<T> updateBuilder => Builders<T>.Update;
+        protected SortDefinitionBuilder<T> sortBuilder => Builders<T>.Sort;
+
+        protected readonly IMongoCollection<T> collection;
+
+        public Collection(IMongoCollection<T> collection)
+        {
+            this.collection = collection;
+        }
+
+        protected T Insert(T item)
+        {
+            collection.InsertOne(item);
+            return item;
+        }
     }
 }

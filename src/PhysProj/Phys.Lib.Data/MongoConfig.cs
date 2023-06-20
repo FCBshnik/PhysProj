@@ -2,6 +2,7 @@
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
+using Phys.Lib.Core.Localization;
 using Phys.Lib.Core.Users;
 
 namespace Phys.Lib.Data
@@ -18,6 +19,13 @@ namespace Phys.Lib.Data
             {
                 m.AutoMap();
                 m.MapIdProperty(u => u.Id).SetSerializer(idSerializer);
+            });
+
+            BsonClassMap.RegisterClassMap<NameDbo>(m =>
+            {
+                m.AutoMap();
+                m.MapProperty(u => u.Language).SetElementName("lang");
+                m.MapProperty(u => u.Name).SetElementName("name");
             });
         }
 

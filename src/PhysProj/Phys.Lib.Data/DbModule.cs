@@ -32,10 +32,6 @@ namespace Phys.Lib.Data
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
-            builder.RegisterType<Db>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
             builder.RegisterTypes(new[] { typeof(UsersDb) } )
                 .AsImplementedInterfaces()
                 .SingleInstance();

@@ -29,17 +29,17 @@ namespace Phys.Lib.Tests.Api.Admin
             var container = BuildContainer();
             using (var scope = container.BeginLifetimeScope())
             {
-                var app = scope.Resolve<App>();
-                InitDb(app);
+                var users = scope.Resolve<IUsers>();
+                InitDb(users);
             }
 
             client = new AdminApiClient(url, http);
         }
 
-        private void InitDb(App app)
+        private void InitDb(IUsers users)
         {
-            app.Users.Create(new CreateUserData { Name = "user", Password = "123456", Role = UserRole.User });
-            app.Users.Create(new CreateUserData { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
+            users.Create(new CreateUserData { Name = "user", Password = "123456", Role = UserRole.User });
+            users.Create(new CreateUserData { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
         }
 
         private IContainer BuildContainer()
