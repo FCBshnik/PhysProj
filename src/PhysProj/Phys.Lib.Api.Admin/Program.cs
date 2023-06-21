@@ -9,6 +9,7 @@ using NLog;
 using NLog.Web;
 using Phys.Lib.Api.Admin.Api;
 using Phys.Lib.Api.Admin.Api.Auth;
+using Phys.Lib.Api.Admin.Api.Authors;
 using Phys.Lib.Api.Admin.Api.Health;
 using Phys.Lib.Api.Admin.OpenApi;
 using Phys.Lib.Core;
@@ -87,6 +88,7 @@ namespace Phys.Lib.Api.Admin
 
             app.MapEndpoint("api/auth", AuthEndpoint.Map);
             app.MapEndpoint("api/health", HealthEndpoint.Map);
+            app.MapEndpoint("api/authors", AuthorsEndpoint.Map);
 
             app.Lifetime.ApplicationStarted.Register(() => log.Info($"api started at {string.Join(";", app.Urls)}"));
             app.Lifetime.ApplicationStopped.Register(() => log.Info($"api stopped"));

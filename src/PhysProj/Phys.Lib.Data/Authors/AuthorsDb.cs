@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using Phys.Lib.Core.Authors;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Data.Authors
 {
@@ -21,8 +22,8 @@ namespace Phys.Lib.Data.Authors
 
             if (query.Code != null)
                 filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
-            //if (query.Search != null)
-            //    filter = Filter.And(filter, Filter.Regex(u => u.Code, query.Search));
+            if (query.Search != null)
+                filter = filterBuilder.And(filter, filterBuilder.Regex(u => u.Code, Regex.Escape(query.Search)));
 
             var sort = sortBuilder.Descending(i => i.Id);
 

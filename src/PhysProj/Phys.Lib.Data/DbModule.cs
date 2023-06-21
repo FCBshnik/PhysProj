@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using MongoDB.Driver;
 using NLog;
+using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Users;
+using Phys.Lib.Data.Authors;
 using Phys.Lib.Data.Users;
 
 namespace Phys.Lib.Data
@@ -31,8 +33,11 @@ namespace Phys.Lib.Data
             builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<UserDbo>("users"))
                 .AsImplementedInterfaces()
                 .SingleInstance();
+            builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<AuthorDbo>("authors"))
+                .AsImplementedInterfaces()
+                .SingleInstance();
 
-            builder.RegisterTypes(new[] { typeof(UsersDb) } )
+            builder.RegisterTypes(new[] { typeof(UsersDb), typeof(AuthorsDb) } )
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }

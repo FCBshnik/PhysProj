@@ -5,6 +5,7 @@ using Phys.Lib.Data;
 using Phys.Lib.Admin.Client;
 using System.Net;
 using Xunit.Abstractions;
+using Phys.Lib.Core.Authors;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -30,16 +31,20 @@ namespace Phys.Lib.Tests.Api.Admin
             using (var scope = container.BeginLifetimeScope())
             {
                 var users = scope.Resolve<IUsers>();
-                InitDb(users);
+                var authors = scope.Resolve<IAuthors>();
+                InitDb(users, authors);
             }
 
             client = new AdminApiClient(url, http);
         }
 
-        private void InitDb(IUsers users)
+        private void InitDb(IUsers users, IAuthors authors)
         {
             users.Create(new UserCreateData { Name = "user", Password = "123456", Role = UserRole.User });
             users.Create(new UserCreateData { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
+
+            authors.Create("decartes");
+            authors.Create("galilei");
         }
 
         private IContainer BuildContainer()
@@ -56,12 +61,15 @@ namespace Phys.Lib.Tests.Api.Admin
             Log("testing");
 
             await HealthCheck();
+
             await LoginFailed();
             await LoginAsUserFailed();
             var token = await LoginAsAdminSuccess();
             await GetUserInfoUnauthorized();
             http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             await GetUserInfoAuthorized();
+
+            await ListAuthors();
 
             Log("tested");
         }
@@ -119,6 +127,13 @@ namespace Phys.Lib.Tests.Api.Admin
             var result = await client.GetUserInfoAsync();
 
             Assert.Equal("admin", result.Name);
+        }
+
+        private async Task ListAuthors()
+        {
+            var result = await client.ListAuthorsAsync();
+
+            Assert.Equal(2, result.Count);
         }
     }
 }

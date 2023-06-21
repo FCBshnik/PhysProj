@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Phys.Lib.Core;
 using Phys.Lib.Core.Authors;
 
 namespace Phys.Lib.Api.Admin.Api.Authors
@@ -18,7 +19,8 @@ namespace Phys.Lib.Api.Admin.Api.Authors
 
             builder.MapGet("/", ([FromServices] IAuthors authors) =>
             {
-                authors.Search("*");
+                var items = authors.Search(".");
+                return Results.Ok(items);
             })
             .ProducesOk<List<AuthorModel>>()
             .WithName("ListAuthors");

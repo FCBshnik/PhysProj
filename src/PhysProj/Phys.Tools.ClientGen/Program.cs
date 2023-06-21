@@ -7,7 +7,8 @@ namespace Phys.Tools.ClientGen
     {
         static void Main(string[] args)
         {
-            GenerateTypeScript();
+            //GenerateTypeScript();
+            GenerateCSharp();
         }
 
         private static void GenerateTypeScript()
