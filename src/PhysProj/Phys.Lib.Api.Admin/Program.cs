@@ -23,7 +23,7 @@ using System.Text.Json.Serialization;
 
 namespace Phys.Lib.Api.Admin
 {
-    public class Program
+    public static class Program
     {
         private static readonly NLog.ILogger log = LogManager.GetCurrentClassLogger();
 
@@ -76,7 +76,7 @@ namespace Phys.Lib.Api.Admin
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            //if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

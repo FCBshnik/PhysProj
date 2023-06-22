@@ -23,13 +23,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Tests.Api", "Phys.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{0A2144C5-59AC-4850-BCAB-961D1293FD53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Tools.ClientGen", "Phys.Tools.ClientGen\Phys.Tools.ClientGen.csproj", "{38833F27-209E-4D2C-97C9-2BF61A6D56A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Tools.ClientGen", "Phys.Tools.ClientGen\Phys.Tools.ClientGen.csproj", "{38833F27-209E-4D2C-97C9-2BF61A6D56A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{6505BD1D-9B75-4A0D-976E-E4A386E3EB5E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{0E0E79C9-E73A-4819-97FA-3714DA5B3AD0}"
 	ProjectSection(SolutionItems) = preProject
 		Clients\CSharp\AdminApiClient.cs = Clients\CSharp\AdminApiClient.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{5990FEE0-58EF-40A0-81ED-00E735F0CFF8}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\docker\.dockerignore = ..\..\docker\.dockerignore
+		..\..\docker\docker-compose.yml = ..\..\docker\docker-compose.yml
+		..\..\docker\phys-lib-api-admin.cmd = ..\..\docker\phys-lib-api-admin.cmd
+		..\..\docker\phys-lib-api-admin.dockerfile = ..\..\docker\phys-lib-api-admin.dockerfile
 	EndProjectSection
 EndProject
 Global

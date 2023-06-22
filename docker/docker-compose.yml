@@ -1,0 +1,12 @@
+services:
+  mongo:
+    image: mongo:4.4.18
+    ports:
+      - "27017:27017"
+    volumes:
+      - physproj-mongo:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+volumes:
+  physproj-mongo:
