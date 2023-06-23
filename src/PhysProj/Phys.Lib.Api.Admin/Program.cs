@@ -1,3 +1,4 @@
+using Amazon.Runtime.Internal;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CommandLine;
@@ -75,12 +76,17 @@ namespace Phys.Lib.Api.Admin
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            app.Use(async (ctx, next) =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                if (ctx.Request.Method != "GET")
+                    log.Info($"req [{ctx.Request.Method}] {ctx.Request.Path}");
+                await next();
+                if (ctx.Response.StatusCode != (int)System.Net.HttpStatusCode.OK)
+                    log.Info($"res [{ctx.Response.StatusCode}] to [{ctx.Request.Method}] {ctx.Request.Path}");
+            });
 
             app.UseCors();
             app.UseAuthentication();
@@ -88,7 +94,7 @@ namespace Phys.Lib.Api.Admin
 
             app.MapEndpoint("api/auth", AuthEndpoint.Map);
             app.MapEndpoint("api/health", HealthEndpoint.Map);
-            app.MapEndpoint("api/authors", AuthorsEndpoint.Map);
+            app.MapEndpoint("api/authors", AuthorsEndpoint.Map).RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(() => log.Info($"api started at {string.Join(";", app.Urls)}"));
             app.Lifetime.ApplicationStopped.Register(() => log.Info($"api stopped"));

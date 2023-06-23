@@ -8,7 +8,7 @@ namespace Phys.Lib.Api.Admin.Api
         public static RouteGroupBuilder MapEndpoint(this WebApplication app, string prefix, Action<RouteGroupBuilder> map)
         {
             var builder = app.MapGroup(prefix)
-                .AddEndpointFilter<LoggingFilter>()
+                .AddEndpointFilter<InternalErrorFilter>()
                 .AddEndpointFilter<ValidationErrorFilter>()
                 .WithOpenApi();
             map(builder);
