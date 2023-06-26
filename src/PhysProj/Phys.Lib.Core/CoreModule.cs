@@ -1,5 +1,8 @@
 ﻿using Autofac;
 using Phys.Lib.Core.Validation;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Phys.Lib.Tests.Unit")]
 
 namespace Phys.Lib.Core
 {

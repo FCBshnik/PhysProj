@@ -1,4 +1,3 @@
-using Amazon.Runtime.Internal;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CommandLine;

@@ -21,7 +21,7 @@ namespace Phys.Tools.ClientGen
             var clientName = "Admin";
             var className = $"{clientName}ApiClient";
             using var http = new HttpClient();
-            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync("https://localhost:7188/swagger/v1/swagger.json").Result).Result;
+            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync("http://localhost:7188/swagger/v1/swagger.json").Result).Result;
             var settings = new NSwag.CodeGeneration.TypeScript.TypeScriptClientGeneratorSettings
             {
                 ClassName = className,
@@ -54,7 +54,7 @@ namespace Phys.Tools.ClientGen
             var clientName = "Admin";
             var className = $"{clientName}ApiClient";
             using var http = new HttpClient();
-            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync("https://localhost:7188/swagger/v1/swagger.json").Result).Result;
+            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync("http://localhost:7188/swagger/v1/swagger.json").Result).Result;
             var settings = new NSwag.CodeGeneration.CSharp.CSharpClientGeneratorSettings
             {
                 ClassName = className,

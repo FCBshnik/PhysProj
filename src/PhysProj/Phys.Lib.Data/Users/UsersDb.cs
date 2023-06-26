@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using Phys.Lib.Core.Users;
 
 namespace Phys.Lib.Data.Users
@@ -11,6 +12,7 @@ namespace Phys.Lib.Data.Users
 
         public UserDbo Create(UserDbo user)
         {
+            user.Id = ObjectId.GenerateNewId().ToString();
             return Insert(user);
         }
 

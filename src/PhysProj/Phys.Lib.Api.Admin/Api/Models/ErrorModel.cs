@@ -11,5 +11,10 @@
             Code = code;
             Message = message;
         }
+
+        public static ErrorModel NotFound(string message)
+        {
+            return new ErrorModel(ErrorCode.NotFound, message);
+        }
     }
 }

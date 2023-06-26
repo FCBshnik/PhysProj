@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
-using Phys.Lib.Core.Localization;
+using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Users;
 
 namespace Phys.Lib.Data
@@ -19,13 +19,21 @@ namespace Phys.Lib.Data
             {
                 m.AutoMap();
                 m.MapIdProperty(u => u.Id).SetSerializer(idSerializer);
+                m.MapProperty(u => u.NameLowerCase).SetElementName("nameLc");
+                m.MapProperty(u => u.PasswordHash).SetElementName("pwdHash");
             });
 
-            BsonClassMap.RegisterClassMap<NameDbo>(m =>
+            BsonClassMap.RegisterClassMap<AuthorDbo>(m =>
+            {
+                m.AutoMap();
+                m.MapIdProperty(u => u.Id).SetSerializer(idSerializer);
+            });
+
+            BsonClassMap.RegisterClassMap<AuthorDbo.InfoDbo>(m =>
             {
                 m.AutoMap();
                 m.MapProperty(u => u.Language).SetElementName("lang");
-                m.MapProperty(u => u.Name).SetElementName("name");
+                m.MapProperty(u => u.Description).SetElementName("desc");
             });
         }
 
@@ -38,7 +46,7 @@ namespace Phys.Lib.Data
                 new IgnoreExtraElementsConvention(true)
             };
 
-            ConventionRegistry.Register("app", conventions, type => true);
+            ConventionRegistry.Register("app", conventions, _ => true);
         }
     }
 }

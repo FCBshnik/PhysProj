@@ -8,6 +8,8 @@ namespace Phys.Lib.Data
         protected UpdateDefinitionBuilder<T> updateBuilder => Builders<T>.Update;
         protected SortDefinitionBuilder<T> sortBuilder => Builders<T>.Sort;
 
+        protected FindOneAndUpdateOptions<T, T> findOneAndUpdateOptions = new FindOneAndUpdateOptions<T, T> { ReturnDocument = ReturnDocument.After };
+
         protected readonly IMongoCollection<T> collection;
 
         public Collection(IMongoCollection<T> collection)

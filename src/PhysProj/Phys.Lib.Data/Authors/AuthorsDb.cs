@@ -1,7 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using Phys.Lib.Core.Authors;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Data.Authors
 {
@@ -13,6 +12,7 @@ namespace Phys.Lib.Data.Authors
 
         public AuthorDbo Create(AuthorDbo author)
         {
+            author.Id = ObjectId.GenerateNewId().ToString();
             return Insert(author);
         }
 
@@ -23,7 +23,7 @@ namespace Phys.Lib.Data.Authors
             if (query.Code != null)
                 filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
             if (query.Search != null)
-                filter = filterBuilder.And(filter, filterBuilder.Regex(u => u.Code, Regex.Escape(query.Search)));
+                filter = filterBuilder.And(filter, filterBuilder.Regex(u => u.Code, query.Search));
 
             var sort = sortBuilder.Descending(i => i.Id);
 
@@ -37,14 +37,30 @@ namespace Phys.Lib.Data.Authors
             return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
         }
 
-        public AuthorDbo Update<T>(string id, Expression<Func<AuthorDbo, T>> field, T value)
+        public AuthorDbo Update(string id, AuthorUpdate options)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
 
             var filter = filterBuilder.Eq(i => i.Id, id);
-            var update = updateBuilder.Set(field, value);
+            var update = updateBuilder.Combine();
+            if (options.Born != null)
+                update = update.Set(i => i.Born, options.Born);
+            if (options.Died != null)
+                update = update.Set(i => i.Died, options.Died);
+            if (options.AddInfo != null)
+                update = update.Push(i => i.Infos, options.AddInfo);
+            if (options.RemoveInfo != null)
+                update = update.PullFilter(i => i.Infos, i => i.Language == options.RemoveInfo);
 
-            return collection.FindOneAndUpdate(filter, update) ?? throw new ApplicationException($"author '{id}' was not updated due to not found in db");
+            return collection.FindOneAndUpdate(filter, update, findOneAndUpdateOptions)
+                ?? throw new ApplicationException($"author '{id}' was not updated due to not found in db");
+        }
+
+        public void Delete(string id)
+        {
+            if (id is null) throw new ArgumentNullException(nameof(id));
+
+            collection.DeleteOne(filterBuilder.Eq(i => i.Id, id));
         }
     }
 }

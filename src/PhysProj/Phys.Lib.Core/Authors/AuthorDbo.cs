@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Core.Localization;
-
-namespace Phys.Lib.Core.Authors
+﻿namespace Phys.Lib.Core.Authors
 {
     public class AuthorDbo
     {
@@ -12,6 +10,20 @@ namespace Phys.Lib.Core.Authors
 
         public string Died { get; set; }
 
-        public List<NameDbo> Names { get; set; } = new List<NameDbo>();
+        public List<InfoDbo> Infos { get; set; } = new List<InfoDbo>();
+
+        public class InfoDbo
+        {
+            public string Language { get; set; }
+
+            public string Name { get; set; }
+
+            public string Description { get; set; }
+        }
+
+        public override string ToString()
+        {
+            return $"{Code} ({Id})";
+        }
     }
 }

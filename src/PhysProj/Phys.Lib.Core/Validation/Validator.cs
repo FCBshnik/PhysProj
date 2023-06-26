@@ -5,6 +5,7 @@ namespace Phys.Lib.Core.Validation
 {
     public class Validator : IValidator
     {
+        // todo: get rid off autofac interface
         private readonly ILifetimeScope scope;
 
         public Validator(ILifetimeScope scope)

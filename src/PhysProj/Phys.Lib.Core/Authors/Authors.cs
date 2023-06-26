@@ -1,5 +1,4 @@
 ﻿using NLog;
-using System.Linq.Expressions;
 
 namespace Phys.Lib.Core.Authors
 {
@@ -18,10 +17,21 @@ namespace Phys.Lib.Core.Authors
         {
             if (string.IsNullOrWhiteSpace(code)) throw new ArgumentException(nameof(code));
 
-            return db.Create(new AuthorDbo
+            var author = db.Create(new AuthorDbo
             {
                 Code = code,
             });
+
+            log.Info($"created author {author}");
+            return author;
+        }
+
+        public void Delete(AuthorDbo author)
+        {
+            if (author is null) throw new ArgumentNullException(nameof(author));
+
+            db.Delete(author.Id);
+            log.Info($"deleted author {author}");
         }
 
         public AuthorDbo? GetByCode(string code)
@@ -38,12 +48,13 @@ namespace Phys.Lib.Core.Authors
             return db.Find(new AuthorsQuery { Search = search });
         }
 
-        public AuthorDbo Update<T>(AuthorDbo author, Expression<Func<AuthorDbo, T>> field, T value)
+        public AuthorDbo Update(AuthorDbo author, AuthorUpdate update)
         {
             if (author is null) throw new ArgumentNullException(nameof(author));
-            if (field is null) throw new ArgumentNullException(nameof(field));
 
-            return db.Update(author.Id, field, value);
+            author = db.Update(author.Id, update);
+            log.Info($"updated author {author}");
+            return author;
         }
     }
 }

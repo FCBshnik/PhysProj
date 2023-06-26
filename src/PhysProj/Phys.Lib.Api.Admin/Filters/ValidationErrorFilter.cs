@@ -7,7 +7,7 @@ namespace Phys.Lib.Api.Admin.Filters
 {
     public class ValidationErrorFilter : IEndpointFilter
     {
-        private static readonly NLog.ILogger log = LogManager.GetLogger("api-validation");
+        private static readonly NLog.ILogger log = LogManager.GetLogger("api-validation-err");
 
         public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
         {

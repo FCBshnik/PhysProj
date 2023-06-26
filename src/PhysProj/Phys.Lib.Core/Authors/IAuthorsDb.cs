@@ -1,15 +1,15 @@
-﻿using System.Linq.Expressions;
-
-namespace Phys.Lib.Core.Authors
+﻿namespace Phys.Lib.Core.Authors
 {
     public interface IAuthorsDb
     {
-        AuthorDbo Create(AuthorDbo author);
+        List<AuthorDbo> Find(AuthorsQuery query);
 
         AuthorDbo Get(string id);
 
-        List<AuthorDbo> Find(AuthorsQuery query);
+        AuthorDbo Create(AuthorDbo author);
 
-        AuthorDbo Update<T>(string id, Expression<Func<AuthorDbo, T>> field, T value);
+        AuthorDbo Update(string id, AuthorUpdate update);
+
+        void Delete(string id);
     }
 }

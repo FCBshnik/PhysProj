@@ -4,7 +4,7 @@ namespace Phys.Lib.Api.Admin.Filters
 {
     public class InternalErrorFilter : IEndpointFilter
     {
-        private static readonly NLog.ILogger log = LogManager.GetLogger("api-log");
+        private static readonly NLog.ILogger log = LogManager.GetLogger("api-internal-err");
 
         public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
         {

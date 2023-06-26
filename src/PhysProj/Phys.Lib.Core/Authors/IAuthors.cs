@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Phys.Lib.Core.Authors
+﻿namespace Phys.Lib.Core.Authors
 {
     public interface IAuthors
     {
@@ -10,6 +8,8 @@ namespace Phys.Lib.Core.Authors
 
         AuthorDbo Create(string code);
 
-        AuthorDbo Update<T>(AuthorDbo author, Expression<Func<AuthorDbo, T>> field, T value);
+        AuthorDbo Update(AuthorDbo author, AuthorUpdate update);
+
+        void Delete(AuthorDbo author);
     }
 }

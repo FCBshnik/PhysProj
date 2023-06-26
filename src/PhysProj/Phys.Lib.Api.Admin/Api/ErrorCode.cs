@@ -4,5 +4,6 @@
     {
         LoginFailed,
         InvalidArgument,
+        NotFound,
     }
 }
