@@ -2,12 +2,12 @@
 {
     public class AuthorUpdate
     {
-        public string Born { get; set; }
+        public string? Born { get; set; }
 
-        public string Died { get; set; }
+        public string? Died { get; set; }
 
-        public AuthorDbo.InfoDbo AddInfo { get; set; }
+        public AuthorDbo.InfoDbo? AddInfo { get; set; }
 
-        public string RemoveInfo { get; set; }
+        public string? RemoveInfo { get; set; }
     }
 }
