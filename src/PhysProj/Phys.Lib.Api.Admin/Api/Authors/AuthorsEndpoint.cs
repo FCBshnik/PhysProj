@@ -6,6 +6,8 @@ namespace Phys.Lib.Api.Admin.Api.Authors
 {
     public class AuthorsEndpoint
     {
+        private static readonly AuthorsMapper mapper = new AuthorsMapper();
+
         public static void Map(RouteGroupBuilder builder)
         {
             builder.MapGet("/", ([FromServices] IAuthors authors) =>
@@ -22,7 +24,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
                 if (author == null)
                     return Results.BadRequest(ErrorModel.NotFound($"author '{code}' not found"));
 
-                return Results.Ok(author);
+                return Results.Ok(mapper.Map(author));
             })
             .ProducesOk<AuthorModel>()
             .ProducesError()

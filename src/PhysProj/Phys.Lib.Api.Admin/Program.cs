@@ -93,7 +93,7 @@ namespace Phys.Lib.Api.Admin
 
             app.MapEndpoint("api/auth", AuthEndpoint.Map);
             app.MapEndpoint("api/health", HealthEndpoint.Map);
-            app.MapEndpoint("api/authors", AuthorsEndpoint.Map).RequireAuthorization();
+            app.MapEndpoint("api/authors", AuthorsEndpoint.Map);//.RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(() => log.Info($"api started at {string.Join(";", app.Urls)}"));
             app.Lifetime.ApplicationStopped.Register(() => log.Info($"api stopped"));
