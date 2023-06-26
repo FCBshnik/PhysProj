@@ -1,27 +1,24 @@
 using Autofac;
-using Phys.Lib.Core;
 using Phys.Lib.Core.Users;
-using Phys.Lib.Data;
 using Phys.Lib.Admin.Client;
 using System.Net;
-using Xunit.Abstractions;
 using Phys.Lib.Core.Authors;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
     public class AdminTests : ApiTests
     {
+        private FileInfo projectPath => new FileInfo(Path.Combine(solutionDir.FullName, "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin.csproj"));
         private const string url = "https://localhost:17188/";
 
-        private AdminApiClient? api;
+        private AdminApiClient api;
 
-        private FileInfo projectPath => new FileInfo(Path.Combine(solutionDir.FullName, "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin.csproj"));
-
-        private IUsers users;
-        private IAuthors authors;
+        private IUsers? users;
+        private IAuthors? authors;
 
         public AdminTests(ITestOutputHelper output) : base(output)
         {
+            api = new AdminApiClient(url, http);
         }
 
         public override async Task Init()
@@ -36,11 +33,9 @@ namespace Phys.Lib.Tests.Api.Admin
                 users = scope.Resolve<IUsers>();
                 authors = scope.Resolve<IAuthors>();
             }
-
-            api = new AdminApiClient(url, http);
         }
 
-        private void InitUsers()
+        private void CreateUsers()
         {
             users.Create(new UserCreateData { Name = "user", Password = "123456", Role = UserRole.User });
             users.Create(new UserCreateData { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
@@ -55,152 +50,145 @@ namespace Phys.Lib.Tests.Api.Admin
         }
 
         [Fact]
-        public async void AllTests()
+        public void AllTests()
         {
             Log("testing");
 
-            await HealthCheck();
-
-            InitUsers();
-
-            await LoginFailed();
-            await LoginAsUserFailed();
-            var token = await LoginAsAdminSuccess();
-            await GetUserInfoUnauthorized();
-            http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            await GetUserInfoAuthorized();
-
-            await AuthorsTests();
+            HealthTests();
+            AuthTests();
+            AuthorsTests();
 
             Log("tested");
         }
 
-        private async Task HealthCheck()
+        private void AuthTests()
         {
-            var check = await api.HealthCheckAsync();
-            Assert.True(check != null, "Health check");
+            CreateUsers();
+
+            LoginFailedTest();
+            LoginAsUserFailedTest();
+            GetUserInfoUnauthorizedTest();
+            http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", LoginAsAdminSuccessTest());
+            GetUserInfoAuthorizedTest();
         }
 
-        private async Task LoginFailed()
+        private void HealthTests()
         {
-            var result = await Assert.ThrowsAsync<ApiException<ErrorModel>>(async () => await api.LoginAsync(new LoginModel
+            var check = api.HealthCheckAsync().Result;
+            check.Should().NotBeNull();
+        }
+
+        private void LoginFailedTest()
+        {
+            api.Invoking(i => i.LoginAsync(new LoginModel
             {
                 Username = "badUserName",
                 Password = "badUserPassword"
-            }));
-
-            Assert.Equal(ErrorCode.LoginFailed, result.Result.Code);
+            }).Result).Should().Throw<ApiException<ErrorModel>>().Where(e => e.Result.Code == ErrorCode.LoginFailed);
         }
 
-        private async Task LoginAsUserFailed()
+        private void LoginAsUserFailedTest()
         {
-            var result = await Assert.ThrowsAsync<ApiException<ErrorModel>>(async () => await api.LoginAsync(new LoginModel
+            api.Invoking(i => i.LoginAsync(new LoginModel
             {
                 Username = "user",
                 Password = "123456"
-            }));
-
-            Assert.Equal(ErrorCode.LoginFailed, result.Result.Code);
+            }).Result).Should().Throw<ApiException<ErrorModel>>().Which.Result.Code.Should().Be(ErrorCode.LoginFailed);
         }
 
-        private async Task<string> LoginAsAdminSuccess()
+        private string LoginAsAdminSuccessTest()
         {
-            var result = await api.LoginAsync(new LoginModel
+            var result = api.LoginAsync(new LoginModel
             {
                 Username = "admin",
                 Password = "123qwe"
-            });
-
-            Assert.NotEmpty(result.Token);
+            }).Result;
+            result.Token.Should().NotBeEmpty();
 
             return result.Token;
         }
 
-        private async Task GetUserInfoUnauthorized()
+        private void GetUserInfoUnauthorizedTest()
         {
-            var result = await Assert.ThrowsAsync<ApiException>(api.GetUserInfoAsync);
-
-            Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
+            var result = Assert.ThrowsAsync<ApiException>(api.GetUserInfoAsync).Result;
+            result.StatusCode.Should().Be((int)HttpStatusCode.Unauthorized);
         }
 
-        private async Task GetUserInfoAuthorized()
+        private void GetUserInfoAuthorizedTest()
         {
-            var result = await api.GetUserInfoAsync();
-
-            Assert.Equal("admin", result.Name);
+            var result = api.GetUserInfoAsync().Result;
+            result.Name.Should().Be("admin");
         }
 
-        private async Task AuthorsTests()
+        private void AuthorsTests()
         {
-            await AssertAuthors();
+            AssertAuthors();
 
-            await TestAuthorNotFound("decartes");
-            
+            AuthorNotFoundTest("decartes");
+
             authors.Create("decartes");
-            await TestAuthorFound("decartes");
+            AuthorFoundTest("decartes");
 
             authors.Create("galilei");
-            await TestAuthorFound("galilei");
+            AuthorFoundTest("galilei");
 
-            await AssertAuthors("decartes", "galilei");
+            AssertAuthors("decartes", "galilei");
 
-            await api.DeleteAuthorAsync("none");
-            await AssertAuthors("decartes", "galilei");
+            api.DeleteAuthorAsync("none").Wait();
+            AssertAuthors("decartes", "galilei");
 
-            await api.DeleteAuthorAsync("galilei");
-            await AssertAuthors("decartes");
+            api.DeleteAuthorAsync("galilei").Wait();
+            AssertAuthors("decartes");
 
-            await TestAuthorUpdate("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
-            await TestAuthorUpdate("decartes", new AuthorUpdateModel { Born = string.Empty, Died = "1650" });
+            AuthorUpdateTest("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
+            AuthorUpdateTest("decartes", new AuthorUpdateModel { Born = string.Empty, Died = "1650" });
 
-            await TestAuthorUpdateInfo("decartes", "en", new AuthorInfoUpdateModel { Name = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
-            await TestAuthorDeleteInfo("decartes", "en");
+            AuthorUpdateInfoTest("decartes", "en", new AuthorInfoUpdateModel { Name = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
+            AuthorDeleteInfoTest("decartes", "en");
         }
 
-        private async Task TestAuthorNotFound(string code)
+        private void AuthorNotFoundTest(string code)
         {
-            var result = await Assert.ThrowsAsync<ApiException<ErrorModel>>(async () => await api.GetAuthorAsync(code));
-            Assert.Equal(ErrorCode.NotFound, result.Result.Code);
+            var result = Assert.ThrowsAsync<ApiException<ErrorModel>>(() => api.GetAuthorAsync(code)).Result;
+            result.Result.Code.Should().Be(ErrorCode.NotFound);
         }
 
-        private async Task TestAuthorFound(string code)
+        private void AuthorFoundTest(string code)
         {
-            var author = await api.GetAuthorAsync(code);
-            Assert.Equal(code, author.Code);
+            var author = api.GetAuthorAsync(code).Result;
+            author.Code.Should().Be(code);
         }
 
-        private async Task TestAuthorUpdate(string code, AuthorUpdateModel update)
+        private void AuthorUpdateTest(string code, AuthorUpdateModel update)
         {
-            var author = await api.UpdateAuthorAsync(code, update);
-            Assert.Equal(code, author.Code);
-            Assert.Equal(update.Born, author.Born);
-            Assert.Equal(update.Died, author.Died);
+            var author = api.UpdateAuthorAsync(code, update).Result;
+            author.Code.Should().Be(code);
+            author.Born.Should().Be(update.Born);
+            author.Died.Should().Be(update.Died);
         }
 
-        private async Task TestAuthorUpdateInfo(string code, string language, AuthorInfoUpdateModel update)
+        private void AuthorUpdateInfoTest(string code, string language, AuthorInfoUpdateModel update)
         {
-            var author = await api.UpdateAuthorInfoAsync(code, language, update);
-            Assert.Equal(code, author.Code);
+            var author = api.UpdateAuthorInfoAsync(code, language, update).Result;
+            author.Code.Should().Be(code);
 
             var info = author.Infos.FirstOrDefault(i => i.Language == language);
-            Assert.NotNull(info);
-            Assert.Equal(update.Name, info.Name);
-            Assert.Equal(update.Description, info.Description);
+            info.Should().NotBeNull();
+            info.Name.Should().Be(update.Name);
+            info.Description.Should().Be(update.Description);
         }
 
-        private async Task TestAuthorDeleteInfo(string code, string language)
+        private void AuthorDeleteInfoTest(string code, string language)
         {
-            var author = await api.DeleteAuthorInfoAsync(code, language);
-            Assert.Equal(code, author.Code);
-
-            var info = author.Infos.FirstOrDefault(i => i.Language == language);
-            Assert.Null(info);
+            var author = api.DeleteAuthorInfoAsync(code, language).Result;
+            author.Code.Should().Be(code);
+            author.Infos.Should().NotContain(i => i.Language == language);
         }
 
-        private async Task AssertAuthors(params string[] authors)
+        private void AssertAuthors(params string[] authors)
         {
-            var result = await api.ListAuthorsAsync();
-            Assert.Equal(result.Count, authors.Length);
+            var result = api.ListAuthorsAsync().Result;
+            authors.Should().HaveCount(result.Count);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using CliWrap;
 using Fluid;
 using Testcontainers.MongoDb;
-using Xunit.Abstractions;
 
 namespace Phys.Lib.Tests.Api
 {

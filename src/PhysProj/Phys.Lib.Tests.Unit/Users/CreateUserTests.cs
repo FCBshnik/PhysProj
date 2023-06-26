@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Phys.Lib.Core.Users;
 
 namespace Phys.Lib.Tests.Unit.Users
@@ -15,7 +16,8 @@ namespace Phys.Lib.Tests.Unit.Users
         [InlineData("admin", true)]
         public void TestUserName(string userName, bool isValid)
         {
-            Assert.Equal(userNameValidator.Validate(userName).IsValid, isValid);
+            var result = userNameValidator.Validate(userName);
+            result.IsValid.Should().Be(isValid);
         }
     }
 }
