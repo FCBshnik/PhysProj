@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Core.Utils;
-
-namespace Phys.Lib.Core.Users
+﻿namespace Phys.Lib.Core.Users
 {
     public class UserDbo
     {
@@ -14,7 +12,7 @@ namespace Phys.Lib.Core.Users
 
         public string PasswordHash { get; set; }
 
-        public List<string> Roles { get; set; } = CollectionUtils.Empty<string>();
+        public List<string> Roles { get; set; } = new List<string>();
 
         public bool HasRole(string role) => Roles.Contains(role, StringComparer.OrdinalIgnoreCase);
 

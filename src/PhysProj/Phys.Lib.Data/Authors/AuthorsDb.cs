@@ -19,7 +19,6 @@ namespace Phys.Lib.Data.Authors
         public List<AuthorDbo> Find(AuthorsQuery query)
         {
             var filter = filterBuilder.Empty;
-
             if (query.Code != null)
                 filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
             if (query.Search != null)
@@ -42,6 +41,7 @@ namespace Phys.Lib.Data.Authors
             if (id is null) throw new ArgumentNullException(nameof(id));
 
             var filter = filterBuilder.Eq(i => i.Id, id);
+
             var update = updateBuilder.Combine();
             if (options.Born != null)
                 update = update.Set(i => i.Born, options.Born);

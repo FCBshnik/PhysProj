@@ -19,7 +19,6 @@ namespace Phys.Lib.Data.Users
         public List<UserDbo> Find(UsersQuery query)
         {
             var filter = filterBuilder.Empty;
-
             if (query.Code != null)
                 filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
             if (query.NameLowerCase != null)
