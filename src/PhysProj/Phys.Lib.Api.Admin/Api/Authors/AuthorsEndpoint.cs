@@ -13,7 +13,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             builder.MapGet("/", ([FromServices] IAuthors authors) =>
             {
                 var items = authors.Search(".");
-                return Results.Ok(items);
+                return Results.Ok(items.Select(mapper.Map));
             })
             .ProducesOk<List<AuthorModel>>()
             .WithName("ListAuthors");
@@ -33,7 +33,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             builder.MapPost("/", ([FromBody] AuthorCreateModel model, [FromServices] IAuthors authors) =>
             {
                 var author = authors.Create(model.Code);
-                return Results.Ok(author);
+                return Results.Ok(mapper.Map(author));
             })
             .ProducesOk<AuthorModel>()
             .ProducesError()
@@ -46,7 +46,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
                     return Results.BadRequest(ErrorModel.NotFound($"author '{code}' not found"));
 
                 author = authors.Update(author, new AuthorUpdate { Born = model.Born, Died = model.Died });
-                return Results.Ok(author);
+                return Results.Ok(mapper.Map(author));
             })
             .ProducesOk<AuthorModel>()
             .ProducesError()
@@ -70,7 +70,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
                     return Results.BadRequest(ErrorModel.NotFound($"author '{code}' not found"));
 
                 author = authors.Update(author, new AuthorUpdate { AddInfo = new AuthorDbo.InfoDbo { Language = language, Name = model.Name, Description = model.Description } });
-                return Results.Ok(author);
+                return Results.Ok(mapper.Map(author));
             })
             .ProducesOk<AuthorModel>()
             .ProducesError()
@@ -83,7 +83,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
                     return Results.BadRequest(ErrorModel.NotFound($"author '{code}' not found"));
 
                 author = authors.Update(author, new AuthorUpdate { RemoveInfo = language });
-                return Results.Ok(author);
+                return Results.Ok(mapper.Map(author));
             })
             .ProducesOk<AuthorModel>()
             .ProducesError()

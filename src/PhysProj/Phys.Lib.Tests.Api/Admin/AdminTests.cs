@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
 using System.Net;
@@ -143,7 +143,8 @@ namespace Phys.Lib.Tests.Api.Admin
             AuthorUpdateTest("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
             AuthorUpdateTest("decartes", new AuthorUpdateModel { Born = string.Empty, Died = "1650" });
 
-            AuthorUpdateInfoTest("decartes", "en", new AuthorInfoUpdateModel { Name = "Ren� Descartes", Description = "French philosopher, scientist, and mathematician" });
+            AuthorUpdateInfoTest("decartes", "en", new AuthorInfoUpdateModel { Name = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
+            AuthorUpdateInfoTest("decartes", "ru", new AuthorInfoUpdateModel { Name = "Рене́ Дека́рт", Description = "французский философ, математик и естествоиспытатель" });
             AuthorDeleteInfoTest("decartes", "en");
         }
 
