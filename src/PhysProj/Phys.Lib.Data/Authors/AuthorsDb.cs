@@ -52,7 +52,7 @@ namespace Phys.Lib.Data.Authors
             if (options.RemoveInfo != null)
                 update = update.PullFilter(i => i.Infos, i => i.Language == options.RemoveInfo);
 
-            return collection.FindOneAndUpdate(filter, update, findOneAndUpdateOptions)
+            return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
                 ?? throw new ApplicationException($"author '{id}' was not updated due to not found in db");
         }
 

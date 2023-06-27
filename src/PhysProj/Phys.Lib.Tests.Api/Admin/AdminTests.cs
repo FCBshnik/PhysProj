@@ -13,8 +13,8 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private AdminApiClient api;
 
-        private IUsers? users;
-        private IAuthors? authors;
+        private IUsersService? users;
+        private IAuthorsService? authors;
 
         public AdminTests(ITestOutputHelper output) : base(output)
         {
@@ -30,8 +30,8 @@ namespace Phys.Lib.Tests.Api.Admin
             var container = BuildContainer();
             using (var scope = container.BeginLifetimeScope())
             {
-                users = scope.Resolve<IUsers>();
-                authors = scope.Resolve<IAuthors>();
+                users = scope.Resolve<IUsersService>();
+                authors = scope.Resolve<IAuthorsService>();
             }
         }
 

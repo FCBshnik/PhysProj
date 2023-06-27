@@ -12,7 +12,7 @@ namespace Phys.Lib.Core
         {
             builder.RegisterType<Validator>().AsImplementedInterfaces().SingleInstance();
 
-            builder.RegisterTypes(new[] { typeof(Users.Users), typeof(Authors.Authors) })
+            builder.RegisterTypes(new[] { typeof(Users.UsersService), typeof(Authors.AuthorsService), typeof(Works.WorksService) })
                 .AsImplementedInterfaces()
                 .AsSelf()
                 .SingleInstance();

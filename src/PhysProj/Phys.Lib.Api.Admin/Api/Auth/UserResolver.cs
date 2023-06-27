@@ -4,10 +4,10 @@ namespace Phys.Lib.Api.Admin.Api.Auth
 {
     public class UserResolver
     {
-        private readonly IUsers users;
+        private readonly IUsersService users;
         private readonly IHttpContextAccessor httpContext;
 
-        public UserResolver(IUsers users, IHttpContextAccessor httpContext)
+        public UserResolver(IUsersService users, IHttpContextAccessor httpContext)
         {
             this.users = users;
             this.httpContext = httpContext;

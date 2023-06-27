@@ -10,7 +10,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
 
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapGet("/", ([FromServices] IAuthors authors) =>
+            builder.MapGet("/", ([FromServices] IAuthorsService authors) =>
             {
                 var items = authors.Search(".");
                 return Results.Ok(items.Select(mapper.Map));
@@ -18,7 +18,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             .ProducesOk<List<AuthorModel>>()
             .WithName("ListAuthors");
 
-            builder.MapGet("/{code}", (string code, [FromServices] IAuthors authors) =>
+            builder.MapGet("/{code}", (string code, [FromServices] IAuthorsService authors) =>
             {
                 var author = authors.GetByCode(code);
                 if (author == null)
@@ -30,7 +30,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             .ProducesError()
             .WithName("GetAuthor");
 
-            builder.MapPost("/", ([FromBody] AuthorCreateModel model, [FromServices] IAuthors authors) =>
+            builder.MapPost("/", ([FromBody] AuthorCreateModel model, [FromServices] IAuthorsService authors) =>
             {
                 var author = authors.Create(model.Code);
                 return Results.Ok(mapper.Map(author));
@@ -39,7 +39,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             .ProducesError()
             .WithName("CreateAuthor");
 
-            builder.MapPost("/{code}", (string code, [FromBody]AuthorUpdateModel model, [FromServices] IAuthors authors) =>
+            builder.MapPost("/{code}", (string code, [FromBody]AuthorUpdateModel model, [FromServices] IAuthorsService authors) =>
             {
                 var author = authors.GetByCode(code);
                 if (author == null)
@@ -52,7 +52,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             .ProducesError()
             .WithName("UpdateAuthor");
 
-            builder.MapDelete("/{code}", (string code, [FromServices] IAuthors authors) =>
+            builder.MapDelete("/{code}", (string code, [FromServices] IAuthorsService authors) =>
             {
                 var author = authors.GetByCode(code);
                 if (author != null)
@@ -63,7 +63,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             .ProducesError()
             .WithName("DeleteAuthor");
 
-            builder.MapPost("/{code}/info/{language}", (string code, string language, [FromBody]AuthorInfoUpdateModel model, [FromServices] IAuthors authors) =>
+            builder.MapPost("/{code}/info/{language}", (string code, string language, [FromBody]AuthorInfoUpdateModel model, [FromServices] IAuthorsService authors) =>
             {
                 var author = authors.GetByCode(code);
                 if (author == null)
@@ -76,7 +76,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             .ProducesError()
             .WithName("UpdateAuthorInfo");
 
-            builder.MapDelete("/{code}/info/{language}", (string code, string language, [FromServices] IAuthors authors) =>
+            builder.MapDelete("/{code}/info/{language}", (string code, string language, [FromServices] IAuthorsService authors) =>
             {
                 var author = authors.GetByCode(code);
                 if (author == null)

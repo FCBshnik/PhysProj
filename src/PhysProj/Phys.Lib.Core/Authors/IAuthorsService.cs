@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Authors
 {
-    public interface IAuthors
+    public interface IAuthorsService
     {
         List<AuthorDbo> Search(string search);
 

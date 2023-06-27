@@ -2,13 +2,13 @@
 
 namespace Phys.Lib.Core.Authors
 {
-    public class Authors : IAuthors
+    public class AuthorsService : IAuthorsService
     {
         private static readonly ILogger log = LogManager.GetLogger("authors");
 
         private readonly IAuthorsDb db;
 
-        public Authors(IAuthorsDb db)
+        public AuthorsService(IAuthorsDb db)
         {
             this.db = db;
         }

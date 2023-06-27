@@ -9,7 +9,7 @@ namespace Phys.Lib.Api.Admin.Api.Auth
     {
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapPost("login", ([FromBody]LoginModel model, [FromServices]IValidator validator, [FromServices]IUsers users) =>
+            builder.MapPost("login", ([FromBody]LoginModel model, [FromServices]IValidator validator, [FromServices]IUsersService users) =>
             {
                 validator.Validate(model);
 

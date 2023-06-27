@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Users
 {
-    public interface IUsers
+    public interface IUsersService
     {
         UserDbo Create(UserCreateData data);
 

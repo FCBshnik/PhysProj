@@ -4,9 +4,9 @@ namespace Phys.Lib.Cli.Users
 {
     internal class CreateUserCommand : ICommand<CreateUserOptions>
     {
-        private readonly IUsers users;
+        private readonly IUsersService users;
 
-        public CreateUserCommand(IUsers users)
+        public CreateUserCommand(IUsersService users)
         {
             this.users = users;
         }

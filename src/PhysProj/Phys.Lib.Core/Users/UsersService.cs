@@ -3,14 +3,14 @@ using Phys.Lib.Core.Validation;
 
 namespace Phys.Lib.Core.Users
 {
-    public class Users : IUsers
+    public class UsersService : IUsersService
     {
         private static readonly ILogger log = LogManager.GetLogger("users");
 
         private readonly IUsersDb db;
         private readonly IValidator validation;
 
-        public Users(IUsersDb db, IValidator validation)
+        public UsersService(IUsersDb db, IValidator validation)
         {
             this.db = db;
             this.validation = validation;

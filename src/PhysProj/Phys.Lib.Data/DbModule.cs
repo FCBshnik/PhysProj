@@ -3,8 +3,10 @@ using MongoDB.Driver;
 using NLog;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Users;
+using Phys.Lib.Core.Works;
 using Phys.Lib.Data.Authors;
 using Phys.Lib.Data.Users;
+using Phys.Lib.Data.Works;
 
 namespace Phys.Lib.Data
 {
@@ -30,16 +32,18 @@ namespace Phys.Lib.Data
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
-            builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<UserDbo>("users"))
-                .AsImplementedInterfaces()
-                .SingleInstance();
-            builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<AuthorDbo>("authors"))
+            RegisterCollection<UserDbo, UsersDb>(builder, "users");
+            RegisterCollection<AuthorDbo, AuthorsDb>(builder, "authors");
+            RegisterCollection<WorkDbo, WorksDb>(builder, "works");
+        }
+
+        private void RegisterCollection<TItem, TDb>(ContainerBuilder builder, string collectionName)
+        {
+            builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<TItem>(collectionName))
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
-            builder.RegisterTypes(new[] { typeof(UsersDb), typeof(AuthorsDb) } )
-                .AsImplementedInterfaces()
-                .SingleInstance();
+            builder.RegisterType<TDb>().AsImplementedInterfaces().SingleInstance();
         }
     }
 }
