@@ -1,0 +1,73 @@
+﻿using Phys.Lib.Admin.Client;
+
+namespace Phys.Lib.Tests.Api.Admin
+{
+    public partial class AdminTests
+    {
+        private class AuthorsTests
+        {
+            private readonly AdminApiClient api;
+
+            public AuthorsTests(AdminApiClient api)
+            {
+                this.api = api;
+            }
+
+            public void List(params string[] authors)
+            {
+                var result = api.ListAuthorsAsync().Result;
+                authors.Should().HaveCount(result.Count);
+            }
+
+            public void NotFound(string code)
+            {
+                var result = Assert.ThrowsAsync<ApiException<ErrorModel>>(() => api.GetAuthorAsync(code)).Result;
+                result.Result.Code.Should().Be(ErrorCode.NotFound);
+            }
+
+            public void Found(string code)
+            {
+                var author = api.GetAuthorAsync(code).Result;
+                author.Code.Should().Be(code);
+            }
+
+            public void Create(string code)
+            {
+                var result = api.CreateAuthorAsync(new AuthorCreateModel { Code = code }).Result;
+                result.Code.Should().Be(code);
+            }
+
+            public void Delete(string code)
+            {
+                var result = api.DeleteAuthorAsync(code).Result;
+                result.Should().NotBeNull();
+            }
+
+            public void Update(string code, AuthorUpdateModel update)
+            {
+                var author = api.UpdateAuthorAsync(code, update).Result;
+                author.Code.Should().Be(code);
+                author.Born.Should().Be(update.Born);
+                author.Died.Should().Be(update.Died);
+            }
+
+            public void InfoUpdate(string code, string language, AuthorInfoUpdateModel update)
+            {
+                var author = api.UpdateAuthorInfoAsync(code, language, update).Result;
+                author.Code.Should().Be(code);
+
+                var info = author.Infos.FirstOrDefault(i => i.Language == language);
+                info.Should().NotBeNull();
+                info.Name.Should().Be(update.Name);
+                info.Description.Should().Be(update.Description);
+            }
+
+            public void InfoDelete(string code, string language)
+            {
+                var author = api.DeleteAuthorInfoAsync(code, language).Result;
+                author.Code.Should().Be(code);
+                author.Infos.Should().NotContain(i => i.Language == language);
+            }
+        }
+    }
+}
