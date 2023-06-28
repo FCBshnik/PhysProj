@@ -82,7 +82,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
                 if (author == null)
                     return Results.BadRequest(ErrorModel.NotFound($"author '{code}' not found"));
 
-                author = authors.Update(author, new AuthorUpdate { RemoveInfo = language });
+                author = authors.Update(author, new AuthorUpdate { DeleteInfo = language });
                 return Results.Ok(mapper.Map(author));
             })
             .ProducesOk<AuthorModel>()

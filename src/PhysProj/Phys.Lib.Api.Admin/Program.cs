@@ -8,9 +8,10 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 using Phys.Lib.Api.Admin.Api;
-using Phys.Lib.Api.Admin.Api.Auth;
 using Phys.Lib.Api.Admin.Api.Authors;
 using Phys.Lib.Api.Admin.Api.Health;
+using Phys.Lib.Api.Admin.Api.User;
+using Phys.Lib.Api.Admin.Api.Works;
 using Phys.Lib.Api.Admin.OpenApi;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
@@ -91,9 +92,10 @@ namespace Phys.Lib.Api.Admin
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapEndpoint("api/auth", AuthEndpoint.Map);
-            app.MapEndpoint("api/health", HealthEndpoint.Map);
-            app.MapEndpoint("api/authors", AuthorsEndpoint.Map);//.RequireAuthorization();
+            app.MapEndpoint("user", UserEndpoint.Map);
+            app.MapEndpoint("health", HealthEndpoint.Map);
+            app.MapEndpoint("authors", AuthorsEndpoint.Map);//.RequireAuthorization();
+            app.MapEndpoint("works", WorksEndpoint.Map);//.RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(() => log.Info($"api started at {string.Join(";", app.Urls)}"));
             app.Lifetime.ApplicationStopped.Register(() => log.Info($"api stopped"));

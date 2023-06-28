@@ -8,14 +8,14 @@
 
         public WorkDbo.InfoDbo? AddInfo { get; set; }
 
-        public string? RemoveInfo { get; set; }
+        public string? DeleteInfo { get; set; }
 
-        public string? AddAuthor { get; set; }
+        public string? AddAuthorId { get; set; }
 
-        public string? RemoveAuthor { get; set; }
+        public string? DeleteAuthorId { get; set; }
 
-        public string? AddEdition { get; set; }
+        public string? AddOriginalId { get; set; }
 
-        public string? RemoveEdition { get; set; }
+        public string? DeleteOriginalId { get; set; }
     }
 }

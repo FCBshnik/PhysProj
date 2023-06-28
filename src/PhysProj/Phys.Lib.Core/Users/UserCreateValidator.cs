@@ -2,9 +2,9 @@
 
 namespace Phys.Lib.Core.Users
 {
-    internal class UserCreateDataValidator : AbstractValidator<UserCreateData>
+    internal class UserCreateValidator : AbstractValidator<UserCreate>
     {
-        public UserCreateDataValidator(IUsersDb db)
+        public UserCreateValidator(IUsersDb db)
         {
             RuleFor(u => u.Name).NotNull();
             RuleFor(u => u.Name).SetValidator(new UserNameValidator());

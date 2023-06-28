@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Phys.Lib.Api.Admin.Api.Auth
+namespace Phys.Lib.Api.Admin.Api.User
 {
     public class LoginModelValidator : AbstractValidator<LoginModel>
     {

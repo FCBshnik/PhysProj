@@ -49,8 +49,8 @@ namespace Phys.Lib.Data.Authors
                 update = update.Set(i => i.Died, options.Died);
             if (options.AddInfo != null)
                 update = update.Push(i => i.Infos, options.AddInfo);
-            if (options.RemoveInfo != null)
-                update = update.PullFilter(i => i.Infos, i => i.Language == options.RemoveInfo);
+            if (options.DeleteInfo != null)
+                update = update.PullFilter(i => i.Infos, i => i.Language == options.DeleteInfo);
 
             return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
                 ?? throw new ApplicationException($"author '{id}' was not updated due to not found in db");

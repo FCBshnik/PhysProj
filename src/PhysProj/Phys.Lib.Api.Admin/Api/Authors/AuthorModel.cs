@@ -10,9 +10,9 @@
 
         public string Died { get; set; }
 
-        public List<InfoModel> Infos { get; set; } = new List<InfoModel>();
+        public List<AuthorInfoModel> Infos { get; set; } = new List<AuthorInfoModel>();
 
-        public class InfoModel
+        public class AuthorInfoModel
         {
             public string Language { get; set; }
 

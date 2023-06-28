@@ -56,16 +56,16 @@ namespace Phys.Lib.Data.Works
                 update = update.Set(i => i.Language, options.Language);
             if (options.AddInfo != null)
                 update = update.Push(i => i.Infos, options.AddInfo);
-            if (options.RemoveInfo != null)
-                update = update.PullFilter(i => i.Infos, i => i.Language == options.RemoveInfo);
-            if (options.AddAuthor != null)
-                update = update.Push(i => i.AuthorsIds, options.AddAuthor);
-            if (options.RemoveAuthor != null)
-                update = update.Pull(i => i.AuthorsIds, options.RemoveAuthor);
-            if (options.AddEdition != null)
-                update = update.Push(i => i.EditionsIds, options.AddEdition);
-            if (options.RemoveEdition != null)
-                update = update.Pull(i => i.EditionsIds, options.RemoveEdition);
+            if (options.DeleteInfo != null)
+                update = update.PullFilter(i => i.Infos, i => i.Language == options.DeleteInfo);
+            if (options.AddAuthorId != null)
+                update = update.Push(i => i.AuthorsIds, options.AddAuthorId);
+            if (options.DeleteAuthorId != null)
+                update = update.Pull(i => i.AuthorsIds, options.DeleteAuthorId);
+            if (options.AddOriginalId != null)
+                update = update.Push(i => i.OriginalsIds, options.AddOriginalId);
+            if (options.DeleteOriginalId != null)
+                update = update.Pull(i => i.OriginalsIds, options.DeleteOriginalId);
 
             return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
                 ?? throw new ApplicationException($"work '{id}' was not updated due to not found in db");

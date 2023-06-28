@@ -16,5 +16,10 @@
         {
             return new ErrorModel(ErrorCode.NotFound, message);
         }
+
+        public static IResult NotFoundResult(string message)
+        {
+            return Results.BadRequest(NotFound(message));
+        }
     }
 }

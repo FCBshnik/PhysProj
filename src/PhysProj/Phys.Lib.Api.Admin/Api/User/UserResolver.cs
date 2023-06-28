@@ -1,6 +1,6 @@
 ﻿using Phys.Lib.Core.Users;
 
-namespace Phys.Lib.Api.Admin.Api.Auth
+namespace Phys.Lib.Api.Admin.Api.User
 {
     public class UserResolver
     {

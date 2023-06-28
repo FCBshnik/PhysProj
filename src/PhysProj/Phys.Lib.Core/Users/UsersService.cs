@@ -52,17 +52,17 @@ namespace Phys.Lib.Core.Users
             return Result.Ok(user);
         }
 
-        public UserDbo Create(UserCreateData data)
+        public UserDbo Create(UserCreate create)
         {
-            validation.Validate(data);
+            validation.Validate(create);
 
             var user = new UserDbo
             {
-                Code = data.Code,
-                Name = data.Name,
-                NameLowerCase = data.NameLowerCase,
-                PasswordHash = UserPasswordHasher.HashPassword(data.Password),
-                Roles = new List<string> { data.Role.Code },
+                Code = create.Code,
+                Name = create.Name,
+                NameLowerCase = create.NameLowerCase,
+                PasswordHash = UserPasswordHasher.HashPassword(create.Password),
+                Roles = new List<string> { create.Role.Code },
             };
 
             user = db.Create(user);

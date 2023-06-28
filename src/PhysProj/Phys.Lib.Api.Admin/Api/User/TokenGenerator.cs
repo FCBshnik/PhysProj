@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Phys.Lib.Api.Admin.Api.Auth
+namespace Phys.Lib.Api.Admin.Api.User
 {
     internal static class TokenGenerator
     {

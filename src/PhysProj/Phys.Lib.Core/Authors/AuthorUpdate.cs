@@ -8,6 +8,6 @@
 
         public AuthorDbo.InfoDbo? AddInfo { get; set; }
 
-        public string? RemoveInfo { get; set; }
+        public string? DeleteInfo { get; set; }
     }
 }

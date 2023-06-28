@@ -3,17 +3,17 @@ using Phys.Lib.Api.Admin.Api.Models;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Core.Validation;
 
-namespace Phys.Lib.Api.Admin.Api.Auth
+namespace Phys.Lib.Api.Admin.Api.User
 {
-    public static class AuthEndpoint
+    public static class UserEndpoint
     {
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapPost("login", ([FromBody]LoginModel model, [FromServices]IValidator validator, [FromServices]IUsersService users) =>
+            builder.MapPost("login", ([FromBody] LoginModel model, [FromServices] IValidator validator, [FromServices] IUsersService service) =>
             {
                 validator.Validate(model);
 
-                var user = users.Login(model.Username, model.Password, UserRole.Admin);
+                var user = service.Login(model.Username, model.Password, UserRole.Admin);
                 if (user.Fail)
                     return Results.BadRequest(new ErrorModel(ErrorCode.LoginFailed, user.Error));
 
@@ -23,7 +23,7 @@ namespace Phys.Lib.Api.Admin.Api.Auth
             .ProducesError()
             .WithName("Login");
 
-            builder.MapGet("user", ([FromServices]UserDbo user) =>
+            builder.MapGet("/", ([FromServices] UserDbo user) =>
             {
                 return Results.Ok(new UserModel
                 {
