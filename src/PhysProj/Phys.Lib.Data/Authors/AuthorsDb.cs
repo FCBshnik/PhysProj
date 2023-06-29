@@ -36,21 +36,27 @@ namespace Phys.Lib.Data.Authors
             return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
         }
 
-        public AuthorDbo Update(string id, AuthorUpdate options)
+        public AuthorDbo Update(string id, AuthorUpdate author)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
 
             var filter = filterBuilder.Eq(i => i.Id, id);
-
             var update = updateBuilder.Combine();
-            if (options.Born != null)
-                update = update.Set(i => i.Born, options.Born);
-            if (options.Died != null)
-                update = update.Set(i => i.Died, options.Died);
-            if (options.AddInfo != null)
-                update = update.Push(i => i.Infos, options.AddInfo);
-            if (options.DeleteInfo != null)
-                update = update.PullFilter(i => i.Infos, i => i.Language == options.DeleteInfo);
+
+            if (author.Born == string.Empty)
+                update = update.Unset(i => i.Born);
+            else if (author.Born != null)
+                update = update.Set(i => i.Born, author.Born);
+
+            if (author.Died == string.Empty)
+                update = update.Unset(i => i.Died);
+            else if (author.Died != null)
+                update = update.Set(i => i.Died, author.Died);
+
+            if (author.AddInfo != null)
+                update = update.Push(i => i.Infos, author.AddInfo);
+            if (author.DeleteInfo != null)
+                update = update.PullFilter(i => i.Infos, i => i.Language == author.DeleteInfo);
 
             return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
                 ?? throw new ApplicationException($"author '{id}' was not updated due to not found in db");

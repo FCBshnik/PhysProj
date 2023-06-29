@@ -15,7 +15,7 @@ namespace Phys.Lib.Core.Authors
 
         public AuthorDbo Create(string code)
         {
-            if (string.IsNullOrWhiteSpace(code)) throw new ArgumentException(nameof(code));
+            code = Code.NormalizeAndValidate(code);
 
             var author = db.Create(new AuthorDbo
             {

@@ -19,10 +19,9 @@ namespace Phys.Lib.Tests.Api.Admin
                 authors.Should().HaveCount(result.Count);
             }
 
-            public void NotFound(string code)
+            public void NotFound(string code, ErrorCode errorCode)
             {
-                var result = Assert.ThrowsAsync<ApiException<ErrorModel>>(() => api.GetAuthorAsync(code)).Result;
-                result.Result.Code.Should().Be(ErrorCode.NotFound);
+                AdminAssert.ShouldFail(() => api.GetAuthorAsync(code), errorCode);
             }
 
             public void Found(string code)
@@ -37,6 +36,11 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Code.Should().Be(code);
             }
 
+            public void CreateFailed(string code, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            {
+                AdminAssert.ShouldFail(() => api.CreateAuthorAsync(new AuthorCreateModel { Code = code }), errorCode);
+            }
+
             public void Delete(string code)
             {
                 var result = api.DeleteAuthorAsync(code).Result;
@@ -47,8 +51,8 @@ namespace Phys.Lib.Tests.Api.Admin
             {
                 var author = api.UpdateAuthorAsync(code, update).Result;
                 author.Code.Should().Be(code);
-                author.Born.Should().Be(update.Born);
-                author.Died.Should().Be(update.Died);
+                author.Born.ShouldBeUpdatedWith(update.Born);
+                author.Died.ShouldBeUpdatedWith(update.Died);
             }
 
             public void InfoUpdate(string code, string language, AuthorInfoUpdateModel update)

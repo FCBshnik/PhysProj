@@ -1,4 +1,6 @@
-﻿namespace Phys.Lib.Core.Works
+﻿using Phys.Lib.Core.Authors;
+
+namespace Phys.Lib.Core.Works
 {
     public class WorkUpdate
     {
@@ -10,12 +12,14 @@
 
         public string? DeleteInfo { get; set; }
 
-        public string? AddAuthorId { get; set; }
+        public AuthorDbo? AddAuthor { get; set; }
 
-        public string? DeleteAuthorId { get; set; }
+        public string? DeleteAuthor { get; set; }
 
-        public string? AddOriginalId { get; set; }
+        public WorkDbo? AddWork { get; set; }
 
-        public string? DeleteOriginalId { get; set; }
+        public string? DeleteWork { get; set; }
+
+        public WorkDbo? Original { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Phys.Lib.Core.Works;
+﻿using Phys.Lib.Core;
+using Phys.Lib.Core.Works;
 using Riok.Mapperly.Abstractions;
 
 namespace Phys.Lib.Api.Admin.Api.Works
@@ -8,13 +9,14 @@ namespace Phys.Lib.Api.Admin.Api.Works
     {
         public partial WorkModel Map(WorkDbo work);
 
-        [MapperIgnoreTarget(nameof(WorkUpdate.AddInfo))]
-        [MapperIgnoreTarget(nameof(WorkUpdate.DeleteInfo))]
-        [MapperIgnoreTarget(nameof(WorkUpdate.AddAuthorId))]
-        [MapperIgnoreTarget(nameof(WorkUpdate.DeleteAuthorId))]
-        [MapperIgnoreTarget(nameof(WorkUpdate.AddOriginalId))]
-        [MapperIgnoreTarget(nameof(WorkUpdate.DeleteOriginalId))]
-        public partial WorkUpdate Map(WorkUpdateModel model);
+        public WorkUpdate Map(WorkUpdateModel model)
+        {
+            return new WorkUpdate
+            {
+                Date = model.Date,
+                Language = model.Language,
+            };
+        }
 
         public WorkDbo.InfoDbo Map(WorkInfoUpdateModel model, string language)
         {

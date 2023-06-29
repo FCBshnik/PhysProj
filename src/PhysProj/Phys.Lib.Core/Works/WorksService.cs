@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using FluentValidation;
+using NLog;
 
 namespace Phys.Lib.Core.Works
 {
@@ -15,7 +16,7 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo Create(string code)
         {
-            if (string.IsNullOrWhiteSpace(code)) throw new ArgumentException(nameof(code));
+            code = Code.NormalizeAndValidate(code);
 
             var work = db.Create(new WorkDbo
             {
@@ -51,10 +52,22 @@ namespace Phys.Lib.Core.Works
         public WorkDbo Update(WorkDbo work, WorkUpdate update)
         {
             if (work is null) throw new ArgumentNullException(nameof(work));
+            if (update is null) throw new ArgumentNullException(nameof(update));
+
+            if (update.Original != null)
+            {
+                if (update.Original.Code == work.Code)
+                    throw ValidationError($"original work can not be set to itself");
+            }
 
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}");
             return work;
+        }
+
+        private Exception ValidationError(string message)
+        {
+            return new ValidationException(message);
         }
     }
 }

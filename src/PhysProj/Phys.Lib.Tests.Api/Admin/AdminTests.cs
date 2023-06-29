@@ -7,6 +7,8 @@ namespace Phys.Lib.Tests.Api.Admin
 {
     public partial class AdminTests : ApiTests
     {
+        private const string nonExistentCode = "non-existent";
+
         private FileInfo projectPath => new FileInfo(Path.Combine(solutionDir.FullName, "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin.csproj"));
         private const string url = "https://localhost:17188/";
 
@@ -86,7 +88,11 @@ namespace Phys.Lib.Tests.Api.Admin
             var tests = new AuthorsTests(api);
             tests.List();
 
-            tests.NotFound("decartes");
+            tests.NotFound("decartes", ErrorCode.NotFound);
+
+            tests.CreateFailed("decartes-");
+            tests.CreateFailed("-decartes");
+            tests.CreateFailed("deca--rtes");
 
             tests.Create("decartes");
             tests.Found("decartes");
@@ -116,16 +122,37 @@ namespace Phys.Lib.Tests.Api.Admin
 
             tests.List();
 
-            tests.NotFound("discourse-on-method");
+            tests.NotFound("discourse-on-method", ErrorCode.NotFound);
 
             tests.Create("discourse-on-method");
             tests.Found("discourse-on-method");
             tests.List("discourse-on-method");
 
-            tests.UpdateFailed("non-existent", new WorkUpdateModel(), ErrorCode.NotFound);
+            tests.UpdateFailed(nonExistentCode, new WorkUpdateModel(), ErrorCode.NotFound);
 
             tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr" });
             tests.Update("discourse-on-method", new WorkUpdateModel { Date = string.Empty, Language = string.Empty });
+
+            tests.InfoUpdateFailed(nonExistentCode, "ru", new WorkInfoUpdateModel(), ErrorCode.NotFound);
+            tests.InfoUpdate("discourse-on-method", "en", new WorkInfoUpdateModel { Name = "Discourse on the Method", Description = "one of the most influential works in the history of modern philosophy" });
+            tests.InfoUpdate("discourse-on-method", "ru", new WorkInfoUpdateModel { Name = "Рассуждение о методе", Description = "Считается переломной работой, ознаменовавшей переход от философии Ренессанса и начавшей эпоху философии Нового времени" });
+
+            tests.InfoDelete("discourse-on-method", "ru");
+            tests.InfoDelete("discourse-on-method", "es");
+
+            tests.LinkAuthorFailed("discourse-on-method", nonExistentCode, ErrorCode.NotFound);
+            tests.LinkAuthor("discourse-on-method", "decartes");
+            tests.UnlinkAuthor("discourse-on-method", "decartes");
+
+            tests.Create("discourse-on-method-chapter-one");
+            tests.Create("discourse-on-method-chapter-two");
+            tests.Create("discourse-on-method-chapter-three");
+            tests.LinkWorkFailed("discourse-on-method", nonExistentCode, ErrorCode.NotFound);
+            tests.LinkWork("discourse-on-method", "discourse-on-method-chapter-one");
+            tests.LinkWork("discourse-on-method", "discourse-on-method-chapter-two");
+            tests.LinkWork("discourse-on-method", "discourse-on-method-chapter-three");
+            tests.UnlinkWork("discourse-on-method", "discourse-on-method-chapter-one");
+            tests.UnlinkWork("discourse-on-method", "discourse-on-method-chapter-three");
         }
     }
 }

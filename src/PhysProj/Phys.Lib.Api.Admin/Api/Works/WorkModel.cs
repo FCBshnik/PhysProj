@@ -12,9 +12,11 @@
 
         public List<WorkInfoModel> Infos { get; set; } = new List<WorkInfoModel>();
 
-        public List<string> AuthorsIds { get; set; } = new List<string>();
+        public List<string> AuthorsCodes { get; set; } = new List<string>();
 
-        public List<string> OriginalsIds { get; set; } = new List<string>();
+        public List<string> WorksCodes { get; set; } = new List<string>();
+
+        public string OriginalCode { get; set; }
 
         public class WorkInfoModel
         {

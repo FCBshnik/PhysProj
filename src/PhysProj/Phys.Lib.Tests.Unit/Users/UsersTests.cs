@@ -1,9 +1,8 @@
-using FluentAssertions;
 using Phys.Lib.Core.Users;
 
 namespace Phys.Lib.Tests.Unit.Users
 {
-    public class CreateUserTests
+    public class UsersTests
     {
         private static readonly UserCreateValidator.UserNameValidator userNameValidator = new UserCreateValidator.UserNameValidator();
 

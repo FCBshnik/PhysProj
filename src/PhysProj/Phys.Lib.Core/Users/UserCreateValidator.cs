@@ -12,11 +12,8 @@ namespace Phys.Lib.Core.Users
             RuleFor(u => u.Password).SetValidator(new UserPasswordValidator());
             RuleFor(u => u.Role).NotNull();
 
-            RuleFor(u => u.NameLowerCase)
+            RuleFor(u => u.Name.ToLowerInvariant())
                 .Must(n => db.Find(new UsersQuery { NameLowerCase = n }).Count == 0)
-                .WithMessage("user name is already taken");
-            RuleFor(u => u.Code)
-                .Must(c => db.Find(new UsersQuery { Code = c }).Count == 0)
                 .WithMessage("user name is already taken");
         }
 
@@ -34,15 +31,18 @@ namespace Phys.Lib.Core.Users
             {
                 RuleFor(u => u)
                     .Must(n => n.Count(char.IsLetter) >= 3)
-                    .WithMessage("must contain at least 3 characters");
+                    .WithMessage("username must contain at least 3 letters");
                 RuleFor(u => u)
                     .Must(n => char.IsLetter(n.First()))
-                    .WithMessage("must start with letter");
-                RuleFor(u => u).Must(n => n.Trim().Length == n.Length).WithMessage("must not start or end with space");
+                    .WithMessage("username must start with letter");
                 RuleFor(u => u)
                     .Matches(@"^[\w\d\- _]+$")
-                    .WithMessage("must contain only letters, digits, whitespace, underscore or hyphen");
-                RuleFor(u => u).MaximumLength(20);
+                    .WithMessage("username must contain only letters, digits, whitespaces, underscores and hyphens");
+                RuleFor(u => u)
+                    .Must(n => n.Trim().Length == n.Length)
+                    .WithMessage("username must not start or end with space");
+                RuleFor(u => u)
+                    .MaximumLength(20);
             }
         }
     }

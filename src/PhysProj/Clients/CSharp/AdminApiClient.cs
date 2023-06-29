@@ -1568,15 +1568,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> AddWorkAuthorAsync(string code, string authorCode)
+        public virtual System.Threading.Tasks.Task<WorkModel> LinkAuthorToWorkAsync(string code, string authorCode)
         {
-            return AddWorkAuthorAsync(code, authorCode, System.Threading.CancellationToken.None);
+            return LinkAuthorToWorkAsync(code, authorCode, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> AddWorkAuthorAsync(string code, string authorCode, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> LinkAuthorToWorkAsync(string code, string authorCode, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
@@ -1661,15 +1661,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> DeleteWorkAuthorAsync(string code, string authorCode)
+        public virtual System.Threading.Tasks.Task<WorkModel> UnlinkAuthorFromWorkAsync(string code, string authorCode)
         {
-            return DeleteWorkAuthorAsync(code, authorCode, System.Threading.CancellationToken.None);
+            return UnlinkAuthorFromWorkAsync(code, authorCode, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> DeleteWorkAuthorAsync(string code, string authorCode, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> UnlinkAuthorFromWorkAsync(string code, string authorCode, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
@@ -1753,15 +1753,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> AddWorkOriginalAsync(string code, string originalCode)
+        public virtual System.Threading.Tasks.Task<WorkModel> LinkWorkToOriginalAsync(string code, string originalCode)
         {
-            return AddWorkOriginalAsync(code, originalCode, System.Threading.CancellationToken.None);
+            return LinkWorkToOriginalAsync(code, originalCode, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> AddWorkOriginalAsync(string code, string originalCode, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> LinkWorkToOriginalAsync(string code, string originalCode, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
@@ -1770,7 +1770,7 @@ namespace Phys.Lib.Admin.Client
                 throw new System.ArgumentNullException("originalCode");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{code}/originals/{originalCode}");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{code}/original/{originalCode}");
             urlBuilder_.Replace("{code}", System.Uri.EscapeDataString(ConvertToString(code, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{originalCode}", System.Uri.EscapeDataString(ConvertToString(originalCode, System.Globalization.CultureInfo.InvariantCulture)));
 
@@ -1846,26 +1846,207 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> DeleteWorkOriginalAsync(string code, string originalCode)
+        public virtual System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromOriginalAsync(string code)
         {
-            return DeleteWorkOriginalAsync(code, originalCode, System.Threading.CancellationToken.None);
+            return UnlinkWorkFromOriginalAsync(code, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> DeleteWorkOriginalAsync(string code, string originalCode, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromOriginalAsync(string code, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
 
-            if (originalCode == null)
-                throw new System.ArgumentNullException("originalCode");
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{code}/original");
+            urlBuilder_.Replace("{code}", System.Uri.EscapeDataString(ConvertToString(code, System.Globalization.CultureInfo.InvariantCulture)));
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("DELETE");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<WorkModel>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ErrorModel>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<ErrorModel>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<WorkModel> LinkWorkToCollectedWorkAsync(string collectedWorkCode, string subWorkCode)
+        {
+            return LinkWorkToCollectedWorkAsync(collectedWorkCode, subWorkCode, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<WorkModel> LinkWorkToCollectedWorkAsync(string collectedWorkCode, string subWorkCode, System.Threading.CancellationToken cancellationToken)
+        {
+            if (collectedWorkCode == null)
+                throw new System.ArgumentNullException("collectedWorkCode");
+
+            if (subWorkCode == null)
+                throw new System.ArgumentNullException("subWorkCode");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{code}/originals/{originalCode}");
-            urlBuilder_.Replace("{code}", System.Uri.EscapeDataString(ConvertToString(code, System.Globalization.CultureInfo.InvariantCulture)));
-            urlBuilder_.Replace("{originalCode}", System.Uri.EscapeDataString(ConvertToString(originalCode, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{collectedWorkCode}/works/{subWorkCode}");
+            urlBuilder_.Replace("{collectedWorkCode}", System.Uri.EscapeDataString(ConvertToString(collectedWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Replace("{subWorkCode}", System.Uri.EscapeDataString(ConvertToString(subWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<WorkModel>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ErrorModel>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<ErrorModel>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromCollectedWorkAsync(string collectedWorkCode, string subWorkCode)
+        {
+            return UnlinkWorkFromCollectedWorkAsync(collectedWorkCode, subWorkCode, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromCollectedWorkAsync(string collectedWorkCode, string subWorkCode, System.Threading.CancellationToken cancellationToken)
+        {
+            if (collectedWorkCode == null)
+                throw new System.ArgumentNullException("collectedWorkCode");
+
+            if (subWorkCode == null)
+                throw new System.ArgumentNullException("subWorkCode");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{collectedWorkCode}/works/{subWorkCode}");
+            urlBuilder_.Replace("{collectedWorkCode}", System.Uri.EscapeDataString(ConvertToString(collectedWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Replace("{subWorkCode}", System.Uri.EscapeDataString(ConvertToString(subWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2219,11 +2400,14 @@ namespace Phys.Lib.Admin.Client
         [Newtonsoft.Json.JsonProperty("infos", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<WorkInfoModel> Infos { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("authorsIds", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> AuthorsIds { get; set; }
+        [Newtonsoft.Json.JsonProperty("authorsCodes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> AuthorsCodes { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("originalsIds", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> OriginalsIds { get; set; }
+        [Newtonsoft.Json.JsonProperty("worksCodes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> WorksCodes { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("originalCode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OriginalCode { get; set; }
 
     }
 

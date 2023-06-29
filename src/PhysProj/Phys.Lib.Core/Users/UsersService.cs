@@ -58,9 +58,8 @@ namespace Phys.Lib.Core.Users
 
             var user = new UserDbo
             {
-                Code = create.Code,
                 Name = create.Name,
-                NameLowerCase = create.NameLowerCase,
+                NameLowerCase = create.Name.ToLowerInvariant(),
                 PasswordHash = UserPasswordHasher.HashPassword(create.Password),
                 Roles = new List<string> { create.Role.Code },
             };

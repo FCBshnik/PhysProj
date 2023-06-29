@@ -43,29 +43,42 @@ namespace Phys.Lib.Data.Works
             return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"work '{id}' not found in db");
         }
 
-        public WorkDbo Update(string id, WorkUpdate options)
+        public WorkDbo Update(string id, WorkUpdate work)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
 
             var filter = filterBuilder.Eq(i => i.Id, id);
-
             var update = updateBuilder.Combine();
-            if (options.Date != null)
-                update = update.Set(i => i.Date, options.Date);
-            if (options.Language != null)
-                update = update.Set(i => i.Language, options.Language);
-            if (options.AddInfo != null)
-                update = update.Push(i => i.Infos, options.AddInfo);
-            if (options.DeleteInfo != null)
-                update = update.PullFilter(i => i.Infos, i => i.Language == options.DeleteInfo);
-            if (options.AddAuthorId != null)
-                update = update.Push(i => i.AuthorsIds, options.AddAuthorId);
-            if (options.DeleteAuthorId != null)
-                update = update.Pull(i => i.AuthorsIds, options.DeleteAuthorId);
-            if (options.AddOriginalId != null)
-                update = update.Push(i => i.OriginalsIds, options.AddOriginalId);
-            if (options.DeleteOriginalId != null)
-                update = update.Pull(i => i.OriginalsIds, options.DeleteOriginalId);
+
+            if (work.Date == string.Empty)
+                update = update.Unset(i => i.Date);
+            else if (work.Date != null)
+                update = update.Set(i => i.Date, work.Date);
+
+            if (work.Language == string.Empty)
+                update = update.Unset(i => i.Language);
+            else if (work.Language != null)
+                update = update.Set(i => i.Language, work.Language);
+
+            if (work.AddInfo != null)
+                update = update.Push(i => i.Infos, work.AddInfo);
+            if (work.DeleteInfo != null)
+                update = update.PullFilter(i => i.Infos, i => i.Language == work.DeleteInfo);
+
+            if (work.AddAuthor != null)
+                update = update.AddToSet(i => i.AuthorsCodes, work.AddAuthor.Code);
+            if (work.DeleteAuthor != null)
+                update = update.Pull(i => i.AuthorsCodes, work.DeleteAuthor);
+
+            if (work.AddWork != null)
+                update = update.AddToSet(i => i.WorksCodes, work.AddWork.Code);
+            if (work.DeleteWork != null)
+                update = update.Pull(i => i.WorksCodes, work.DeleteWork);
+
+            if (work.Original == WorkDbo.None)
+                update = update.Unset(i => i.OriginalCode);
+            else if (work.Original != null)
+                update = update.Set(i => i.OriginalCode, work.Original.Code);
 
             return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
                 ?? throw new ApplicationException($"work '{id}' was not updated due to not found in db");

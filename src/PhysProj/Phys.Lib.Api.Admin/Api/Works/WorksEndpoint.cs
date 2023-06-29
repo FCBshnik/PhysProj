@@ -88,40 +88,23 @@ namespace Phys.Lib.Api.Admin.Api.Works
                 if (author == null)
                     return ErrorModel.NotFoundResult($"author '{code}' not found");
 
-                work = service.Update(work, new WorkUpdate { AddAuthorId = author.Id });
+                work = service.Update(work, new WorkUpdate { AddAuthor = author });
                 return Results.Ok(mapper.Map(work));
             })
-            .ProducesResponse<WorkModel>("AddWorkAuthor");
+            .ProducesResponse<WorkModel>("LinkAuthorToWork");
 
-            builder.MapDelete("/{code}/authors/{authorCode}", (string code, string authorCode, [FromServices] IWorksService service, [FromServices] IAuthorsService authorsService) =>
+            builder.MapDelete("/{code}/authors/{authorCode}", (string code, string authorCode, [FromServices] IWorksService service) =>
             {
                 var work = service.GetByCode(code);
                 if (work == null)
                     return ErrorModel.NotFoundResult($"work '{code}' not found");
-                var author = authorsService.GetByCode(authorCode);
-                if (author == null)
-                    return ErrorModel.NotFoundResult($"author '{code}' not found");
 
-                work = service.Update(work, new WorkUpdate { DeleteAuthorId = author.Id });
+                work = service.Update(work, new WorkUpdate { DeleteAuthor = authorCode });
                 return Results.Ok(mapper.Map(work));
             })
-            .ProducesResponse<WorkModel>("DeleteWorkAuthor");
+            .ProducesResponse<WorkModel>("UnlinkAuthorFromWork");
 
-            builder.MapPost("/{code}/originals/{originalCode}", (string code, string originalCode, [FromServices] IWorksService service) =>
-            {
-                var work = service.GetByCode(code);
-                if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
-                var original = service.GetByCode(originalCode);
-                if (original == null)
-                    return ErrorModel.NotFoundResult($"original work '{code}' not found");
-
-                work = service.Update(work, new WorkUpdate { AddOriginalId = original.Id });
-                return Results.Ok(mapper.Map(work));
-            })
-            .ProducesResponse<WorkModel>("AddWorkOriginal");
-
-            builder.MapDelete("/{code}/originals/{originalCode}", (string code, string originalCode, [FromServices] IWorksService service) =>
+            builder.MapPost("/{code}/original/{originalCode}", (string code, string originalCode, [FromServices] IWorksService service) =>
             {
                 var work = service.GetByCode(code);
                 if (work == null)
@@ -130,10 +113,46 @@ namespace Phys.Lib.Api.Admin.Api.Works
                 if (original == null)
                     return ErrorModel.NotFoundResult($"original work '{code}' not found");
 
-                work = service.Update(work, new WorkUpdate { DeleteOriginalId = original.Id });
+                work = service.Update(work, new WorkUpdate { Original = original });
                 return Results.Ok(mapper.Map(work));
             })
-            .ProducesResponse<WorkModel>("DeleteWorkOriginal");
+            .ProducesResponse<WorkModel>("LinkWorkToOriginal");
+
+            builder.MapDelete("/{code}/original", (string code, [FromServices] IWorksService service) =>
+            {
+                var work = service.GetByCode(code);
+                if (work == null)
+                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+
+                work = service.Update(work, new WorkUpdate { Original = WorkDbo.None });
+                return Results.Ok(mapper.Map(work));
+            })
+            .ProducesResponse<WorkModel>("UnlinkWorkFromOriginal");
+
+            builder.MapPost("/{collectedWorkCode}/works/{subWorkCode}", (string collectedWorkCode, string subWorkCode, [FromServices] IWorksService service) =>
+            {
+                var work = service.GetByCode(collectedWorkCode);
+                if (work == null)
+                    return ErrorModel.NotFoundResult($"work '{collectedWorkCode}' not found");
+                var subWork = service.GetByCode(subWorkCode);
+                if (subWork == null)
+                    return ErrorModel.NotFoundResult($"work '{collectedWorkCode}' not found");
+
+                work = service.Update(work, new WorkUpdate { AddWork = subWork });
+                return Results.Ok(mapper.Map(work));
+            })
+            .ProducesResponse<WorkModel>("LinkWorkToCollectedWork");
+
+            builder.MapDelete("/{collectedWorkCode}/works/{subWorkCode}", (string collectedWorkCode, string subWorkCode, [FromServices] IWorksService service) =>
+            {
+                var work = service.GetByCode(collectedWorkCode);
+                if (work == null)
+                    return ErrorModel.NotFoundResult($"work '{collectedWorkCode}' not found");
+
+                work = service.Update(work, new WorkUpdate { DeleteWork = subWorkCode });
+                return Results.Ok(mapper.Map(work));
+            })
+            .ProducesResponse<WorkModel>("UnlinkWorkFromCollectedWork");
         }
     }
 }

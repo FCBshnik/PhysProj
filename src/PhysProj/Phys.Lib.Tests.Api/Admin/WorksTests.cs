@@ -1,5 +1,4 @@
-﻿using Docker.DotNet.Models;
-using Phys.Lib.Admin.Client;
+﻿using Phys.Lib.Admin.Client;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -20,10 +19,9 @@ namespace Phys.Lib.Tests.Api.Admin
                 works.Should().HaveCount(result.Count);
             }
 
-            public void NotFound(string code)
+            public void NotFound(string code, ErrorCode errorCode)
             {
-                var result = Assert.ThrowsAsync<ApiException<ErrorModel>>(() => api.GetWorkAsync(code)).Result;
-                result.Result.Code.Should().Be(ErrorCode.NotFound);
+                AdminAssert.ShouldFail(() => api.GetWorkAsync(code), errorCode);
             }
 
             public void Found(string code)
@@ -40,16 +38,77 @@ namespace Phys.Lib.Tests.Api.Admin
 
             public void UpdateFailed(string code, WorkUpdateModel update, ErrorCode errorCode)
             {
-                var result = Assert.ThrowsAsync<ApiException<ErrorModel>>(() => api.UpdateWorkAsync(code, update)).Result;
-                result.Result.Code.Should().Be(errorCode);
+                AdminAssert.ShouldFail(() => api.UpdateWorkAsync(code, update), errorCode);
             }
 
             public void Update(string code, WorkUpdateModel update)
             {
                 var result = api.UpdateWorkAsync(code, update).Result;
                 result.Code.Should().Be(code);
-                result.Language.Should().Be(update.Language);
-                result.Date.Should().Be(update.Date);
+
+                result.Language.ShouldBeUpdatedWith(update.Language);
+                result.Date.ShouldBeUpdatedWith(update.Date);
+            }
+
+            public void InfoUpdateFailed(string code, string language, WorkInfoUpdateModel update, ErrorCode errorCode)
+            {
+                AdminAssert.ShouldFail(() => api.UpdateWorkInfoAsync(code, language, update), errorCode);
+            }
+
+            public void InfoUpdate(string code, string language, WorkInfoUpdateModel update)
+            {
+                var result = api.UpdateWorkInfoAsync(code, language, update).Result;
+                result.Code.Should().Be(code);
+
+                var info = result.Infos.FirstOrDefault(i => i.Language == language);
+                info.Should().NotBeNull();
+                info.Name.Should().Be(update.Name);
+                info.Description.Should().Be(update.Description);
+            }
+
+            public void InfoDelete(string code, string language)
+            {
+                var author = api.DeleteWorkInfoAsync(code, language).Result;
+                author.Code.Should().Be(code);
+                author.Infos.Should().NotContain(i => i.Language == language);
+            }
+
+            public void LinkAuthorFailed(string code, string authorCode, ErrorCode errorCode)
+            {
+                AdminAssert.ShouldFail(() => api.LinkAuthorToWorkAsync(code, authorCode), errorCode);
+            }
+
+            public void LinkAuthor(string code, string authorCode)
+            {
+                var result = api.LinkAuthorToWorkAsync(code, authorCode).Result;
+                result.Code.Should().Be(code);
+                result.AuthorsCodes.Should().Contain(authorCode);
+            }
+
+            public void UnlinkAuthor(string code, string authorCode)
+            {
+                var result = api.UnlinkAuthorFromWorkAsync(code, authorCode).Result;
+                result.Code.Should().Be(code);
+                result.AuthorsCodes.Should().NotContain(authorCode);
+            }
+
+            public void LinkWorkFailed(string code, string workCode, ErrorCode errorCode)
+            {
+                AdminAssert.ShouldFail(() => api.LinkWorkToCollectedWorkAsync(code, workCode), errorCode);
+            }
+
+            public void LinkWork(string code, string workCode)
+            {
+                var result = api.LinkWorkToCollectedWorkAsync(code, workCode).Result;
+                result.Code.Should().Be(code);
+                result.WorksCodes.Should().Contain(workCode);
+            }
+
+            public void UnlinkWork(string code, string workCode)
+            {
+                var result = api.UnlinkWorkFromCollectedWorkAsync(code, workCode).Result;
+                result.Code.Should().Be(code);
+                result.AuthorsCodes.Should().NotContain(workCode);
             }
         }
     }
