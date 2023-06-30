@@ -55,6 +55,11 @@ namespace Phys.Lib.Tests.Api.Admin
                 author.Died.ShouldBeUpdatedWith(update.Died);
             }
 
+            public void InfoUpdateFailed(string code, string language, AuthorInfoUpdateModel update, ErrorCode errorCode)
+            {
+                AdminAssert.ShouldFail(() => api.UpdateAuthorInfoAsync(code, language, update), errorCode);
+            }
+
             public void InfoUpdate(string code, string language, AuthorInfoUpdateModel update)
             {
                 var author = api.UpdateAuthorInfoAsync(code, language, update).Result;

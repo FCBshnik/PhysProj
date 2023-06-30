@@ -110,6 +110,8 @@ namespace Phys.Lib.Tests.Api.Admin
             tests.Update("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
             tests.Update("decartes", new AuthorUpdateModel { Born = string.Empty, Died = "1650" });
 
+            tests.InfoUpdateFailed(nonExistentCode, "en", new AuthorInfoUpdateModel(), ErrorCode.NotFound);
+            tests.InfoUpdateFailed("decartes", nonExistentCode, new AuthorInfoUpdateModel(), ErrorCode.InvalidArgument);
             tests.InfoUpdate("decartes", "en", new AuthorInfoUpdateModel { Name = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
             tests.InfoUpdate("decartes", "ru", new AuthorInfoUpdateModel { Name = "Рене́ Дека́рт", Description = "французский философ, математик и естествоиспытатель" });
 
@@ -129,11 +131,13 @@ namespace Phys.Lib.Tests.Api.Admin
             tests.List("discourse-on-method");
 
             tests.UpdateFailed(nonExistentCode, new WorkUpdateModel(), ErrorCode.NotFound);
-
+            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = nonExistentCode }, ErrorCode.InvalidArgument);
             tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr" });
+            tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "FR" });
             tests.Update("discourse-on-method", new WorkUpdateModel { Date = string.Empty, Language = string.Empty });
 
             tests.InfoUpdateFailed(nonExistentCode, "ru", new WorkInfoUpdateModel(), ErrorCode.NotFound);
+            tests.InfoUpdateFailed("discourse-on-method", nonExistentCode, new WorkInfoUpdateModel(), ErrorCode.InvalidArgument);
             tests.InfoUpdate("discourse-on-method", "en", new WorkInfoUpdateModel { Name = "Discourse on the Method", Description = "one of the most influential works in the history of modern philosophy" });
             tests.InfoUpdate("discourse-on-method", "ru", new WorkInfoUpdateModel { Name = "Рассуждение о методе", Description = "Считается переломной работой, ознаменовавшей переход от философии Ренессанса и начавшей эпоху философии Нового времени" });
 

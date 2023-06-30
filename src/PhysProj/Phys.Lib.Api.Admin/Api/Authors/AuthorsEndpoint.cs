@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Api.Admin.Api.Models;
+using Phys.Lib.Core;
 using Phys.Lib.Core.Authors;
 
 namespace Phys.Lib.Api.Admin.Api.Authors
@@ -67,7 +68,8 @@ namespace Phys.Lib.Api.Admin.Api.Authors
             {
                 var author = authors.GetByCode(code);
                 if (author == null)
-                    return Results.BadRequest(ErrorModel.NotFound($"author '{code}' not found"));
+                    return ErrorModel.NotFound($"author '{code}' not found").ToResult();
+                language = Language.NormalizeAndValidate(language);
 
                 author = authors.Update(author, new AuthorUpdate { AddInfo = new AuthorDbo.InfoDbo { Language = language, Name = model.Name, Description = model.Description } });
                 return Results.Ok(mapper.Map(author));

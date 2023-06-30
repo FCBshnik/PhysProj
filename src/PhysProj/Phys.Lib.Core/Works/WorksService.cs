@@ -60,6 +60,9 @@ namespace Phys.Lib.Core.Works
                     throw ValidationError($"original work can not be set to itself");
             }
 
+            if (!string.IsNullOrEmpty(update.Language))
+                update.Language = Language.NormalizeAndValidate(update.Language);
+
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}");
             return work;

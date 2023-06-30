@@ -46,7 +46,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 var result = api.UpdateWorkAsync(code, update).Result;
                 result.Code.Should().Be(code);
 
-                result.Language.ShouldBeUpdatedWith(update.Language);
+                result.Language.ShouldBeUpdatedWith(update.Language?.ToLowerInvariant());
                 result.Date.ShouldBeUpdatedWith(update.Date);
             }
 

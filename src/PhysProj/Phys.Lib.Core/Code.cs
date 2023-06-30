@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Core
 {
+    /// <summary>
+    /// Ensures that string value is url and file path representative code
+    /// </summary
     public static class Code
     {
         private static readonly Validator validator = new Validator();

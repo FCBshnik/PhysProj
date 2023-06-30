@@ -1,4 +1,6 @@
-﻿namespace Phys.Lib.Api.Admin.Api.Models
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+
+namespace Phys.Lib.Api.Admin.Api.Models
 {
     public record ErrorModel
     {
@@ -12,14 +14,19 @@
             Message = message;
         }
 
+        public IResult ToResult()
+        {
+            return Results.BadRequest(this);
+        }
+
         public static ErrorModel NotFound(string message)
         {
             return new ErrorModel(ErrorCode.NotFound, message);
         }
 
-        public static IResult NotFoundResult(string message)
+        public static ErrorModel InvalidArgument(string message)
         {
-            return Results.BadRequest(NotFound(message));
+            return new ErrorModel(ErrorCode.InvalidArgument, message);
         }
     }
 }

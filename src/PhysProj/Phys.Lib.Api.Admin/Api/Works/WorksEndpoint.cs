@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Api.Admin.Api.Models;
+using Phys.Lib.Core;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Works;
 
@@ -22,7 +23,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(code);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
 
                 return Results.Ok(mapper.Map(work));
             })
@@ -37,12 +38,12 @@ namespace Phys.Lib.Api.Admin.Api.Works
 
             builder.MapPost("/{code}", (string code, [FromBody] WorkUpdateModel model, [FromServices] IWorksService service) =>
             {
-                var author = service.GetByCode(code);
-                if (author == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+                var work = service.GetByCode(code);
+                if (work == null)
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
 
-                author = service.Update(author, mapper.Map(model));
-                return Results.Ok(mapper.Map(author));
+                work = service.Update(work, mapper.Map(model));
+                return Results.Ok(mapper.Map(work));
             })
             .ProducesResponse<WorkModel>("UpdateWork");
 
@@ -61,7 +62,8 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(code);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
+                language = Language.NormalizeAndValidate(language);
 
                 work = service.Update(work, new WorkUpdate { AddInfo = mapper.Map(model, language) });
                 return Results.Ok(mapper.Map(work));
@@ -72,7 +74,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(code);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
 
                 work = service.Update(work, new WorkUpdate { DeleteInfo = language });
                 return Results.Ok(mapper.Map(work));
@@ -83,10 +85,10 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(code);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
-                var author = authorsService.GetByCode(authorCode);
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
+                var author = authorsService.GetByCode(authorCode);  
                 if (author == null)
-                    return ErrorModel.NotFoundResult($"author '{code}' not found");
+                    return ErrorModel.NotFound($"author '{code}' not found").ToResult();
 
                 work = service.Update(work, new WorkUpdate { AddAuthor = author });
                 return Results.Ok(mapper.Map(work));
@@ -97,7 +99,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(code);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
 
                 work = service.Update(work, new WorkUpdate { DeleteAuthor = authorCode });
                 return Results.Ok(mapper.Map(work));
@@ -108,10 +110,10 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(code);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
                 var original = service.GetByCode(originalCode);
                 if (original == null)
-                    return ErrorModel.NotFoundResult($"original work '{code}' not found");
+                    return ErrorModel.NotFound($"original work '{code}' not found").ToResult();
 
                 work = service.Update(work, new WorkUpdate { Original = original });
                 return Results.Ok(mapper.Map(work));
@@ -122,7 +124,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(code);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{code}' not found");
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
 
                 work = service.Update(work, new WorkUpdate { Original = WorkDbo.None });
                 return Results.Ok(mapper.Map(work));
@@ -133,10 +135,10 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(collectedWorkCode);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{collectedWorkCode}' not found");
+                    return ErrorModel.NotFound($"work '{collectedWorkCode}' not found").ToResult();
                 var subWork = service.GetByCode(subWorkCode);
                 if (subWork == null)
-                    return ErrorModel.NotFoundResult($"work '{collectedWorkCode}' not found");
+                    return ErrorModel.NotFound($"work '{collectedWorkCode}' not found").ToResult();
 
                 work = service.Update(work, new WorkUpdate { AddWork = subWork });
                 return Results.Ok(mapper.Map(work));
@@ -147,7 +149,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
             {
                 var work = service.GetByCode(collectedWorkCode);
                 if (work == null)
-                    return ErrorModel.NotFoundResult($"work '{collectedWorkCode}' not found");
+                    return ErrorModel.NotFound($"work '{collectedWorkCode}' not found").ToResult();
 
                 work = service.Update(work, new WorkUpdate { DeleteWork = subWorkCode });
                 return Results.Ok(mapper.Map(work));
