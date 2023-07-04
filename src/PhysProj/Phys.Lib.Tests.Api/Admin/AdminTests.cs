@@ -112,8 +112,8 @@ namespace Phys.Lib.Tests.Api.Admin
             tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "1696", Died = "1650" });
             tests.Update("decartes", new AuthorUpdateModel { Died = "1650" });
             tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "1696" });
-            tests.Update("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
             tests.Update("decartes", new AuthorUpdateModel { Born = string.Empty, Died = "1650" });
+            tests.Update("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
 
             tests.InfoUpdateFailed(nonExistentCode, "en", new AuthorInfoUpdateModel(), ErrorCode.NotFound);
             tests.InfoUpdateFailed("decartes", nonExistentCode, new AuthorInfoUpdateModel(), ErrorCode.InvalidArgument);
@@ -136,18 +136,23 @@ namespace Phys.Lib.Tests.Api.Admin
             tests.List("discourse-on-method");
 
             tests.UpdateFailed(nonExistentCode, new WorkUpdateModel(), ErrorCode.NotFound);
-            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = nonExistentCode }, ErrorCode.InvalidArgument);
-            tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr" });
+            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = nonExistentCode });
+            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = nonExistentCode });
+            // can not be published before author's lifetime
+            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1537" });
+            // but can be published after author's lifetime
+            tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1737" });
             tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "FR" });
             tests.Update("discourse-on-method", new WorkUpdateModel { Date = string.Empty, Language = string.Empty });
+            tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr" });
 
-            tests.InfoUpdateFailed(nonExistentCode, "ru", new WorkInfoUpdateModel(), ErrorCode.NotFound);
-            tests.InfoUpdateFailed("discourse-on-method", nonExistentCode, new WorkInfoUpdateModel(), ErrorCode.InvalidArgument);
-            tests.InfoUpdate("discourse-on-method", "en", new WorkInfoUpdateModel { Name = "Discourse on the Method", Description = "one of the most influential works in the history of modern philosophy" });
-            tests.InfoUpdate("discourse-on-method", "ru", new WorkInfoUpdateModel { Name = "Рассуждение о методе", Description = "Считается переломной работой, ознаменовавшей переход от философии Ренессанса и начавшей эпоху философии Нового времени" });
+            tests.UpdateInfoFailed(nonExistentCode, "ru", new WorkInfoUpdateModel(), ErrorCode.NotFound);
+            tests.UpdateInfoFailed("discourse-on-method", nonExistentCode, new WorkInfoUpdateModel());
+            tests.UpdateInfo("discourse-on-method", "en", new WorkInfoUpdateModel { Name = "Discourse on the Method", Description = "one of the most influential works in the history of modern philosophy" });
+            tests.UpdateInfo("discourse-on-method", "ru", new WorkInfoUpdateModel { Name = "Рассуждение о методе", Description = "Считается переломной работой, ознаменовавшей переход от философии Ренессанса и начавшей эпоху философии Нового времени" });
 
-            tests.InfoDelete("discourse-on-method", "ru");
-            tests.InfoDelete("discourse-on-method", "es");
+            tests.DeleteInfo("discourse-on-method", "ru");
+            tests.DeleteInfo("discourse-on-method", "es");
 
             tests.LinkAuthorFailed("discourse-on-method", nonExistentCode, ErrorCode.NotFound);
             tests.LinkAuthor("discourse-on-method", "decartes");

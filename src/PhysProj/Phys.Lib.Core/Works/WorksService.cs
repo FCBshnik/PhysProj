@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using NLog;
+using Phys.Lib.Core.Authors;
+using Phys.Lib.Core.Utils;
 
 namespace Phys.Lib.Core.Works
 {
@@ -8,10 +10,12 @@ namespace Phys.Lib.Core.Works
         private static readonly ILogger log = LogManager.GetLogger("works");
 
         private readonly IWorksDb db;
+        private readonly IAuthorsDb authorsDb;
 
-        public WorksService(IWorksDb db)
+        public WorksService(IWorksDb db, IAuthorsDb authorsDb)
         {
             this.db = db;
+            this.authorsDb = authorsDb;
         }
 
         public WorkDbo Create(string code)
@@ -60,8 +64,19 @@ namespace Phys.Lib.Core.Works
                     throw ValidationError($"original work can not be set to itself");
             }
 
-            if (!string.IsNullOrEmpty(update.Language))
+            if (update.Language.HasValue())
                 update.Language = Language.NormalizeAndValidate(update.Language);
+
+            if (update.Date.HasValue())
+                update.Date = Date.NormalizeAndValidate(update.Date);
+
+            if (update.AddAuthor.HasValue())
+            {
+                update.AddAuthor = Code.NormalizeAndValidate(update.AddAuthor);
+                var author = authorsDb.GetByCode(update.AddAuthor);
+                if (author == null)
+                    throw ValidationError($"author '{update.AddAuthor}' not found");
+            }
 
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}");

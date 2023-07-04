@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Api.Admin.Api.Models;
 using Phys.Lib.Core;
-using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Works;
 
 namespace Phys.Lib.Api.Admin.Api.Works
@@ -81,16 +80,13 @@ namespace Phys.Lib.Api.Admin.Api.Works
             })
             .ProducesResponse<WorkModel>("DeleteWorkInfo");
 
-            builder.MapPost("/{code}/authors/{authorCode}", (string code, string authorCode, [FromServices] IWorksService service, [FromServices] IAuthorsService authorsService) =>
+            builder.MapPost("/{code}/authors/{authorCode}", (string code, string authorCode, [FromServices] IWorksService service) =>
             {
                 var work = service.GetByCode(code);
                 if (work == null)
                     return ErrorModel.NotFound($"work '{code}' not found").ToResult();
-                var author = authorsService.GetByCode(authorCode);  
-                if (author == null)
-                    return ErrorModel.NotFound($"author '{code}' not found").ToResult();
 
-                work = service.Update(work, new WorkUpdate { AddAuthor = author });
+                work = service.Update(work, new WorkUpdate { AddAuthor = authorCode });
                 return Results.Ok(mapper.Map(work));
             })
             .ProducesResponse<WorkModel>("LinkAuthorToWork");

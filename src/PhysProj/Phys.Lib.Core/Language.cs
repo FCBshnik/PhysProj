@@ -54,15 +54,19 @@ namespace Phys.Lib.Core
 
         public static string NormalizeAndValidate(string value)
         {
-            if (TryParse(value, out var lang))
-                return lang.Code;
+            var parsed = Parse(value);
+            if (parsed)
+                return parsed.Value.Code;
 
-            throw new ValidationException($"invalid language '{value}'");
+            throw new ValidationException(parsed.Error);
         }
 
-        public static bool TryParse(string value, out Language? language)
+        public static Result<Language> Parse(string value)
         {
-            return languages.TryGetValue(value, out language);
+            if (languages.TryGetValue(value, out var language))
+                return Result.Ok(language);
+
+            return Result.Fail<Language>($"invalid language '{value}'");
         }
 
         public static implicit operator string(Language language)

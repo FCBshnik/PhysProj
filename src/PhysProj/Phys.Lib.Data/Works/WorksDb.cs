@@ -66,7 +66,7 @@ namespace Phys.Lib.Data.Works
                 update = update.PullFilter(i => i.Infos, i => i.Language == work.DeleteInfo);
 
             if (work.AddAuthor != null)
-                update = update.AddToSet(i => i.AuthorsCodes, work.AddAuthor.Code);
+                update = update.AddToSet(i => i.AuthorsCodes, work.AddAuthor);
             if (work.DeleteAuthor != null)
                 update = update.Pull(i => i.AuthorsCodes, work.DeleteAuthor);
 

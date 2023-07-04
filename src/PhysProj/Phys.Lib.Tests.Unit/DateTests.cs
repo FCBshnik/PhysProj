@@ -64,7 +64,7 @@ namespace Phys.Lib.Tests.Unit
         [InlineData("3YYBCE", "2YYBCE")]
         public void ValidBornAndDiedTests(string born, string died)
         {
-            Date.ValidateAndThrowBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value);
+            Date.ValidateBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value);
         }
 
         [Theory]
@@ -74,7 +74,7 @@ namespace Phys.Lib.Tests.Unit
         [InlineData("3YYBCE", "30YBCE")]
         public void InvalidBornAndDiedTests(string born, string died)
         {
-            Assert.Throws<ValidationException>(() => Date.ValidateAndThrowBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value));
+            Assert.Throws<ValidationException>(() => Date.ValidateBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value));
         }
     }
 }

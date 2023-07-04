@@ -12,7 +12,7 @@ namespace Phys.Lib.Core.Works
 
         public string? DeleteInfo { get; set; }
 
-        public AuthorDbo? AddAuthor { get; set; }
+        public string? AddAuthor { get; set; }
 
         public string? DeleteAuthor { get; set; }
 

@@ -31,17 +31,17 @@ namespace Phys.Lib.Core
             return parsed.Value.Code;
         }
 
-        public static void ValidateAndThrowBornAndDied(string? born, string? died)
+        public static void ValidateBornAndDied(string? born, string? died)
         {
             if (!born.HasValue() || !died.HasValue())
                 return;
 
             var bornDate = Parse(born).Value;
             var diedDate = Parse(died).Value;
-            ValidateAndThrowBornAndDied(bornDate, diedDate);
+            ValidateBornAndDied(bornDate, diedDate);
         }
 
-        public static void ValidateAndThrowBornAndDied(Date born, Date died)
+        public static void ValidateBornAndDied(Date born, Date died)
         {
             if (born == null) throw new ArgumentNullException(nameof(born));
             if (died == null) throw new ArgumentNullException(nameof(died));

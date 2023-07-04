@@ -14,8 +14,14 @@
         /// </summary>
         public string Date { get; set; }
 
+        /// <summary>
+        /// Language the work is written on
+        /// </summary>
         public string Language { get; set; }
 
+        /// <summary>
+        /// Translatable information about work
+        /// </summary>
         public List<InfoDbo> Infos { get; set; } = new List<InfoDbo>();
 
         /// <summary>

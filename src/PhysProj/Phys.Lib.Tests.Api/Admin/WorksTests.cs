@@ -36,7 +36,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Code.Should().Be(code);
             }
 
-            public void UpdateFailed(string code, WorkUpdateModel update, ErrorCode errorCode)
+            public void UpdateFailed(string code, WorkUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.UpdateWorkAsync(code, update), errorCode);
             }
@@ -50,12 +50,12 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Date.ShouldBeUpdatedWith(update.Date);
             }
 
-            public void InfoUpdateFailed(string code, string language, WorkInfoUpdateModel update, ErrorCode errorCode)
+            public void UpdateInfoFailed(string code, string language, WorkInfoUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.UpdateWorkInfoAsync(code, language, update), errorCode);
             }
 
-            public void InfoUpdate(string code, string language, WorkInfoUpdateModel update)
+            public void UpdateInfo(string code, string language, WorkInfoUpdateModel update)
             {
                 var result = api.UpdateWorkInfoAsync(code, language, update).Result;
                 result.Code.Should().Be(code);
@@ -66,7 +66,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 info.Description.Should().Be(update.Description);
             }
 
-            public void InfoDelete(string code, string language)
+            public void DeleteInfo(string code, string language)
             {
                 var author = api.DeleteWorkInfoAsync(code, language).Result;
                 author.Code.Should().Be(code);

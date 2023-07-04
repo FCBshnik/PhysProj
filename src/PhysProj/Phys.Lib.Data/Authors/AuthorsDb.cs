@@ -36,6 +36,13 @@ namespace Phys.Lib.Data.Authors
             return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
         }
 
+        public AuthorDbo GetByCode(string code)
+        {
+            if (code is null) throw new ArgumentNullException(nameof(code));
+
+            return collection.Find(filterBuilder.Eq(u => u.Code, code)).FirstOrDefault() ?? throw new ApplicationException($"author '{code}' not found in db");
+        }
+
         public AuthorDbo Update(string id, AuthorUpdate author)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));

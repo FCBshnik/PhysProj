@@ -56,10 +56,12 @@ namespace Phys.Lib.Core.Authors
 
             if (update.Born.HasValue())
                 update.Born = Date.NormalizeAndValidate(update.Born);
+
             if (update.Died.HasValue())
                 update.Died = Date.NormalizeAndValidate(update.Died);
 
-            Date.ValidateAndThrowBornAndDied(author.Born ?? update.Born, author.Died ?? update.Died);
+            if (update.Born.HasValue() || update.Died.HasValue())
+                Date.ValidateBornAndDied(author.Born ?? update.Born, author.Died ?? update.Died);
 
             author = db.Update(author.Id, update);
             log.Info($"updated author {author}");

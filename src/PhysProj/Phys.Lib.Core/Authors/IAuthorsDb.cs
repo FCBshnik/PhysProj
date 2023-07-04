@@ -6,6 +6,8 @@
 
         AuthorDbo Get(string id);
 
+        AuthorDbo GetByCode(string code);
+
         AuthorDbo Create(AuthorDbo author);
 
         AuthorDbo Update(string id, AuthorUpdate update);
