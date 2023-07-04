@@ -1,4 +1,6 @@
-﻿namespace Phys.Lib.Tests.Unit
+﻿using FluentValidation;
+
+namespace Phys.Lib.Tests.Unit
 {
     public class DateTests
     {
@@ -54,6 +56,25 @@
             result.Ok.Should().BeTrue();
             result.Value.Min.Should().Be(min);
             result.Value.Max.Should().Be(max);
+        }
+
+        [Theory]
+        [InlineData("1650", "1690")]
+        [InlineData("3YY", "4YY")]
+        [InlineData("3YYBCE", "2YYBCE")]
+        public void ValidBornAndDiedTests(string born, string died)
+        {
+            Date.ValidateAndThrowBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value);
+        }
+
+        [Theory]
+        [InlineData("1695", "1690")]
+        [InlineData("3YY", "6YY")]
+        [InlineData("25YBCE", "26YBCE")]
+        [InlineData("3YYBCE", "30YBCE")]
+        public void InvalidBornAndDiedTests(string born, string died)
+        {
+            Assert.Throws<ValidationException>(() => Date.ValidateAndThrowBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value));
         }
     }
 }

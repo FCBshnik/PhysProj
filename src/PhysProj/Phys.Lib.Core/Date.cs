@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
+using Phys.Lib.Core.Utils;
 using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Core
 {
     public class Date
     {
-        private static Validator validator = new Validator();
-
         private static Result<Date> parseFail = Result.Fail<Date>("invalid date");
         private static readonly Regex parseRegex = new Regex(@"^(?<prefix>\d+)(?<approximatePower>Y+)?(?<approximateSkew>\d+)?(?<bce>BCE)?$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
@@ -23,7 +22,38 @@ namespace Phys.Lib.Core
             Max = max;
         }
 
-        public static Result<Date> Parse(string value)
+        public static string NormalizeAndValidate(string? value)
+        {
+            var parsed = Parse(value);
+            if (!parsed)
+                throw new ValidationException(parsed.Error);
+
+            return parsed.Value.Code;
+        }
+
+        public static void ValidateAndThrowBornAndDied(string? born, string? died)
+        {
+            if (!born.HasValue() || !died.HasValue())
+                return;
+
+            var bornDate = Parse(born).Value;
+            var diedDate = Parse(died).Value;
+            ValidateAndThrowBornAndDied(bornDate, diedDate);
+        }
+
+        public static void ValidateAndThrowBornAndDied(Date born, Date died)
+        {
+            if (born == null) throw new ArgumentNullException(nameof(born));
+            if (died == null) throw new ArgumentNullException(nameof(died));
+
+            if (born.Max > died.Max || died.Min < born.Min)
+                throw new ValidationException($"invalid born and died dates");
+
+            if (born.Max < died.Min && died.Min - born.Max >= 100)
+                throw new ValidationException($"invalid born and died dates");
+        }
+
+        public static Result<Date> Parse(string? value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 return parseFail;
@@ -57,21 +87,6 @@ namespace Phys.Lib.Core
                 return parseFail;
 
             return Result.Ok(new Date(value, min, max));
-        }
-
-        internal class Validator : AbstractValidator<string>
-        {
-            public Validator()
-            {
-                RuleFor(u => u)
-                    .Must(Check)
-                    .WithMessage("date is invalid");
-            }
-
-            private bool Check(string value)
-            {
-                return true;
-            }
         }
     }
 }

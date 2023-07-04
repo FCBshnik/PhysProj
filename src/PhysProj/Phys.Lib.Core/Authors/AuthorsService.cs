@@ -1,4 +1,5 @@
 ﻿using NLog;
+using Phys.Lib.Core.Utils;
 
 namespace Phys.Lib.Core.Authors
 {
@@ -51,6 +52,14 @@ namespace Phys.Lib.Core.Authors
         public AuthorDbo Update(AuthorDbo author, AuthorUpdate update)
         {
             if (author is null) throw new ArgumentNullException(nameof(author));
+            if (update is null) throw new ArgumentNullException(nameof(update));
+
+            if (update.Born.HasValue())
+                update.Born = Date.NormalizeAndValidate(update.Born);
+            if (update.Died.HasValue())
+                update.Died = Date.NormalizeAndValidate(update.Died);
+
+            Date.ValidateAndThrowBornAndDied(author.Born ?? update.Born, author.Died ?? update.Died);
 
             author = db.Update(author.Id, update);
             log.Info($"updated author {author}");

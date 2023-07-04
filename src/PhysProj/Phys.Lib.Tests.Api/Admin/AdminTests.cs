@@ -107,6 +107,11 @@ namespace Phys.Lib.Tests.Api.Admin
             tests.Delete("galilei");
             tests.List("decartes");
 
+            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = nonExistentCode });
+            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "165o" });
+            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "1696", Died = "1650" });
+            tests.Update("decartes", new AuthorUpdateModel { Died = "1650" });
+            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "1696" });
             tests.Update("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
             tests.Update("decartes", new AuthorUpdateModel { Born = string.Empty, Died = "1650" });
 
