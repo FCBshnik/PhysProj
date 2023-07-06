@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Authors
 {
-    public class AuthorUpdate
+    public class AuthorDbUpdate
     {
         public string? Born { get; set; }
 

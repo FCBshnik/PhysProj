@@ -2,7 +2,7 @@
 {
     public interface IAuthorsDb
     {
-        List<AuthorDbo> Find(AuthorsQuery query);
+        List<AuthorDbo> Find(AuthorsDbQuery query);
 
         AuthorDbo Get(string id);
 
@@ -10,7 +10,7 @@
 
         AuthorDbo Create(AuthorDbo author);
 
-        AuthorDbo Update(string id, AuthorUpdate update);
+        AuthorDbo Update(string id, AuthorDbUpdate update);
 
         void Delete(string id);
     }

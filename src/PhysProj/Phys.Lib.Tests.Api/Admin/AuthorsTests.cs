@@ -47,7 +47,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Should().NotBeNull();
             }
 
-            public void Update(string code, AuthorUpdateModel update)
+            public void UpdateLifetime(string code, AuthorLifetimeUpdateModel update)
             {
                 var author = api.UpdateAuthorAsync(code, update).Result;
                 author.Code.Should().Be(code);
@@ -55,7 +55,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 author.Died.ShouldBeUpdatedWith(update.Died);
             }
 
-            public void UpdateFailed(string code, AuthorUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            public void UpdateLifetimeFailed(string code, AuthorLifetimeUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.UpdateAuthorAsync(code, update), errorCode);
             }

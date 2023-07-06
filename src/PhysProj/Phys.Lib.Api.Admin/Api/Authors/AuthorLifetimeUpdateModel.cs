@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Api.Admin.Api.Authors
 {
-    public class AuthorUpdateModel
+    public class AuthorLifetimeUpdateModel
     {
         public string Born { get; set; }
 

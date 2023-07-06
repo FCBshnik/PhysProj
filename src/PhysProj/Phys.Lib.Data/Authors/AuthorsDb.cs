@@ -16,7 +16,7 @@ namespace Phys.Lib.Data.Authors
             return Insert(author);
         }
 
-        public List<AuthorDbo> Find(AuthorsQuery query)
+        public List<AuthorDbo> Find(AuthorsDbQuery query)
         {
             var filter = filterBuilder.Empty;
             if (query.Code != null)
@@ -43,7 +43,7 @@ namespace Phys.Lib.Data.Authors
             return collection.Find(filterBuilder.Eq(u => u.Code, code)).FirstOrDefault() ?? throw new ApplicationException($"author '{code}' not found in db");
         }
 
-        public AuthorDbo Update(string id, AuthorUpdate author)
+        public AuthorDbo Update(string id, AuthorDbUpdate author)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
 

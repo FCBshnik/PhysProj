@@ -107,13 +107,13 @@ namespace Phys.Lib.Tests.Api.Admin
             tests.Delete("galilei");
             tests.List("decartes");
 
-            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = nonExistentCode });
-            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "165o" });
-            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "1696", Died = "1650" });
-            tests.Update("decartes", new AuthorUpdateModel { Died = "1650" });
-            tests.UpdateFailed("decartes", new AuthorUpdateModel { Born = "1696" });
-            tests.Update("decartes", new AuthorUpdateModel { Born = string.Empty, Died = "1650" });
-            tests.Update("decartes", new AuthorUpdateModel { Born = "1596", Died = "1650" });
+            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = nonExistentCode });
+            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "165o" });
+            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "1696", Died = "1650" });
+            tests.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Died = "1650" });
+            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "1696" });
+            tests.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Born = string.Empty, Died = "1650" });
+            tests.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Born = "1596", Died = "1650" });
 
             tests.InfoUpdateFailed(nonExistentCode, "en", new AuthorInfoUpdateModel(), ErrorCode.NotFound);
             tests.InfoUpdateFailed("decartes", nonExistentCode, new AuthorInfoUpdateModel(), ErrorCode.InvalidArgument);

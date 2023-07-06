@@ -1,5 +1,9 @@
 ﻿using Autofac;
+using Phys.Lib.Core.Authors;
+using Phys.Lib.Core.Users;
+using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Validation;
+using Phys.Lib.Core.Works;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Phys.Lib.Tests.Unit")]
@@ -12,10 +16,11 @@ namespace Phys.Lib.Core
         {
             builder.RegisterType<Validator>().AsImplementedInterfaces().SingleInstance();
 
-            builder.RegisterTypes(new[] { typeof(Users.UsersService), typeof(Authors.AuthorsService), typeof(Works.WorksService) })
-                .AsImplementedInterfaces()
-                .AsSelf()
-                .SingleInstance();
+            builder
+                .RegisterService<UsersService, IUsersService>()
+                .RegisterService<AuthorsSearch, IAuthorsSearch>()
+                .RegisterService<AuthorsEditor, IAuthorsEditor>()
+                .RegisterService<WorksService, IWorksService>();
 
             builder.RegisterModule(new ValidationModule(ThisAssembly));
         }

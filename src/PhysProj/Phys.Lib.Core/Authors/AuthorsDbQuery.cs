@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Authors
 {
-    public class AuthorsQuery
+    public class AuthorsDbQuery
     {
         public string? Search { get; set; }
 
