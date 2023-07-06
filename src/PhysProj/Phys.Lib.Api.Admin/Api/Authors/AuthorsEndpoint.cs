@@ -13,7 +13,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
         {
             builder.MapGet("/", ([FromServices] IAuthorsSearch authors) =>
             {
-                var items = authors.Search(".");
+                var items = authors.FindByText(".");
                 return Results.Ok(items.Select(mapper.Map));
             })
             .ProducesOk<List<AuthorModel>>()

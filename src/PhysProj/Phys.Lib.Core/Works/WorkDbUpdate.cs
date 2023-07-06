@@ -1,10 +1,8 @@
-﻿using Phys.Lib.Core.Authors;
-
-namespace Phys.Lib.Core.Works
+﻿namespace Phys.Lib.Core.Works
 {
-    public class WorkUpdate
+    public class WorkDbUpdate
     {
-        public string? Date { get; set; }
+        public string? Publish { get; set; }
 
         public string? Language { get; set; }
 
@@ -16,10 +14,10 @@ namespace Phys.Lib.Core.Works
 
         public string? DeleteAuthor { get; set; }
 
-        public WorkDbo? AddWork { get; set; }
+        public string? AddWork { get; set; }
 
         public string? DeleteWork { get; set; }
 
-        public WorkDbo? Original { get; set; }
+        public string? Original { get; set; }
     }
 }

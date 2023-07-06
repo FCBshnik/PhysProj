@@ -36,6 +36,13 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Code.Should().Be(code);
             }
 
+            public void Delete(string code)
+            {
+                var result = api.DeleteWorkAsync(code).Result;
+                var works = api.ListWorksAsync().Result;
+                works.Select(w => w.Code).Should().NotContain(code);
+            }
+
             public void UpdateFailed(string code, WorkUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.UpdateWorkAsync(code, update), errorCode);
@@ -47,7 +54,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Code.Should().Be(code);
 
                 result.Language.ShouldBeUpdatedWith(update.Language?.ToLowerInvariant());
-                result.Date.ShouldBeUpdatedWith(update.Date);
+                result.Publish.ShouldBeUpdatedWith(update.Date);
             }
 
             public void UpdateInfoFailed(string code, string language, WorkInfoUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)
@@ -73,7 +80,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 author.Infos.Should().NotContain(i => i.Language == language);
             }
 
-            public void LinkAuthorFailed(string code, string authorCode, ErrorCode errorCode)
+            public void LinkAuthorFailed(string code, string authorCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.LinkAuthorToWorkAsync(code, authorCode), errorCode);
             }
@@ -92,7 +99,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.AuthorsCodes.Should().NotContain(authorCode);
             }
 
-            public void LinkWorkFailed(string code, string workCode, ErrorCode errorCode)
+            public void LinkWorkFailed(string code, string workCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.LinkWorkToCollectedWorkAsync(code, workCode), errorCode);
             }

@@ -9,11 +9,11 @@ namespace Phys.Lib.Api.Admin.Api.Works
     {
         public partial WorkModel Map(WorkDbo work);
 
-        public WorkUpdate Map(WorkUpdateModel model)
+        public WorkDbUpdate Map(WorkUpdateModel model)
         {
-            return new WorkUpdate
+            return new WorkDbUpdate
             {
-                Date = model.Date,
+                Publish = model.Date,
                 Language = model.Language,
             };
         }

@@ -12,7 +12,7 @@
         /// <summary>
         /// Published date
         /// </summary>
-        public string Date { get; set; }
+        public string Publish { get; set; }
 
         /// <summary>
         /// Language the work is written on
@@ -46,6 +46,11 @@
             public string Name { get; set; }
 
             public string Description { get; set; }
+
+            public override string? ToString()
+            {
+                return $"{Language} ({Name})";
+            }
         }
 
         public override string ToString()

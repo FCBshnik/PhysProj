@@ -6,7 +6,7 @@
 
         public string Code { get; set; }
 
-        public string Date { get; set; }
+        public string Publish { get; set; }
 
         public string Language { get; set; }
 

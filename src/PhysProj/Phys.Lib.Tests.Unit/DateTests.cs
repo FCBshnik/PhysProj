@@ -46,6 +46,7 @@ namespace Phys.Lib.Tests.Unit
         [InlineData("155Y", 1540, 1560)]
         [InlineData("150Y", 1490, 1510)]
         [InlineData("150Y5", 1450, 1550)]
+        [InlineData("145Y5", 1400, 1500)]
         [InlineData("15YY", 1400, 1600)]
         [InlineData("18Y5", 130, 230)]
         [InlineData("198Y", 1970, 1990)]
@@ -60,21 +61,37 @@ namespace Phys.Lib.Tests.Unit
 
         [Theory]
         [InlineData("1650", "1690")]
+        [InlineData("1600", "1700")]
         [InlineData("3YY", "4YY")]
         [InlineData("3YYBCE", "2YYBCE")]
-        public void ValidBornAndDiedTests(string born, string died)
+        public void ValidLifetimeTests(string born, string died)
         {
-            Date.ValidateBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value);
+            Date.ValidateLifetime(Date.Parse(born).Value, Date.Parse(died).Value);
         }
 
         [Theory]
         [InlineData("1695", "1690")]
-        [InlineData("3YY", "6YY")]
+        [InlineData("1600", "1800")]
+        [InlineData("3YY", "5YY")]
         [InlineData("25YBCE", "26YBCE")]
         [InlineData("3YYBCE", "30YBCE")]
-        public void InvalidBornAndDiedTests(string born, string died)
+        public void InvalidLifetimeTests(string born, string died)
         {
-            Assert.Throws<ValidationException>(() => Date.ValidateBornAndDied(Date.Parse(born).Value, Date.Parse(died).Value));
+            Assert.Throws<ValidationException>(() => Date.ValidateLifetime(Date.Parse(born).Value, Date.Parse(died).Value));
+        }
+
+        [Theory]
+        [InlineData("1650", "1670")]
+        public void ValidBornAndPublishTests(string born, string publish)
+        {
+            Date.ValidateBornAndPublish(Date.Parse(born).Value, Date.Parse(publish).Value);
+        }
+
+        [Theory]
+        [InlineData("1695", "1590")]
+        public void InvalidBornAndPublishTests(string born, string publish)
+        {
+            Assert.Throws<ValidationException>(() => Date.ValidateBornAndPublish(Date.Parse(born).Value, Date.Parse(publish).Value));
         }
     }
 }

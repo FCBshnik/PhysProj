@@ -22,6 +22,11 @@ namespace Phys.Lib.Core
             Max = max;
         }
 
+        public override string ToString()
+        {
+            return $"{Code} [{Min},{Max}]";
+        }
+
         public static string NormalizeAndValidate(string? value)
         {
             var parsed = Parse(value);
@@ -31,26 +36,51 @@ namespace Phys.Lib.Core
             return parsed.Value.Code;
         }
 
-        public static void ValidateBornAndDied(string? born, string? died)
+        public static void ValidateLifetime(string? born, string? died)
         {
             if (!born.HasValue() || !died.HasValue())
                 return;
 
             var bornDate = Parse(born).Value;
             var diedDate = Parse(died).Value;
-            ValidateBornAndDied(bornDate, diedDate);
+            ValidateLifetime(bornDate, diedDate);
         }
 
-        public static void ValidateBornAndDied(Date born, Date died)
+        public static void ValidateBornAndPublish(string? born, string? publish)
+        {
+            if (!born.HasValue() || !publish.HasValue())
+                return;
+
+            var bornDate = Parse(born).Value;
+            var publishDate = Parse(publish).Value;
+            ValidateBornAndPublish(bornDate, publishDate);
+        }
+
+        public static void ValidateBornAndPublish(Date born, Date publish)
+        {
+            if (born == null) throw new ArgumentNullException(nameof(born));
+            if (publish == null) throw new ArgumentNullException(nameof(publish));
+
+            if (publish.Max < born.Min)
+                throw new ValidationException($"can not be published {publish} before born {born}");
+        }
+
+        public static void ValidateLifetime(Date born, Date died)
         {
             if (born == null) throw new ArgumentNullException(nameof(born));
             if (died == null) throw new ArgumentNullException(nameof(died));
 
-            if (born.Max > died.Max || died.Min < born.Min)
-                throw new ValidationException($"invalid born and died dates");
+            if (born.Max > died.Max)
+                throw new ValidationException($"can not be born {born} after died {died}");
 
-            if (born.Max < died.Min && died.Min - born.Max >= 100)
-                throw new ValidationException($"invalid born and died dates");
+            if (died.Min < born.Min)
+                throw new ValidationException($"can not be died {died} before born {born}");
+
+            if (born.Max < died.Min && died.Min - born.Max > 100)
+                throw new ValidationException($"can not live so long from {born} to {died}");
+
+            if (died.Max - born.Min > 300)
+                throw new ValidationException($"can not live so long from {born} to {died}");
         }
 
         public static Result<Date> Parse(string? value)

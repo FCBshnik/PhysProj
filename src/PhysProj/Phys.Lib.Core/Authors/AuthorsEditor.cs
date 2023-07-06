@@ -1,5 +1,6 @@
 ﻿using NLog;
 using Phys.Lib.Core.Utils;
+using Phys.Lib.Core.Works;
 
 namespace Phys.Lib.Core.Authors
 {
@@ -8,10 +9,12 @@ namespace Phys.Lib.Core.Authors
         private static readonly ILogger log = LogManager.GetLogger("authors-editor");
 
         private readonly IAuthorsDb db;
+        private readonly IWorksSearch worksSearch;
 
-        public AuthorsEditor(IAuthorsDb db)
+        public AuthorsEditor(IAuthorsDb db, IWorksSearch worksSearch)
         {
             this.db = db ?? throw new ArgumentNullException();
+            this.worksSearch = worksSearch ?? throw new ArgumentNullException();
         }
 
         public AuthorDbo Create(string code)
@@ -61,13 +64,20 @@ namespace Phys.Lib.Core.Authors
             if (born is null && died is null) throw new ArgumentNullException();
 
             var update = new AuthorDbUpdate();
+
             if (born.HasValue())
+            {
                 update.Born = Date.NormalizeAndValidate(born);
+
+                foreach (var work in worksSearch.FindByAuthor(author.Code))
+                    Date.ValidateBornAndPublish(update.Born, work.Publish);
+            }
+
             if (died.HasValue())
                 update.Died = Date.NormalizeAndValidate(died);
 
             if (update.Born.HasValue() || update.Died.HasValue())
-                Date.ValidateBornAndDied(author.Born ?? update.Born, author.Died ?? update.Died);
+                Date.ValidateLifetime(author.Born ?? update.Born, author.Died ?? update.Died);
 
             author = db.Update(author.Id, update);
             log.Info($"updated author {author}");

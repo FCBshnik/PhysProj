@@ -85,88 +85,93 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private void TestAuthors()
         {
-            var tests = new AuthorsTests(api);
-            tests.List();
+            var authors = new AuthorsTests(api);
+            var works = new WorksTests(api);
+            authors.List();
 
-            tests.NotFound("decartes", ErrorCode.NotFound);
+            authors.NotFound("decartes", ErrorCode.NotFound);
 
-            tests.CreateFailed("decartes-");
-            tests.CreateFailed("-decartes");
-            tests.CreateFailed("deca--rtes");
+            authors.CreateFailed("decartes-");
+            authors.CreateFailed("-decartes");
+            authors.CreateFailed("deca--rtes");
 
-            tests.Create("decartes");
-            tests.Found("decartes");
+            authors.Create("decartes");
+            authors.Found("decartes");
 
-            tests.Create("galilei");
-            tests.Found("galilei");
-            tests.List("decartes", "galilei");
+            authors.Create("galilei");
+            authors.Found("galilei");
+            authors.List("decartes", "galilei");
 
-            tests.Delete("non-existent");
-            tests.List("decartes", "galilei");
+            authors.Delete("non-existent");
+            authors.List("decartes", "galilei");
 
-            tests.Delete("galilei");
-            tests.List("decartes");
+            authors.Delete("galilei");
+            authors.List("decartes");
 
-            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = nonExistentCode });
-            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "165o" });
-            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "1696", Died = "1650" });
-            tests.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Died = "1650" });
-            tests.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "1696" });
-            tests.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Born = string.Empty, Died = "1650" });
-            tests.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Born = "1596", Died = "1650" });
+            authors.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = nonExistentCode });
+            authors.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "165o" });
+            authors.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "1696", Died = "1650" });
+            authors.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Died = "1650" });
+            authors.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "1696" });
+            authors.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Born = string.Empty, Died = "1650" });
+            authors.UpdateLifetime("decartes", new AuthorLifetimeUpdateModel { Born = "1596", Died = "1650" });
 
-            tests.InfoUpdateFailed(nonExistentCode, "en", new AuthorInfoUpdateModel(), ErrorCode.NotFound);
-            tests.InfoUpdateFailed("decartes", nonExistentCode, new AuthorInfoUpdateModel(), ErrorCode.InvalidArgument);
-            tests.InfoUpdate("decartes", "en", new AuthorInfoUpdateModel { Name = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
-            tests.InfoUpdate("decartes", "ru", new AuthorInfoUpdateModel { Name = "Рене́ Дека́рт", Description = "французский философ, математик и естествоиспытатель" });
+            authors.InfoUpdateFailed(nonExistentCode, "en", new AuthorInfoUpdateModel(), ErrorCode.NotFound);
+            authors.InfoUpdateFailed("decartes", nonExistentCode, new AuthorInfoUpdateModel(), ErrorCode.InvalidArgument);
+            authors.InfoUpdate("decartes", "en", new AuthorInfoUpdateModel { Name = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
+            authors.InfoUpdate("decartes", "ru", new AuthorInfoUpdateModel { Name = "Рене́ Дека́рт", Description = "французский философ, математик и естествоиспытатель" });
 
-            tests.InfoDelete("decartes", "en");
+            authors.InfoDelete("decartes", "en");
         }
 
         private void TestWorks()
         {
-            var tests = new WorksTests(api);
+            var authors = new AuthorsTests(api);
+            var works = new WorksTests(api);
 
-            tests.List();
+            works.List();
 
-            tests.NotFound("discourse-on-method", ErrorCode.NotFound);
+            works.NotFound("discourse-on-method", ErrorCode.NotFound);
 
-            tests.Create("discourse-on-method");
-            tests.Found("discourse-on-method");
-            tests.List("discourse-on-method");
+            works.Create("discourse-on-method");
+            works.Found("discourse-on-method");
+            works.List("discourse-on-method");
 
-            tests.UpdateFailed(nonExistentCode, new WorkUpdateModel(), ErrorCode.NotFound);
-            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = nonExistentCode });
-            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = nonExistentCode });
+            works.UpdateFailed(nonExistentCode, new WorkUpdateModel(), ErrorCode.NotFound);
+            works.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = nonExistentCode });
+            works.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = nonExistentCode });
+            works.Update("discourse-on-method", new WorkUpdateModel { Date = "1737" });
+            works.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "FR" });
+            works.Update("discourse-on-method", new WorkUpdateModel { Date = string.Empty, Language = string.Empty });
+            works.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr" });
+
+            works.UpdateInfoFailed(nonExistentCode, "ru", new WorkInfoUpdateModel(), ErrorCode.NotFound);
+            works.UpdateInfoFailed("discourse-on-method", nonExistentCode, new WorkInfoUpdateModel());
+            works.UpdateInfo("discourse-on-method", "en", new WorkInfoUpdateModel { Name = "Discourse on the Method", Description = "one of the most influential works in the history of modern philosophy" });
+            works.UpdateInfo("discourse-on-method", "ru", new WorkInfoUpdateModel { Name = "Рассуждение о методе", Description = "Считается переломной работой, ознаменовавшей переход от философии Ренессанса и начавшей эпоху философии Нового времени" });
+
+            works.DeleteInfo("discourse-on-method", "ru");
+            works.DeleteInfo("discourse-on-method", "es");
+
+            works.LinkAuthorFailed("discourse-on-method", nonExistentCode);
+            works.LinkAuthor("discourse-on-method", "decartes");
+
             // can not be published before author's lifetime
-            tests.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1537" });
-            // but can be published after author's lifetime
-            tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1737" });
-            tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "FR" });
-            tests.Update("discourse-on-method", new WorkUpdateModel { Date = string.Empty, Language = string.Empty });
-            tests.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr" });
+            works.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1537" });
+            // can not change author born less than existing publish work
+            authors.UpdateLifetimeFailed("decartes", new AuthorLifetimeUpdateModel { Born = "1650" });
 
-            tests.UpdateInfoFailed(nonExistentCode, "ru", new WorkInfoUpdateModel(), ErrorCode.NotFound);
-            tests.UpdateInfoFailed("discourse-on-method", nonExistentCode, new WorkInfoUpdateModel());
-            tests.UpdateInfo("discourse-on-method", "en", new WorkInfoUpdateModel { Name = "Discourse on the Method", Description = "one of the most influential works in the history of modern philosophy" });
-            tests.UpdateInfo("discourse-on-method", "ru", new WorkInfoUpdateModel { Name = "Рассуждение о методе", Description = "Считается переломной работой, ознаменовавшей переход от философии Ренессанса и начавшей эпоху философии Нового времени" });
+            works.UnlinkAuthor("discourse-on-method", "decartes");
 
-            tests.DeleteInfo("discourse-on-method", "ru");
-            tests.DeleteInfo("discourse-on-method", "es");
-
-            tests.LinkAuthorFailed("discourse-on-method", nonExistentCode, ErrorCode.NotFound);
-            tests.LinkAuthor("discourse-on-method", "decartes");
-            tests.UnlinkAuthor("discourse-on-method", "decartes");
-
-            tests.Create("discourse-on-method-chapter-one");
-            tests.Create("discourse-on-method-chapter-two");
-            tests.Create("discourse-on-method-chapter-three");
-            tests.LinkWorkFailed("discourse-on-method", nonExistentCode, ErrorCode.NotFound);
-            tests.LinkWork("discourse-on-method", "discourse-on-method-chapter-one");
-            tests.LinkWork("discourse-on-method", "discourse-on-method-chapter-two");
-            tests.LinkWork("discourse-on-method", "discourse-on-method-chapter-three");
-            tests.UnlinkWork("discourse-on-method", "discourse-on-method-chapter-one");
-            tests.UnlinkWork("discourse-on-method", "discourse-on-method-chapter-three");
+            works.Create("discourse-on-method-chapter-one");
+            works.Create("discourse-on-method-chapter-two");
+            works.Create("discourse-on-method-chapter-three");
+            works.LinkWorkFailed("discourse-on-method", nonExistentCode);
+            works.LinkWork("discourse-on-method", "discourse-on-method-chapter-one");
+            works.LinkWork("discourse-on-method", "discourse-on-method-chapter-two");
+            works.LinkWork("discourse-on-method", "discourse-on-method-chapter-three");
+            works.UnlinkWork("discourse-on-method", "discourse-on-method-chapter-one");
+            works.UnlinkWork("discourse-on-method", "discourse-on-method-chapter-three");
         }
     }
 }

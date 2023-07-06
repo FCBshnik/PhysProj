@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using Phys.Lib.Core.Authors;
+using Phys.Lib.Data.Utils;
 
 namespace Phys.Lib.Data.Authors
 {
@@ -21,6 +22,8 @@ namespace Phys.Lib.Data.Authors
             var filter = filterBuilder.Empty;
             if (query.Code != null)
                 filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
+            if (query.Codes != null)
+                filter = filterBuilder.And(filter, filterBuilder.In(u => u.Code, query.Codes));
             if (query.Search != null)
                 filter = filterBuilder.And(filter, filterBuilder.Regex(u => u.Code, query.Search));
 
@@ -50,14 +53,14 @@ namespace Phys.Lib.Data.Authors
             var filter = filterBuilder.Eq(i => i.Id, id);
             var update = updateBuilder.Combine();
 
-            if (author.Born == string.Empty)
+            if (author.Born.IsEmpty())
                 update = update.Unset(i => i.Born);
-            else if (author.Born != null)
+            else if (author.Born.HasValue())
                 update = update.Set(i => i.Born, author.Born);
 
-            if (author.Died == string.Empty)
+            if (author.Died.IsEmpty())
                 update = update.Unset(i => i.Died);
-            else if (author.Died != null)
+            else if (author.Died.HasValue())
                 update = update.Set(i => i.Died, author.Died);
 
             if (author.AddInfo != null)

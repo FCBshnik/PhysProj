@@ -396,15 +396,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<AuthorModel> UpdateAuthorAsync(string code, AuthorLifetimeUpdateModel body)
+        public virtual System.Threading.Tasks.Task<AuthorModel> UpdateAuthorLifetimeAsync(string code, AuthorLifetimeUpdateModel body)
         {
-            return UpdateAuthorAsync(code, body, System.Threading.CancellationToken.None);
+            return UpdateAuthorLifetimeAsync(code, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<AuthorModel> UpdateAuthorAsync(string code, AuthorLifetimeUpdateModel body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<AuthorModel> UpdateAuthorLifetimeAsync(string code, AuthorLifetimeUpdateModel body, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
@@ -1934,26 +1934,26 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> LinkWorkToCollectedWorkAsync(string collectedWorkCode, string subWorkCode)
+        public virtual System.Threading.Tasks.Task<WorkModel> LinkWorkToCollectedWorkAsync(string collectedWorkCode, string linkWorkCode)
         {
-            return LinkWorkToCollectedWorkAsync(collectedWorkCode, subWorkCode, System.Threading.CancellationToken.None);
+            return LinkWorkToCollectedWorkAsync(collectedWorkCode, linkWorkCode, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> LinkWorkToCollectedWorkAsync(string collectedWorkCode, string subWorkCode, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> LinkWorkToCollectedWorkAsync(string collectedWorkCode, string linkWorkCode, System.Threading.CancellationToken cancellationToken)
         {
             if (collectedWorkCode == null)
                 throw new System.ArgumentNullException("collectedWorkCode");
 
-            if (subWorkCode == null)
-                throw new System.ArgumentNullException("subWorkCode");
+            if (linkWorkCode == null)
+                throw new System.ArgumentNullException("linkWorkCode");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{collectedWorkCode}/works/{subWorkCode}");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{collectedWorkCode}/works/{linkWorkCode}");
             urlBuilder_.Replace("{collectedWorkCode}", System.Uri.EscapeDataString(ConvertToString(collectedWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
-            urlBuilder_.Replace("{subWorkCode}", System.Uri.EscapeDataString(ConvertToString(subWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Replace("{linkWorkCode}", System.Uri.EscapeDataString(ConvertToString(linkWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2027,26 +2027,26 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromCollectedWorkAsync(string collectedWorkCode, string subWorkCode)
+        public virtual System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromCollectedWorkAsync(string collectedWorkCode, string linkWorkCode)
         {
-            return UnlinkWorkFromCollectedWorkAsync(collectedWorkCode, subWorkCode, System.Threading.CancellationToken.None);
+            return UnlinkWorkFromCollectedWorkAsync(collectedWorkCode, linkWorkCode, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromCollectedWorkAsync(string collectedWorkCode, string subWorkCode, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromCollectedWorkAsync(string collectedWorkCode, string linkWorkCode, System.Threading.CancellationToken cancellationToken)
         {
             if (collectedWorkCode == null)
                 throw new System.ArgumentNullException("collectedWorkCode");
 
-            if (subWorkCode == null)
-                throw new System.ArgumentNullException("subWorkCode");
+            if (linkWorkCode == null)
+                throw new System.ArgumentNullException("linkWorkCode");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{collectedWorkCode}/works/{subWorkCode}");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/works/{collectedWorkCode}/works/{linkWorkCode}");
             urlBuilder_.Replace("{collectedWorkCode}", System.Uri.EscapeDataString(ConvertToString(collectedWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
-            urlBuilder_.Replace("{subWorkCode}", System.Uri.EscapeDataString(ConvertToString(subWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Replace("{linkWorkCode}", System.Uri.EscapeDataString(ConvertToString(linkWorkCode, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2391,8 +2391,8 @@ namespace Phys.Lib.Admin.Client
         [Newtonsoft.Json.JsonProperty("code", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Code { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("date", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Date { get; set; }
+        [Newtonsoft.Json.JsonProperty("publish", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Publish { get; set; }
 
         [Newtonsoft.Json.JsonProperty("language", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Language { get; set; }

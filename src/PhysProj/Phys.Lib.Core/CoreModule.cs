@@ -20,7 +20,8 @@ namespace Phys.Lib.Core
                 .RegisterService<UsersService, IUsersService>()
                 .RegisterService<AuthorsSearch, IAuthorsSearch>()
                 .RegisterService<AuthorsEditor, IAuthorsEditor>()
-                .RegisterService<WorksService, IWorksService>();
+                .RegisterService<WorksSearch, IWorksSearch>()
+                .RegisterService<WorksEditor, IWorksEditor>();
 
             builder.RegisterModule(new ValidationModule(ThisAssembly));
         }

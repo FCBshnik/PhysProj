@@ -2,13 +2,13 @@
 {
     public interface IWorksDb
     {
-        List<WorkDbo> Find(WorksQuery query);
+        List<WorkDbo> Find(WorksDbQuery query);
 
         WorkDbo Get(string id);
 
         WorkDbo Create(WorkDbo work);
 
-        WorkDbo Update(string id, WorkUpdate update);
+        WorkDbo Update(string id, WorkDbUpdate update);
 
         void Delete(string id);
     }

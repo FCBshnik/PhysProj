@@ -20,11 +20,18 @@ namespace Phys.Lib.Core.Authors
             return db.Find(new AuthorsDbQuery { Code = code }).FirstOrDefault();
         }
 
-        public List<AuthorDbo> Search(string search)
+        public List<AuthorDbo> FindByText(string search)
         {
             if (search is null) throw new ArgumentNullException(nameof(search));
 
             return db.Find(new AuthorsDbQuery { Search = search });
+        }
+
+        public List<AuthorDbo> FindByCodes(List<string> codes)
+        {
+            if (codes is null) throw new ArgumentNullException(nameof(codes));
+
+            return db.Find(new AuthorsDbQuery { Codes = codes });
         }
     }
 }
