@@ -100,6 +100,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
             authors.Create("galilei");
             authors.Found("galilei");
+            authors.CreateFailed("galilei");
             authors.List("decartes", "galilei");
 
             authors.Delete("non-existent");
@@ -136,6 +137,7 @@ namespace Phys.Lib.Tests.Api.Admin
             works.Create("discourse-on-method");
             works.Found("discourse-on-method");
             works.List("discourse-on-method");
+            works.CreateFailed("discourse-on-method");
 
             works.UpdateFailed(nonExistentCode, new WorkUpdateModel(), ErrorCode.NotFound);
             works.UpdateFailed("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = nonExistentCode });

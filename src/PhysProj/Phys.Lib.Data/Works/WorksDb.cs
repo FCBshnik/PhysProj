@@ -9,6 +9,7 @@ namespace Phys.Lib.Data.Works
     {
         public WorksDb(IMongoCollection<WorkDbo> collection) : base(collection)
         {
+            collection.Indexes.CreateOne(new CreateIndexModel<WorkDbo>(indexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
         public WorkDbo Create(WorkDbo work)

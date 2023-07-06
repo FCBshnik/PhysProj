@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using FluentValidation;
+using NLog;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Works;
 
@@ -9,17 +10,22 @@ namespace Phys.Lib.Core.Authors
         private static readonly ILogger log = LogManager.GetLogger("authors-editor");
 
         private readonly IAuthorsDb db;
+        private readonly IAuthorsSearch authorsSearch;
         private readonly IWorksSearch worksSearch;
 
-        public AuthorsEditor(IAuthorsDb db, IWorksSearch worksSearch)
+        public AuthorsEditor(IAuthorsDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch)
         {
             this.db = db ?? throw new ArgumentNullException();
             this.worksSearch = worksSearch ?? throw new ArgumentNullException();
+            this.authorsSearch = authorsSearch ?? throw new ArgumentNullException();
         }
 
         public AuthorDbo Create(string code)
         {
             code = Code.NormalizeAndValidate(code);
+
+            if (authorsSearch.FindByCode(code) != null)
+                throw ValidationError($"author with the same code already exists");
 
             var author = db.Create(new AuthorDbo
             {
@@ -82,6 +88,11 @@ namespace Phys.Lib.Core.Authors
             author = db.Update(author.Id, update);
             log.Info($"updated author {author}");
             return author;
+        }
+
+        private Exception ValidationError(string message)
+        {
+            return new ValidationException(message);
         }
     }
 }

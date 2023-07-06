@@ -9,6 +9,7 @@ namespace Phys.Lib.Data.Authors
     {
         public AuthorsDb(IMongoCollection<AuthorDbo> collection) : base(collection)
         {
+            collection.Indexes.CreateOne(new CreateIndexModel<AuthorDbo>(indexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
         public AuthorDbo Create(AuthorDbo author)

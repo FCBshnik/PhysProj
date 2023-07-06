@@ -7,6 +7,7 @@ namespace Phys.Lib.Data
         protected FilterDefinitionBuilder<T> filterBuilder => Builders<T>.Filter;
         protected UpdateDefinitionBuilder<T> updateBuilder => Builders<T>.Update;
         protected SortDefinitionBuilder<T> sortBuilder => Builders<T>.Sort;
+        protected IndexKeysDefinitionBuilder<T> indexBuilder => Builders<T>.IndexKeys;
 
         protected FindOneAndUpdateOptions<T, T> findOneAndUpdateReturnAfter = new FindOneAndUpdateOptions<T, T> { ReturnDocument = ReturnDocument.After };
 

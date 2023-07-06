@@ -8,6 +8,7 @@ namespace Phys.Lib.Data.Users
     {
         public UsersDb(IMongoCollection<UserDbo> collection) : base(collection)
         {
+            collection.Indexes.CreateOne(new CreateIndexModel<UserDbo>(indexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
         }
 
         public UserDbo Create(UserDbo user)

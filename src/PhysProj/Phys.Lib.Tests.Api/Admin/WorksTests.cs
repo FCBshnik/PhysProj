@@ -36,6 +36,11 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Code.Should().Be(code);
             }
 
+            public void CreateFailed(string code, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            {
+                AdminAssert.ShouldFail(() => api.CreateWorkAsync(new WorkCreateModel { Code = code }), errorCode);
+            }
+
             public void Delete(string code)
             {
                 var result = api.DeleteWorkAsync(code).Result;

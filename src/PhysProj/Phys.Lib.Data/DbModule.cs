@@ -37,7 +37,7 @@ namespace Phys.Lib.Data
             RegisterCollection<WorkDbo, WorksDb>(builder, "works");
         }
 
-        private void RegisterCollection<TItem, TDb>(ContainerBuilder builder, string collectionName)
+        private void RegisterCollection<TItem, TDb>(ContainerBuilder builder, string collectionName) where TDb: notnull
         {
             builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<TItem>(collectionName))
                 .AsImplementedInterfaces()

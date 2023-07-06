@@ -35,6 +35,9 @@ namespace Phys.Lib.Core.Works
         {
             code = Code.NormalizeAndValidate(code);
 
+            if (worksSearch.FindByCode(code) != null)
+                throw ValidationError($"work with the same code already exists");
+
             var work = db.Create(new WorkDbo
             {
                 Code = code,
