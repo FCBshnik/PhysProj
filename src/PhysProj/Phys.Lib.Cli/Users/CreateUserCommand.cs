@@ -13,14 +13,8 @@ namespace Phys.Lib.Cli.Users
 
         public void Run(CreateUserOptions options)
         {
-            var userData = new UserCreate
-            {
-                Name = options.Name,
-                Password = options.Password,
-                Role = UserRole.Parse(options.Role),
-            };
-
-            users.Create(userData);
+            var user = users.Create(options.Name, options.Password);
+            users.AddRole(user, UserRole.Parse(options.Role));
         }
     }
 }

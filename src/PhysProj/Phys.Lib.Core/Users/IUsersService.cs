@@ -2,10 +2,14 @@
 {
     public interface IUsersService
     {
-        UserDbo Create(UserCreate create);
+        UserDbo Create(string name, string password);
 
-        Result<UserDbo> Login(string userName, string password, UserRole withRole);
+        UserDbo AddRole(UserDbo user, UserRole role);
 
-        UserDbo? GetByName(string userName);
+        UserDbo DeleteRole(UserDbo user, UserRole role);
+
+        Result<UserDbo> Login(string name, string password, UserRole role);
+
+        UserDbo GetByName(string name);
     }
 }

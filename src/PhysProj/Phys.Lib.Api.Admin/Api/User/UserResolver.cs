@@ -15,7 +15,7 @@ namespace Phys.Lib.Api.Admin.Api.User
 
         public UserDbo GetUser()
         {
-            return users.GetByName(httpContext.HttpContext.User.Identity.Name) ?? throw new ApplicationException();
+            return users.GetByName(httpContext.HttpContext.User.Identity.Name);
         }
     }
 }

@@ -35,8 +35,10 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private void CreateUsers()
         {
-            users.Create(new UserCreate { Name = "user", Password = "123456", Role = UserRole.User });
-            users.Create(new UserCreate { Name = "admin", Password = "123qwe", Role = UserRole.Admin });
+            var user = users.Create("user", "123456");
+            users.AddRole(user, UserRole.User);
+            var admin = users.Create("admin", "123qwe");
+            users.AddRole(admin, UserRole.Admin);
         }
 
         private IContainer BuildContainer()

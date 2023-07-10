@@ -2,32 +2,26 @@
 
 namespace Phys.Lib.Core.Users
 {
-    internal class UserCreateValidator : AbstractValidator<UserCreate>
+    internal static class UserValidators
     {
-        public UserCreateValidator(IUsersDb db)
-        {
-            RuleFor(u => u.Name).NotNull();
-            RuleFor(u => u.Name).SetValidator(new UserNameValidator());
-            RuleFor(u => u.Password).NotNull();
-            RuleFor(u => u.Password).SetValidator(new UserPasswordValidator());
-            RuleFor(u => u.Role).NotNull();
+        public static readonly PasswordValidator Password = new PasswordValidator();
+        public static readonly NameValidator Name = new NameValidator();
 
-            RuleFor(u => u.Name.ToLowerInvariant())
-                .Must(n => db.Find(new UsersQuery { NameLowerCase = n }).Count == 0)
-                .WithMessage("user name is already taken");
-        }
-
-        public class UserPasswordValidator : AbstractValidator<string>
+        public class PasswordValidator : AbstractValidator<string>
         {
-            public UserPasswordValidator()
+            public PasswordValidator()
             {
                 RuleFor(u => u).MinimumLength(6);
+                RuleFor(u => u).MaximumLength(100);
+                RuleFor(u => u)
+                    .Must(n => !n.Any(char.IsWhiteSpace))
+                    .WithMessage("password must not contain spaces");
             }
         }
 
-        public class UserNameValidator : AbstractValidator<string>
+        public class NameValidator : AbstractValidator<string>
         {
-            public UserNameValidator()
+            public NameValidator()
             {
                 RuleFor(u => u)
                     .Must(n => n.Count(char.IsLetter) >= 3)

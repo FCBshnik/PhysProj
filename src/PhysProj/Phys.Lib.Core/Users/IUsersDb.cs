@@ -4,8 +4,8 @@
     {
         UserDbo Create(UserDbo user);
 
-        UserDbo Get(string id);
+        List<UserDbo> Find(UsersDbQuery query);
 
-        List<UserDbo> Find(UsersQuery query);
+        UserDbo Update(string id, UserDbUpdate update);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Users
 {
-    public class UsersQuery
+    public class UsersDbQuery
     {
         public string? NameLowerCase { get; set; }
 
