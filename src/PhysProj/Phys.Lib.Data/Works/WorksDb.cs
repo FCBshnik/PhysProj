@@ -74,10 +74,10 @@ namespace Phys.Lib.Data.Works
             if (work.DeleteAuthor.HasValue())
                 update = update.Pull(i => i.AuthorsCodes, work.DeleteAuthor);
 
-            if (work.AddWork.HasValue())
-                update = update.AddToSet(i => i.WorksCodes, work.AddWork);
-            if (work.DeleteWork.HasValue())
-                update = update.Pull(i => i.WorksCodes, work.DeleteWork);
+            if (work.AddSubWork.HasValue())
+                update = update.AddToSet(i => i.SubWorksCodes, work.AddSubWork);
+            if (work.DeleteSubWork.HasValue())
+                update = update.Pull(i => i.SubWorksCodes, work.DeleteSubWork);
 
             if (work.Original.IsEmpty())
                 update = update.Unset(i => i.OriginalCode);

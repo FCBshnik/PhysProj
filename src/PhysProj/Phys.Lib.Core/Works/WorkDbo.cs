@@ -25,9 +25,9 @@
         public List<InfoDbo> Infos { get; set; } = new List<InfoDbo>();
 
         /// <summary>
-        /// Collection of works in collected work
+        /// Collection of sub works in collected work
         /// </summary>
-        public List<string> WorksCodes { get; set; } = new List<string>();
+        public List<string> SubWorksCodes { get; set; } = new List<string>();
 
         /// <summary>
         /// Collection of authors of work
@@ -35,7 +35,7 @@
         public List<string> AuthorsCodes { get; set; } = new List<string>();
 
         /// <summary>
-        /// Original work of translation
+        /// Original work translated in this work
         /// </summary>
         public string? OriginalCode { get; set; }
 

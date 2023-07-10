@@ -81,18 +81,31 @@ namespace Phys.Lib.Core.Works
             return work;
         }
 
-        public WorkDbo LinkWork(WorkDbo work, string workCode)
+        public WorkDbo LinkWork(WorkDbo work, string subWorkCode)
         {
             if (work is null) throw new ArgumentNullException(nameof(work));
-            if (workCode is null) throw new ArgumentNullException(nameof(workCode));
+            if (subWorkCode is null) throw new ArgumentNullException(nameof(subWorkCode));
 
-            var linkWork = worksSearch.FindByCode(workCode);
-            if (linkWork == null)
-                throw ValidationError($"work '{workCode}' not found");
+            subWorkCode = Code.NormalizeAndValidate(subWorkCode);
 
-            var update = new WorkDbUpdate { AddWork = linkWork.Code };
+            if (work.SubWorksCodes.Contains(subWorkCode))
+                return work;
+
+            var subWork = worksSearch.FindByCode(subWorkCode);
+            if (subWork == null)
+                throw ValidationError($"work '{subWorkCode}' not found");
+
+            if (subWork.Code == work.Code)
+                throw ValidationError($"can not link sub work as self");
+            if (subWork.Code == work.OriginalCode)
+                throw ValidationError($"can not link sub work which is already linked as original");
+
+            ValidateWorkIsNotLinked(work, subWork.Code, 0);
+            ValidateWorkIsNotLinked(subWork, work.Code, 0);
+
+            var update = new WorkDbUpdate { AddSubWork = subWork.Code };
             work = db.Update(work.Id, update);
-            log.Info($"updated work {work}: linked work {linkWork}");
+            log.Info($"updated work {work}: linked work {subWork}");
             return work;
         }
 
@@ -112,7 +125,7 @@ namespace Phys.Lib.Core.Works
             if (work is null) throw new ArgumentNullException(nameof(work));
             if (workCode is null) throw new ArgumentNullException(nameof(workCode));
 
-            var update = new WorkDbUpdate { DeleteWork = workCode };
+            var update = new WorkDbUpdate { DeleteSubWork = workCode };
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}: unlinked work {workCode}");
             return work;
@@ -157,14 +170,42 @@ namespace Phys.Lib.Core.Works
             if (work is null) throw new ArgumentNullException(nameof(work));
             if (originalCode is null) throw new ArgumentNullException(nameof(originalCode));
 
+            originalCode = Code.NormalizeAndValidate(originalCode);
+
+            if (work.OriginalCode == originalCode)
+                return work;
+
             var original = worksSearch.FindByCode(originalCode);
             if (original == null)
                 throw ValidationError($"work '{originalCode}' not found");
+
+            if (original.Code == work.Code)
+                throw ValidationError($"can not link original as self");
+            if (work.SubWorksCodes.Contains(original.Code))
+                throw ValidationError($"can not link original which is already linked as sub work");
+
+            ValidateWorkIsNotLinked(work, original.Code, 0);
+            ValidateWorkIsNotLinked(original, work.Code, 0);
 
             var update = new WorkDbUpdate { Original = original.Code };
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}: updated original {original}");
             return work;
+        }
+
+        private void ValidateWorkIsNotLinked(WorkDbo work, string linkedCode, int depth)
+        {
+            if (depth > 3)
+                throw ValidationError($"too long chain of works links detected");
+
+            if (work.OriginalCode == linkedCode || work.SubWorksCodes.Contains(linkedCode))
+                throw ValidationError($"circular chain of works links detected");
+
+            if (work.OriginalCode != null)
+                ValidateWorkIsNotLinked(worksSearch.FindByCode(work.OriginalCode) ?? throw new ApplicationException(), linkedCode, depth + 1);
+
+            foreach (var subWorkCode in work.SubWorksCodes)
+                ValidateWorkIsNotLinked(worksSearch.FindByCode(subWorkCode) ?? throw new ApplicationException(), linkedCode, depth + 1);
         }
 
         private Exception ValidationError(string message)

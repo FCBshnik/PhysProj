@@ -1753,15 +1753,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> LinkWorkToOriginalAsync(string code, string originalCode)
+        public virtual System.Threading.Tasks.Task<WorkModel> LinkOriginalToWorkAsync(string code, string originalCode)
         {
-            return LinkWorkToOriginalAsync(code, originalCode, System.Threading.CancellationToken.None);
+            return LinkOriginalToWorkAsync(code, originalCode, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> LinkWorkToOriginalAsync(string code, string originalCode, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> LinkOriginalToWorkAsync(string code, string originalCode, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
@@ -1846,15 +1846,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromOriginalAsync(string code)
+        public virtual System.Threading.Tasks.Task<WorkModel> UnlinkOriginalFromWorkAsync(string code)
         {
-            return UnlinkWorkFromOriginalAsync(code, System.Threading.CancellationToken.None);
+            return UnlinkOriginalFromWorkAsync(code, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WorkModel> UnlinkWorkFromOriginalAsync(string code, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WorkModel> UnlinkOriginalFromWorkAsync(string code, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
@@ -2403,8 +2403,8 @@ namespace Phys.Lib.Admin.Client
         [Newtonsoft.Json.JsonProperty("authorsCodes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string> AuthorsCodes { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("worksCodes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string> WorksCodes { get; set; }
+        [Newtonsoft.Json.JsonProperty("subWorksCodes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> SubWorksCodes { get; set; }
 
         [Newtonsoft.Json.JsonProperty("originalCode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OriginalCode { get; set; }

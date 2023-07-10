@@ -114,7 +114,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
                 work = editor.UpdateOriginal(work, originalCode);
                 return Results.Ok(mapper.Map(work));
             })
-            .ProducesResponse<WorkModel>("LinkWorkToOriginal");
+            .ProducesResponse<WorkModel>("LinkOriginalToWork");
 
             builder.MapDelete("/{code}/original", (string code, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
             {
@@ -125,7 +125,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
                 work = editor.UpdateOriginal(work, string.Empty);
                 return Results.Ok(mapper.Map(work));
             })
-            .ProducesResponse<WorkModel>("UnlinkWorkFromOriginal");
+            .ProducesResponse<WorkModel>("UnlinkOriginalFromWork");
 
             builder.MapPost("/{collectedWorkCode}/works/{linkWorkCode}", (string collectedWorkCode, string linkWorkCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
             {

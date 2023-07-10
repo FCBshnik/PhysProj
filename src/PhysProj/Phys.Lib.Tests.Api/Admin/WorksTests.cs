@@ -90,6 +90,18 @@ namespace Phys.Lib.Tests.Api.Admin
                 AdminAssert.ShouldFail(() => api.LinkAuthorToWorkAsync(code, authorCode), errorCode);
             }
 
+            public void LinkOriginal(string code, string originalCode)
+            {
+                var result = api.LinkOriginalToWorkAsync(code, originalCode).Result;
+                result.Code.Should().Be(code);
+                result.OriginalCode.Should().Be(originalCode);
+            }
+
+            public void LinkOriginalFailed(string code, string originalCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            {
+                AdminAssert.ShouldFail(() => api.LinkOriginalToWorkAsync(code, originalCode), errorCode);
+            }
+
             public void LinkAuthor(string code, string authorCode)
             {
                 var result = api.LinkAuthorToWorkAsync(code, authorCode).Result;
@@ -104,19 +116,19 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.AuthorsCodes.Should().NotContain(authorCode);
             }
 
-            public void LinkWorkFailed(string code, string workCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            public void LinkSubWorkFailed(string code, string workCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.LinkWorkToCollectedWorkAsync(code, workCode), errorCode);
             }
 
-            public void LinkWork(string code, string workCode)
+            public void LinkSubWork(string code, string workCode)
             {
                 var result = api.LinkWorkToCollectedWorkAsync(code, workCode).Result;
                 result.Code.Should().Be(code);
-                result.WorksCodes.Should().Contain(workCode);
+                result.SubWorksCodes.Should().Contain(workCode);
             }
 
-            public void UnlinkWork(string code, string workCode)
+            public void UnlinkSubWork(string code, string workCode)
             {
                 var result = api.UnlinkWorkFromCollectedWorkAsync(code, workCode).Result;
                 result.Code.Should().Be(code);

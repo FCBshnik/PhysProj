@@ -14,7 +14,7 @@
 
         public List<string> AuthorsCodes { get; set; } = new List<string>();
 
-        public List<string> WorksCodes { get; set; } = new List<string>();
+        public List<string> SubWorksCodes { get; set; } = new List<string>();
 
         public string OriginalCode { get; set; }
 

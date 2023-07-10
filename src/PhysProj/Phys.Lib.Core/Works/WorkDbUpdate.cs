@@ -14,9 +14,9 @@
 
         public string? DeleteAuthor { get; set; }
 
-        public string? AddWork { get; set; }
+        public string? AddSubWork { get; set; }
 
-        public string? DeleteWork { get; set; }
+        public string? DeleteSubWork { get; set; }
 
         public string? Original { get; set; }
     }

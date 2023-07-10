@@ -1,5 +1,4 @@
 ﻿using Phys.Lib.Admin.Client;
-using Phys.Lib.Core;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
