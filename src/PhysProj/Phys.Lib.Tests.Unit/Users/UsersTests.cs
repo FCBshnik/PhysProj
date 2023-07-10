@@ -4,19 +4,43 @@ namespace Phys.Lib.Tests.Unit.Users
 {
     public class UsersTests
     {
-        private static readonly UserValidators.NameValidator userNameValidator = new UserValidators.NameValidator();
+        [Theory]
+        [InlineData("ya")]
+        [InlineData("8lalala")]
+        [InlineData(" admin")]
+        [InlineData("admin ")]
+        [InlineData("ad$min")]
+        public void InvalidNamesTests(string name)
+        {
+            var result = UserValidators.Name.Validate(name);
+            result.IsValid.Should().BeFalse();
+        }
 
         [Theory]
-        [InlineData("ya", false)]
-        [InlineData("8lalala", false)]
-        [InlineData(" admin", false)]
-        [InlineData("admin ", false)]
-        [InlineData("ad$min", false)]
-        [InlineData("admin", true)]
-        public void TestUserName(string userName, bool isValid)
+        [InlineData("admin")]
+        [InlineData("user-1")]
+        public void ValidNamesTests(string name)
         {
-            var result = userNameValidator.Validate(userName);
-            result.IsValid.Should().Be(isValid);
+            var result = UserValidators.Name.Validate(name);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData("password")]
+        [InlineData("123456")]
+        public void ValidPasswordTests(string password)
+        {
+            var result = UserValidators.Password.Validate(password);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData("123")]
+        [InlineData("123 456")]
+        public void InvalidPasswordTests(string password)
+        {
+            var result = UserValidators.Password.Validate(password);
+            result.IsValid.Should().BeFalse();
         }
     }
 }
