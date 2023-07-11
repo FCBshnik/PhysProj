@@ -21,8 +21,393 @@ export class AdminApiClient {
     /**
      * @return OK
      */
+    listAuthors(): Promise<AuthorModel[]> {
+        let url_ = this.baseUrl + "/api/authors";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processListAuthors(_response);
+        });
+    }
+
+    protected processListAuthors(response: Response): Promise<AuthorModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(AuthorModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AuthorModel[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    createAuthor(body: AuthorCreateModel): Promise<AuthorModel> {
+        let url_ = this.baseUrl + "/api/authors";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateAuthor(_response);
+        });
+    }
+
+    protected processCreateAuthor(response: Response): Promise<AuthorModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthorModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AuthorModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getAuthor(code: string): Promise<AuthorModel> {
+        let url_ = this.baseUrl + "/api/authors/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAuthor(_response);
+        });
+    }
+
+    protected processGetAuthor(response: Response): Promise<AuthorModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthorModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AuthorModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteAuthor(code: string): Promise<OkModel> {
+        let url_ = this.baseUrl + "/api/authors/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteAuthor(_response);
+        });
+    }
+
+    protected processDeleteAuthor(response: Response): Promise<OkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<OkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateAuthorLifetime(code: string, body: AuthorLifetimeUpdateModel): Promise<AuthorModel> {
+        let url_ = this.baseUrl + "/api/authors/{code}/lifetime";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateAuthorLifetime(_response);
+        });
+    }
+
+    protected processUpdateAuthorLifetime(response: Response): Promise<AuthorModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthorModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AuthorModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateAuthorInfo(code: string, language: string, body: AuthorInfoUpdateModel): Promise<AuthorModel> {
+        let url_ = this.baseUrl + "/api/authors/{code}/info/{language}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (language === undefined || language === null)
+            throw new Error("The parameter 'language' must be defined.");
+        url_ = url_.replace("{language}", encodeURIComponent("" + language));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateAuthorInfo(_response);
+        });
+    }
+
+    protected processUpdateAuthorInfo(response: Response): Promise<AuthorModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthorModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AuthorModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteAuthorInfo(code: string, language: string): Promise<AuthorModel> {
+        let url_ = this.baseUrl + "/api/authors/{code}/info/{language}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (language === undefined || language === null)
+            throw new Error("The parameter 'language' must be defined.");
+        url_ = url_.replace("{language}", encodeURIComponent("" + language));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteAuthorInfo(_response);
+        });
+    }
+
+    protected processDeleteAuthorInfo(response: Response): Promise<AuthorModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthorModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AuthorModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    healthCheck(): Promise<OkModel> {
+        let url_ = this.baseUrl + "/api/health/check";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processHealthCheck(_response);
+        });
+    }
+
+    protected processHealthCheck(response: Response): Promise<OkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<OkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     login(body: LoginModel): Promise<LoginSuccessModel> {
-        let url_ = this.baseUrl + "/api/auth/login";
+        let url_ = this.baseUrl + "/api/user/login";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -70,7 +455,7 @@ export class AdminApiClient {
      * @return OK
      */
     getUserInfo(): Promise<UserModel> {
-        let url_ = this.baseUrl + "/api/auth/user";
+        let url_ = this.baseUrl + "/api/user";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -106,8 +491,8 @@ export class AdminApiClient {
     /**
      * @return OK
      */
-    healthCheck(): Promise<OkModel> {
-        let url_ = this.baseUrl + "/api/health/check";
+    listWorks(): Promise<WorkModel[]> {
+        let url_ = this.baseUrl + "/api/works";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -118,11 +503,211 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processHealthCheck(_response);
+            return this.processListWorks(_response);
         });
     }
 
-    protected processHealthCheck(response: Response): Promise<OkModel> {
+    protected processListWorks(response: Response): Promise<WorkModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(WorkModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    createWork(body: WorkCreateModel): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateWork(_response);
+        });
+    }
+
+    protected processCreateWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getWork(code: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetWork(_response);
+        });
+    }
+
+    protected processGetWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateWork(code: string, body: WorkUpdateModel): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateWork(_response);
+        });
+    }
+
+    protected processUpdateWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteWork(code: string): Promise<OkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteWork(_response);
+        });
+    }
+
+    protected processDeleteWork(response: Response): Promise<OkModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -146,11 +731,633 @@ export class AdminApiClient {
         }
         return Promise.resolve<OkModel>(null as any);
     }
+
+    /**
+     * @return OK
+     */
+    updateWorkInfo(code: string, language: string, body: WorkInfoUpdateModel): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/info/{language}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (language === undefined || language === null)
+            throw new Error("The parameter 'language' must be defined.");
+        url_ = url_.replace("{language}", encodeURIComponent("" + language));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateWorkInfo(_response);
+        });
+    }
+
+    protected processUpdateWorkInfo(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteWorkInfo(code: string, language: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/info/{language}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (language === undefined || language === null)
+            throw new Error("The parameter 'language' must be defined.");
+        url_ = url_.replace("{language}", encodeURIComponent("" + language));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteWorkInfo(_response);
+        });
+    }
+
+    protected processDeleteWorkInfo(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    linkAuthorToWork(code: string, authorCode: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/authors/{authorCode}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (authorCode === undefined || authorCode === null)
+            throw new Error("The parameter 'authorCode' must be defined.");
+        url_ = url_.replace("{authorCode}", encodeURIComponent("" + authorCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processLinkAuthorToWork(_response);
+        });
+    }
+
+    protected processLinkAuthorToWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    unlinkAuthorFromWork(code: string, authorCode: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/authors/{authorCode}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (authorCode === undefined || authorCode === null)
+            throw new Error("The parameter 'authorCode' must be defined.");
+        url_ = url_.replace("{authorCode}", encodeURIComponent("" + authorCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUnlinkAuthorFromWork(_response);
+        });
+    }
+
+    protected processUnlinkAuthorFromWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    linkOriginalToWork(code: string, originalCode: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/original/{originalCode}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (originalCode === undefined || originalCode === null)
+            throw new Error("The parameter 'originalCode' must be defined.");
+        url_ = url_.replace("{originalCode}", encodeURIComponent("" + originalCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processLinkOriginalToWork(_response);
+        });
+    }
+
+    protected processLinkOriginalToWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    unlinkOriginalFromWork(code: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/original";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUnlinkOriginalFromWork(_response);
+        });
+    }
+
+    protected processUnlinkOriginalFromWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    linkWorkToCollectedWork(collectedWorkCode: string, linkWorkCode: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{collectedWorkCode}/works/{linkWorkCode}";
+        if (collectedWorkCode === undefined || collectedWorkCode === null)
+            throw new Error("The parameter 'collectedWorkCode' must be defined.");
+        url_ = url_.replace("{collectedWorkCode}", encodeURIComponent("" + collectedWorkCode));
+        if (linkWorkCode === undefined || linkWorkCode === null)
+            throw new Error("The parameter 'linkWorkCode' must be defined.");
+        url_ = url_.replace("{linkWorkCode}", encodeURIComponent("" + linkWorkCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processLinkWorkToCollectedWork(_response);
+        });
+    }
+
+    protected processLinkWorkToCollectedWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    unlinkWorkFromCollectedWork(collectedWorkCode: string, linkWorkCode: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{collectedWorkCode}/works/{linkWorkCode}";
+        if (collectedWorkCode === undefined || collectedWorkCode === null)
+            throw new Error("The parameter 'collectedWorkCode' must be defined.");
+        url_ = url_.replace("{collectedWorkCode}", encodeURIComponent("" + collectedWorkCode));
+        if (linkWorkCode === undefined || linkWorkCode === null)
+            throw new Error("The parameter 'linkWorkCode' must be defined.");
+        url_ = url_.replace("{linkWorkCode}", encodeURIComponent("" + linkWorkCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUnlinkWorkFromCollectedWork(_response);
+        });
+    }
+
+    protected processUnlinkWorkFromCollectedWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+}
+
+export class AuthorCreateModel implements IAuthorCreateModel {
+    code?: string | undefined;
+
+    constructor(data?: IAuthorCreateModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): AuthorCreateModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthorCreateModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        return data;
+    }
+}
+
+export interface IAuthorCreateModel {
+    code?: string | undefined;
+}
+
+export class AuthorInfoModel implements IAuthorInfoModel {
+    language?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IAuthorInfoModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.language = _data["language"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): AuthorInfoModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthorInfoModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["language"] = this.language;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IAuthorInfoModel {
+    language?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class AuthorInfoUpdateModel implements IAuthorInfoUpdateModel {
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IAuthorInfoUpdateModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): AuthorInfoUpdateModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthorInfoUpdateModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IAuthorInfoUpdateModel {
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class AuthorLifetimeUpdateModel implements IAuthorLifetimeUpdateModel {
+    born?: string | undefined;
+    died?: string | undefined;
+
+    constructor(data?: IAuthorLifetimeUpdateModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.born = _data["born"];
+            this.died = _data["died"];
+        }
+    }
+
+    static fromJS(data: any): AuthorLifetimeUpdateModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthorLifetimeUpdateModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["born"] = this.born;
+        data["died"] = this.died;
+        return data;
+    }
+}
+
+export interface IAuthorLifetimeUpdateModel {
+    born?: string | undefined;
+    died?: string | undefined;
+}
+
+export class AuthorModel implements IAuthorModel {
+    id?: string | undefined;
+    code?: string | undefined;
+    born?: string | undefined;
+    died?: string | undefined;
+    infos?: AuthorInfoModel[] | undefined;
+
+    constructor(data?: IAuthorModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.born = _data["born"];
+            this.died = _data["died"];
+            if (Array.isArray(_data["infos"])) {
+                this.infos = [] as any;
+                for (let item of _data["infos"])
+                    this.infos!.push(AuthorInfoModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AuthorModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthorModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["born"] = this.born;
+        data["died"] = this.died;
+        if (Array.isArray(this.infos)) {
+            data["infos"] = [];
+            for (let item of this.infos)
+                data["infos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IAuthorModel {
+    id?: string | undefined;
+    code?: string | undefined;
+    born?: string | undefined;
+    died?: string | undefined;
+    infos?: AuthorInfoModel[] | undefined;
 }
 
 export enum ErrorCode {
     LoginFailed = "login-failed",
     InvalidArgument = "invalid-argument",
+    NotFound = "not-found",
 }
 
 export class ErrorModel implements IErrorModel {
@@ -351,6 +1558,254 @@ export class UserModel implements IUserModel {
 export interface IUserModel {
     name?: string | undefined;
     roles?: string[] | undefined;
+}
+
+export class WorkCreateModel implements IWorkCreateModel {
+    code?: string | undefined;
+
+    constructor(data?: IWorkCreateModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): WorkCreateModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkCreateModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        return data;
+    }
+}
+
+export interface IWorkCreateModel {
+    code?: string | undefined;
+}
+
+export class WorkInfoModel implements IWorkInfoModel {
+    language?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IWorkInfoModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.language = _data["language"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): WorkInfoModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkInfoModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["language"] = this.language;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IWorkInfoModel {
+    language?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class WorkInfoUpdateModel implements IWorkInfoUpdateModel {
+    name?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IWorkInfoUpdateModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): WorkInfoUpdateModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkInfoUpdateModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IWorkInfoUpdateModel {
+    name?: string | undefined;
+    description?: string | undefined;
+}
+
+export class WorkModel implements IWorkModel {
+    id?: string | undefined;
+    code?: string | undefined;
+    publish?: string | undefined;
+    language?: string | undefined;
+    infos?: WorkInfoModel[] | undefined;
+    authorsCodes?: string[] | undefined;
+    subWorksCodes?: string[] | undefined;
+    originalCode?: string | undefined;
+
+    constructor(data?: IWorkModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.publish = _data["publish"];
+            this.language = _data["language"];
+            if (Array.isArray(_data["infos"])) {
+                this.infos = [] as any;
+                for (let item of _data["infos"])
+                    this.infos!.push(WorkInfoModel.fromJS(item));
+            }
+            if (Array.isArray(_data["authorsCodes"])) {
+                this.authorsCodes = [] as any;
+                for (let item of _data["authorsCodes"])
+                    this.authorsCodes!.push(item);
+            }
+            if (Array.isArray(_data["subWorksCodes"])) {
+                this.subWorksCodes = [] as any;
+                for (let item of _data["subWorksCodes"])
+                    this.subWorksCodes!.push(item);
+            }
+            this.originalCode = _data["originalCode"];
+        }
+    }
+
+    static fromJS(data: any): WorkModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["publish"] = this.publish;
+        data["language"] = this.language;
+        if (Array.isArray(this.infos)) {
+            data["infos"] = [];
+            for (let item of this.infos)
+                data["infos"].push(item.toJSON());
+        }
+        if (Array.isArray(this.authorsCodes)) {
+            data["authorsCodes"] = [];
+            for (let item of this.authorsCodes)
+                data["authorsCodes"].push(item);
+        }
+        if (Array.isArray(this.subWorksCodes)) {
+            data["subWorksCodes"] = [];
+            for (let item of this.subWorksCodes)
+                data["subWorksCodes"].push(item);
+        }
+        data["originalCode"] = this.originalCode;
+        return data;
+    }
+}
+
+export interface IWorkModel {
+    id?: string | undefined;
+    code?: string | undefined;
+    publish?: string | undefined;
+    language?: string | undefined;
+    infos?: WorkInfoModel[] | undefined;
+    authorsCodes?: string[] | undefined;
+    subWorksCodes?: string[] | undefined;
+    originalCode?: string | undefined;
+}
+
+export class WorkUpdateModel implements IWorkUpdateModel {
+    date?: string | undefined;
+    language?: string | undefined;
+
+    constructor(data?: IWorkUpdateModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.date = _data["date"];
+            this.language = _data["language"];
+        }
+    }
+
+    static fromJS(data: any): WorkUpdateModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkUpdateModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["date"] = this.date;
+        data["language"] = this.language;
+        return data;
+    }
+}
+
+export interface IWorkUpdateModel {
+    date?: string | undefined;
+    language?: string | undefined;
 }
 
 export class ApiException extends Error {
