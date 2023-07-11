@@ -5,9 +5,11 @@ namespace Phys.Tools.ClientGen
 {
     internal static class Program
     {
+        private static readonly string adminSwaggerJsonUrl = "http://localhost:7188/swagger/v1/swagger.json";
+
         static void Main(string[] args)
         {
-            //GenerateTypeScript();
+            GenerateTypeScript();
             GenerateCSharp();
         }
 
@@ -21,12 +23,10 @@ namespace Phys.Tools.ClientGen
             var clientName = "Admin";
             var className = $"{clientName}ApiClient";
             using var http = new HttpClient();
-            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync("http://localhost:7188/swagger/v1/swagger.json").Result).Result;
+            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync(adminSwaggerJsonUrl).Result).Result;
             var settings = new NSwag.CodeGeneration.TypeScript.TypeScriptClientGeneratorSettings
             {
                 ClassName = className,
-                //ClientBaseClass = className + "Base",
-                //ConfigurationClass = className + "Config",
                 CodeGeneratorSettings =
                 {
                 },
@@ -54,7 +54,7 @@ namespace Phys.Tools.ClientGen
             var clientName = "Admin";
             var className = $"{clientName}ApiClient";
             using var http = new HttpClient();
-            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync("http://localhost:7188/swagger/v1/swagger.json").Result).Result;
+            var document = OpenApiDocument.FromJsonAsync(http.GetStringAsync(adminSwaggerJsonUrl).Result).Result;
             var settings = new NSwag.CodeGeneration.CSharp.CSharpClientGeneratorSettings
             {
                 ClassName = className,
