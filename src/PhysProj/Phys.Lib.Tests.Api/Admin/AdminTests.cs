@@ -87,6 +87,7 @@ namespace Phys.Lib.Tests.Api.Admin
         private void TestAuthors()
         {
             var authors = new AuthorsTests(api);
+            var works = new WorksTests(api);
 
             // TODO: extract complex scenarios
             // empty list at start
@@ -136,6 +137,13 @@ namespace Phys.Lib.Tests.Api.Admin
             authors.InfoDelete("decartes", "en");
             // delete info is idempotent
             authors.InfoDelete("decartes", nonExistentCode);
+            // can not delete author linked to work
+            authors.Create("author");
+            works.Create("work-of-author");
+            works.LinkAuthor("work-of-author", "author");
+            authors.DeleteFailed("author");
+            works.Delete("work-of-author");
+            authors.Delete("author");
         }
 
         private void TestWorks()
@@ -222,6 +230,11 @@ namespace Phys.Lib.Tests.Api.Admin
             // unlink works from collected work
             works.UnlinkSubWork("discourse-on-method", "discourse-on-method-chapter-one");
             works.UnlinkSubWork("discourse-on-method", "discourse-on-method-chapter-three");
+            // can not delete work linked as original
+            works.Create("original");
+            works.Create("work");
+            works.LinkOriginal("work", "original");
+            works.DeleteFailed("original");
         }
     }
 }

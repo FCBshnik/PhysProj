@@ -40,6 +40,10 @@ namespace Phys.Lib.Core.Authors
         {
             if (author is null) throw new ArgumentNullException(nameof(author));
 
+            var works = worksSearch.FindByAuthor(author.Code);
+            if (works.Any())
+                throw ValidationError($"can not delete author linked to work");
+
             db.Delete(author.Id);
             log.Info($"deleted author {author}");
         }

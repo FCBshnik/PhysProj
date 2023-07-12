@@ -51,6 +51,9 @@ namespace Phys.Lib.Core.Works
         {
             if (work is null) throw new ArgumentNullException(nameof(work));
 
+            if (worksSearch.FindTranslations(work.Code).Any())
+                throw ValidationError("can not delete work linked as original to translated work");
+
             db.Delete(work.Id);
             log.Info($"deleted work {work}");
         }

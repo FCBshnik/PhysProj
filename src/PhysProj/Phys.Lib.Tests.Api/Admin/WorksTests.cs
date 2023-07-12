@@ -48,6 +48,11 @@ namespace Phys.Lib.Tests.Api.Admin
                 works.Select(w => w.Code).Should().NotContain(code);
             }
 
+            public void DeleteFailed(string code, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            {
+                AdminAssert.ShouldFail(() => api.DeleteWorkAsync(code), errorCode);
+            }
+
             public void UpdateFailed(string code, WorkUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
                 AdminAssert.ShouldFail(() => api.UpdateWorkAsync(code, update), errorCode);

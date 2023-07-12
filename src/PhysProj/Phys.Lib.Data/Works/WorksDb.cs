@@ -32,6 +32,8 @@ namespace Phys.Lib.Data.Works
                 filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
             if (query.AuthorCode != null)
                 filter = filterBuilder.And(filter, filterBuilder.AnyEq(u => u.AuthorsCodes, query.AuthorCode));
+            if (query.OriginalCode != null)
+                filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.OriginalCode, query.OriginalCode));
             if (query.Search != null)
                 filter = filterBuilder.And(filter, filterBuilder.Regex(u => u.Code, query.Search));
 

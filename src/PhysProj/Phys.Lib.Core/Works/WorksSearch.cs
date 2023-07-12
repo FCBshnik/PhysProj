@@ -33,5 +33,12 @@ namespace Phys.Lib.Core.Works
 
             return db.Find(new WorksDbQuery { AuthorCode = authorCode });
         }
+
+        public List<WorkDbo> FindTranslations(string originalCode)
+        {
+            if (originalCode is null) throw new ArgumentNullException(nameof(originalCode));
+
+            return db.Find(new WorksDbQuery { OriginalCode = originalCode });
+        }
     }
 }

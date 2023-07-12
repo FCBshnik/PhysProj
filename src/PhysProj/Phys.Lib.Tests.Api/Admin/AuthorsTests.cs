@@ -47,6 +47,11 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Should().NotBeNull();
             }
 
+            public void DeleteFailed(string code, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            {
+                AdminAssert.ShouldFail(() => api.DeleteAuthorAsync(code), errorCode);
+            }
+
             public void UpdateLifetime(string code, AuthorLifetimeUpdateModel update)
             {
                 var author = api.UpdateAuthorLifetimeAsync(code, update).Result;

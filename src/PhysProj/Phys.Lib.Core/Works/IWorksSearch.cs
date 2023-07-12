@@ -6,6 +6,8 @@
 
         List<WorkDbo> FindByAuthor(string authorCode);
 
+        List<WorkDbo> FindTranslations(string originalCode);
+
         WorkDbo? FindByCode(string code);
     }
 }
