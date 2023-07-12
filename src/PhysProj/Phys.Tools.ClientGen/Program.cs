@@ -27,6 +27,7 @@ namespace Phys.Tools.ClientGen
             var settings = new NSwag.CodeGeneration.TypeScript.TypeScriptClientGeneratorSettings
             {
                 ClassName = className,
+                UseTransformResultMethod = true,
                 CodeGeneratorSettings =
                 {
                 },

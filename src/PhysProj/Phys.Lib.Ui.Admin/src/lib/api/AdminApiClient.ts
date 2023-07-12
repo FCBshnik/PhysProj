@@ -33,7 +33,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processListAuthors(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processListAuthors(_response));
         });
     }
 
@@ -81,7 +81,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCreateAuthor(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processCreateAuthor(_response));
         });
     }
 
@@ -128,7 +128,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetAuthor(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetAuthor(_response));
         });
     }
 
@@ -175,7 +175,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDeleteAuthor(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteAuthor(_response));
         });
     }
 
@@ -226,7 +226,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateAuthorLifetime(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateAuthorLifetime(_response));
         });
     }
 
@@ -280,7 +280,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateAuthorInfo(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateAuthorInfo(_response));
         });
     }
 
@@ -330,7 +330,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDeleteAuthorInfo(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteAuthorInfo(_response));
         });
     }
 
@@ -374,7 +374,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processHealthCheck(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processHealthCheck(_response));
         });
     }
 
@@ -422,7 +422,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processLogin(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processLogin(_response));
         });
     }
 
@@ -466,7 +466,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetUserInfo(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetUserInfo(_response));
         });
     }
 
@@ -503,7 +503,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processListWorks(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processListWorks(_response));
         });
     }
 
@@ -558,7 +558,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCreateWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processCreateWork(_response));
         });
     }
 
@@ -605,7 +605,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetWork(_response));
         });
     }
 
@@ -656,7 +656,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateWork(_response));
         });
     }
 
@@ -703,7 +703,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDeleteWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteWork(_response));
         });
     }
 
@@ -757,7 +757,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateWorkInfo(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateWorkInfo(_response));
         });
     }
 
@@ -807,7 +807,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDeleteWorkInfo(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteWorkInfo(_response));
         });
     }
 
@@ -857,7 +857,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processLinkAuthorToWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processLinkAuthorToWork(_response));
         });
     }
 
@@ -907,7 +907,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUnlinkAuthorFromWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUnlinkAuthorFromWork(_response));
         });
     }
 
@@ -957,7 +957,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processLinkOriginalToWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processLinkOriginalToWork(_response));
         });
     }
 
@@ -1004,7 +1004,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUnlinkOriginalFromWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUnlinkOriginalFromWork(_response));
         });
     }
 
@@ -1054,7 +1054,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processLinkWorkToCollectedWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processLinkWorkToCollectedWork(_response));
         });
     }
 
@@ -1104,7 +1104,7 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUnlinkWorkFromCollectedWork(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUnlinkWorkFromCollectedWork(_response));
         });
     }
 
