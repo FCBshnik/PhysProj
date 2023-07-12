@@ -2,6 +2,6 @@
 
 </script>
 
-<article class="grid">
+<article>
     Home
 </article>

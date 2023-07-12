@@ -1,11 +1,16 @@
-import { AdminApiClient } from "$lib/api/AdminApiClient";
+import { AdminApiClient, ErrorModel } from "$lib/api/AdminApiClient";
+import { notificationsService } from "./NotificationsService";
 
 let authToken: string | null = null;
 
 function fetchAuth(url: RequestInfo, init?: RequestInit) {
     if (init && authToken)
         init.headers = { ...init?.headers, 'Authorization': `Bearer ${authToken}` };
-    return fetch(url, init);
+    return fetch(url, init).then(r => {
+        if (r.status == 500)
+            notificationsService.push("Server error");
+        return Promise.resolve(r);
+    });
 }
 
 class ApiService extends AdminApiClient {
@@ -34,6 +39,14 @@ class ApiService extends AdminApiClient {
         authToken = token;
         localStorage.setItem("token", authToken);
         console.info('saved token');
+    }
+
+    public transformResult<T>(url:string, response:Response, fn:(r:Response) => Promise<T>){
+        return fn(response).catch(err => {
+            if (err instanceof ErrorModel)
+                notificationsService.push((err as ErrorModel).message);
+            return Promise.reject(err);
+        });
     }
 }
 
