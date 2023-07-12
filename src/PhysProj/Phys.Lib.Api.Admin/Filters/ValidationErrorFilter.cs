@@ -18,7 +18,8 @@ namespace Phys.Lib.Api.Admin.Filters
             catch (ValidationException e)
             {
                 log.Info($"validation error: {e.Message}");
-                return Results.BadRequest(new ErrorModel(ErrorCode.InvalidArgument, e.Message));
+                var message = e.Errors.Any() ? e.Errors.First().ErrorMessage : e.Message;
+                return Results.BadRequest(new ErrorModel(ErrorCode.InvalidArgument, message));
             }
         }
     }
