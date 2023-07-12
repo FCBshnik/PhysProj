@@ -49,6 +49,9 @@ namespace Phys.Lib.Core.Authors
             if (author is null) throw new ArgumentNullException(nameof(author));
             if (info is null) throw new ArgumentNullException(nameof(info));
 
+            if (author.Infos.Any(i => i.Language == info.Language))
+                author = DeleteInfo(author, info.Language);
+
             author = db.Update(author.Id, new AuthorDbUpdate { AddInfo = info });
             log.Info($"updated author {author}");
             return author;
@@ -83,7 +86,7 @@ namespace Phys.Lib.Core.Authors
                 update.Died = Date.NormalizeAndValidate(died);
 
             if (update.Born.HasValue() || update.Died.HasValue())
-                Date.ValidateLifetime(author.Born ?? update.Born, author.Died ?? update.Died);
+                Date.ValidateLifetime(update.Born ?? author.Born, update.Died ?? author.Died);
 
             author = db.Update(author.Id, update);
             log.Info($"updated author {author}");

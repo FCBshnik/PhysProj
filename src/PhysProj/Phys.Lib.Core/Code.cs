@@ -12,9 +12,13 @@ namespace Phys.Lib.Core
 
         public static string NormalizeAndValidate(string value)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ValidationException("code can not be empty");
 
             var code = Regex.Replace(value, @"[^\w]", "-").Replace('_', '-').ToLowerInvariant().Trim();
+            if (string.IsNullOrWhiteSpace(code))
+                throw new ValidationException("code can not be empty");
+
             validator.ValidateAndThrow(code);
             return code;
         }
