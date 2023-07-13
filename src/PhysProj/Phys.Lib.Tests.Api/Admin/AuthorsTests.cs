@@ -13,10 +13,16 @@ namespace Phys.Lib.Tests.Api.Admin
                 this.api = api;
             }
 
+            public void Search(string search, IEnumerable<string> authors)
+            {
+                var result = api.ListAuthorsAsync(search: search).Result;
+                result.Select(a => a.Code).Should().BeEquivalentTo(authors);
+            }
+
             public void List(params string[] authors)
             {
-                var result = api.ListAuthorsAsync().Result;
-                authors.Should().HaveCount(result.Count);
+                var result = api.ListAuthorsAsync(null).Result;
+                result.Select(a => a.Code).Should().BeEquivalentTo(authors);
             }
 
             public void NotFound(string code, ErrorCode errorCode)

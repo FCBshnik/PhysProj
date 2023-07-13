@@ -25,8 +25,14 @@ namespace Phys.Lib.Data.Authors
                 filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
             if (query.Codes != null)
                 filter = filterBuilder.And(filter, filterBuilder.In(u => u.Code, query.Codes));
-            if (query.Search != null)
-                filter = filterBuilder.And(filter, filterBuilder.Regex(u => u.Code, query.Search));
+            if (query.SearchRegex != null)
+            {
+                var infoFilterBuilder = Builders<AuthorDbo.InfoDbo>.Filter;
+                filter = filterBuilder.And(filter, filterBuilder.Or(
+                    filterBuilder.Regex(u => u.Code, query.SearchRegex),
+                    filterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, query.SearchRegex)),
+                    filterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Description, query.SearchRegex))));
+            }
 
             var sort = sortBuilder.Descending(i => i.Id);
 

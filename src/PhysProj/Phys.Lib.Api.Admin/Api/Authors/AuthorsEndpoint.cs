@@ -11,9 +11,9 @@ namespace Phys.Lib.Api.Admin.Api.Authors
 
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapGet("/", ([FromServices] IAuthorsSearch authors) =>
+            builder.MapGet("/", ([FromQuery] string? search, [FromServices] IAuthorsSearch authors) =>
             {
-                var items = authors.FindByText(".");
+                var items = authors.FindByText(search ?? ".");
                 return Results.Ok(items.Select(mapper.Map));
             })
             .ProducesOk<List<AuthorModel>>()

@@ -108,6 +108,18 @@ namespace Phys.Lib.Tests.Api.Admin
             // create author duplicate failed
             authors.CreateFailed("galilei");
             authors.List("decartes", "galilei");
+            // search by code
+            authors.Create("galileo");
+            authors.Search("dec", new[] { "decartes" });
+            authors.Search("gal", new[] { "galileo", "galilei" });
+            authors.Delete("galileo");
+            // search by name
+            authors.Create("galileo");
+            authors.InfoUpdate("galileo", "en", new AuthorInfoUpdateModel { Name = "name" });
+            authors.InfoUpdate("galilei", "en", new AuthorInfoUpdateModel { Description = "desc" });
+            authors.Search("name", new[] { "galileo" });
+            authors.Search("desc", new[] { "galilei" });
+            authors.Delete("galileo");
             // delete is idempotent
             authors.Delete(nonExistentCode);
             authors.List("decartes", "galilei");

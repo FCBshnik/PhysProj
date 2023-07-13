@@ -55,18 +55,23 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AuthorModel>> ListAuthorsAsync()
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AuthorModel>> ListAuthorsAsync(string search)
         {
-            return ListAuthorsAsync(System.Threading.CancellationToken.None);
+            return ListAuthorsAsync(search, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AuthorModel>> ListAuthorsAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AuthorModel>> ListAuthorsAsync(string search, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/authors");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/authors?");
+            if (search != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;

@@ -24,7 +24,7 @@ namespace Phys.Lib.Core.Authors
         {
             if (search is null) throw new ArgumentNullException(nameof(search));
 
-            return db.Find(new AuthorsDbQuery { Search = search });
+            return db.Find(new AuthorsDbQuery { SearchRegex = search });
         }
 
         public List<AuthorDbo> FindByCodes(List<string> codes)
