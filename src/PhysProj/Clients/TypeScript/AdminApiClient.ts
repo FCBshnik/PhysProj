@@ -19,10 +19,15 @@ export class AdminApiClient {
     }
 
     /**
+     * @param search (optional) 
      * @return OK
      */
-    listAuthors(): Promise<AuthorModel[]> {
-        let url_ = this.baseUrl + "/api/authors";
+    listAuthors(search: string | undefined): Promise<AuthorModel[]> {
+        let url_ = this.baseUrl + "/api/authors?";
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {

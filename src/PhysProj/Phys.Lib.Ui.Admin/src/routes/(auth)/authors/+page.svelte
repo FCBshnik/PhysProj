@@ -5,7 +5,7 @@
     let text:string = '';
 
     async function refresh() {
-        authors = await api.service.listAuthors();
+        authors = await api.service.listAuthors(text);
     }
 
     async function create() {
@@ -13,6 +13,12 @@
             text = '';
             refresh()
         })
+    }
+
+    async function deleteAuthor(author:api.AuthorModel) {
+        api.service.deleteAuthor(author.code).then(r => {
+            refresh()
+        });
     }
 
     refresh();
@@ -28,12 +34,12 @@
 
     <section class="p-4">
         <table class="table-auto w-full">
-            <thead>
-              <tr>
+            <thead class="">
+              <tr class="border-b-2 border-b-gray-700">
                 <th>Code</th>
                 <th>Born</th>
                 <th>Died</th>
-                <th>Edit</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -43,7 +49,7 @@
                     <td>{author.born ?? '-'}</td>
                     <td>{author.died ?? '-'}</td>
                     <td class="flex justify-end gap-1">
-                        <button class="w-min text-xs" on:click={refresh}>X</button>
+                        <button class="w-min text-xs" on:click={() => deleteAuthor(author)}>X</button>
                     </td>
                   </tr>
                 {/each}

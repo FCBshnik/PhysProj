@@ -4,7 +4,7 @@
 
 @layer base {
     body {
-        @apply text-gray-400 bg-gray-800;
+        @apply text-gray-500 bg-gray-800;
     }
     main {
     }
@@ -24,7 +24,7 @@
         @apply w-full p-2 text-sm bg-gray-50 focus:outline-none border border-gray-200 rounded text-gray-600
     }
     a {
-        @apply hover:text-blue-400
+        @apply hover:text-blue-400 text-gray-400
     }
     nav {
         @apply flex flex-wrap w-full items-center justify-between p-4 gap-4
