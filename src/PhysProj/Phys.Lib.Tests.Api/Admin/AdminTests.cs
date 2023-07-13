@@ -235,6 +235,15 @@ namespace Phys.Lib.Tests.Api.Admin
             works.Create("work");
             works.LinkOriginal("work", "original");
             works.DeleteFailed("original");
+            works.Delete("work");
+            works.Delete("original");
+            // can not delete work linked as sub-work
+            works.Create("work");
+            works.Create("sub-work");
+            works.LinkSubWork("work", "sub-work");
+            works.DeleteFailed("sub-work");
+            works.Delete("work");
+            works.Delete("sub-work");
         }
     }
 }

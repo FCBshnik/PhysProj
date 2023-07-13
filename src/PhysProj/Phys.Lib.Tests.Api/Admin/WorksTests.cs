@@ -121,23 +121,23 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.AuthorsCodes.Should().NotContain(authorCode);
             }
 
-            public void LinkSubWorkFailed(string code, string workCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            public void LinkSubWorkFailed(string collectedWorkCode, string subWorkCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
             {
-                AdminAssert.ShouldFail(() => api.LinkWorkToCollectedWorkAsync(code, workCode), errorCode);
+                AdminAssert.ShouldFail(() => api.LinkWorkToCollectedWorkAsync(collectedWorkCode, subWorkCode), errorCode);
             }
 
-            public void LinkSubWork(string code, string workCode)
+            public void LinkSubWork(string collectedWorkCode, string subWorkCode)
             {
-                var result = api.LinkWorkToCollectedWorkAsync(code, workCode).Result;
-                result.Code.Should().Be(code);
-                result.SubWorksCodes.Should().Contain(workCode);
+                var result = api.LinkWorkToCollectedWorkAsync(collectedWorkCode, subWorkCode).Result;
+                result.Code.Should().Be(collectedWorkCode);
+                result.SubWorksCodes.Should().Contain(subWorkCode);
             }
 
-            public void UnlinkSubWork(string code, string workCode)
+            public void UnlinkSubWork(string collectedWorkCode, string subWorkCode)
             {
-                var result = api.UnlinkWorkFromCollectedWorkAsync(code, workCode).Result;
-                result.Code.Should().Be(code);
-                result.AuthorsCodes.Should().NotContain(workCode);
+                var result = api.UnlinkWorkFromCollectedWorkAsync(collectedWorkCode, subWorkCode).Result;
+                result.Code.Should().Be(collectedWorkCode);
+                result.AuthorsCodes.Should().NotContain(subWorkCode);
             }
         }
     }

@@ -40,5 +40,12 @@ namespace Phys.Lib.Core.Works
 
             return db.Find(new WorksDbQuery { OriginalCode = originalCode });
         }
+
+        public List<WorkDbo> FindCollected(string subWorkCode)
+        {
+            if (subWorkCode is null) throw new ArgumentNullException(nameof(subWorkCode));
+
+            return db.Find(new WorksDbQuery { SubWorkCode = subWorkCode });
+        }
     }
 }

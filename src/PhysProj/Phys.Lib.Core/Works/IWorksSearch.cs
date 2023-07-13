@@ -8,6 +8,8 @@
 
         List<WorkDbo> FindTranslations(string originalCode);
 
+        List<WorkDbo> FindCollected(string subWorkCode);
+
         WorkDbo? FindByCode(string code);
     }
 }

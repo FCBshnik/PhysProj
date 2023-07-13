@@ -53,6 +53,8 @@ namespace Phys.Lib.Core.Works
 
             if (worksSearch.FindTranslations(work.Code).Any())
                 throw ValidationError("can not delete work linked as original to translated work");
+            if (worksSearch.FindCollected(work.Code).Any())
+                throw ValidationError("can not delete work linked as sub-work to collected work");
 
             db.Delete(work.Id);
             log.Info($"deleted work {work}");
