@@ -4,10 +4,10 @@ namespace Phys.Lib.Data
 {
     internal class Collection<T>
     {
-        protected FilterDefinitionBuilder<T> filterBuilder => Builders<T>.Filter;
-        protected UpdateDefinitionBuilder<T> updateBuilder => Builders<T>.Update;
-        protected SortDefinitionBuilder<T> sortBuilder => Builders<T>.Sort;
-        protected IndexKeysDefinitionBuilder<T> indexBuilder => Builders<T>.IndexKeys;
+        protected static FilterDefinitionBuilder<T> filterBuilder => Builders<T>.Filter;
+        protected static UpdateDefinitionBuilder<T> updateBuilder => Builders<T>.Update;
+        protected static SortDefinitionBuilder<T> sortBuilder => Builders<T>.Sort;
+        protected static IndexKeysDefinitionBuilder<T> indexBuilder => Builders<T>.IndexKeys;
 
         protected FindOneAndUpdateOptions<T, T> findOneAndUpdateReturnAfter = new FindOneAndUpdateOptions<T, T> { ReturnDocument = ReturnDocument.After };
 
