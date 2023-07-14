@@ -144,3 +144,9 @@ dotnet_diagnostic.CA1859.severity = warning
 
 # RCS1214: Unnecessary interpolated string.
 dotnet_diagnostic.RCS1214.severity = silent
+
+# IDE0055: Fix formatting
+dotnet_diagnostic.IDE0055.severity = suggestion
+
+# CA1816: Dispose methods should call SuppressFinalize
+dotnet_diagnostic.CA1816.severity = silent
