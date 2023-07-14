@@ -1,11 +1,7 @@
-﻿using NLog;
-
-namespace Phys.Lib.Core.Works
+﻿namespace Phys.Lib.Core.Works
 {
     public class WorksSearch : IWorksSearch
     {
-        private static readonly ILogger log = LogManager.GetLogger("works-search");
-
         private readonly IWorksDb db;
 
         public WorksSearch(IWorksDb db)

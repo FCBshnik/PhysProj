@@ -8,12 +8,11 @@ namespace Phys.Lib.Tests.Api.Admin
     {
         private const string nonExistentCode = "non-existent";
 
-        private FileInfo projectPath => new FileInfo(Path.Combine(solutionDir.FullName, "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin.csproj"));
+        private FileInfo ProjectPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin.csproj"));
+
         private const string url = "https://localhost:17188/";
 
-        private AdminApiClient api;
-
-        private IUsersService? users;
+        private readonly AdminApiClient api;
 
         public AdminTests(ITestOutputHelper output) : base(output)
         {
@@ -24,16 +23,15 @@ namespace Phys.Lib.Tests.Api.Admin
         {
             await base.Init();
 
-            StartApp(url, projectPath);
+            StartApp(url, ProjectPath);
 
             var container = BuildContainer();
-            using (var scope = container.BeginLifetimeScope())
-            {
-                users = scope.Resolve<IUsersService>();
-            }
+            using var scope = container.BeginLifetimeScope();
+            var users = scope.Resolve<IUsersService>();
+            InitUsers(users);
         }
 
-        private void CreateUsers()
+        private void InitUsers(IUsersService users)
         {
             var user = users.Create("user", "123456");
             users.AddRole(user, UserRole.User);
@@ -64,8 +62,6 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private void TestUsers()
         {
-            CreateUsers();
-
             var tests = new UsersTests(api);
 
             tests.LoginFailed(new LoginModel { Username = "non-existent", Password = "123456" });

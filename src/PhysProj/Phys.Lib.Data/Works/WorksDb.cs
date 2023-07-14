@@ -9,7 +9,7 @@ namespace Phys.Lib.Data.Works
     {
         public WorksDb(IMongoCollection<WorkDbo> collection) : base(collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<WorkDbo>(indexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<WorkDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
         public WorkDbo Create(WorkDbo work)
@@ -22,24 +22,24 @@ namespace Phys.Lib.Data.Works
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            collection.DeleteOne(filterBuilder.Eq(i => i.Id, id));
+            collection.DeleteOne(FilterBuilder.Eq(i => i.Id, id));
         }
 
         public List<WorkDbo> Find(WorksDbQuery query)
         {
-            var filter = filterBuilder.Empty;
+            var filter = FilterBuilder.Empty;
             if (query.Code != null)
-                filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
+                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.AuthorCode != null)
-                filter = filterBuilder.And(filter, filterBuilder.AnyEq(u => u.AuthorsCodes, query.AuthorCode));
+                filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.AuthorsCodes, query.AuthorCode));
             if (query.OriginalCode != null)
-                filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.OriginalCode, query.OriginalCode));
+                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.OriginalCode, query.OriginalCode));
             if (query.SubWorkCode != null)
-                filter = filterBuilder.And(filter, filterBuilder.AnyEq(u => u.SubWorksCodes, query.SubWorkCode));
+                filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.SubWorksCodes, query.SubWorkCode));
             if (query.Search != null)
-                filter = filterBuilder.And(filter, filterBuilder.Regex(u => u.Code, query.Search));
+                filter = FilterBuilder.And(filter, FilterBuilder.Regex(u => u.Code, query.Search));
 
-            var sort = sortBuilder.Descending(i => i.Id);
+            var sort = SortBuilder.Descending(i => i.Id);
 
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
@@ -48,15 +48,15 @@ namespace Phys.Lib.Data.Works
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"work '{id}' not found in db");
+            return collection.Find(FilterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"work '{id}' not found in db");
         }
 
         public WorkDbo Update(string id, WorkDbUpdate work)
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            var filter = filterBuilder.Eq(i => i.Id, id);
-            var update = updateBuilder.Combine();
+            var filter = FilterBuilder.Eq(i => i.Id, id);
+            var update = UpdateBuilder.Combine();
 
             if (work.Publish.IsEmpty())
                 update = update.Unset(i => i.Publish);

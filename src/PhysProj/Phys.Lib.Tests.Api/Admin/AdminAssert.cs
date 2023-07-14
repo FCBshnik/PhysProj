@@ -13,10 +13,12 @@ namespace Phys.Lib.Tests.Api.Admin
         public static void ShouldBeUpdatedWith(this string? resultValue, string? updateValue)
         {
             if (updateValue != null)
-                if (updateValue == string.Empty)
+            {
+                if (updateValue?.Length == 0)
                     resultValue.Should().BeNull();
                 else
                     resultValue.Should().Be(updateValue);
+            }
         }
     }
 }

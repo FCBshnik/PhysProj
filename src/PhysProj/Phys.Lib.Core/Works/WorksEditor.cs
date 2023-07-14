@@ -7,7 +7,7 @@ namespace Phys.Lib.Core.Works
 {
     public class WorksEditor : IWorksEditor
     {
-        private static readonly ILogger log = LogManager.GetLogger("works-editor");
+        private static readonly Logger log = LogManager.GetLogger("works-editor");
 
         private readonly IWorksDb db;
         private readonly IWorksSearch worksSearch;
@@ -140,8 +140,10 @@ namespace Phys.Lib.Core.Works
                 date = Date.NormalizeAndValidate(date);
 
                 if (work.AuthorsCodes.Count != 0)
+                {
                     foreach (var author in authorsSearch.FindByCodes(work.AuthorsCodes))
                         Date.ValidateBornAndPublish(author.Born, date);
+                }
             }
 
             var update = new WorkDbUpdate { Publish = date };
@@ -174,10 +176,7 @@ namespace Phys.Lib.Core.Works
             if (work.OriginalCode == originalCode)
                 return work;
 
-            var original = worksSearch.FindByCode(originalCode);
-            if (original == null)
-                throw ValidationError($"work '{originalCode}' not found");
-
+            var original = worksSearch.FindByCode(originalCode) ?? throw ValidationError($"work '{originalCode}' not found");
             if (original.Code == work.Code)
                 throw ValidationError($"can not link original as self");
             if (work.SubWorksCodes.Contains(original.Code))
@@ -207,7 +206,7 @@ namespace Phys.Lib.Core.Works
                 ValidateWorkIsNotLinked(worksSearch.FindByCode(subWorkCode) ?? throw new ApplicationException(), linkedCode, depth + 1);
         }
 
-        private Exception ValidationError(string message)
+        private static ValidationException ValidationError(string message)
         {
             return new ValidationException(message);
         }

@@ -7,7 +7,7 @@ namespace Phys.Lib.Api.Admin.Api.Authors
 {
     public static class AuthorsEndpoint
     {
-        private static readonly AuthorsMapper mapper = new AuthorsMapper();
+        private static readonly AuthorsMapper mapper = new();
 
         public static void Map(RouteGroupBuilder builder)
         {

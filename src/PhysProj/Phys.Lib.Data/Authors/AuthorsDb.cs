@@ -9,7 +9,7 @@ namespace Phys.Lib.Data.Authors
     {
         public AuthorsDb(IMongoCollection<AuthorDbo> collection) : base(collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<AuthorDbo>(indexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<AuthorDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
         public AuthorDbo Create(AuthorDbo author)
@@ -20,21 +20,21 @@ namespace Phys.Lib.Data.Authors
 
         public List<AuthorDbo> Find(AuthorsDbQuery query)
         {
-            var filter = filterBuilder.Empty;
+            var filter = FilterBuilder.Empty;
             if (query.Code != null)
-                filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.Code, query.Code));
+                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.Codes != null)
-                filter = filterBuilder.And(filter, filterBuilder.In(u => u.Code, query.Codes));
+                filter = FilterBuilder.And(filter, FilterBuilder.In(u => u.Code, query.Codes));
             if (query.SearchRegex != null)
             {
                 var infoFilterBuilder = Builders<AuthorDbo.InfoDbo>.Filter;
-                filter = filterBuilder.And(filter, filterBuilder.Or(
-                    filterBuilder.Regex(u => u.Code, query.SearchRegex),
-                    filterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, query.SearchRegex)),
-                    filterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Description, query.SearchRegex))));
+                filter = FilterBuilder.And(filter, FilterBuilder.Or(
+                    FilterBuilder.Regex(u => u.Code, query.SearchRegex),
+                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, query.SearchRegex)),
+                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Description, query.SearchRegex))));
             }
 
-            var sort = sortBuilder.Descending(i => i.Id);
+            var sort = SortBuilder.Descending(i => i.Id);
 
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
@@ -43,22 +43,22 @@ namespace Phys.Lib.Data.Authors
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
+            return collection.Find(FilterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
         }
 
         public AuthorDbo GetByCode(string code)
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            return collection.Find(filterBuilder.Eq(u => u.Code, code)).FirstOrDefault() ?? throw new ApplicationException($"author '{code}' not found in db");
+            return collection.Find(FilterBuilder.Eq(u => u.Code, code)).FirstOrDefault() ?? throw new ApplicationException($"author '{code}' not found in db");
         }
 
         public AuthorDbo Update(string id, AuthorDbUpdate author)
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            var filter = filterBuilder.Eq(i => i.Id, id);
-            var update = updateBuilder.Combine();
+            var filter = FilterBuilder.Eq(i => i.Id, id);
+            var update = UpdateBuilder.Combine();
 
             if (author.Born.IsEmpty())
                 update = update.Unset(i => i.Born);
@@ -83,7 +83,7 @@ namespace Phys.Lib.Data.Authors
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            collection.DeleteOne(filterBuilder.Eq(i => i.Id, id));
+            collection.DeleteOne(FilterBuilder.Eq(i => i.Id, id));
         }
     }
 }

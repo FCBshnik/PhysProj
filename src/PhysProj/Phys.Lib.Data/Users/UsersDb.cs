@@ -9,7 +9,7 @@ namespace Phys.Lib.Data.Users
     {
         public UsersDb(IMongoCollection<UserDbo> collection) : base(collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<UserDbo>(indexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<UserDbo>(IndexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
         }
 
         public UserDbo Create(UserDbo user)
@@ -23,8 +23,8 @@ namespace Phys.Lib.Data.Users
             ArgumentNullException.ThrowIfNull(id);
             ArgumentNullException.ThrowIfNull(user);
 
-            var filter = filterBuilder.Eq(i => i.Id, id);
-            var update = updateBuilder.Combine();
+            var filter = FilterBuilder.Eq(i => i.Id, id);
+            var update = UpdateBuilder.Combine();
 
             if (user.AddRole.HasValue())
                 update = update.Push(i => i.Roles, user.AddRole);
@@ -41,11 +41,11 @@ namespace Phys.Lib.Data.Users
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            var filter = filterBuilder.Empty;
+            var filter = FilterBuilder.Empty;
             if (query.NameLowerCase != null)
-                filter = filterBuilder.And(filter, filterBuilder.Eq(u => u.NameLowerCase, query.NameLowerCase));
+                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.NameLowerCase, query.NameLowerCase));
 
-            var sort = sortBuilder.Descending(i => i.Id);
+            var sort = SortBuilder.Descending(i => i.Id);
 
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }

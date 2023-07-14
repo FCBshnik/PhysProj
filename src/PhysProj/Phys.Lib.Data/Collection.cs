@@ -4,12 +4,12 @@ namespace Phys.Lib.Data
 {
     internal class Collection<T>
     {
-        protected static FilterDefinitionBuilder<T> filterBuilder => Builders<T>.Filter;
-        protected static UpdateDefinitionBuilder<T> updateBuilder => Builders<T>.Update;
-        protected static SortDefinitionBuilder<T> sortBuilder => Builders<T>.Sort;
-        protected static IndexKeysDefinitionBuilder<T> indexBuilder => Builders<T>.IndexKeys;
+        protected static FilterDefinitionBuilder<T> FilterBuilder => Builders<T>.Filter;
+        protected static UpdateDefinitionBuilder<T> UpdateBuilder => Builders<T>.Update;
+        protected static SortDefinitionBuilder<T> SortBuilder => Builders<T>.Sort;
+        protected static IndexKeysDefinitionBuilder<T> IndexBuilder => Builders<T>.IndexKeys;
 
-        protected FindOneAndUpdateOptions<T, T> findOneAndUpdateReturnAfter = new FindOneAndUpdateOptions<T, T> { ReturnDocument = ReturnDocument.After };
+        protected FindOneAndUpdateOptions<T, T> findOneAndUpdateReturnAfter = new() { ReturnDocument = ReturnDocument.After };
 
         protected readonly IMongoCollection<T> collection;
 

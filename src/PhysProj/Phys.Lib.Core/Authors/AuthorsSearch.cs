@@ -6,7 +6,7 @@
 
         public AuthorsSearch(IAuthorsDb db)
         {
-            this.db = db ?? throw new ArgumentNullException();
+            this.db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         public AuthorDbo? FindByCode(string code)
