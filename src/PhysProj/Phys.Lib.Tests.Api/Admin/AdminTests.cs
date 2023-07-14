@@ -31,7 +31,7 @@ namespace Phys.Lib.Tests.Api.Admin
             InitUsers(users);
         }
 
-        private void InitUsers(IUsersService users)
+        private static void InitUsers(IUsersService users)
         {
             var user = users.Create("user", "123456");
             users.AddRole(user, UserRole.User);

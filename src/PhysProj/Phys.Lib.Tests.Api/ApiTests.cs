@@ -6,17 +6,12 @@ namespace Phys.Lib.Tests.Api
 {
     public class ApiTests : IDisposable
     {
-        private CancellationTokenSource cts = new CancellationTokenSource();
-
-        private MongoDbContainer mongo = new MongoDbBuilder()
-                .WithImage("mongo:4.4.18")
-                .Build();
-
-        protected HttpClient http = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
-
-        protected DirectoryInfo solutionDir = new DirectoryInfo(@".\..\..\..\..\");
-
+        private readonly CancellationTokenSource cts = new();
+        private readonly MongoDbContainer mongo = new MongoDbBuilder().WithImage("mongo:4.4.18").Build();
         private readonly ITestOutputHelper output;
+
+        protected HttpClient http = new() { Timeout = TimeSpan.FromSeconds(3) };
+        protected DirectoryInfo solutionDir = new(@".\..\..\..\..\");
 
         public ApiTests(ITestOutputHelper output)
         {
@@ -56,9 +51,11 @@ namespace Phys.Lib.Tests.Api
                 throw new InvalidOperationException($"Project file '{projectPath}' not found");
 
             // build
-            var appDir = new DirectoryInfo(projectPath.Directory.Name);
+            var appDir = projectPath.Directory;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (appDir.Exists)
                 appDir.Delete(true);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             appDir.Create();
             DotNetBuild(projectPath, appDir);
 
@@ -70,9 +67,7 @@ namespace Phys.Lib.Tests.Api
             File.WriteAllText(testSettingsFile.FullName, appSettings);
 
             // run
-            var appFile = new FileInfo(Path.Combine(appDir.FullName, projectPath.Directory.Name) + ".dll");
-            if (!appFile.Exists)
-                throw new InvalidOperationException($"App file '{appFile.FullName}' not found");
+            var appFile = new FileInfo(Path.Combine(appDir.FullName, appDir.Name) + ".dll");
             DotNetRun(appFile, testSettingsFile);
 
             // todo: wait app started
@@ -99,6 +94,10 @@ namespace Phys.Lib.Tests.Api
 
         private void DotNetRun(FileInfo appFile, FileInfo appSettingsFile)
         {
+            if (!appFile.Exists)
+                throw new InvalidOperationException($"App file '{appFile.FullName}' not found");
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             _ = Cli.Wrap("dotnet")
                 .WithArguments(a =>
                 {
@@ -107,6 +106,7 @@ namespace Phys.Lib.Tests.Api
                 })
                 .WithWorkingDirectory(appFile.Directory.FullName)
                 .ExecuteAsync(cts.Token);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         protected void Log(string message)
