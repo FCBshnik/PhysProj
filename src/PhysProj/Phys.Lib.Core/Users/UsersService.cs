@@ -16,16 +16,16 @@ namespace Phys.Lib.Core.Users
 
         public UserDbo GetByName(string name)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(name);
 
             return db.Find(new UsersDbQuery { NameLowerCase = name.ToLowerInvariant() }).FirstOrDefault() ?? throw new ApplicationException($"user '{name}' not found");
         }
 
         public Result<UserDbo> Login(string userName, string password, UserRole role)
         {
-            if (userName == null) throw new ArgumentNullException(nameof(userName));
-            if (password == null) throw new ArgumentNullException(nameof(password));
-            if (role == null) throw new ArgumentNullException(nameof(role));
+            ArgumentNullException.ThrowIfNull(userName);
+            ArgumentNullException.ThrowIfNull(password);
+            ArgumentNullException.ThrowIfNull(role);
 
             var user = db.Find(new UsersDbQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
             if (user == null)
@@ -52,8 +52,8 @@ namespace Phys.Lib.Core.Users
 
         public UserDbo AddRole(UserDbo user, UserRole role)
         {
-            if (user == null) throw new ArgumentNullException(nameof(user));
-            if (role == null) throw new ArgumentNullException(nameof(role));
+            ArgumentNullException.ThrowIfNull(user);
+            ArgumentNullException.ThrowIfNull(role);
 
             if (user.HasRole(role))
                 return user;
@@ -65,8 +65,8 @@ namespace Phys.Lib.Core.Users
 
         public UserDbo DeleteRole(UserDbo user, UserRole role)
         {
-            if (user == null) throw new ArgumentNullException(nameof(user));
-            if (role == null) throw new ArgumentNullException(nameof(role));
+            ArgumentNullException.ThrowIfNull(user);
+            ArgumentNullException.ThrowIfNull(role);
 
             if (!user.HasRole(role))
                 return user;
@@ -78,8 +78,8 @@ namespace Phys.Lib.Core.Users
 
         public UserDbo Create(string name, string password)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (password == null) throw new ArgumentNullException(nameof(password));
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(password);
 
             UserValidators.Name.ValidateAndThrow(name);
             UserValidators.Password.ValidateAndThrow(password);

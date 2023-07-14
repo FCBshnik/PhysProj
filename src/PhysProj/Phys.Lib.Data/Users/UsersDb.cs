@@ -20,8 +20,8 @@ namespace Phys.Lib.Data.Users
 
         public UserDbo Update(string id, UserDbUpdate user)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
-            if (user is null) throw new ArgumentNullException(nameof(user));
+            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(user);
 
             var filter = filterBuilder.Eq(i => i.Id, id);
             var update = updateBuilder.Combine();
@@ -39,7 +39,7 @@ namespace Phys.Lib.Data.Users
 
         public List<UserDbo> Find(UsersDbQuery query)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
+            ArgumentNullException.ThrowIfNull(query);
 
             var filter = filterBuilder.Empty;
             if (query.NameLowerCase != null)

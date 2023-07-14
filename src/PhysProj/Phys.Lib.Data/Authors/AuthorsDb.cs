@@ -41,21 +41,21 @@ namespace Phys.Lib.Data.Authors
 
         public AuthorDbo Get(string id)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
         }
 
         public AuthorDbo GetByCode(string code)
         {
-            if (code is null) throw new ArgumentNullException(nameof(code));
+            ArgumentNullException.ThrowIfNull(code);
 
             return collection.Find(filterBuilder.Eq(u => u.Code, code)).FirstOrDefault() ?? throw new ApplicationException($"author '{code}' not found in db");
         }
 
         public AuthorDbo Update(string id, AuthorDbUpdate author)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var filter = filterBuilder.Eq(i => i.Id, id);
             var update = updateBuilder.Combine();
@@ -81,7 +81,7 @@ namespace Phys.Lib.Data.Authors
 
         public void Delete(string id)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             collection.DeleteOne(filterBuilder.Eq(i => i.Id, id));
         }

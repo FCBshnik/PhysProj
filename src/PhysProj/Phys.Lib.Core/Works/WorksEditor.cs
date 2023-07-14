@@ -22,8 +22,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo AddInfo(WorkDbo work, WorkDbo.InfoDbo info)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (info is null) throw new ArgumentNullException(nameof(info));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(info);
 
             var update = new WorkDbUpdate { AddInfo = info };
             work = db.Update(work.Id, update);
@@ -49,7 +49,7 @@ namespace Phys.Lib.Core.Works
 
         public void Delete(WorkDbo work)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
+            ArgumentNullException.ThrowIfNull(work);
 
             if (worksSearch.FindTranslations(work.Code).Any())
                 throw ValidationError("can not delete work linked as original to translated work");
@@ -62,8 +62,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo DeleteInfo(WorkDbo work, string language)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (language is null) throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(language);
 
             var update = new WorkDbUpdate { DeleteInfo = language };
             work = db.Update(work.Id, update);
@@ -73,8 +73,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo LinkAuthor(WorkDbo work, string authorCode)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (authorCode is null) throw new ArgumentNullException(nameof(authorCode));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(authorCode);
 
             var author = authorsSearch.FindByCode(authorCode);
             if (author == null)
@@ -88,8 +88,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo LinkWork(WorkDbo work, string subWorkCode)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (subWorkCode is null) throw new ArgumentNullException(nameof(subWorkCode));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(subWorkCode);
 
             subWorkCode = Code.NormalizeAndValidate(subWorkCode);
 
@@ -116,8 +116,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo UnlinkAuthor(WorkDbo work, string authorCode)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (authorCode is null) throw new ArgumentNullException(nameof(authorCode));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(authorCode);
 
             var update = new WorkDbUpdate { DeleteAuthor = authorCode };
             work = db.Update(work.Id, update);
@@ -127,8 +127,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo UnlinkWork(WorkDbo work, string workCode)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (workCode is null) throw new ArgumentNullException(nameof(workCode));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(workCode);
 
             var update = new WorkDbUpdate { DeleteSubWork = workCode };
             work = db.Update(work.Id, update);
@@ -138,8 +138,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo UpdateDate(WorkDbo work, string date)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (date is null) throw new ArgumentNullException(nameof(date));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(date);
 
             if (date.HasValue())
             {
@@ -158,8 +158,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo UpdateLanguage(WorkDbo work, string language)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (language is null) throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(language);
 
             if (language.HasValue())
                 language = Language.NormalizeAndValidate(language);
@@ -172,8 +172,8 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo UpdateOriginal(WorkDbo work, string originalCode)
         {
-            if (work is null) throw new ArgumentNullException(nameof(work));
-            if (originalCode is null) throw new ArgumentNullException(nameof(originalCode));
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(originalCode);
 
             originalCode = Code.NormalizeAndValidate(originalCode);
 

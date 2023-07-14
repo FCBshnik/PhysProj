@@ -5,7 +5,7 @@ using Phys.Lib.Core.Authors;
 
 namespace Phys.Lib.Api.Admin.Api.Authors
 {
-    public class AuthorsEndpoint
+    public static class AuthorsEndpoint
     {
         private static readonly AuthorsMapper mapper = new AuthorsMapper();
 

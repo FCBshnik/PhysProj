@@ -38,7 +38,7 @@ namespace Phys.Lib.Core.Authors
 
         public void Delete(AuthorDbo author)
         {
-            if (author is null) throw new ArgumentNullException(nameof(author));
+            ArgumentNullException.ThrowIfNull(author);
 
             var works = worksSearch.FindByAuthor(author.Code);
             if (works.Any())
@@ -50,8 +50,8 @@ namespace Phys.Lib.Core.Authors
 
         public AuthorDbo UpdateInfo(AuthorDbo author, AuthorDbo.InfoDbo info)
         {
-            if (author is null) throw new ArgumentNullException(nameof(author));
-            if (info is null) throw new ArgumentNullException(nameof(info));
+            ArgumentNullException.ThrowIfNull(author);
+            ArgumentNullException.ThrowIfNull(info);
 
             if (author.Infos.Any(i => i.Language == info.Language))
                 author = DeleteInfo(author, info.Language);
@@ -63,8 +63,8 @@ namespace Phys.Lib.Core.Authors
 
         public AuthorDbo DeleteInfo(AuthorDbo author, string language)
         {
-            if (author is null) throw new ArgumentNullException(nameof(author));
-            if (language is null) throw new ArgumentNullException(nameof(language));
+            ArgumentNullException.ThrowIfNull(author);
+            ArgumentNullException.ThrowIfNull(language);
 
             author = db.Update(author.Id, new AuthorDbUpdate { DeleteInfo = language });
             log.Info($"updated author {author}");
@@ -73,7 +73,7 @@ namespace Phys.Lib.Core.Authors
 
         public AuthorDbo UpdateLifetime(AuthorDbo author, string? born, string? died)
         {
-            if (author is null) throw new ArgumentNullException(nameof(author));
+            ArgumentNullException.ThrowIfNull(author);
             if (born is null && died is null) throw new ArgumentNullException();
 
             var update = new AuthorDbUpdate();

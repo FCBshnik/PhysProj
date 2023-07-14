@@ -4,7 +4,7 @@
     {
         public static Result<T> Fail<T>(string error)
         {
-            if (error is null) throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
             return new Result<T>(default, error);
         }
 

@@ -50,7 +50,7 @@ namespace Phys.Lib.Tests.Api
 
         protected void StartApp(string url, FileInfo projectPath)
         {
-            if (url is null) throw new ArgumentNullException(nameof(url));
+            ArgumentNullException.ThrowIfNull(url);
 
             if (!projectPath.Exists)
                 throw new InvalidOperationException($"Project file '{projectPath}' not found");

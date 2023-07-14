@@ -79,8 +79,8 @@ namespace Phys.Lib.Tests.Api.Admin
 
                 var info = result.Infos.FirstOrDefault(i => i.Language == language);
                 info.Should().NotBeNull();
-                info.Name.Should().Be(update.Name);
-                info.Description.Should().Be(update.Description);
+                info?.Name.Should().Be(update.Name);
+                info?.Description.Should().Be(update.Description);
             }
 
             public void DeleteInfo(string code, string language)

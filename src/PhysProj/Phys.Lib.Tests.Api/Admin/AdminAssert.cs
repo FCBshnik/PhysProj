@@ -10,7 +10,7 @@ namespace Phys.Lib.Tests.Api.Admin
             result.Result.Code.Should().Be(errorCode);
         }
 
-        public static void ShouldBeUpdatedWith(this string resultValue, string updateValue)
+        public static void ShouldBeUpdatedWith(this string? resultValue, string? updateValue)
         {
             if (updateValue != null)
                 if (updateValue == string.Empty)

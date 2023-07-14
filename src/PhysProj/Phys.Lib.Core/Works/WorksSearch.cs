@@ -15,35 +15,35 @@ namespace Phys.Lib.Core.Works
 
         public WorkDbo? FindByCode(string code)
         {
-            if (code is null) throw new ArgumentNullException(nameof(code));
+            ArgumentNullException.ThrowIfNull(code);
 
             return db.Find(new WorksDbQuery { Code = code }).FirstOrDefault();
         }
 
         public List<WorkDbo> FindByText(string search)
         {
-            if (search is null) throw new ArgumentNullException(nameof(search));
+            ArgumentNullException.ThrowIfNull(search);
 
             return db.Find(new WorksDbQuery { Search = search });
         }
 
         public List<WorkDbo> FindByAuthor(string authorCode)
         {
-            if (authorCode is null) throw new ArgumentNullException(nameof(authorCode));
+            ArgumentNullException.ThrowIfNull(authorCode);
 
             return db.Find(new WorksDbQuery { AuthorCode = authorCode });
         }
 
         public List<WorkDbo> FindTranslations(string originalCode)
         {
-            if (originalCode is null) throw new ArgumentNullException(nameof(originalCode));
+            ArgumentNullException.ThrowIfNull(originalCode);
 
             return db.Find(new WorksDbQuery { OriginalCode = originalCode });
         }
 
         public List<WorkDbo> FindCollected(string subWorkCode)
         {
-            if (subWorkCode is null) throw new ArgumentNullException(nameof(subWorkCode));
+            ArgumentNullException.ThrowIfNull(subWorkCode);
 
             return db.Find(new WorksDbQuery { SubWorkCode = subWorkCode });
         }

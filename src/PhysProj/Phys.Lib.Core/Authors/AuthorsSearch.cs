@@ -1,11 +1,7 @@
-﻿using NLog;
-
-namespace Phys.Lib.Core.Authors
+﻿namespace Phys.Lib.Core.Authors
 {
     internal class AuthorsSearch : IAuthorsSearch
     {
-        private static readonly ILogger log = LogManager.GetLogger("authors-search");
-
         private readonly IAuthorsDb db;
 
         public AuthorsSearch(IAuthorsDb db)
@@ -15,21 +11,21 @@ namespace Phys.Lib.Core.Authors
 
         public AuthorDbo? FindByCode(string code)
         {
-            if (code is null) throw new ArgumentNullException(nameof(code));
+            ArgumentNullException.ThrowIfNull(nameof(code));
 
             return db.Find(new AuthorsDbQuery { Code = code }).FirstOrDefault();
         }
 
         public List<AuthorDbo> FindByText(string search)
         {
-            if (search is null) throw new ArgumentNullException(nameof(search));
+            ArgumentNullException.ThrowIfNull(search);
 
             return db.Find(new AuthorsDbQuery { SearchRegex = search });
         }
 
         public List<AuthorDbo> FindByCodes(List<string> codes)
         {
-            if (codes is null) throw new ArgumentNullException(nameof(codes));
+            ArgumentNullException.ThrowIfNull(codes);
 
             return db.Find(new AuthorsDbQuery { Codes = codes });
         }

@@ -58,8 +58,8 @@ namespace Phys.Lib.Core
 
         public static void ValidateBornAndPublish(Date born, Date publish)
         {
-            if (born == null) throw new ArgumentNullException(nameof(born));
-            if (publish == null) throw new ArgumentNullException(nameof(publish));
+            ArgumentNullException.ThrowIfNull(born);
+            ArgumentNullException.ThrowIfNull(publish);
 
             if (publish.Max < born.Min)
                 throw new ValidationException($"can not be published {publish} before born {born}");
@@ -67,8 +67,8 @@ namespace Phys.Lib.Core
 
         public static void ValidateLifetime(Date born, Date died)
         {
-            if (born == null) throw new ArgumentNullException(nameof(born));
-            if (died == null) throw new ArgumentNullException(nameof(died));
+            ArgumentNullException.ThrowIfNull(born);
+            ArgumentNullException.ThrowIfNull(died);
 
             if (born.Max > died.Max)
                 throw new ValidationException($"can not be born {born} after died {died}");

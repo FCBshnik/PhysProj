@@ -20,7 +20,7 @@ namespace Phys.Lib.Data.Works
 
         public void Delete(string id)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             collection.DeleteOne(filterBuilder.Eq(i => i.Id, id));
         }
@@ -46,14 +46,14 @@ namespace Phys.Lib.Data.Works
 
         public WorkDbo Get(string id)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             return collection.Find(filterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"work '{id}' not found in db");
         }
 
         public WorkDbo Update(string id, WorkDbUpdate work)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var filter = filterBuilder.Eq(i => i.Id, id);
             var update = updateBuilder.Combine();
