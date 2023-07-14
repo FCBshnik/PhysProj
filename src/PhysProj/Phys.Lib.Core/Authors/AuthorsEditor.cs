@@ -41,7 +41,7 @@ namespace Phys.Lib.Core.Authors
             ArgumentNullException.ThrowIfNull(author);
 
             var works = worksSearch.FindByAuthor(author.Code);
-            if (works.Any())
+            if (works.Count != 0)
                 throw ValidationError($"can not delete author linked to work");
 
             db.Delete(author.Id);

@@ -84,7 +84,7 @@ namespace Phys.Lib.Core.Users
             UserValidators.Name.ValidateAndThrow(name);
             UserValidators.Password.ValidateAndThrow(password);
 
-            if (db.Find(new UsersDbQuery { NameLowerCase = name.ToLowerInvariant() }).Any())
+            if (db.Find(new UsersDbQuery { NameLowerCase = name.ToLowerInvariant() }).Count != 0)
                 throw ValidationError("user name is already taken");
 
             var user = new UserDbo

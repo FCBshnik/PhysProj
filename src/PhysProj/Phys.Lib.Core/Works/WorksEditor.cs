@@ -51,9 +51,9 @@ namespace Phys.Lib.Core.Works
         {
             ArgumentNullException.ThrowIfNull(work);
 
-            if (worksSearch.FindTranslations(work.Code).Any())
+            if (worksSearch.FindTranslations(work.Code).Count != 0)
                 throw ValidationError("can not delete work linked as original to translated work");
-            if (worksSearch.FindCollected(work.Code).Any())
+            if (worksSearch.FindCollected(work.Code).Count != 0)
                 throw ValidationError("can not delete work linked as sub-work to collected work");
 
             db.Delete(work.Id);
@@ -76,10 +76,7 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(work);
             ArgumentNullException.ThrowIfNull(authorCode);
 
-            var author = authorsSearch.FindByCode(authorCode);
-            if (author == null)
-                throw ValidationError($"author '{authorCode}' not found");
-
+            var author = authorsSearch.FindByCode(authorCode) ?? throw ValidationError($"author '{authorCode}' not found");
             var update = new WorkDbUpdate { AddAuthor = author.Code };
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}: linked author {author}");
@@ -96,10 +93,7 @@ namespace Phys.Lib.Core.Works
             if (work.SubWorksCodes.Contains(subWorkCode))
                 return work;
 
-            var subWork = worksSearch.FindByCode(subWorkCode);
-            if (subWork == null)
-                throw ValidationError($"work '{subWorkCode}' not found");
-
+            var subWork = worksSearch.FindByCode(subWorkCode) ?? throw ValidationError($"work '{subWorkCode}' not found");
             if (subWork.Code == work.Code)
                 throw ValidationError($"can not link sub work as self");
             if (subWork.Code == work.OriginalCode)
@@ -145,7 +139,7 @@ namespace Phys.Lib.Core.Works
             {
                 date = Date.NormalizeAndValidate(date);
 
-                if (work.AuthorsCodes.Any())
+                if (work.AuthorsCodes.Count != 0)
                     foreach (var author in authorsSearch.FindByCodes(work.AuthorsCodes))
                         Date.ValidateBornAndPublish(author.Born, date);
             }
