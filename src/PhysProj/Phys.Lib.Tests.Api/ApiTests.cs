@@ -51,23 +51,23 @@ namespace Phys.Lib.Tests.Api
                 throw new InvalidOperationException($"Project file '{projectPath}' not found");
 
             // build
-            var appDir = projectPath.Directory;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            if (appDir.Exists)
-                appDir.Delete(true);
+            var appTestDir = new DirectoryInfo(projectPath.Directory.Name);
+            if (appTestDir.Exists)
+                appTestDir.Delete(true);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-            appDir.Create();
-            DotNetBuild(projectPath, appDir);
+            appTestDir.Create();
+            DotNetBuild(projectPath, appTestDir);
 
             // add test appsettings.json
             var parser = new FluidParser();
             var ctx = new TemplateContext(new { mongoUrl = GetMongoUrl(), apiUrl = url });
             var appSettings = parser.Parse(File.ReadAllText("appsettings.test.json")).Render(ctx);
-            var testSettingsFile = new FileInfo(Path.Combine(appDir.FullName, $"appsettings.api-tests.json"));
+            var testSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, $"appsettings.api-tests.json"));
             File.WriteAllText(testSettingsFile.FullName, appSettings);
 
             // run
-            var appFile = new FileInfo(Path.Combine(appDir.FullName, appDir.Name) + ".dll");
+            var appFile = new FileInfo(Path.Combine(appTestDir.FullName, appTestDir.Name) + ".dll");
             DotNetRun(appFile, testSettingsFile);
 
             // todo: wait app started
