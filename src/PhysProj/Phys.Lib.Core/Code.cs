@@ -37,8 +37,8 @@ namespace Phys.Lib.Core
                     .Must(n => char.IsLetter(n.First()))
                     .WithMessage("code must start with letter");
                 RuleFor(u => u)
-                    .Must(n => char.IsLetter(n.Last()))
-                    .WithMessage("code must end with letter");
+                    .Must(n => char.IsLetter(n.Last()) || char.IsDigit(n.Last()))
+                    .WithMessage("code must end with letter or digit");
                 RuleFor(u => u)
                     .Must(u => u.All(c => char.IsLetter(c) || char.IsDigit(c) || c == '-'))
                     .WithMessage("code must contain only letters, digits and hyphens");

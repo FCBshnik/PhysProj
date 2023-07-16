@@ -5,25 +5,30 @@
         private static readonly Code.Validator codeValidator = new Code.Validator();
 
         [Theory]
-        [InlineData("ya", false)]
-        [InlineData("8decartes", false)]
-        [InlineData("decartes8", false)]
-        [InlineData(" decartes", false)]
-        [InlineData("decartes ", false)]
-        [InlineData("decartes-", false)]
-        [InlineData("deca--rtes", false)]
-        [InlineData("d-s", false)]
-        [InlineData("deca&rtes", false)]
-        [InlineData("Decartes", false)]
-        [InlineData("DECARTES", false)]
-        [InlineData("decartes", true)]
-        [InlineData("deca-rtes", true)]
-        [InlineData("dec-car-tes", true)]
-        [InlineData("dec-8-tes", true)]
-        public void ValidateCodeTests(string code, bool isValid)
+        [InlineData("ya")]
+        [InlineData("8decartes")]
+        [InlineData(" decartes")]
+        [InlineData("decartes ")]
+        [InlineData("decartes-")]
+        [InlineData("Decartes")]
+        [InlineData("DECARTES")]
+        public void InvalidCodeTests(string code)
         {
             var result = codeValidator.Validate(code);
-            result.IsValid.Should().Be(isValid);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("decartes8")]
+        [InlineData("decartes-8")]
+        [InlineData("decartes")]
+        [InlineData("deca-rtes")]
+        [InlineData("dec-car-tes")]
+        [InlineData("dec-8-tes")]
+        public void ValidCodeTests(string code)
+        {
+            var result = codeValidator.Validate(code);
+            result.IsValid.Should().BeTrue();
         }
     }
 }
