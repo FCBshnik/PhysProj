@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Data.Utils;
+using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Data.Authors
 {
@@ -27,11 +28,12 @@ namespace Phys.Lib.Data.Authors
                 filter = FilterBuilder.And(filter, FilterBuilder.In(u => u.Code, query.Codes));
             if (query.SearchRegex != null)
             {
+                var regex = Regex.Escape(query.SearchRegex);
                 var infoFilterBuilder = Builders<AuthorDbo.InfoDbo>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
-                    FilterBuilder.Regex(u => u.Code, query.SearchRegex),
-                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, query.SearchRegex)),
-                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Description, query.SearchRegex))));
+                    FilterBuilder.Regex(u => u.Code, regex),
+                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, regex)),
+                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Description, regex))));
             }
 
             var sort = SortBuilder.Descending(i => i.Id);

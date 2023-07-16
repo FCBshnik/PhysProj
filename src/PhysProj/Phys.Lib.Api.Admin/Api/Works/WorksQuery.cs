@@ -4,7 +4,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
 {
     public class WorksQuery
     {
-        [FromQuery]
+        [FromQuery(Name = "search")]
         public string? Search { get; set; }
     }
 }
