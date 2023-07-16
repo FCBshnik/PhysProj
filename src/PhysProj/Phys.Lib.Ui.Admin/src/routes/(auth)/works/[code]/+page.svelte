@@ -5,8 +5,15 @@
 
 	let work: api.WorkModel;
 	let selectedLanguage: string = 'en';
-	let searchAuthorText = '';
+
+	let authorSearchText = '';
 	let author: api.AuthorModel | undefined;
+
+	let subWorkSearchText = '';
+	let subWork: api.WorkModel | undefined;
+
+	let originalSearchText = '';
+	let originalWork: api.WorkModel | undefined;
 
 	refresh();
 
@@ -46,7 +53,7 @@
 	}
 
 	function searchAuthor() {
-		api.service.listAuthors(searchAuthorText).then(a => author = a.find(_ => true));
+		api.service.listAuthors(authorSearchText).then(a => author = a.find(_ => true));
 	}
 
 	function linkAuthor() {
@@ -55,7 +62,31 @@
 
 	function unlinkAuthor(authorCode:string) {
 		api.service.unlinkAuthorFromWork(work.code, authorCode).finally(refresh);
+	}
+
+	function searchSubWork() {
+		api.service.listWorks(subWorkSearchText).then(a => subWork = a.find(_ => true));
+	}
+
+	function linkSubWork() {
+		api.service.linkWorkToCollectedWork(work.code, subWork?.code).finally(refresh);
 	}	
+
+	function unlinkSubWork(subWorkCode:string) {
+		api.service.unlinkWorkFromCollectedWork(work.code, subWorkCode).finally(refresh);
+	}
+
+	function searchOriginalWork() {
+		api.service.listWorks(originalSearchText).then(a => originalWork = a.find(_ => true));
+	}
+
+	function linkOriginalWork() {
+		api.service.linkOriginalToWork(work.code, originalWork?.code).finally(refresh);
+	}	
+
+	function unlinkOriginalWork() {
+		api.service.unlinkOriginalFromWork(work.code).finally(refresh);
+	}
 </script>
 
 <article class="p-4 gap-1">
@@ -94,9 +125,9 @@
 		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="p-2">Authors</div>
 			<div class="flex flex-row gap-2 p-2 items-center">
-				<input class="basis-3/12" type="search" bind:value={searchAuthorText} placeholder="Text to search author" />
+				<input class="basis-3/12" type="search" bind:value={authorSearchText} placeholder="Text to search author" />
 				<div class="basis-5/12">{author?.code ?? ''}</div>
-				<button class="basis-2/12" on:click={searchAuthor} disabled='{searchAuthorText === ''}'>Search</button>
+				<button class="basis-2/12" on:click={searchAuthor} disabled='{authorSearchText === ''}'>Search</button>
 				<button class="basis-2/12 disabled:opacity-75" on:click={linkAuthor} disabled='{author === undefined}'>Link</button>
 			</div>
 			{#each work.authorsCodes ?? [] as authorCode}
@@ -104,6 +135,45 @@
                 <div class="basis-10/12">{authorCode}</div>
                 <div class="basis-2/12 flex flex-row gap-2">
                     <button on:click={() => unlinkAuthor(authorCode)}>Unlink</button>
+                </div>
+            </div>
+			{/each}
+		</section>
+		<section class="p-2 border-b-2 border-b-gray-700">
+			<div class="p-2">Original</div>
+			<div class="flex flex-row gap-2 p-2 items-center">
+				{#if work.originalCode}
+					<div class="basis-10/12">{work.originalCode}</div>
+					<button class="basis-2/12 disabled:opacity-75" on:click={unlinkOriginalWork}>Unlink</button>
+				{:else}
+					<input class="basis-3/12" type="search" bind:value={originalSearchText} placeholder="Text to search work" />
+					<div class="basis-5/12">{originalWork?.code ?? ''}</div>
+					<button class="basis-2/12" on:click={searchOriginalWork} disabled='{originalSearchText === ''}'>Search</button>
+					<button class="basis-2/12 disabled:opacity-75" on:click={linkOriginalWork} disabled='{originalWork === undefined}'>Link</button>
+				{/if}
+			</div>
+			{#each work.subWorksCodes ?? [] as subWorkCode}
+            <div class="flex flex-row gap-2 p-2">
+                <div class="basis-10/12">{subWorkCode}</div>
+                <div class="basis-2/12 flex flex-row gap-2">
+                    <button on:click={() => unlinkSubWork(subWorkCode)}>Unlink</button>
+                </div>
+            </div>
+			{/each}
+		</section>
+		<section class="p-2 border-b-2 border-b-gray-700">
+			<div class="p-2">Sub works</div>
+			<div class="flex flex-row gap-2 p-2 items-center">
+				<input class="basis-3/12" type="search" bind:value={subWorkSearchText} placeholder="Text to search work" />
+				<div class="basis-5/12">{subWork?.code ?? ''}</div>
+				<button class="basis-2/12" on:click={searchSubWork} disabled='{subWorkSearchText === ''}'>Search</button>
+				<button class="basis-2/12 disabled:opacity-75" on:click={linkSubWork} disabled='{subWork === undefined}'>Link</button>
+			</div>
+			{#each work.subWorksCodes ?? [] as subWorkCode}
+            <div class="flex flex-row gap-2 p-2">
+                <div class="basis-10/12">{subWorkCode}</div>
+                <div class="basis-2/12 flex flex-row gap-2">
+                    <button on:click={() => unlinkSubWork(subWorkCode)}>Unlink</button>
                 </div>
             </div>
 			{/each}
