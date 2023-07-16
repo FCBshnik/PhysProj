@@ -46,8 +46,8 @@
 
 <article class="p-4 gap-1">
 	{#if author}
-		<section><a href="/authors">Authors</a> / '{author.code}'</section>
-		<section class="p-2">
+		<section class="p-2"><a href="/authors">Authors</a> / '{author.code}'</section>
+		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="p-2">Lifetime</div>
 			<div class="flex flex-row gap-2 p-2">
 				<input class="basis-5/12" type="text" bind:value={author.born} />
@@ -55,7 +55,7 @@
 				<button class="basis-2/12" on:click={updateLifetime}>Update</button>
 			</div>
 		</section>
-		<section class="p-2">
+		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="flex flex-row gap-2 p-2 items-center justify-between">
 				<div class="basis-10/12">Info</div>
 				<div class="basis-2/12 flex flex-row gap-2">
@@ -67,8 +67,8 @@
 				</div>
 			</div>
 			{#each author.infos ?? [] as info}
-            <div class="flex flex-row gap-2 p-2">
-                <input class="basis-1/12" type="text" readonly bind:value={info.language} />
+            <div class="flex flex-row gap-2 p-2 items-center">
+                <div class="basis-1/12 text-center">{info.language}</div>
                 <input class="basis-3/12" type="text" bind:value={info.name} />
                 <input class="basis-6/12" type="text" bind:value={info.description} />
                 <div class="basis-2/12 flex flex-row gap-2">

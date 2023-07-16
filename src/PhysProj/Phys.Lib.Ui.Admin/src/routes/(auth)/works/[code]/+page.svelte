@@ -1,0 +1,112 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	import * as api from '$lib/services/ApiService';
+	import { goto } from '$app/navigation';
+
+	let work: api.WorkModel;
+	let selectedLanguage: string = 'en';
+	let searchAuthorText = '';
+	let author: api.AuthorModel | undefined;
+
+	refresh();
+
+	function refresh() {
+		api.service
+			.getWork($page.params.code)
+			.then((a) => (work = a))
+			.catch((e) => goto('/404'));
+	}
+
+	function updateDate() {
+		api.service
+			.updateWork(
+				work.code,
+				new api.WorkUpdateModel({ date: work.publish })
+			)
+			.finally(refresh);
+}
+
+	function updateInfo(info: api.WorkInfoModel) {
+		api.service
+			.updateWorkInfo(
+				work.code,
+				info.language,
+				new api.WorkInfoUpdateModel({ name: info.name, description: info.description })
+			)
+			.finally(refresh);
+	}
+
+	function addInfo() {
+		work.infos?.push(new api.WorkInfoModel({ language: selectedLanguage }));
+		work.infos = work.infos;
+	}
+
+	function deleteInfo(info: api.WorkInfoModel) {
+		api.service.deleteWorkInfo(work.code, info.language).finally(refresh);
+	}
+
+	function searchAuthor() {
+		api.service.listAuthors(searchAuthorText).then(a => author = a.find(_ => true));
+	}
+
+	function linkAuthor() {
+		api.service.linkAuthorToWork(work.code, author?.code).finally(refresh);
+	}	
+
+	function unlinkAuthor(authorCode:string) {
+		api.service.unlinkAuthorFromWork(work.code, authorCode).finally(refresh);
+	}	
+</script>
+
+<article class="p-4 gap-1">
+	{#if work}
+		<section class="p-2"><a href="/works">Works</a> / '{work.code}'</section>
+		<section class="p-2 border-b-2 border-b-gray-700">
+			<div class="p-2">Date</div>
+			<div class="flex flex-row gap-2 p-2">
+				<input class="basis-10/12" type="text" bind:value={work.publish} />
+				<button class="basis-2/12" on:click={updateDate}>Update</button>
+			</div>
+		</section>
+		<section class="p-2 border-b-2 border-b-gray-700">
+			<div class="flex flex-row gap-2 p-2 items-center justify-between">
+				<div class="basis-10/12">Info</div>
+				<div class="basis-2/12 flex flex-row gap-2">
+					<select bind:value={selectedLanguage} class="">
+						<option>en</option>
+						<option>ru</option>
+					</select>
+					<button class="" on:click={addInfo}>Add</button>
+				</div>
+			</div>
+			{#each work.infos ?? [] as info}
+            <div class="flex flex-row gap-2 p-2 items-center">
+                <div class="basis-1/12 text-center">{info.language}</div>
+                <input class="basis-3/12" type="text" bind:value={info.name} />
+                <input class="basis-6/12" type="text" bind:value={info.description} />
+                <div class="basis-2/12 flex flex-row gap-2">
+                    <button on:click={() => updateInfo(info)}>Update</button>
+                    <button on:click={() => deleteInfo(info)}>X</button>
+                </div>
+            </div>
+			{/each}
+		</section>
+		<section class="p-2 border-b-2 border-b-gray-700">
+			<div class="p-2">Authors</div>
+			<div class="flex flex-row gap-2 p-2 items-center">
+				<input class="basis-3/12" type="search" bind:value={searchAuthorText} placeholder="Text to search author" />
+				<div class="basis-5/12">{author?.code ?? ''}</div>
+				<button class="basis-2/12" on:click={searchAuthor} disabled='{searchAuthorText === ''}'>Search</button>
+				<button class="basis-2/12 disabled:opacity-75" on:click={linkAuthor} disabled='{author === undefined}'>Link</button>
+			</div>
+			{#each work.authorsCodes ?? [] as authorCode}
+            <div class="flex flex-row gap-2 p-2">
+                <div class="basis-10/12">{authorCode}</div>
+                <div class="basis-2/12 flex flex-row gap-2">
+                    <button on:click={() => unlinkAuthor(authorCode)}>Unlink</button>
+                </div>
+            </div>
+			{/each}
+		</section>
+	{/if}
+</article>

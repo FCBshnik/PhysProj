@@ -59,6 +59,7 @@ namespace Phys.Tools.ClientGen
             var settings = new NSwag.CodeGeneration.CSharp.CSharpClientGeneratorSettings
             {
                 ClassName = className,
+                GenerateOptionalParameters = false,
                 CSharpGeneratorSettings =
                 {
                     Namespace = $"Phys.Lib.{clientName}.Client",

@@ -1,22 +1,22 @@
 <script lang="ts">
     import * as api from '$lib/services/ApiService';
 
-    let authors:api.AuthorModel[] = [];
+    let works:api.WorkModel[] = [];
     let text:string = '';
 
     async function refresh() {
-        authors = await api.service.listAuthors(text);
+        works = await api.service.listWorks(text);
     }
 
     async function create() {
-        api.service.createAuthor(new api.AuthorCreateModel({ code: text })).then(r => {
+        api.service.createWork(new api.WorkCreateModel({ code: text })).then(r => {
             text = '';
             refresh()
         })
     }
 
-    async function deleteAuthor(author:api.AuthorModel) {
-        api.service.deleteAuthor(author.code).then(r => {
+    async function deleteWork(work:api.WorkModel) {
+        api.service.deleteWork(work.code).then(r => {
             refresh()
         });
     }
@@ -26,7 +26,7 @@
 
 <article>
     <section class="flex flex-row items-center p-4 gap-4">
-        <input class="w-full" type="search" bind:value={text} placeholder="Code to create new author or text to search"/>
+        <input class="w-full" type="search" bind:value={text} placeholder="Code to create new work or text to search"/>
         <button class="w-auto" on:click={refresh}>Search</button>
         <button class="w-auto" on:click={create}>Create</button>
         <button class="w-auto" on:click={refresh}>Refresh</button>
@@ -37,19 +37,19 @@
             <thead class="">
               <tr class="border-b-2 border-b-gray-700">
                 <th>Code</th>
-                <th>Born</th>
-                <th>Died</th>
+                <th>Date</th>
+                <th>Authors</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-                {#each authors as author}
+                {#each works as work}
                 <tr class="border-b-2 border-b-gray-700">
-                    <td><a href="/authors/{author.code}">{author.code}</a></td>
-                    <td>{author.born ?? '-'}</td>
-                    <td>{author.died ?? '-'}</td>
+                    <td><a href="/works/{work.code}">{work.code}</a></td>
+                    <td>{work.publish ?? '-'}</td>
+                    <td>{work.authorsCodes?.join(', ') ?? '-'}</td>
                     <td class="flex justify-end">
-                        <button class="w-min text-xs" on:click={() => deleteAuthor(author)}>X</button>
+                        <button class="w-min text-xs" on:click={() => deleteWork(work)}>X</button>
                     </td>
                   </tr>
                 {/each}

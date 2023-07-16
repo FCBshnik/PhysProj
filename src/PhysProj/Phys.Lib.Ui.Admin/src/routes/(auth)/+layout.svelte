@@ -15,6 +15,8 @@
 	<ul>
 		<a href="/authors">Authors</a>
 		<a href="/works">Works</a>
+	</ul>
+	<ul>
 		<button on:click={logout}>Logout</button>
 	</ul>
 </nav>
