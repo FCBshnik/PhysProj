@@ -11,9 +11,9 @@ namespace Phys.Lib.Api.Admin.Api.Works
 
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapGet("/", ([FromServices] IWorksSearch search) =>
+            builder.MapGet("/", ([AsParameters] WorksQuery query, [FromServices] IWorksSearch search) =>
             {
-                var works = search.FindByText(".");
+                var works = search.FindByText(query.Search ?? ".");
                 return Results.Ok(works.Select(mapper.Map));
             })
             .ProducesResponse<List<WorkModel>>("ListWorks");

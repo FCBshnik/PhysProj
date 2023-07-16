@@ -2,7 +2,7 @@
 {
     public class WorksDbQuery
     {
-        public string? Search { get; set; }
+        public string? SearchRegex { get; set; }
 
         public string? Code { get; set; }
 

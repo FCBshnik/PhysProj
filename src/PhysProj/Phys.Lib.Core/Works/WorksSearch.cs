@@ -20,7 +20,7 @@
         {
             ArgumentNullException.ThrowIfNull(search);
 
-            return db.Find(new WorksDbQuery { Search = search });
+            return db.Find(new WorksDbQuery { SearchRegex = search });
         }
 
         public List<WorkDbo> FindByAuthor(string authorCode)

@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Data.Utils;
 
@@ -36,8 +37,14 @@ namespace Phys.Lib.Data.Works
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.OriginalCode, query.OriginalCode));
             if (query.SubWorkCode != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.SubWorksCodes, query.SubWorkCode));
-            if (query.Search != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Regex(u => u.Code, query.Search));
+            if (query.SearchRegex != null)
+            {
+                var infoFilterBuilder = Builders<WorkDbo.InfoDbo>.Filter;
+                filter = FilterBuilder.And(filter, FilterBuilder.Or(
+                    FilterBuilder.Regex(u => u.Code, query.SearchRegex),
+                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, query.SearchRegex)),
+                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Description, query.SearchRegex))));
+            }
 
             var sort = SortBuilder.Descending(i => i.Id);
 

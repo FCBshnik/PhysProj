@@ -15,8 +15,14 @@ namespace Phys.Lib.Tests.Api.Admin
 
             public void List(params string[] works)
             {
-                var result = api.ListWorksAsync().Result;
-                works.Should().HaveCount(result.Count);
+                var result = api.ListWorksAsync(null).Result;
+                result.Select(r => r.Code).Should().BeEquivalentTo(works);
+            }
+
+            public void Search(string search, IEnumerable<string> works)
+            {
+                var result = api.ListWorksAsync(search).Result;
+                result.Select(r => r.Code).Should().BeEquivalentTo(works);
             }
 
             public void NotFound(string code, ErrorCode errorCode)
@@ -44,7 +50,7 @@ namespace Phys.Lib.Tests.Api.Admin
             public void Delete(string code)
             {
                 var result = api.DeleteWorkAsync(code).Result;
-                var works = api.ListWorksAsync().Result;
+                var works = api.ListWorksAsync(null).Result;
                 works.Select(w => w.Code).Should().NotContain(code);
             }
 

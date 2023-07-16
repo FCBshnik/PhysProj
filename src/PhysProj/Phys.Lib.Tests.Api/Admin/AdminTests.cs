@@ -172,7 +172,7 @@ namespace Phys.Lib.Tests.Api.Admin
             works.Create("discourse-on-method");
             works.Found("discourse-on-method");
             works.List("discourse-on-method");
-            // create duplicate failed
+            // can not create duplicate
             works.CreateFailed("discourse-on-method");
             // update non existing failed
             works.UpdateFailed(nonExistentCode, new WorkUpdateModel(), ErrorCode.NotFound);
@@ -252,6 +252,17 @@ namespace Phys.Lib.Tests.Api.Admin
             works.DeleteFailed("sub-work");
             works.Delete("work");
             works.Delete("sub-work");
+            // search
+            works.Create("work-abc-1");
+            works.UpdateInfo("work-abc-1", "en", new WorkInfoUpdateModel { Name = "abcname" });
+            works.Create("work-abc-2");
+            works.UpdateInfo("work-abc-2", "en", new WorkInfoUpdateModel { Name = "abcdesc" });
+            works.Create("work-abd-2");
+            // search by code
+            works.Search("abc", new[] { "work-abc-1", "work-abc-2" });
+            // search by name
+            works.Search("abcname", new[] { "work-abc-1" });
+            works.Search("abcdesc", new[] { "work-abc-2" });
         }
     }
 }
