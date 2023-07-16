@@ -111,7 +111,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
                 if (work == null)
                     return ErrorModel.NotFound($"work '{code}' not found").ToResult();
 
-                work = editor.UpdateOriginal(work, originalCode);
+                work = editor.LinkOriginal(work, originalCode);
                 return Results.Ok(mapper.Map(work));
             })
             .ProducesResponse<WorkModel>("LinkOriginalToWork");
@@ -122,7 +122,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
                 if (work == null)
                     return ErrorModel.NotFound($"work '{code}' not found").ToResult();
 
-                work = editor.UpdateOriginal(work, string.Empty);
+                work = editor.UnlinkOriginal(work);
                 return Results.Ok(mapper.Map(work));
             })
             .ProducesResponse<WorkModel>("UnlinkOriginalFromWork");

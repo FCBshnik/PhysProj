@@ -166,7 +166,7 @@ namespace Phys.Lib.Core.Works
             return work;
         }
 
-        public WorkDbo UpdateOriginal(WorkDbo work, string originalCode)
+        public WorkDbo LinkOriginal(WorkDbo work, string originalCode)
         {
             ArgumentNullException.ThrowIfNull(work);
             ArgumentNullException.ThrowIfNull(originalCode);
@@ -188,6 +188,16 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { Original = original.Code };
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}: updated original {original}");
+            return work;
+        }
+
+        public WorkDbo UnlinkOriginal(WorkDbo work)
+        {
+            ArgumentNullException.ThrowIfNull(work);
+
+            var update = new WorkDbUpdate { Original = string.Empty };
+            work = db.Update(work.Id, update);
+            log.Info($"updated work {work}: unlink original");
             return work;
         }
 

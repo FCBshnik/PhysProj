@@ -16,7 +16,9 @@
 
         WorkDbo UnlinkAuthor(WorkDbo work, string authorCode);
 
-        WorkDbo UpdateOriginal(WorkDbo work, string originalCode);
+        WorkDbo LinkOriginal(WorkDbo work, string originalCode);
+
+        WorkDbo UnlinkOriginal(WorkDbo work);
 
         WorkDbo LinkWork(WorkDbo work, string workCode);
 
