@@ -26,9 +26,9 @@ namespace Phys.Lib.Data.Authors
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.Codes != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.In(u => u.Code, query.Codes));
-            if (query.SearchRegex != null)
+            if (query.Search != null)
             {
-                var regex = Regex.Escape(query.SearchRegex);
+                var regex = Regex.Escape(query.Search);
                 var infoFilterBuilder = Builders<AuthorDbo.InfoDbo>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),

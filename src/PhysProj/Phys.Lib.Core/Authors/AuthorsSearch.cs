@@ -16,11 +16,9 @@
             return db.Find(new AuthorsDbQuery { Code = code }).FirstOrDefault();
         }
 
-        public List<AuthorDbo> FindByText(string search)
+        public List<AuthorDbo> Find(string? search = null)
         {
-            ArgumentNullException.ThrowIfNull(search);
-
-            return db.Find(new AuthorsDbQuery { SearchRegex = search });
+            return db.Find(new AuthorsDbQuery { Search = search });
         }
 
         public List<AuthorDbo> FindByCodes(List<string> codes)

@@ -38,9 +38,9 @@ namespace Phys.Lib.Data.Works
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.OriginalCode, query.OriginalCode));
             if (query.SubWorkCode != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.SubWorksCodes, query.SubWorkCode));
-            if (query.SearchRegex != null)
+            if (query.Search != null)
             {
-                var regex = Regex.Escape(query.SearchRegex);
+                var regex = Regex.Escape(query.Search);
                 var infoFilterBuilder = Builders<WorkDbo.InfoDbo>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),

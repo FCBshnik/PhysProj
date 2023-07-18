@@ -16,11 +16,9 @@
             return db.Find(new WorksDbQuery { Code = code }).FirstOrDefault();
         }
 
-        public List<WorkDbo> FindByText(string search)
+        public List<WorkDbo> Find(string? search = null)
         {
-            ArgumentNullException.ThrowIfNull(search);
-
-            return db.Find(new WorksDbQuery { SearchRegex = search });
+            return db.Find(new WorksDbQuery { Search = search });
         }
 
         public List<WorkDbo> FindByAuthor(string authorCode)

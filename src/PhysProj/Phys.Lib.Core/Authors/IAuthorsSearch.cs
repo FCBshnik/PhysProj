@@ -2,7 +2,7 @@
 {
     public interface IAuthorsSearch
     {
-        List<AuthorDbo> FindByText(string search);
+        List<AuthorDbo> Find(string? search = null);
 
         List<AuthorDbo> FindByCodes(List<string> codes);
 

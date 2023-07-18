@@ -2,7 +2,7 @@
 {
     public interface IWorksSearch
     {
-        List<WorkDbo> FindByText(string search);
+        List<WorkDbo> Find(string? search = null);
 
         List<WorkDbo> FindByAuthor(string authorCode);
 

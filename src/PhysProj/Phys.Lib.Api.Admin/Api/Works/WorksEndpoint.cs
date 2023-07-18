@@ -13,7 +13,7 @@ namespace Phys.Lib.Api.Admin.Api.Works
         {
             builder.MapGet("/", ([AsParameters] WorksQuery query, [FromServices] IWorksSearch search) =>
             {
-                var works = search.FindByText(query.Search ?? ".");
+                var works = search.Find(query.Search);
                 return Results.Ok(works.Select(mapper.Map));
             })
             .ProducesResponse<List<WorkModel>>("ListWorks");
