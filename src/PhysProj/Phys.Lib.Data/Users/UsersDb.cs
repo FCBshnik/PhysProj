@@ -7,7 +7,11 @@ namespace Phys.Lib.Data.Users
 {
     internal class UsersDb : Collection<UserDbo>, IUsersDb
     {
-        public UsersDb(IMongoCollection<UserDbo> collection) : base(collection)
+        public UsersDb(Lazy<IMongoCollection<UserDbo>> collection) : base(collection)
+        {
+        }
+
+        protected override void Init(IMongoCollection<UserDbo> collection)
         {
             collection.Indexes.CreateOne(new CreateIndexModel<UserDbo>(IndexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
         }

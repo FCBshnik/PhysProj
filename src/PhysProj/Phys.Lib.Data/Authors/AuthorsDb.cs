@@ -8,7 +8,11 @@ namespace Phys.Lib.Data.Authors
 {
     internal class AuthorsDb : Collection<AuthorDbo>, IAuthorsDb
     {
-        public AuthorsDb(IMongoCollection<AuthorDbo> collection) : base(collection)
+        public AuthorsDb(Lazy<IMongoCollection<AuthorDbo>> collection) : base(collection)
+        {
+        }
+
+        protected override void Init(IMongoCollection<AuthorDbo> collection)
         {
             collection.Indexes.CreateOne(new CreateIndexModel<AuthorDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }

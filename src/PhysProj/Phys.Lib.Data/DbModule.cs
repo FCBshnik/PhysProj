@@ -12,7 +12,7 @@ namespace Phys.Lib.Data
 {
     public class DbModule : Module
     {
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
         private readonly string connectionString;
 
@@ -26,9 +26,9 @@ namespace Phys.Lib.Data
             MongoConfig.Configure();
 
             log.Info($"mongo connection: {connectionString}");
-            var client = new MongoClient(connectionString);
+            var client = new MongoClient(new MongoUrl(connectionString));
 
-            builder.Register(c => client.GetDatabase("phys-lib"))
+            builder.Register(_ => client.GetDatabase("phys-lib"))
                 .AsImplementedInterfaces()
                 .SingleInstance();
 
@@ -37,11 +37,10 @@ namespace Phys.Lib.Data
             RegisterCollection<WorkDbo, WorksDb>(builder, "works");
         }
 
-        private void RegisterCollection<TItem, TDb>(ContainerBuilder builder, string collectionName) where TDb: notnull
+        private void RegisterCollection<TItem, TDb>(ContainerBuilder builder, string collectionName) where TDb: Collection<TItem>
         {
             builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<TItem>(collectionName))
-                .AsImplementedInterfaces()
-                .SingleInstance();
+                .AsImplementedInterfaces().SingleInstance();
 
             builder.RegisterType<TDb>().AsImplementedInterfaces().SingleInstance();
         }

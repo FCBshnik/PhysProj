@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Data.Utils;
 using System.Text.RegularExpressions;
@@ -9,7 +8,11 @@ namespace Phys.Lib.Data.Works
 {
     internal class WorksDb : Collection<WorkDbo>, IWorksDb
     {
-        public WorksDb(IMongoCollection<WorkDbo> collection) : base(collection)
+        public WorksDb(Lazy<IMongoCollection<WorkDbo>> collection) : base(collection)
+        {
+        }
+
+        protected override void Init(IMongoCollection<WorkDbo> collection)
         {
             collection.Indexes.CreateOne(new CreateIndexModel<WorkDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
