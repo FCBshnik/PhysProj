@@ -1,0 +1,1 @@
+docker --context physproj-home-db compose --file docker-compose.yml --project-name physproj down

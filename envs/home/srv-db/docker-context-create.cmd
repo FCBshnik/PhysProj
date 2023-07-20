@@ -1,0 +1,1 @@
+docker context create physproj-home-db --docker "host=ssh://deploy@192.168.2.66"

@@ -1,0 +1,9 @@
+services:
+  mongo:
+    container_name: physproj-mongo
+    restart: always
+    image: mongo:4.4.18
+    ports:
+      - "27017:27017"
+    volumes:
+      - /opt/physproj/mongo/data:/data/db
