@@ -1,0 +1,9 @@
+services:
+  physproj-admin-api:
+    container_name: physproj-admin-api
+    image: physproj-home-admin-api
+    restart: always
+    ports:
+      - "7188:7188"
+    volumes:
+      - /opt/physproj/admin-api/data:/app/data
