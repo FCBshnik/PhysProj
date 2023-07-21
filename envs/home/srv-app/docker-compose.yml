@@ -1,6 +1,7 @@
 services:
   physproj-admin-api:
     container_name: physproj-admin-api
+    build: admin-api
     image: physproj-home-admin-api
     restart: always
     ports:
