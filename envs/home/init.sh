@@ -1,3 +1,3 @@
-useradd -m deploy -p deploy123
-usermod -aG docker deploy
-usermod -aG ssh deploy
+useradd -m physproj
+usermod -G ssh,docker physproj
+passwd physproj
