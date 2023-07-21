@@ -62,7 +62,7 @@ namespace Phys.Lib.Core.Utils
             config.LoggingRules.Add(consoleRule);
 
             var fileTarget = new FileTarget();
-            fileTarget.FileName = "./logs/${shortdate}_log.txt";
+            fileTarget.FileName = "./data/logs/${shortdate}_log.txt";
             fileTarget.Layout = layout;
             fileTarget.KeepFileOpen = true;
             fileTarget.ConcurrentWrites = false;
