@@ -2,8 +2,10 @@
 {
     public class OkModel
     {
-        public static OkModel Ok => new OkModel { Time = DateTime.UtcNow };
+        public static OkModel Ok => new OkModel();
 
-        public DateTime Time { get; set; }
+        public DateTime Time { get; set; } = DateTime.UtcNow;
+
+        public string Version { get; set; } = "2023.07.22";
     }
 }
