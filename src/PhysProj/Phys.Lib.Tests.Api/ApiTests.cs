@@ -1,5 +1,7 @@
 ﻿using CliWrap;
 using Fluid;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Testcontainers.MongoDb;
 
 namespace Phys.Lib.Tests.Api
@@ -17,9 +19,17 @@ namespace Phys.Lib.Tests.Api
         {
             this.output = output;
 
-            Log("initializing");
-            Init().Wait();
-            Log("initialized");
+            try
+            {
+                Log("initializing");
+                Init().Wait();
+                Log("initialized");
+            }
+            catch
+            {
+                Dispose();
+                throw;
+            }
         }
 
         public void Dispose()
@@ -59,16 +69,18 @@ namespace Phys.Lib.Tests.Api
             appTestDir.Create();
             DotNetBuild(projectPath, appTestDir);
 
-            // add test appsettings.json
-            var parser = new FluidParser();
-            var ctx = new TemplateContext(new { mongoUrl = GetMongoUrl(), apiUrl = url });
-            var appSettings = parser.Parse(File.ReadAllText("appsettings.test.json")).Render(ctx);
-            var testSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, $"appsettings.api-tests.json"));
-            File.WriteAllText(testSettingsFile.FullName, appSettings);
+            // modify appsettings.json for test env
+            var appSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, "appsettings.json"));
+            if (!appSettingsFile.Exists)
+                throw new InvalidOperationException($"Project '{projectPath}' settings file '{appSettingsFile}' not found");
+            var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appSettingsFile.FullName));
+            appSettings["ConnectionStrings"]["mongo"] = GetMongoUrl();
+            appSettings["ConnectionStrings"]["urls"] = url;
+            File.WriteAllText(appSettingsFile.FullName, JsonConvert.SerializeObject(appSettings));
 
             // run
             var appFile = new FileInfo(Path.Combine(appTestDir.FullName, appTestDir.Name) + ".dll");
-            DotNetRun(appFile, testSettingsFile);
+            DotNetRun(appFile);
 
             // todo: wait app started
             Thread.Sleep(2000);
@@ -92,7 +104,7 @@ namespace Phys.Lib.Tests.Api
             Log($"built '{projectPath.FullName}'");
         }
 
-        private void DotNetRun(FileInfo appFile, FileInfo appSettingsFile)
+        private void DotNetRun(FileInfo appFile)
         {
             if (!appFile.Exists)
                 throw new InvalidOperationException($"App file '{appFile.FullName}' not found");
@@ -102,7 +114,6 @@ namespace Phys.Lib.Tests.Api
                 .WithArguments(a =>
                 {
                     a.Add(appFile.FullName);
-                    a.Add("--appsettings").Add(appSettingsFile.FullName);
                 })
                 .WithWorkingDirectory(appFile.Directory.FullName)
                 .ExecuteAsync(cts.Token);

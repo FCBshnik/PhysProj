@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using CommandLine;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
@@ -32,12 +31,7 @@ namespace Phys.Lib.Api.Admin
         {
             ConsoleUtils.OnRun();
 
-            var options = Parser.Default.ParseArguments<Options>(args).Value;
-
             var builder = WebApplication.CreateBuilder(args);
-
-            if (options.AppSettingsFile != null)
-                builder.Configuration.AddJsonFile(options.AppSettingsFile, false);
 
             var config = builder.Configuration;
             var urls = config.GetConnectionString("urls") ?? throw new ApplicationException();
@@ -140,12 +134,6 @@ namespace Phys.Lib.Api.Admin
                         new string[]{}
                     }
                 });
-        }
-
-        private class Options
-        {
-            [Option("appsettings", Required = false)]
-            public string? AppSettingsFile { get; set; }
         }
     }
 }
