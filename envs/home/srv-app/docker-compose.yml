@@ -2,7 +2,7 @@ services:
   admin-api:
     container_name: admin-api
     build: admin-api
-    image: home-admin-api
+    image: physproj-home-admin-api
     restart: always
     ports:
       - "7188:7188"
@@ -10,8 +10,8 @@ services:
       - /opt/physproj/admin-api/data:/app/data
   admin-web:
     container_name: admin-web
-    build: ./
-    image: physproj-admin-web
+    build: admin-web
+    image: physproj-home-admin-web
     restart: always
     ports:
       - "7189:80"
