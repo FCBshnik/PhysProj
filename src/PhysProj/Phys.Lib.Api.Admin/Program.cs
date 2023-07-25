@@ -25,7 +25,10 @@ namespace Phys.Lib.Api.Admin
 {
     public static class Program
     {
-        private static readonly NLog.ILogger log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+
+        internal static Lazy<string> version = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty);
+        internal static string Version => version.Value;
 
         public static void Main(string[] args)
         {

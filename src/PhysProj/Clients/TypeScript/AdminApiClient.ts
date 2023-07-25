@@ -1488,6 +1488,7 @@ export interface ILoginSuccessModel {
 
 export class OkModel implements IOkModel {
     time?: Date;
+    version?: string | undefined;
 
     constructor(data?: IOkModel) {
         if (data) {
@@ -1501,6 +1502,7 @@ export class OkModel implements IOkModel {
     init(_data?: any) {
         if (_data) {
             this.time = _data["time"] ? new Date(_data["time"].toString()) : <any>undefined;
+            this.version = _data["version"];
         }
     }
 
@@ -1514,12 +1516,14 @@ export class OkModel implements IOkModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["time"] = this.time ? this.time.toISOString() : <any>undefined;
+        data["version"] = this.version;
         return data;
     }
 }
 
 export interface IOkModel {
     time?: Date;
+    version?: string | undefined;
 }
 
 export class UserModel implements IUserModel {

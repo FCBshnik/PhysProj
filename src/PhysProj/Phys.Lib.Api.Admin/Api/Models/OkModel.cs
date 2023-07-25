@@ -6,6 +6,6 @@
 
         public DateTime Time { get; set; } = DateTime.UtcNow;
 
-        public string Version { get; set; } = "2023.07.22";
+        public string Version { get; set; } = Program.Version;
     }
 }
