@@ -1,10 +1,19 @@
 services:
-  physproj-admin-api:
-    container_name: physproj-admin-api
+  admin-api:
+    container_name: admin-api
     build: admin-api
-    image: physproj-home-admin-api
+    image: home-admin-api
     restart: always
     ports:
       - "7188:7188"
     volumes:
       - /opt/physproj/admin-api/data:/app/data
+  admin-web:
+    container_name: admin-web
+    build: ./
+    image: physproj-admin-web
+    restart: always
+    ports:
+      - "7189:80"
+    volumes:
+      - /opt/physproj/admin-web/nginx:/var/log/nginx
