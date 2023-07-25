@@ -8,7 +8,7 @@ namespace Phys.Lib.Tests.Api.Admin
     {
         private const string nonExistentCode = "non-existent";
 
-        private FileInfo ProjectPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Api.Admin", "Phys.Lib.Api.Admin.csproj"));
+        private FileInfo ProjectPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api.csproj"));
 
         private const string url = "https://localhost:17188/";
 

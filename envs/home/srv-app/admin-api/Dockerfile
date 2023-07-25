@@ -3,4 +3,4 @@ WORKDIR /app
 COPY bin .
 ADD settings .
 EXPOSE 7188
-ENTRYPOINT ["dotnet", "Phys.Lib.Api.Admin.dll"]
+ENTRYPOINT ["dotnet", "Phys.Lib.Admin.Api.dll"]
