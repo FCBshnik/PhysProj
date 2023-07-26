@@ -3,6 +3,7 @@
 	import * as api from '$lib/services/ApiService';
 	import { goto } from '$app/navigation';
 	import LanguageSelector from '$lib/components/LanguageSelector.svelte';
+	import AuthorSelector from '$lib/components/AuthorSelector.svelte';
 
 	let work: api.WorkModel;
 	let selectedLanguage: string = 'en';
@@ -67,6 +68,7 @@
 	}
 
 	function linkAuthor() {
+		console.debug('linkAuthor');
 		api.service.linkAuthorToWork(work.code, author?.code).finally(refresh);
 	}	
 
@@ -141,9 +143,8 @@
 		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="p-2">Authors</div>
 			<div class="flex flex-row gap-2 p-2 items-center">
-				<input class="basis-3/12" type="search" bind:value={authorSearchText} placeholder="Text to search author" />
-				<div class="basis-5/12">{author?.code ?? ''}</div>
-				<button class="basis-2/12" on:click={searchAuthor} disabled='{authorSearchText === ''}'>Search</button>
+				<div class="basis-6/12"><AuthorSelector bind:selected={author}/></div>
+				<div class="basis-4/12">{author?.code ?? ''}</div>
 				<button class="basis-2/12 disabled:opacity-75" on:click={linkAuthor} disabled='{author === undefined}'>Link</button>
 			</div>
 			{#each work.authorsCodes ?? [] as authorCode}
