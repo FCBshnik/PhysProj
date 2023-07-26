@@ -39,6 +39,8 @@ namespace Phys.Lib.Core
             Ru, En, Fr, La, Gr, Grc
         }.ToDictionary(l => l.Code, StringComparer.InvariantCultureIgnoreCase);
 
+        public static readonly IReadOnlyCollection<Language> All = languages.Values.ToList();
+
         /// <summary>
         /// ISO 639-X code of language
         /// </summary>

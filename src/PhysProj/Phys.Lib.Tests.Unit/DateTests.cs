@@ -39,6 +39,7 @@ namespace Phys.Lib.Tests.Unit
         [InlineData("0YY", -100, 100)]
         [InlineData("3YYBCE", -400, -200)]
         [InlineData("33Y2BCE", -350, -310)]
+        [InlineData("6YBCE", -70, -50)]
         [InlineData("32YBCE", -330, -310)]
         [InlineData("0Y", -10, 10)]
         [InlineData("3Y", 20, 40)]

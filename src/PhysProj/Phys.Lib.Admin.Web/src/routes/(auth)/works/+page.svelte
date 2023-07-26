@@ -38,6 +38,7 @@
               <tr class="border-b-2 border-b-gray-700">
                 <th>Code</th>
                 <th>Date</th>
+                <th>Lang</th>
                 <th>Authors</th>
                 <th></th>
               </tr>
@@ -47,6 +48,7 @@
                 <tr class="border-b-2 border-b-gray-700">
                     <td><a href="/works/{work.code}">{work.code}</a></td>
                     <td>{work.publish ?? '-'}</td>
+                    <td>{work.language ?? '-'}</td>
                     <td>{work.authorsCodes?.join(', ') ?? '-'}</td>
                     <td class="flex justify-end">
                         <button class="w-min text-xs" on:click={() => deleteWork(work)}>X</button>

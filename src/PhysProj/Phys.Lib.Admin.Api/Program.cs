@@ -20,6 +20,7 @@ using Phys.Lib.Admin.Api.Api.Health;
 using Phys.Lib.Admin.Api.Api.User;
 using Phys.Lib.Admin.Api.Api.Works;
 using Phys.Lib.Admin.Api.OpenApi;
+using Phys.Lib.Admin.Api.Api.Config;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -91,8 +92,9 @@ namespace Phys.Lib.Admin.Api
 
             app.MapEndpoint("user", UserEndpoint.Map);
             app.MapEndpoint("health", HealthEndpoint.Map);
-            app.MapEndpoint("authors", AuthorsEndpoint.Map);//.RequireAuthorization();
-            app.MapEndpoint("works", WorksEndpoint.Map);//.RequireAuthorization();
+            app.MapEndpoint("config", ConfigEndpoint.Map).RequireAuthorization();
+            app.MapEndpoint("authors", AuthorsEndpoint.Map).RequireAuthorization();
+            app.MapEndpoint("works", WorksEndpoint.Map).RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(() => log.Info($"api started at {string.Join(";", app.Urls)}"));
             app.Lifetime.ApplicationStopped.Register(() => log.Info($"api stopped"));

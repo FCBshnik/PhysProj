@@ -17,7 +17,7 @@ namespace Phys.Tools.ClientGen
         {
             var curDir = AppDomain.CurrentDomain.BaseDirectory;
             var outDir = new DirectoryInfo(Path.Combine(curDir, "../../../../Clients/TypeScript/"));
-            var outDirUi = new DirectoryInfo(Path.Combine(curDir, "../../../../Phys.Lib.Ui.Admin/src/lib/api/"));
+            var outDirUi = new DirectoryInfo(Path.Combine(curDir, "../../../../Phys.Lib.Admin.Web/src/lib/api/"));
             outDir.Create();
 
             var clientName = "Admin";

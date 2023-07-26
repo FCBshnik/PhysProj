@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import * as api from '$lib/services/ApiService';
 	import { goto } from '$app/navigation';
+	import LanguageSelector from '$lib/components/LanguageSelector.svelte';
 
 	let work: api.WorkModel;
 	let selectedLanguage: string = 'en';
@@ -31,7 +32,16 @@
 				new api.WorkUpdateModel({ date: work.publish })
 			)
 			.finally(refresh);
-}
+	}
+
+	function updateLanguage() {
+		api.service
+			.updateWork(
+				work.code,
+				new api.WorkUpdateModel({ language: work.language })
+			)
+			.finally(refresh);
+	}
 
 	function updateInfo(info: api.WorkInfoModel) {
 		api.service
@@ -92,21 +102,27 @@
 <article class="p-4 gap-1">
 	{#if work}
 		<section class="p-2"><a href="/works">Works</a> / '{work.code}'</section>
-		<section class="p-2 border-b-2 border-b-gray-700">
-			<div class="p-2">Date</div>
-			<div class="flex flex-row gap-2 p-2">
-				<input class="basis-10/12" type="text" bind:value={work.publish} />
-				<button class="basis-2/12" on:click={updateDate}>Update</button>
+		<section class="grid grid-flow-col justify-stretch p-2 border-b-2 border-b-gray-700">
+			<div>
+				<div class="p-2">Date</div>
+				<div class="flex flex-row gap-2 p-2">
+					<input class="basis-10/12" type="text" bind:value={work.publish} />
+					<button class="basis-2/12" on:click={updateDate}>Update</button>
+				</div>
+			</div>
+			<div>
+				<div class="p-2">Language</div>
+				<div class="flex flex-row gap-2 p-2">
+					<div class="basis-10/12"><LanguageSelector bind:language={work.language}/></div>
+					<button class="basis-2/12" on:click={updateLanguage}>Update</button>
+				</div>
 			</div>
 		</section>
 		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="flex flex-row gap-2 p-2 items-center justify-between">
-				<div class="basis-10/12">Info</div>
-				<div class="basis-2/12 flex flex-row gap-2">
-					<select bind:value={selectedLanguage} class="">
-						<option>en</option>
-						<option>ru</option>
-					</select>
+				<div class="basis-8/12">Info</div>
+				<div class="basis-4/12 grid grid-flow-col justify-stretch gap-2">
+					<LanguageSelector bind:language={selectedLanguage}/>
 					<button class="" on:click={addInfo}>Add</button>
 				</div>
 			</div>
