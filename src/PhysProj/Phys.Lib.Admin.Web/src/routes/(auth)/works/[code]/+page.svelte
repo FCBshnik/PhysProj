@@ -4,17 +4,16 @@
 	import { goto } from '$app/navigation';
 	import LanguageSelector from '$lib/components/LanguageSelector.svelte';
 	import AuthorSelector from '$lib/components/AuthorSelector.svelte';
+	import WorkSelector from '$lib/components/WorkSelector.svelte';
 
 	let work: api.WorkModel;
 	let selectedLanguage: string = 'en';
 
-	let authorSearchText = '';
 	let author: api.AuthorModel | undefined;
 
 	let subWorkSearchText = '';
 	let subWork: api.WorkModel | undefined;
 
-	let originalSearchText = '';
 	let originalWork: api.WorkModel | undefined;
 
 	refresh();
@@ -163,27 +162,17 @@
 					<div class="basis-10/12">{work.originalCode}</div>
 					<button class="basis-2/12 disabled:opacity-75" on:click={unlinkOriginalWork}>Unlink</button>
 				{:else}
-					<input class="basis-3/12" type="search" bind:value={originalSearchText} placeholder="Text to search work" />
-					<div class="basis-5/12">{originalWork?.code ?? ''}</div>
-					<button class="basis-2/12" on:click={searchOriginalWork} disabled='{originalSearchText === ''}'>Search</button>
+					<div class="basis-6/12"><WorkSelector bind:selected={originalWork}/></div>
+					<div class="basis-4/12">{originalWork?.code ?? ''}</div>
 					<button class="basis-2/12 disabled:opacity-75" on:click={linkOriginalWork} disabled='{originalWork === undefined}'>Link</button>
 				{/if}
 			</div>
-			{#each work.subWorksCodes ?? [] as subWorkCode}
-            <div class="flex flex-row gap-2 p-2">
-                <div class="basis-10/12">{subWorkCode}</div>
-                <div class="basis-2/12 flex flex-row gap-2">
-                    <button on:click={() => unlinkSubWork(subWorkCode)}>Unlink</button>
-                </div>
-            </div>
-			{/each}
 		</section>
 		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="p-2">Sub works</div>
 			<div class="flex flex-row gap-2 p-2 items-center">
-				<input class="basis-3/12" type="search" bind:value={subWorkSearchText} placeholder="Text to search work" />
-				<div class="basis-5/12">{subWork?.code ?? ''}</div>
-				<button class="basis-2/12" on:click={searchSubWork} disabled='{subWorkSearchText === ''}'>Search</button>
+				<div class="basis-6/12"><WorkSelector bind:selected={subWork}/></div>
+				<div class="basis-4/12">{subWork?.code ?? ''}</div>
 				<button class="basis-2/12 disabled:opacity-75" on:click={linkSubWork} disabled='{subWork === undefined}'>Link</button>
 			</div>
 			{#each work.subWorksCodes ?? [] as subWorkCode}
