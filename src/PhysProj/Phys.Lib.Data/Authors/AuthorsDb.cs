@@ -36,7 +36,7 @@ namespace Phys.Lib.Data.Authors
                 var infoFilterBuilder = Builders<AuthorDbo.InfoDbo>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),
-                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, regex)),
+                    FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.FullName, regex)),
                     FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Description, regex))));
             }
 

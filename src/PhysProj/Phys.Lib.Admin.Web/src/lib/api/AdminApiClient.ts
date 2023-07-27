@@ -1233,7 +1233,7 @@ export interface IAuthorCreateModel {
 
 export class AuthorInfoModel implements IAuthorInfoModel {
     language?: string | undefined;
-    name?: string | undefined;
+    fullName?: string | undefined;
     description?: string | undefined;
 
     constructor(data?: IAuthorInfoModel) {
@@ -1248,7 +1248,7 @@ export class AuthorInfoModel implements IAuthorInfoModel {
     init(_data?: any) {
         if (_data) {
             this.language = _data["language"];
-            this.name = _data["name"];
+            this.fullName = _data["fullName"];
             this.description = _data["description"];
         }
     }
@@ -1263,7 +1263,7 @@ export class AuthorInfoModel implements IAuthorInfoModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["language"] = this.language;
-        data["name"] = this.name;
+        data["fullName"] = this.fullName;
         data["description"] = this.description;
         return data;
     }
@@ -1271,12 +1271,12 @@ export class AuthorInfoModel implements IAuthorInfoModel {
 
 export interface IAuthorInfoModel {
     language?: string | undefined;
-    name?: string | undefined;
+    fullName?: string | undefined;
     description?: string | undefined;
 }
 
 export class AuthorInfoUpdateModel implements IAuthorInfoUpdateModel {
-    name?: string | undefined;
+    fullName?: string | undefined;
     description?: string | undefined;
 
     constructor(data?: IAuthorInfoUpdateModel) {
@@ -1290,7 +1290,7 @@ export class AuthorInfoUpdateModel implements IAuthorInfoUpdateModel {
 
     init(_data?: any) {
         if (_data) {
-            this.name = _data["name"];
+            this.fullName = _data["fullName"];
             this.description = _data["description"];
         }
     }
@@ -1304,14 +1304,14 @@ export class AuthorInfoUpdateModel implements IAuthorInfoUpdateModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
+        data["fullName"] = this.fullName;
         data["description"] = this.description;
         return data;
     }
 }
 
 export interface IAuthorInfoUpdateModel {
-    name?: string | undefined;
+    fullName?: string | undefined;
     description?: string | undefined;
 }
 

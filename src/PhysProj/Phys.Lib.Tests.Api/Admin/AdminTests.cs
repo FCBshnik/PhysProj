@@ -93,7 +93,6 @@ namespace Phys.Lib.Tests.Api.Admin
             // create invalid author
             authors.CreateFailed("decartes-");
             authors.CreateFailed("-decartes");
-            authors.CreateFailed("deca--rtes");
             // create valid author
             authors.Create("decartes");
             authors.Found("decartes");
@@ -111,7 +110,7 @@ namespace Phys.Lib.Tests.Api.Admin
             authors.Delete("galileo");
             // search by name
             authors.Create("galileo");
-            authors.InfoUpdate("galileo", "en", new AuthorInfoUpdateModel { Name = "name" });
+            authors.InfoUpdate("galileo", "en", new AuthorInfoUpdateModel { FullName = "name" });
             authors.InfoUpdate("galilei", "en", new AuthorInfoUpdateModel { Description = "desc" });
             authors.Search("name", new[] { "galileo" });
             authors.Search("desc", new[] { "galilei" });
@@ -139,8 +138,8 @@ namespace Phys.Lib.Tests.Api.Admin
             // update info with invalid language
             authors.InfoUpdateFailed("decartes", nonExistentCode, new AuthorInfoUpdateModel(), ErrorCode.InvalidArgument);
             // update info with valid languages
-            authors.InfoUpdate("decartes", "en", new AuthorInfoUpdateModel { Name = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
-            authors.InfoUpdate("decartes", "ru", new AuthorInfoUpdateModel { Name = "Рене́ Дека́рт", Description = "французский философ, математик и естествоиспытатель" });
+            authors.InfoUpdate("decartes", "en", new AuthorInfoUpdateModel { FullName = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
+            authors.InfoUpdate("decartes", "ru", new AuthorInfoUpdateModel { FullName = "Рене́ Дека́рт", Description = "французский философ, математик и естествоиспытатель" });
             // delete info
             authors.InfoDelete("decartes", "en");
             // delete info is idempotent

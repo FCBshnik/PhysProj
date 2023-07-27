@@ -33,6 +33,7 @@ namespace Phys.Lib.Data
             {
                 m.AutoMap();
                 m.MapProperty(u => u.Language).SetElementName("lang");
+                m.MapProperty(u => u.FullName).SetElementName("name");
                 m.MapProperty(u => u.Description).SetElementName("desc");
             });
         }

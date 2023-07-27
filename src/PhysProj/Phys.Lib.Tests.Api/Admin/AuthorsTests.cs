@@ -83,7 +83,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
                 var info = author.Infos.FirstOrDefault(i => i.Language == language);
                 info.Should().NotBeNull();
-                info?.Name.Should().Be(update.Name);
+                info?.FullName.Should().Be(update.FullName);
                 info?.Description.Should().Be(update.Description);
             }
 

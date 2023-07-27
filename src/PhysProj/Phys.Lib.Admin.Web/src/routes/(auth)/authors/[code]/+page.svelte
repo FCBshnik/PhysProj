@@ -29,7 +29,7 @@
 			.updateAuthorInfo(
 				author.code,
 				info.language,
-				new api.AuthorInfoUpdateModel({ name: info.name, description: info.description })
+				new api.AuthorInfoUpdateModel({ fullName: info.fullName, description: info.description })
 			)
 			.finally(refresh);
 	}
@@ -69,7 +69,7 @@
 			{#each author.infos ?? [] as info}
             <div class="flex flex-row gap-2 p-2 items-center">
                 <div class="basis-1/12 text-center">{info.language}</div>
-                <input class="basis-3/12" type="text" bind:value={info.name} />
+                <input class="basis-3/12" type="text" bind:value={info.fullName} />
                 <input class="basis-6/12" type="text" bind:value={info.description} />
                 <div class="basis-2/12 flex flex-row gap-2">
                     <button on:click={() => updateInfo(info)}>Update</button>

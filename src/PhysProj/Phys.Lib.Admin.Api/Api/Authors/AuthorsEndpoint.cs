@@ -67,7 +67,7 @@ namespace Phys.Lib.Admin.Api.Api.Authors
                     return ErrorModel.NotFound($"author '{code}' not found").ToResult();
                 language = Language.NormalizeAndValidate(language);
 
-                author = authorsEditor.UpdateInfo(author, new AuthorDbo.InfoDbo { Language = language, Name = model.Name, Description = model.Description });
+                author = authorsEditor.UpdateInfo(author, new AuthorDbo.InfoDbo { Language = language, FullName = model.FullName, Description = model.Description });
                 return Results.Ok(mapper.Map(author));
             })
             .ProducesResponse<AuthorModel>("UpdateAuthorInfo");
