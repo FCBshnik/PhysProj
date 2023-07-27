@@ -30,5 +30,15 @@
             var result = codeValidator.Validate(code);
             result.IsValid.Should().BeTrue();
         }
+
+        [Theory]
+        [InlineData("Decartes", "decartes")]
+        [InlineData("Decartes Rene", "decartes-rene")]
+        [InlineData("Петровский, Фёдор Александрович", "petrovskij-fyodor-aleksandrovich")]
+        public void NormalizeTests(string code, string expected)
+        {
+            var actual = Code.NormalizeAndValidate(code);
+            actual.Should().BeEquivalentTo(expected);
+        }
     }
 }

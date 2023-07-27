@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using Phys.Lib.Core.Utils;
 using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Core
 {
     /// <summary>
     /// Ensures that string value is url and file path representative code
+    /// It is what often called a 'slug'
     /// </summary
     public static class Code
     {
@@ -15,7 +17,12 @@ namespace Phys.Lib.Core
             if (string.IsNullOrWhiteSpace(value))
                 throw new ValidationException("code can not be empty");
 
-            var code = Regex.Replace(value, @"[^\w]", "-").Replace('_', '-').ToLowerInvariant().Trim();
+            var code = Regex.Replace(value, @"[^\w]", "-").Replace('_', '-')
+                .ToLowerInvariant().Trim()
+                .Replace("--", "-");
+
+            code = RussianTranslitUtils.ConvertToLatin(code);
+
             if (string.IsNullOrWhiteSpace(code))
                 throw new ValidationException("code can not be empty");
 
