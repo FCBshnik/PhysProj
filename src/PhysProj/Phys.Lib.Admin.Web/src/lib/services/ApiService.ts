@@ -1,5 +1,6 @@
 import { AdminApiClient, ErrorModel } from "$lib/api/AdminApiClient";
 import { notificationsService } from "./NotificationsService";
+import { goto } from '$app/navigation';
 
 let authToken: string | null = null;
 
@@ -9,6 +10,12 @@ function fetchAuth(url: RequestInfo, init?: RequestInit) {
     return fetch(url, init).then(r => {
         if (r.status == 500)
             notificationsService.push("Server error");
+        if (r.status == 401) {
+            notificationsService.push("Auth token expired");
+            apiService.clearToken();
+            // todo: fire event and redirect from root layout
+            goto('/login');
+        }
         return Promise.resolve(r);
     });
 }

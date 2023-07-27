@@ -24,7 +24,7 @@
   <form>
     <header>Login</header>
     <input bind:value={username} type="text" placeholder="Name">
-    <input bind:value={password} type="text" placeholder="Password">
+    <input bind:value={password} type="password" placeholder="Password">
     <button on:click={login}>Sign In</button>
   </form>
 </section>
