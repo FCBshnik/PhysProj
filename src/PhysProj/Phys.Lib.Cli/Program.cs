@@ -3,6 +3,7 @@ using CommandLine;
 using Microsoft.Extensions.Configuration;
 using NLog;
 using Phys.Lib.Cli;
+using Phys.Lib.Cli.Test;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Data;
@@ -30,8 +31,12 @@ internal class Program
 
         var builder = new ContainerBuilder();
 
-        builder.RegisterModule(new DbModule(config.GetConnectionString("mongo")));
-        builder.RegisterModule(new CoreModule());
+        if (options.GetType() != typeof(TestOptions))
+        {
+            builder.RegisterModule(new DbModule(config.GetConnectionString("mongo")));
+            builder.RegisterModule(new CoreModule());
+        }
+
         builder.RegisterModule(new CliModule());
         builder.RegisterInstance(options).AsSelf().SingleInstance();
 
