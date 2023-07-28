@@ -57,7 +57,9 @@
 		</section>
 		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="flex flex-row gap-2 p-2 items-center justify-between">
-				<div class="basis-10/12">Info</div>
+				<div class="basis-1/12">Info</div>
+				<div class="basis-3/12">Full name</div>
+                <div class="basis-6/12">Short description</div>
 				<div class="basis-2/12 flex flex-row gap-2">
 					<select bind:value={selectedLanguage} class="">
 						<option>en</option>

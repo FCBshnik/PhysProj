@@ -121,8 +121,10 @@
 		</section>
 		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="flex flex-row gap-2 p-2 items-center justify-between">
-				<div class="basis-8/12">Info</div>
-				<div class="basis-4/12 grid grid-flow-col justify-stretch gap-2">
+				<div class="basis-1/12">Info</div>
+				<div class="basis-3/12">Name</div>
+                <div class="basis-6/12">Short description</div>
+				<div class="basis-2/12 grid grid-flow-col justify-stretch gap-2">
 					<LanguageSelector bind:language={selectedLanguage}/>
 					<button class="" on:click={addInfo}>Add</button>
 				</div>
