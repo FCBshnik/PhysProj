@@ -39,6 +39,8 @@
         /// </summary>
         public string? OriginalCode { get; set; }
 
+        public List<string> FilesCodes { get; set; } = new List<string>();
+
         public class InfoDbo
         {
             public string Language { get; set; }

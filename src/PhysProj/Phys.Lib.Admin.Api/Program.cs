@@ -21,6 +21,7 @@ using Phys.Lib.Admin.Api.Api.User;
 using Phys.Lib.Admin.Api.Api.Works;
 using Phys.Lib.Admin.Api.OpenApi;
 using Phys.Lib.Admin.Api.Api.Config;
+using Phys.Lib.Admin.Api.Api.Files;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -90,11 +91,12 @@ namespace Phys.Lib.Admin.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapEndpoint("user", UserEndpoint.Map);
             app.MapEndpoint("health", HealthEndpoint.Map);
+            app.MapEndpoint("user", UserEndpoint.Map);
             app.MapEndpoint("config", ConfigEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("authors", AuthorsEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("works", WorksEndpoint.Map).RequireAuthorization();
+            app.MapEndpoint("files", FilesEndpoint.Map);//.RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(() => log.Info($"api started at {string.Join(";", app.Urls)}"));
             app.Lifetime.ApplicationStopped.Register(() => log.Info($"api stopped"));

@@ -18,6 +18,8 @@ namespace Phys.Lib.Admin.Api.Api.Works
 
         public List<string> SubWorksCodes { get; set; } = new List<string>();
 
+        public List<string> FilesCodes { get; set; } = new List<string>();
+
         public string OriginalCode { get; set; }
 
         public class WorkInfoModel
