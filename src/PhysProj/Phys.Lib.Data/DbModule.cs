@@ -37,7 +37,7 @@ namespace Phys.Lib.Data
             RegisterCollection<UserDbo, UsersDb>(builder, "users");
             RegisterCollection<AuthorDbo, AuthorsDb>(builder, "authors");
             RegisterCollection<WorkDbo, WorksDb>(builder, "works");
-            RegisterCollection<FileLinksDbo, FilesLinksDb>(builder, "files-links");
+            RegisterCollection<FileDbo, FilesDb>(builder, "files-links");
         }
 
         private void RegisterCollection<TItem, TDb>(ContainerBuilder builder, string collectionName) where TDb: Collection<TItem>

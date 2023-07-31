@@ -1,5 +1,4 @@
 ﻿using Phys.Lib.Admin.Client;
-using System.IO;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -16,34 +15,34 @@ namespace Phys.Lib.Tests.Api.Admin
 
             public void ListStorages(params string[] expectedCodes)
             {
-                var result = api.ListFileStoragesAsync().Result;
+                var result = api.ListStoragesAsync().Result;
                 result.Select(a => a.Code).Should().BeEquivalentTo(expectedCodes);
             }
 
             public void ListStorageFiles(string storageCode, params string[] expectedPaths)
             {
-                var result = api.ListFileStorageFilesAsync(storageCode, search: null).Result;
+                var result = api.ListStorageFilesAsync(storageCode, search: null).Result;
                 result.Select(a => a.Path).Should().BeEquivalentTo(expectedPaths);
             }
 
-            public void ListFilesLinks(params string[] expectedCodes)
+            public void ListFiles(params string[] expectedCodes)
             {
-                var result = api.ListFilesLinksAsync(search: null).Result;
+                var result = api.ListFilesAsync(search: null).Result;
                 result.Select(a => a.Code).Should().BeEquivalentTo(expectedCodes);
             }
 
-            public void LinkFileStorageFile(string storageCode, string path)
+            public void LinkStorageFile(string storageCode, string path)
             {
-                var result = api.LinkFileStorageFileAsync(storageCode, new FileStorageLinkModel { FilePath = path }).Result;
+                var result = api.LinkStorageFileAsync(storageCode, new FileStorageLinkModel { FilePath = path }).Result;
                 result.Links.Should().HaveCount(1);
                 result.Links.First().Type.Should().Be(storageCode);
                 result.Links.First().Path.Should().Be(path);
             }
 
-            public void DeleteFile(string code)
+            public void Delete(string code)
             {
-                var result = api.DeleteFileLinksAsync(code).Result;
-                var files = api.ListFilesLinksAsync(search: code).Result;
+                var result = api.DeleteFileAsync(code).Result;
+                var files = api.ListFilesAsync(search: code).Result;
                 files.Select(f => f.Code).Should().NotContain(code);
             }
 

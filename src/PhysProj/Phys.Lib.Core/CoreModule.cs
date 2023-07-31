@@ -24,7 +24,7 @@ namespace Phys.Lib.Core
                 .RegisterService<WorksSearch, IWorksSearch>()
                 .RegisterService<WorksEditor, IWorksEditor>()
                 .RegisterService<FileStoragesService, IFileStoragesService>()
-                .RegisterService<FileLinksService, IFileLinksService>();
+                .RegisterService<FilesService, IFilesService>();
 
             builder.RegisterModule(new ValidationModule(ThisAssembly));
         }

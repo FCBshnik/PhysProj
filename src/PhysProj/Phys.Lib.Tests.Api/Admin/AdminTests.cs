@@ -272,13 +272,13 @@ namespace Phys.Lib.Tests.Api.Admin
             // link existing file
             using (var stream = files.GetMockStream())
                 fileStorage.Upload("discourse-on-method.pdf", stream);
-            files.LinkFileStorageFile("local", "discourse-on-method.pdf");
+            files.LinkStorageFile("local", "discourse-on-method.pdf");
             works.LinkFile("discourse-on-method", "discourse-on-method-pdf");
             fileStorage.Delete("discourse-on-method.pdf");
             // unlink file
             works.UnlinkFile("discourse-on-method", nonExistentCode);
             works.UnlinkFile("discourse-on-method", "discourse-on-method-pdf");
-            files.DeleteFile("discourse-on-method-pdf");
+            files.Delete("discourse-on-method-pdf");
         }
 
         private void TestFiles()
@@ -292,10 +292,10 @@ namespace Phys.Lib.Tests.Api.Admin
                 fileStorage.Upload("works/work-1.txt", stream);
             files.ListStorageFiles("local", "works/work-1.txt");
             // list empty files links
-            files.ListFilesLinks();
+            files.ListFiles();
             // link storage file
-            files.LinkFileStorageFile("local", "works/work-1.txt");
-            files.ListFilesLinks("works-work-1-txt");
+            files.LinkStorageFile("local", "works/work-1.txt");
+            files.ListFiles("works-work-1-txt");
         }
     }
 }

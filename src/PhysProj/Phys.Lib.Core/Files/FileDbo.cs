@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Files
 {
-    public class FileLinksDbo
+    public class FileDbo
     {
         public string Id { get; set; }
 

@@ -5,18 +5,18 @@ using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Data.Files
 {
-    internal class FilesLinksDb : Collection<FileLinksDbo>, IFilesLinksDb
+    internal class FilesDb : Collection<FileDbo>, IFilesDb
     {
-        public FilesLinksDb(Lazy<IMongoCollection<FileLinksDbo>> collection) : base(collection)
+        public FilesDb(Lazy<IMongoCollection<FileDbo>> collection) : base(collection)
         {
         }
 
-        protected override void Init(IMongoCollection<FileLinksDbo> collection)
+        protected override void Init(IMongoCollection<FileDbo> collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<FileLinksDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<FileDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
-        public FileLinksDbo Create(FileLinksDbo file)
+        public FileDbo Create(FileDbo file)
         {
             ArgumentNullException.ThrowIfNull(file);
 
@@ -31,7 +31,7 @@ namespace Phys.Lib.Data.Files
             collection.DeleteOne(FilterBuilder.Eq(i => i.Id, id));
         }
 
-        public List<FileLinksDbo> Find(FileLinksDbQuery query)
+        public List<FileDbo> Find(FileLinksDbQuery query)
         {
             ArgumentNullException.ThrowIfNull(query);
 
@@ -42,7 +42,7 @@ namespace Phys.Lib.Data.Files
             if (query.Search != null)
             {
                 var regex = Regex.Escape(query.Search);
-                var linkFilterBuilder = Builders<FileLinksDbo.LinkDbo>.Filter;
+                var linkFilterBuilder = Builders<FileDbo.LinkDbo>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),
                     FilterBuilder.ElemMatch(u => u.Links, linkFilterBuilder.Regex(i => i.Path, regex))));
@@ -53,21 +53,21 @@ namespace Phys.Lib.Data.Files
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
 
-        public FileLinksDbo Update(string id, FileLinksDbUpdate fileLinks)
+        public FileDbo Update(string id, FileDbUpdate file)
         {
             ArgumentNullException.ThrowIfNull(id);
-            ArgumentNullException.ThrowIfNull(fileLinks);
+            ArgumentNullException.ThrowIfNull(file);
 
             var filter = FilterBuilder.Eq(i => i.Id, id);
             var update = UpdateBuilder.Combine();
 
-            if (fileLinks.AddLink != null)
-                update = update.Push(i => i.Links, fileLinks.AddLink);
-            if (fileLinks.DeleteLink != null)
-                update = update.PullFilter(i => i.Links, l => l.Type == fileLinks.DeleteLink.Type && l.Path == fileLinks.DeleteLink.Path);
+            if (file.AddLink != null)
+                update = update.Push(i => i.Links, file.AddLink);
+            if (file.DeleteLink != null)
+                update = update.PullFilter(i => i.Links, l => l.Type == file.DeleteLink.Type && l.Path == file.DeleteLink.Path);
 
             return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
-                ?? throw new ApplicationException($"file links '{id}' was not updated due to not found in db");
+                ?? throw new ApplicationException($"file '{id}' was not updated due to not found in db");
         }
     }
 }

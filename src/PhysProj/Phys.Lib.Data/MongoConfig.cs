@@ -59,7 +59,7 @@ namespace Phys.Lib.Data
                 m.MapProperty(u => u.Description).SetElementName("desc");
             });
 
-            BsonClassMap.RegisterClassMap<FileLinksDbo>(m =>
+            BsonClassMap.RegisterClassMap<FileDbo>(m =>
             {
                 m.AutoMap();
                 m.MapIdProperty(u => u.Id).SetSerializer(idSerializer);

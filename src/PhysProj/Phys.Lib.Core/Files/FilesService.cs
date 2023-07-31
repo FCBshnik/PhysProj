@@ -2,14 +2,14 @@
 
 namespace Phys.Lib.Core.Files
 {
-    internal class FileLinksService : IFileLinksService
+    internal class FilesService : IFilesService
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        private readonly IFilesLinksDb db;
+        private readonly IFilesDb db;
         private readonly IFileStoragesService fileStoragesService;
 
-        public FileLinksService(IFileStoragesService fileStoragesService, IFilesLinksDb db)
+        public FilesService(IFileStoragesService fileStoragesService, IFilesDb db)
         {
             ArgumentNullException.ThrowIfNull(fileStoragesService);
             ArgumentNullException.ThrowIfNull(db);
@@ -18,7 +18,7 @@ namespace Phys.Lib.Core.Files
             this.db = db;
         }
 
-        public FileLinksDbo CreateFromStorageFile(string storageCode, string filePath)
+        public FileDbo CreateFromStorageFile(string storageCode, string filePath)
         {
             ArgumentNullException.ThrowIfNull(storageCode);
             ArgumentNullException.ThrowIfNull(filePath);
@@ -26,14 +26,14 @@ namespace Phys.Lib.Core.Files
             var storage = fileStoragesService.Get(storageCode);
             var storageFile = storage.Get(filePath);
             var code = Code.NormalizeAndValidate(filePath);
-            var file = db.Create(new FileLinksDbo
+            var file = db.Create(new FileDbo
             {
                 Code = code,
                 Format = Path.GetExtension(storageFile.Path),
                 Size = storageFile.Size,
-                Links = new List<FileLinksDbo.LinkDbo>
+                Links = new List<FileDbo.LinkDbo>
                 {
-                    new FileLinksDbo.LinkDbo { Type = storageCode, Path = storageFile.Path }
+                    new FileDbo.LinkDbo { Type = storageCode, Path = storageFile.Path }
                 },
             });
 
@@ -41,19 +41,19 @@ namespace Phys.Lib.Core.Files
             return file;
         }
 
-        public List<FileLinksDbo> Find(string? search = null)
+        public List<FileDbo> Find(string? search = null)
         {
             return db.Find(new FileLinksDbQuery { Search = search });
         }
 
-        public FileLinksDbo? FindByCode(string code)
+        public FileDbo? FindByCode(string code)
         {
             ArgumentNullException.ThrowIfNull(code);
 
             return db.Find(new FileLinksDbQuery { Code = code }).FirstOrDefault();
         }
 
-        public void Delete(FileLinksDbo file)
+        public void Delete(FileDbo file)
         {
             ArgumentNullException.ThrowIfNull(file);
 

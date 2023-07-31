@@ -419,7 +419,7 @@ export class AdminApiClient {
      * @param search (optional) 
      * @return OK
      */
-    listFilesLinks(search: string | undefined): Promise<FileLinksModel[]> {
+    listFiles(search: string | undefined): Promise<FileLinksModel[]> {
         let url_ = this.baseUrl + "/api/files?";
         if (search === null)
             throw new Error("The parameter 'search' cannot be null.");
@@ -435,11 +435,11 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processListFilesLinks(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processListFiles(_response));
         });
     }
 
-    protected processListFilesLinks(response: Response): Promise<FileLinksModel[]> {
+    protected processListFiles(response: Response): Promise<FileLinksModel[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -474,7 +474,7 @@ export class AdminApiClient {
     /**
      * @return OK
      */
-    deleteFileLinks(code: string): Promise<OkModel> {
+    deleteFile(code: string): Promise<OkModel> {
         let url_ = this.baseUrl + "/api/files/{code}";
         if (code === undefined || code === null)
             throw new Error("The parameter 'code' must be defined.");
@@ -489,11 +489,11 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteFileLinks(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteFile(_response));
         });
     }
 
-    protected processDeleteFileLinks(response: Response): Promise<OkModel> {
+    protected processDeleteFile(response: Response): Promise<OkModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -521,7 +521,7 @@ export class AdminApiClient {
     /**
      * @return OK
      */
-    listFileStorages(): Promise<FileStorageModel[]> {
+    listStorages(): Promise<FileStorageModel[]> {
         let url_ = this.baseUrl + "/api/files/storages";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -533,11 +533,11 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processListFileStorages(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processListStorages(_response));
         });
     }
 
-    protected processListFileStorages(response: Response): Promise<FileStorageModel[]> {
+    protected processListStorages(response: Response): Promise<FileStorageModel[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -573,7 +573,7 @@ export class AdminApiClient {
      * @param search (optional) 
      * @return OK
      */
-    listFileStorageFiles(storageCode: string, search: string | undefined): Promise<FileStorageFileInfoModel[]> {
+    listStorageFiles(storageCode: string, search: string | undefined): Promise<FileStorageFileInfoModel[]> {
         let url_ = this.baseUrl + "/api/files/storages/{storageCode}/files?";
         if (storageCode === undefined || storageCode === null)
             throw new Error("The parameter 'storageCode' must be defined.");
@@ -592,11 +592,11 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processListFileStorageFiles(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processListStorageFiles(_response));
         });
     }
 
-    protected processListFileStorageFiles(response: Response): Promise<FileStorageFileInfoModel[]> {
+    protected processListStorageFiles(response: Response): Promise<FileStorageFileInfoModel[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -631,7 +631,7 @@ export class AdminApiClient {
     /**
      * @return OK
      */
-    linkFileStorageFile(storageCode: string, body: FileStorageLinkModel): Promise<FileLinksModel> {
+    linkStorageFile(storageCode: string, body: FileStorageLinkModel): Promise<FileLinksModel> {
         let url_ = this.baseUrl + "/api/files/storages/{storageCode}/files/link";
         if (storageCode === undefined || storageCode === null)
             throw new Error("The parameter 'storageCode' must be defined.");
@@ -650,11 +650,11 @@ export class AdminApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processLinkFileStorageFile(_response));
+            return this.transformResult(url_, _response, (_response: Response) => this.processLinkStorageFile(_response));
         });
     }
 
-    protected processLinkFileStorageFile(response: Response): Promise<FileLinksModel> {
+    protected processLinkStorageFile(response: Response): Promise<FileLinksModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {

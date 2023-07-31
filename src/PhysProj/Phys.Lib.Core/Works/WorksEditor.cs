@@ -11,11 +11,11 @@ namespace Phys.Lib.Core.Works
         private static readonly Logger log = LogManager.GetLogger("works-editor");
 
         private readonly IWorksDb db;
-        private readonly IFilesLinksDb filesLinksDb;
+        private readonly IFilesDb filesLinksDb;
         private readonly IWorksSearch worksSearch;
         private readonly IAuthorsSearch authorsSearch;
 
-        public WorksEditor(IWorksDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesLinksDb filesLinksDb)
+        public WorksEditor(IWorksDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesDb filesLinksDb)
         {
             this.db = db;
             this.worksSearch = worksSearch;

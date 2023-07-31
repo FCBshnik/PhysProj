@@ -4,7 +4,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
 {
     internal static class FilesMapper
     {
-        public static FileLinksModel Map(FileLinksDbo file)
+        public static FileLinksModel Map(FileDbo file)
         {
             return new FileLinksModel
             {

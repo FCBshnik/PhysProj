@@ -771,15 +771,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileLinksModel>> ListFilesLinksAsync(string search)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileLinksModel>> ListFilesAsync(string search)
         {
-            return ListFilesLinksAsync(search, System.Threading.CancellationToken.None);
+            return ListFilesAsync(search, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileLinksModel>> ListFilesLinksAsync(string search, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileLinksModel>> ListFilesAsync(string search, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/files?");
@@ -860,15 +860,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<OkModel> DeleteFileLinksAsync(string code)
+        public virtual System.Threading.Tasks.Task<OkModel> DeleteFileAsync(string code)
         {
-            return DeleteFileLinksAsync(code, System.Threading.CancellationToken.None);
+            return DeleteFileAsync(code, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<OkModel> DeleteFileLinksAsync(string code, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<OkModel> DeleteFileAsync(string code, System.Threading.CancellationToken cancellationToken)
         {
             if (code == null)
                 throw new System.ArgumentNullException("code");
@@ -948,15 +948,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageModel>> ListFileStoragesAsync()
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageModel>> ListStoragesAsync()
         {
-            return ListFileStoragesAsync(System.Threading.CancellationToken.None);
+            return ListStoragesAsync(System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageModel>> ListFileStoragesAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageModel>> ListStoragesAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/files/storages");
@@ -1032,15 +1032,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileInfoModel>> ListFileStorageFilesAsync(string storageCode, string search)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileInfoModel>> ListStorageFilesAsync(string storageCode, string search)
         {
-            return ListFileStorageFilesAsync(storageCode, search, System.Threading.CancellationToken.None);
+            return ListStorageFilesAsync(storageCode, search, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileInfoModel>> ListFileStorageFilesAsync(string storageCode, string search, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileInfoModel>> ListStorageFilesAsync(string storageCode, string search, System.Threading.CancellationToken cancellationToken)
         {
             if (storageCode == null)
                 throw new System.ArgumentNullException("storageCode");
@@ -1125,15 +1125,15 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileLinksModel> LinkFileStorageFileAsync(string storageCode, FileStorageLinkModel body)
+        public virtual System.Threading.Tasks.Task<FileLinksModel> LinkStorageFileAsync(string storageCode, FileStorageLinkModel body)
         {
-            return LinkFileStorageFileAsync(storageCode, body, System.Threading.CancellationToken.None);
+            return LinkStorageFileAsync(storageCode, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileLinksModel> LinkFileStorageFileAsync(string storageCode, FileStorageLinkModel body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FileLinksModel> LinkStorageFileAsync(string storageCode, FileStorageLinkModel body, System.Threading.CancellationToken cancellationToken)
         {
             if (storageCode == null)
                 throw new System.ArgumentNullException("storageCode");
