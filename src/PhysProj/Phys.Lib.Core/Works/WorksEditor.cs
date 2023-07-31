@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using NLog;
 using Phys.Lib.Core.Authors;
+using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Utils;
 
 namespace Phys.Lib.Core.Works
@@ -10,14 +11,16 @@ namespace Phys.Lib.Core.Works
         private static readonly Logger log = LogManager.GetLogger("works-editor");
 
         private readonly IWorksDb db;
+        private readonly IFilesLinksDb filesLinksDb;
         private readonly IWorksSearch worksSearch;
         private readonly IAuthorsSearch authorsSearch;
 
-        public WorksEditor(IWorksDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch)
+        public WorksEditor(IWorksDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesLinksDb filesLinksDb)
         {
             this.db = db;
             this.worksSearch = worksSearch;
             this.authorsSearch = authorsSearch;
+            this.filesLinksDb = filesLinksDb;
         }
 
         public WorkDbo AddInfo(WorkDbo work, WorkDbo.InfoDbo info)
@@ -204,6 +207,29 @@ namespace Phys.Lib.Core.Works
             return work;
         }
 
+        public WorkDbo LinkFile(WorkDbo work, string fileCode)
+        {
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(fileCode);
+
+            var file = filesLinksDb.Find(new FileLinksDbQuery { Code = fileCode }).FirstOrDefault() ?? throw ValidationError($"file links '{fileCode}' not found");
+            var update = new WorkDbUpdate { AddFile = file.Code };
+            work = db.Update(work.Id, update);
+            log.Info($"updated work {work}: linked file {file}");
+            return work;
+        }
+
+        public WorkDbo UnlinkFile(WorkDbo work, string fileCode)
+        {
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(fileCode);
+
+            var update = new WorkDbUpdate { DeleteFile = fileCode };
+            work = db.Update(work.Id, update);
+            log.Info($"updated work {work}: unlinked file {fileCode}");
+            return work;
+        }
+
         private void ValidateWorkIsNotLinked(WorkDbo work, string linkedCode, int depth)
         {
             if (depth > 3)
@@ -222,16 +248,6 @@ namespace Phys.Lib.Core.Works
         private static ValidationException ValidationError(string message)
         {
             return new ValidationException(message);
-        }
-
-        public WorkDbo LinkFile(WorkDbo work, string fileCode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public WorkDbo UnlinkFile(WorkDbo work, string fileCode)
-        {
-            throw new NotImplementedException();
         }
     }
 }

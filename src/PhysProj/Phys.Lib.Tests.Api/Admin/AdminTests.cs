@@ -161,6 +161,7 @@ namespace Phys.Lib.Tests.Api.Admin
         {
             var authors = new AuthorsTests(api);
             var works = new WorksTests(api);
+            var files = new FilesTests(api);
 
             // TODO: extract complex scenarios
             // empty list at start
@@ -266,6 +267,18 @@ namespace Phys.Lib.Tests.Api.Admin
             // search by name
             works.Search("abcname", new[] { "work-abc-1" });
             works.Search("abcdesc", new[] { "work-abc-2" });
+            // link not existing file
+            works.LinkFileFailed("discourse-on-method", nonExistentCode);
+            // link existing file
+            using (var stream = files.GetMockStream())
+                fileStorage.Upload("discourse-on-method.pdf", stream);
+            files.LinkFileStorageFile("local", "discourse-on-method.pdf");
+            works.LinkFile("discourse-on-method", "discourse-on-method-pdf");
+            fileStorage.Delete("discourse-on-method.pdf");
+            // unlink file
+            works.UnlinkFile("discourse-on-method", nonExistentCode);
+            works.UnlinkFile("discourse-on-method", "discourse-on-method-pdf");
+            files.DeleteFile("discourse-on-method-pdf");
         }
 
         private void TestFiles()
@@ -277,7 +290,6 @@ namespace Phys.Lib.Tests.Api.Admin
             files.ListStorageFiles("local");
             using (var stream = files.GetMockStream())
                 fileStorage.Upload("works/work-1.txt", stream);
-            output.WriteLine(string.Join(",", fileStorage.List(null).Select(f => f.Path)));
             files.ListStorageFiles("local", "works/work-1.txt");
             // list empty files links
             files.ListFilesLinks();

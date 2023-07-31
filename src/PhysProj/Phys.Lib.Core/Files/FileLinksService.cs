@@ -26,7 +26,7 @@ namespace Phys.Lib.Core.Files
             var storage = fileStoragesService.Get(storageCode);
             var storageFile = storage.Get(filePath);
             var code = Code.NormalizeAndValidate(filePath);
-            var fileLinks = db.Create(new FileLinksDbo
+            var file = db.Create(new FileLinksDbo
             {
                 Code = code,
                 Format = Path.GetExtension(storageFile.Path),
@@ -37,14 +37,29 @@ namespace Phys.Lib.Core.Files
                 },
             });
 
-            log.Info($"created file links {fileLinks}");
-
-            return fileLinks;
+            log.Info($"created file {file}");
+            return file;
         }
 
         public List<FileLinksDbo> Find(string? search = null)
         {
             return db.Find(new FileLinksDbQuery { Search = search });
+        }
+
+        public FileLinksDbo? FindByCode(string code)
+        {
+            ArgumentNullException.ThrowIfNull(code);
+
+            return db.Find(new FileLinksDbQuery { Code = code }).FirstOrDefault();
+        }
+
+        public void Delete(FileLinksDbo file)
+        {
+            ArgumentNullException.ThrowIfNull(file);
+
+            db.Delete(file.Id);
+
+            log.Info($"deletd file '{file}'");
         }
     }
 }

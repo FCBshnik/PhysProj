@@ -2,6 +2,7 @@
 using Fluid;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Phys.Lib.Core.Utils;
 using Testcontainers.MongoDb;
 
 namespace Phys.Lib.Tests.Api
@@ -22,6 +23,7 @@ namespace Phys.Lib.Tests.Api
 
             try
             {
+                ConsoleUtils.OnRun();
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

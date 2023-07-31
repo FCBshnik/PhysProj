@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Core.Files;
-
-namespace Phys.Lib.Core.Works
+﻿namespace Phys.Lib.Core.Works
 {
     public interface IWorksEditor
     {

@@ -1,4 +1,5 @@
 ﻿using Phys.Lib.Admin.Client;
+using System.IO;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -37,6 +38,13 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Links.Should().HaveCount(1);
                 result.Links.First().Type.Should().Be(storageCode);
                 result.Links.First().Path.Should().Be(path);
+            }
+
+            public void DeleteFile(string code)
+            {
+                var result = api.DeleteFileLinksAsync(code).Result;
+                var files = api.ListFilesLinksAsync(search: code).Result;
+                files.Select(f => f.Code).Should().NotContain(code);
             }
 
             public Stream GetMockStream()

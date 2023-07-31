@@ -98,6 +98,11 @@ namespace Phys.Lib.Data.Works
             else if (work.Original.HasValue())
                 update = update.Set(i => i.OriginalCode, work.Original);
 
+            if (work.AddFile.HasValue())
+                update = update.AddToSet(i => i.FilesCodes, work.AddFile);
+            if (work.DeleteFile.HasValue())
+                update = update.Pull(i => i.FilesCodes, work.DeleteFile);
+
             return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
                 ?? throw new ApplicationException($"work '{id}' was not updated due to not found in db");
         }

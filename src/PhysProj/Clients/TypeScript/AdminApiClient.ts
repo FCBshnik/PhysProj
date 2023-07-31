@@ -474,8 +474,11 @@ export class AdminApiClient {
     /**
      * @return OK
      */
-    deleteFileLinks(): Promise<OkModel> {
-        let url_ = this.baseUrl + "/api/files";
+    deleteFileLinks(code: string): Promise<OkModel> {
+        let url_ = this.baseUrl + "/api/files/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -1431,6 +1434,106 @@ export class AdminApiClient {
     }
 
     protected processUnlinkWorkFromCollectedWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    linkFileToWork(code: string, fileCode: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/files/{fileCode}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (fileCode === undefined || fileCode === null)
+            throw new Error("The parameter 'fileCode' must be defined.");
+        url_ = url_.replace("{fileCode}", encodeURIComponent("" + fileCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processLinkFileToWork(_response));
+        });
+    }
+
+    protected processLinkFileToWork(response: Response): Promise<WorkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WorkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WorkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    unlinkFileFromWork(code: string, fileCode: string): Promise<WorkModel> {
+        let url_ = this.baseUrl + "/api/works/{code}/files/{fileCode}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        if (fileCode === undefined || fileCode === null)
+            throw new Error("The parameter 'fileCode' must be defined.");
+        url_ = url_.replace("{fileCode}", encodeURIComponent("" + fileCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUnlinkFileFromWork(_response));
+        });
+    }
+
+    protected processUnlinkFileFromWork(response: Response): Promise<WorkModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {

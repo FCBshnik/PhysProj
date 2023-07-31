@@ -150,6 +150,28 @@ namespace Phys.Lib.Admin.Api.Api.Works
                 return Results.Ok(mapper.Map(work));
             })
             .ProducesResponse<WorkModel>("UnlinkWorkFromCollectedWork");
+
+            builder.MapPost("/{code}/files/{fileCode}", (string code, string fileCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
+            {
+                var work = search.FindByCode(code);
+                if (work == null)
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
+
+                work = editor.LinkFile(work, fileCode);
+                return Results.Ok(mapper.Map(work));
+            })
+            .ProducesResponse<WorkModel>("LinkFileToWork");
+
+            builder.MapDelete("/{code}/files/{fileCode}", (string code, string fileCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
+            {
+                var work = search.FindByCode(code);
+                if (work == null)
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
+
+                work = editor.UnlinkFile(work, fileCode);
+                return Results.Ok(mapper.Map(work));
+            })
+            .ProducesResponse<WorkModel>("UnlinkFileFromWork");
         }
     }
 }

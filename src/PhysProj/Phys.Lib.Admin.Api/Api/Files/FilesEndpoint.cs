@@ -14,9 +14,13 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 return TypedResults.Ok(filesLinks.Select(FilesMapper.Map).ToList());
             }).ProducesResponse<List<FileLinksModel>>("ListFilesLinks");
 
-            builder.MapDelete("/", () =>
+            builder.MapDelete("/{code}", (string code, [FromServices] IFileLinksService service) =>
             {
-                return TypedResults.Ok();
+                var file = service.FindByCode(code);
+                if (file != null)
+                    service.Delete(file);
+
+                return TypedResults.Ok(OkModel.Ok);
             }).ProducesResponse<OkModel>("DeleteFileLinks");
 
             builder.MapGet("storages", ([FromServices] IFileStoragesService storages) =>
