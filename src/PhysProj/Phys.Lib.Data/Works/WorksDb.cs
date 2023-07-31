@@ -19,6 +19,8 @@ namespace Phys.Lib.Data.Works
 
         public WorkDbo Create(WorkDbo work)
         {
+            ArgumentNullException.ThrowIfNull(work);
+
             work.Id = ObjectId.GenerateNewId().ToString();
             return Insert(work);
         }
@@ -32,6 +34,8 @@ namespace Phys.Lib.Data.Works
 
         public List<WorkDbo> Find(WorksDbQuery query)
         {
+            ArgumentNullException.ThrowIfNull(query);
+
             var filter = FilterBuilder.Empty;
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
@@ -56,16 +60,10 @@ namespace Phys.Lib.Data.Works
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
 
-        public WorkDbo Get(string id)
-        {
-            ArgumentNullException.ThrowIfNull(id);
-
-            return collection.Find(FilterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"work '{id}' not found in db");
-        }
-
         public WorkDbo Update(string id, WorkDbUpdate work)
         {
             ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(work);
 
             var filter = FilterBuilder.Eq(i => i.Id, id);
             var update = UpdateBuilder.Combine();

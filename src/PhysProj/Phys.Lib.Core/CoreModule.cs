@@ -23,7 +23,8 @@ namespace Phys.Lib.Core
                 .RegisterService<AuthorsEditor, IAuthorsEditor>()
                 .RegisterService<WorksSearch, IWorksSearch>()
                 .RegisterService<WorksEditor, IWorksEditor>()
-                .RegisterService<FileStoragesService, IFileStoragesService>();
+                .RegisterService<FileStoragesService, IFileStoragesService>()
+                .RegisterService<FileLinksService, IFileLinksService>();
 
             builder.RegisterModule(new ValidationModule(ThisAssembly));
         }

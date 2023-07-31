@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Admin.Api.Api.Files
 {
-    public class FileStorageFileModel
+    public class FileStorageFileInfoModel
     {
         public required string Path { get; set; }
 

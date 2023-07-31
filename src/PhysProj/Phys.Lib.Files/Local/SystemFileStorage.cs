@@ -13,10 +13,13 @@ namespace Phys.Lib.Files.Local
             ArgumentException.ThrowIfNullOrEmpty(baseDir);
 
             this.baseDir = new DirectoryInfo(baseDir);
+            log.Info($"base dir '{this.baseDir.FullName}'");
         }
 
         public void Delete(string path)
         {
+            ArgumentNullException.ThrowIfNull(path);
+
             log.Info($"deleting '{path}'");
 
             var fileInfo = GetFileInfo(path);
@@ -30,13 +33,22 @@ namespace Phys.Lib.Files.Local
 
         public Stream Download(string path)
         {
+            ArgumentNullException.ThrowIfNull(path);
+
             var fileInfo = GetFileInfo(path);
             return fileInfo.OpenRead();
         }
 
+        public FileInfo Get(string path)
+        {
+            ArgumentNullException.ThrowIfNull(path);
+            var fileInfo = GetFileInfo(path);
+            return MapFileInfo(fileInfo);
+        }
+
         public List<FileInfo> List(string? search)
         {
-            if (!baseDir.Exists)
+            if (!Directory.Exists(baseDir.FullName))
                 return Enumerable.Empty<FileInfo>().ToList();
 
             return baseDir.EnumerateFiles(search != null ? $"*{search}*" : "*", SearchOption.AllDirectories)
@@ -47,6 +59,9 @@ namespace Phys.Lib.Files.Local
 
         public FileInfo Upload(string path, Stream data)
         {
+            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(data);
+
             var fileInfo = GetFileInfo(path);
             if (fileInfo.Directory?.Exists == false)
                 fileInfo.Directory.Create();

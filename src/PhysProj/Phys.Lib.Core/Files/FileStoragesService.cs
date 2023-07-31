@@ -1,6 +1,5 @@
 ﻿using Phys.Lib.Files;
 using Phys.Lib.Files.Local;
-using System.Reflection;
 
 namespace Phys.Lib.Core.Files
 {
@@ -21,6 +20,8 @@ namespace Phys.Lib.Core.Files
 
         public IFileStorage Get(string code)
         {
+            ArgumentNullException.ThrowIfNull(code);
+
             if (storagesMap.TryGetValue(code, out var storage))
                 return storage;
 

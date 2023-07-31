@@ -18,6 +18,8 @@ namespace Phys.Lib.Data.Users
 
         public UserDbo Create(UserDbo user)
         {
+            ArgumentNullException.ThrowIfNull(user);
+
             user.Id = ObjectId.GenerateNewId().ToString();
             return Insert(user);
         }

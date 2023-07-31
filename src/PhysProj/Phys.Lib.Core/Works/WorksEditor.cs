@@ -223,5 +223,15 @@ namespace Phys.Lib.Core.Works
         {
             return new ValidationException(message);
         }
+
+        public WorkDbo LinkFile(WorkDbo work, string fileCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public WorkDbo UnlinkFile(WorkDbo work, string fileCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

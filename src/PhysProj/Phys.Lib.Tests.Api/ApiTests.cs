@@ -10,7 +10,8 @@ namespace Phys.Lib.Tests.Api
     {
         private readonly CancellationTokenSource cts = new();
         private readonly MongoDbContainer mongo = new MongoDbBuilder().WithImage("mongo:4.4.18").Build();
-        private readonly ITestOutputHelper output;
+
+        protected readonly ITestOutputHelper output;
 
         protected HttpClient http = new() { Timeout = TimeSpan.FromSeconds(3) };
         protected DirectoryInfo solutionDir = new(@".\..\..\..\..\");
@@ -53,7 +54,7 @@ namespace Phys.Lib.Tests.Api
 
         protected string GetMongoUrl() => mongo.GetConnectionString();
 
-        protected void StartApp(string url, FileInfo projectPath)
+        protected DirectoryInfo StartApp(string url, FileInfo projectPath)
         {
             ArgumentNullException.ThrowIfNull(url);
 
@@ -84,6 +85,8 @@ namespace Phys.Lib.Tests.Api
 
             // todo: wait app started
             Thread.Sleep(2000);
+
+            return appTestDir;
         }
 
         private void DotNetBuild(FileInfo projectPath, DirectoryInfo outDir)

@@ -416,6 +416,267 @@ export class AdminApiClient {
     }
 
     /**
+     * @param search (optional) 
+     * @return OK
+     */
+    listFilesLinks(search: string | undefined): Promise<FileLinksModel[]> {
+        let url_ = this.baseUrl + "/api/files?";
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processListFilesLinks(_response));
+        });
+    }
+
+    protected processListFilesLinks(response: Response): Promise<FileLinksModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FileLinksModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileLinksModel[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteFileLinks(): Promise<OkModel> {
+        let url_ = this.baseUrl + "/api/files";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteFileLinks(_response));
+        });
+    }
+
+    protected processDeleteFileLinks(response: Response): Promise<OkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<OkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    listFileStorages(): Promise<FileStorageModel[]> {
+        let url_ = this.baseUrl + "/api/files/storages";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processListFileStorages(_response));
+        });
+    }
+
+    protected processListFileStorages(response: Response): Promise<FileStorageModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FileStorageModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileStorageModel[]>(null as any);
+    }
+
+    /**
+     * @param search (optional) 
+     * @return OK
+     */
+    listFileStorageFiles(storageCode: string, search: string | undefined): Promise<FileStorageFileInfoModel[]> {
+        let url_ = this.baseUrl + "/api/files/storages/{storageCode}/files?";
+        if (storageCode === undefined || storageCode === null)
+            throw new Error("The parameter 'storageCode' must be defined.");
+        url_ = url_.replace("{storageCode}", encodeURIComponent("" + storageCode));
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processListFileStorageFiles(_response));
+        });
+    }
+
+    protected processListFileStorageFiles(response: Response): Promise<FileStorageFileInfoModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FileStorageFileInfoModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileStorageFileInfoModel[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    linkFileStorageFile(storageCode: string, body: FileStorageLinkModel): Promise<FileLinksModel> {
+        let url_ = this.baseUrl + "/api/files/storages/{storageCode}/files/link";
+        if (storageCode === undefined || storageCode === null)
+            throw new Error("The parameter 'storageCode' must be defined.");
+        url_ = url_.replace("{storageCode}", encodeURIComponent("" + storageCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processLinkFileStorageFile(_response));
+        });
+    }
+
+    protected processLinkFileStorageFile(response: Response): Promise<FileLinksModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileLinksModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileLinksModel>(null as any);
+    }
+
+    /**
      * @return OK
      */
     healthCheck(): Promise<OkModel> {
@@ -1461,6 +1722,186 @@ export interface IErrorModel {
     message?: string | undefined;
 }
 
+export class FileLinksModel implements IFileLinksModel {
+    id?: string | undefined;
+    code?: string | undefined;
+    format?: string | undefined;
+    size?: number | undefined;
+    links?: LinkModel[] | undefined;
+
+    constructor(data?: IFileLinksModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.format = _data["format"];
+            this.size = _data["size"];
+            if (Array.isArray(_data["links"])) {
+                this.links = [] as any;
+                for (let item of _data["links"])
+                    this.links!.push(LinkModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FileLinksModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileLinksModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["format"] = this.format;
+        data["size"] = this.size;
+        if (Array.isArray(this.links)) {
+            data["links"] = [];
+            for (let item of this.links)
+                data["links"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IFileLinksModel {
+    id?: string | undefined;
+    code?: string | undefined;
+    format?: string | undefined;
+    size?: number | undefined;
+    links?: LinkModel[] | undefined;
+}
+
+export class FileStorageFileInfoModel implements IFileStorageFileInfoModel {
+    path?: string | undefined;
+    updated?: Date | undefined;
+    size?: number | undefined;
+
+    constructor(data?: IFileStorageFileInfoModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.path = _data["path"];
+            this.updated = _data["updated"] ? new Date(_data["updated"].toString()) : <any>undefined;
+            this.size = _data["size"];
+        }
+    }
+
+    static fromJS(data: any): FileStorageFileInfoModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileStorageFileInfoModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["path"] = this.path;
+        data["updated"] = this.updated ? this.updated.toISOString() : <any>undefined;
+        data["size"] = this.size;
+        return data;
+    }
+}
+
+export interface IFileStorageFileInfoModel {
+    path?: string | undefined;
+    updated?: Date | undefined;
+    size?: number | undefined;
+}
+
+export class FileStorageLinkModel implements IFileStorageLinkModel {
+    filePath?: string | undefined;
+
+    constructor(data?: IFileStorageLinkModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.filePath = _data["filePath"];
+        }
+    }
+
+    static fromJS(data: any): FileStorageLinkModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileStorageLinkModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["filePath"] = this.filePath;
+        return data;
+    }
+}
+
+export interface IFileStorageLinkModel {
+    filePath?: string | undefined;
+}
+
+export class FileStorageModel implements IFileStorageModel {
+    code?: string | undefined;
+    name?: string | undefined;
+
+    constructor(data?: IFileStorageModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): FileStorageModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileStorageModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IFileStorageModel {
+    code?: string | undefined;
+    name?: string | undefined;
+}
+
 export class LanguageModel implements ILanguageModel {
     code?: string | undefined;
     name?: string | undefined;
@@ -1499,6 +1940,46 @@ export class LanguageModel implements ILanguageModel {
 export interface ILanguageModel {
     code?: string | undefined;
     name?: string | undefined;
+}
+
+export class LinkModel implements ILinkModel {
+    type?: string | undefined;
+    path?: string | undefined;
+
+    constructor(data?: ILinkModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.path = _data["path"];
+        }
+    }
+
+    static fromJS(data: any): LinkModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new LinkModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["path"] = this.path;
+        return data;
+    }
+}
+
+export interface ILinkModel {
+    type?: string | undefined;
+    path?: string | undefined;
 }
 
 export class LoginModel implements ILoginModel {
@@ -1793,6 +2274,7 @@ export class WorkModel implements IWorkModel {
     infos?: WorkInfoModel[] | undefined;
     authorsCodes?: string[] | undefined;
     subWorksCodes?: string[] | undefined;
+    filesCodes?: string[] | undefined;
     originalCode?: string | undefined;
 
     constructor(data?: IWorkModel) {
@@ -1824,6 +2306,11 @@ export class WorkModel implements IWorkModel {
                 this.subWorksCodes = [] as any;
                 for (let item of _data["subWorksCodes"])
                     this.subWorksCodes!.push(item);
+            }
+            if (Array.isArray(_data["filesCodes"])) {
+                this.filesCodes = [] as any;
+                for (let item of _data["filesCodes"])
+                    this.filesCodes!.push(item);
             }
             this.originalCode = _data["originalCode"];
         }
@@ -1857,6 +2344,11 @@ export class WorkModel implements IWorkModel {
             for (let item of this.subWorksCodes)
                 data["subWorksCodes"].push(item);
         }
+        if (Array.isArray(this.filesCodes)) {
+            data["filesCodes"] = [];
+            for (let item of this.filesCodes)
+                data["filesCodes"].push(item);
+        }
         data["originalCode"] = this.originalCode;
         return data;
     }
@@ -1870,6 +2362,7 @@ export interface IWorkModel {
     infos?: WorkInfoModel[] | undefined;
     authorsCodes?: string[] | undefined;
     subWorksCodes?: string[] | undefined;
+    filesCodes?: string[] | undefined;
     originalCode?: string | undefined;
 }
 

@@ -7,12 +7,13 @@ namespace Phys.Lib.Tests.Api.Admin
     public partial class AdminTests : ApiTests
     {
         private const string nonExistentCode = "non-existent";
-
-        private FileInfo ProjectPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api.csproj"));
-
         private const string url = "https://localhost:17188/";
 
         private readonly AdminApiClient api;
+
+        private Files.IFileStorage fileStorage;
+
+        private FileInfo ProjectPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api.csproj"));
 
         public AdminTests(ITestOutputHelper output) : base(output)
         {
@@ -23,7 +24,9 @@ namespace Phys.Lib.Tests.Api.Admin
         {
             await base.Init();
 
-            StartApp(url, ProjectPath);
+            var appDir = StartApp(url, ProjectPath);
+
+            fileStorage = new Files.Local.SystemFileStorage(Path.Combine(appDir.FullName, "data/files"));
 
             var container = BuildContainer();
             using var scope = container.BeginLifetimeScope();
@@ -56,6 +59,7 @@ namespace Phys.Lib.Tests.Api.Admin
             TestUsers();
             TestAuthors();
             TestWorks();
+            TestFiles();
 
             Log("tested");
         }
@@ -262,6 +266,24 @@ namespace Phys.Lib.Tests.Api.Admin
             // search by name
             works.Search("abcname", new[] { "work-abc-1" });
             works.Search("abcdesc", new[] { "work-abc-2" });
+        }
+
+        private void TestFiles()
+        {
+            var files = new FilesTests(api);
+
+            files.ListStorages("local");
+            // list local storage files files
+            files.ListStorageFiles("local");
+            using (var stream = files.GetMockStream())
+                fileStorage.Upload("works/work-1.txt", stream);
+            output.WriteLine(string.Join(",", fileStorage.List(null).Select(f => f.Path)));
+            files.ListStorageFiles("local", "works/work-1.txt");
+            // list empty files links
+            files.ListFilesLinks();
+            // link storage file
+            files.LinkFileStorageFile("local", "works/work-1.txt");
+            files.ListFilesLinks("works-work-1-txt");
         }
     }
 }

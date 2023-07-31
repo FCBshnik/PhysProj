@@ -4,10 +4,6 @@
     {
         List<AuthorDbo> Find(AuthorsDbQuery query);
 
-        AuthorDbo Get(string id);
-
-        AuthorDbo GetByCode(string code);
-
         AuthorDbo Create(AuthorDbo author);
 
         AuthorDbo Update(string id, AuthorDbUpdate update);

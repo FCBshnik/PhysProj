@@ -19,12 +19,16 @@ namespace Phys.Lib.Data.Authors
 
         public AuthorDbo Create(AuthorDbo author)
         {
+            ArgumentNullException.ThrowIfNull(author);
+
             author.Id = ObjectId.GenerateNewId().ToString();
             return Insert(author);
         }
 
         public List<AuthorDbo> Find(AuthorsDbQuery query)
         {
+            ArgumentNullException.ThrowIfNull(query);
+
             var filter = FilterBuilder.Empty;
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
@@ -45,23 +49,10 @@ namespace Phys.Lib.Data.Authors
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
 
-        public AuthorDbo Get(string id)
-        {
-            ArgumentNullException.ThrowIfNull(id);
-
-            return collection.Find(FilterBuilder.Eq(u => u.Id, id)).FirstOrDefault() ?? throw new ApplicationException($"author '{id}' not found in db");
-        }
-
-        public AuthorDbo GetByCode(string code)
-        {
-            ArgumentNullException.ThrowIfNull(code);
-
-            return collection.Find(FilterBuilder.Eq(u => u.Code, code)).FirstOrDefault() ?? throw new ApplicationException($"author '{code}' not found in db");
-        }
-
         public AuthorDbo Update(string id, AuthorDbUpdate author)
         {
             ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(author);
 
             var filter = FilterBuilder.Eq(i => i.Id, id);
             var update = UpdateBuilder.Combine();

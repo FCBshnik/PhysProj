@@ -1,4 +1,6 @@
-﻿namespace Phys.Lib.Core.Works
+﻿using Phys.Lib.Core.Files;
+
+namespace Phys.Lib.Core.Works
 {
     public interface IWorksEditor
     {
@@ -23,6 +25,10 @@
         WorkDbo LinkWork(WorkDbo work, string workCode);
 
         WorkDbo UnlinkWork(WorkDbo work, string workCode);
+
+        WorkDbo LinkFile(WorkDbo work, string fileCode);
+
+        WorkDbo UnlinkFile(WorkDbo work, string fileCode);
 
         void Delete(WorkDbo work);
     }
