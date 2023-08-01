@@ -4,12 +4,10 @@
   import * as api from '$lib/services/ApiService';
   import { goto } from '$app/navigation';
   import Notifications from "$lib/components/Notifications.svelte";
-  import Footer from "$lib/components/Footer.svelte";
-
+  
   if (!api.service.isAuthorized())
     goto("/login");
 </script>
 
 <Notifications/>
 <slot />
-<Footer/>

@@ -13,7 +13,7 @@
 </script>
 
 {#if message}
-    <div class="notification">
+    <div class="absolute top-0 right-0 max-w-md w-full p-4 bg-gray-100 border border-gray-100 text-sm text-gray-800 rounded-md shadow-md">
         {message}
     </div>
 {/if}

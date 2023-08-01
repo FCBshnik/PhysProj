@@ -20,7 +20,7 @@
     }
 </script>
 
-<section class="center">
+<section>
   <form>
     <header>Login</header>
     <input bind:value={username} type="text" placeholder="Name">

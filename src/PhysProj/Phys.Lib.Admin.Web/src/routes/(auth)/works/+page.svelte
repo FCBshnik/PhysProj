@@ -41,6 +41,7 @@
                 <th>Lang</th>
                 <th>Authors</th>
                 <th>Original</th>
+                <th>Files</th>
                 <th></th>
               </tr>
             </thead>
@@ -52,6 +53,7 @@
                     <td>{work.language ?? '-'}</td>
                     <td>{work.authorsCodes?.join(', ') ?? '-'}</td>
                     <td>{work.originalCode ?? '-'}</td>
+                    <td>{work.filesCodes?.join(', ') ?? '-'}</td>
                     <td class="flex justify-end">
                         <button class="w-min text-xs" on:click={() => deleteWork(work)}>X</button>
                     </td>
