@@ -40,9 +40,6 @@ namespace Phys.Lib.Core
                     .Must(n => n.Where(char.IsLetter).All(char.IsLower))
                     .WithMessage("code must contain letters only in lower case");
                 RuleFor(u => u)
-                    .Must(n => char.IsLetter(n.First()))
-                    .WithMessage("code must start with letter");
-                RuleFor(u => u)
                     .Must(n => char.IsLetter(n.Last()) || char.IsDigit(n.Last()))
                     .WithMessage("code must end with letter or digit");
                 RuleFor(u => u)

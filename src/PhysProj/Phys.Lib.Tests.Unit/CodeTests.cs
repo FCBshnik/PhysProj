@@ -6,7 +6,6 @@
 
         [Theory]
         [InlineData("ya")]
-        [InlineData("8decartes")]
         [InlineData(" decartes")]
         [InlineData("decartes ")]
         [InlineData("decartes-")]
@@ -25,6 +24,7 @@
         [InlineData("deca-rtes")]
         [InlineData("dec-car-tes")]
         [InlineData("dec-8-tes")]
+        [InlineData("8decartes")]
         public void ValidCodeTests(string code)
         {
             var result = codeValidator.Validate(code);
