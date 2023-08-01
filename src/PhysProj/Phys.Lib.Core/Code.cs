@@ -48,7 +48,7 @@ namespace Phys.Lib.Core
                 RuleFor(u => u)
                     .Must(u => Enumerable.Range(0, u.Length - 1).All(i => char.IsLetterOrDigit(u[i]) || char.IsLetterOrDigit(u[i + 1])))
                     .WithMessage("code letters and digits can be delimited by only one hyphen");
-                RuleFor(u => u).MaximumLength(50);
+                RuleFor(u => u).MaximumLength(100);
             }
         }
     }
