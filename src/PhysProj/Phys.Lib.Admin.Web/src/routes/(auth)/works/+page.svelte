@@ -51,9 +51,21 @@
                     <td><a href="/works/{work.code}">{work.code}</a></td>
                     <td>{work.publish ?? '-'}</td>
                     <td>{work.language ?? '-'}</td>
-                    <td>{work.authorsCodes?.join(', ') ?? '-'}</td>
-                    <td>{work.originalCode ?? '-'}</td>
-                    <td>{work.filesCodes?.join(', ') ?? '-'}</td>
+                    <td class="flex flex-col">
+                      {#each work.authorsCodes ?? [] as authorCode}
+                        <a href="/authors/{authorCode}">{authorCode}</a>
+                      {/each}
+                    </td>
+                    <td>
+                      {#if work.originalCode}
+                      <a href="/works/{work.originalCode}">{work.originalCode}</a>
+                      {:else}
+                      -
+                      {/if}
+                    </td>
+                    <td>
+                      {work.filesCodes?.join(', ')}
+                    </td>
                     <td class="flex justify-end">
                         <button class="w-min text-xs" on:click={() => deleteWork(work)}>X</button>
                     </td>
