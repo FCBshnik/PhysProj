@@ -771,7 +771,7 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileLinksModel>> ListFilesAsync(string search)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileModel>> ListFilesAsync(string search)
         {
             return ListFilesAsync(search, System.Threading.CancellationToken.None);
         }
@@ -779,7 +779,7 @@ namespace Phys.Lib.Admin.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileLinksModel>> ListFilesAsync(string search, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileModel>> ListFilesAsync(string search, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/files?");
@@ -821,7 +821,7 @@ namespace Phys.Lib.Admin.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FileLinksModel>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FileModel>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1032,7 +1032,7 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileInfoModel>> ListStorageFilesAsync(string storageCode, string search)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileModel>> ListStorageFilesAsync(string storageCode, string search)
         {
             return ListStorageFilesAsync(storageCode, search, System.Threading.CancellationToken.None);
         }
@@ -1040,7 +1040,7 @@ namespace Phys.Lib.Admin.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileInfoModel>> ListStorageFilesAsync(string storageCode, string search, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileStorageFileModel>> ListStorageFilesAsync(string storageCode, string search, System.Threading.CancellationToken cancellationToken)
         {
             if (storageCode == null)
                 throw new System.ArgumentNullException("storageCode");
@@ -1086,7 +1086,7 @@ namespace Phys.Lib.Admin.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FileStorageFileInfoModel>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FileStorageFileModel>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1125,7 +1125,7 @@ namespace Phys.Lib.Admin.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FileLinksModel> LinkStorageFileAsync(string storageCode, FileStorageLinkModel body)
+        public virtual System.Threading.Tasks.Task<FileModel> LinkStorageFileAsync(string storageCode, FileStorageLinkModel body)
         {
             return LinkStorageFileAsync(storageCode, body, System.Threading.CancellationToken.None);
         }
@@ -1133,7 +1133,7 @@ namespace Phys.Lib.Admin.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FileLinksModel> LinkStorageFileAsync(string storageCode, FileStorageLinkModel body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FileModel> LinkStorageFileAsync(string storageCode, FileStorageLinkModel body, System.Threading.CancellationToken cancellationToken)
         {
             if (storageCode == null)
                 throw new System.ArgumentNullException("storageCode");
@@ -1181,7 +1181,7 @@ namespace Phys.Lib.Admin.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileLinksModel>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FileModel>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -3040,7 +3040,7 @@ namespace Phys.Lib.Admin.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))")]
-    public partial class FileLinksModel
+    public partial class FileModel
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Id { get; set; }
@@ -3060,7 +3060,7 @@ namespace Phys.Lib.Admin.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))")]
-    public partial class FileStorageFileInfoModel
+    public partial class FileStorageFileModel
     {
         [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Path { get; set; }
@@ -3076,8 +3076,8 @@ namespace Phys.Lib.Admin.Client
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))")]
     public partial class FileStorageLinkModel
     {
-        [Newtonsoft.Json.JsonProperty("filePath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string FilePath { get; set; }
+        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Path { get; set; }
 
     }
 

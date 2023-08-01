@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Admin.Api.Api.Files
 {
-    public class FileLinksModel
+    public class FileModel
     {
         public string Id { get; set; }
 

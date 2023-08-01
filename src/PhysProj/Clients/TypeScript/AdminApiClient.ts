@@ -419,7 +419,7 @@ export class AdminApiClient {
      * @param search (optional) 
      * @return OK
      */
-    listFiles(search: string | undefined): Promise<FileLinksModel[]> {
+    listFiles(search: string | undefined): Promise<FileModel[]> {
         let url_ = this.baseUrl + "/api/files?";
         if (search === null)
             throw new Error("The parameter 'search' cannot be null.");
@@ -439,7 +439,7 @@ export class AdminApiClient {
         });
     }
 
-    protected processListFiles(response: Response): Promise<FileLinksModel[]> {
+    protected processListFiles(response: Response): Promise<FileModel[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -449,7 +449,7 @@ export class AdminApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(FileLinksModel.fromJS(item));
+                    result200!.push(FileModel.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -468,7 +468,7 @@ export class AdminApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileLinksModel[]>(null as any);
+        return Promise.resolve<FileModel[]>(null as any);
     }
 
     /**
@@ -573,7 +573,7 @@ export class AdminApiClient {
      * @param search (optional) 
      * @return OK
      */
-    listStorageFiles(storageCode: string, search: string | undefined): Promise<FileStorageFileInfoModel[]> {
+    listStorageFiles(storageCode: string, search: string | undefined): Promise<FileStorageFileModel[]> {
         let url_ = this.baseUrl + "/api/files/storages/{storageCode}/files?";
         if (storageCode === undefined || storageCode === null)
             throw new Error("The parameter 'storageCode' must be defined.");
@@ -596,7 +596,7 @@ export class AdminApiClient {
         });
     }
 
-    protected processListStorageFiles(response: Response): Promise<FileStorageFileInfoModel[]> {
+    protected processListStorageFiles(response: Response): Promise<FileStorageFileModel[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -606,7 +606,7 @@ export class AdminApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(FileStorageFileInfoModel.fromJS(item));
+                    result200!.push(FileStorageFileModel.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -625,13 +625,13 @@ export class AdminApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileStorageFileInfoModel[]>(null as any);
+        return Promise.resolve<FileStorageFileModel[]>(null as any);
     }
 
     /**
      * @return OK
      */
-    linkStorageFile(storageCode: string, body: FileStorageLinkModel): Promise<FileLinksModel> {
+    linkStorageFile(storageCode: string, body: FileStorageLinkModel): Promise<FileModel> {
         let url_ = this.baseUrl + "/api/files/storages/{storageCode}/files/link";
         if (storageCode === undefined || storageCode === null)
             throw new Error("The parameter 'storageCode' must be defined.");
@@ -654,14 +654,14 @@ export class AdminApiClient {
         });
     }
 
-    protected processLinkStorageFile(response: Response): Promise<FileLinksModel> {
+    protected processLinkStorageFile(response: Response): Promise<FileModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = FileLinksModel.fromJS(resultData200);
+            result200 = FileModel.fromJS(resultData200);
             return result200;
             });
         } else if (status === 400) {
@@ -676,7 +676,7 @@ export class AdminApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FileLinksModel>(null as any);
+        return Promise.resolve<FileModel>(null as any);
     }
 
     /**
@@ -1825,14 +1825,14 @@ export interface IErrorModel {
     message?: string | undefined;
 }
 
-export class FileLinksModel implements IFileLinksModel {
+export class FileModel implements IFileModel {
     id?: string | undefined;
     code?: string | undefined;
     format?: string | undefined;
     size?: number | undefined;
     links?: LinkModel[] | undefined;
 
-    constructor(data?: IFileLinksModel) {
+    constructor(data?: IFileModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1855,9 +1855,9 @@ export class FileLinksModel implements IFileLinksModel {
         }
     }
 
-    static fromJS(data: any): FileLinksModel {
+    static fromJS(data: any): FileModel {
         data = typeof data === 'object' ? data : {};
-        let result = new FileLinksModel();
+        let result = new FileModel();
         result.init(data);
         return result;
     }
@@ -1877,7 +1877,7 @@ export class FileLinksModel implements IFileLinksModel {
     }
 }
 
-export interface IFileLinksModel {
+export interface IFileModel {
     id?: string | undefined;
     code?: string | undefined;
     format?: string | undefined;
@@ -1885,12 +1885,12 @@ export interface IFileLinksModel {
     links?: LinkModel[] | undefined;
 }
 
-export class FileStorageFileInfoModel implements IFileStorageFileInfoModel {
+export class FileStorageFileModel implements IFileStorageFileModel {
     path?: string | undefined;
     updated?: Date | undefined;
     size?: number | undefined;
 
-    constructor(data?: IFileStorageFileInfoModel) {
+    constructor(data?: IFileStorageFileModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1907,9 +1907,9 @@ export class FileStorageFileInfoModel implements IFileStorageFileInfoModel {
         }
     }
 
-    static fromJS(data: any): FileStorageFileInfoModel {
+    static fromJS(data: any): FileStorageFileModel {
         data = typeof data === 'object' ? data : {};
-        let result = new FileStorageFileInfoModel();
+        let result = new FileStorageFileModel();
         result.init(data);
         return result;
     }
@@ -1923,14 +1923,14 @@ export class FileStorageFileInfoModel implements IFileStorageFileInfoModel {
     }
 }
 
-export interface IFileStorageFileInfoModel {
+export interface IFileStorageFileModel {
     path?: string | undefined;
     updated?: Date | undefined;
     size?: number | undefined;
 }
 
 export class FileStorageLinkModel implements IFileStorageLinkModel {
-    filePath?: string | undefined;
+    path?: string | undefined;
 
     constructor(data?: IFileStorageLinkModel) {
         if (data) {
@@ -1943,7 +1943,7 @@ export class FileStorageLinkModel implements IFileStorageLinkModel {
 
     init(_data?: any) {
         if (_data) {
-            this.filePath = _data["filePath"];
+            this.path = _data["path"];
         }
     }
 
@@ -1956,13 +1956,13 @@ export class FileStorageLinkModel implements IFileStorageLinkModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["filePath"] = this.filePath;
+        data["path"] = this.path;
         return data;
     }
 }
 
 export interface IFileStorageLinkModel {
-    filePath?: string | undefined;
+    path?: string | undefined;
 }
 
 export class FileStorageModel implements IFileStorageModel {

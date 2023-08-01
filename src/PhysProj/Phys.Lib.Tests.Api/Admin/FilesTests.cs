@@ -33,7 +33,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
             public void LinkStorageFile(string storageCode, string path)
             {
-                var result = api.LinkStorageFileAsync(storageCode, new FileStorageLinkModel { FilePath = path }).Result;
+                var result = api.LinkStorageFileAsync(storageCode, new FileStorageLinkModel { Path = path }).Result;
                 result.Links.Should().HaveCount(1);
                 result.Links.First().Type.Should().Be(storageCode);
                 result.Links.First().Path.Should().Be(path);

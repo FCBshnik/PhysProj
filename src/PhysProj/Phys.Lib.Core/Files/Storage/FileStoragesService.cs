@@ -50,8 +50,13 @@ namespace Phys.Lib.Core.Files.Storage
                 throw ValidationError($"storage '{storageCode}' file '{filePath}' not found");
 
             log.Info($"creating file from storage '{storageCode}' file {storageFile}");
-            var code = Code.NormalizeAndValidate(filePath);
-            var file = filesService.Create(code, Path.GetExtension(storageFile.Path), storageFile.Size);
+            var fileName = Path.GetFileName(filePath);
+            var code = Code.NormalizeAndValidate(fileName);
+            var file = filesService.FindByCode(code);
+            if (file != null)
+                throw ValidationError($"file with code '{code}' already exists");
+
+            file = filesService.Create(code, Path.GetExtension(storageFile.Path).Trim('.'), storageFile.Size);
             file = filesService.AddLink(file, new FileDbo.LinkDbo { Type = storageCode, Path = storageFile.Path });
             return file;
         }

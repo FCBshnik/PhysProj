@@ -13,7 +13,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
             {
                 var filesLinks = service.Find(query.Search);
                 return TypedResults.Ok(filesLinks.Select(FilesMapper.Map).ToList());
-            }).ProducesResponse<List<FileLinksModel>>("ListFiles");
+            }).ProducesResponse<List<FileModel>>("ListFiles");
 
             builder.MapDelete("/{code}", (string code, [FromServices] IFilesService service) =>
             {
@@ -33,13 +33,13 @@ namespace Phys.Lib.Admin.Api.Api.Files
             {
                 var storage = storages.Get(storageCode);
                 return TypedResults.Ok(storage.List(query.Search).Select(FilesMapper.Map).ToList());
-            }).ProducesResponse<List<FileStorageFileInfoModel>>("ListStorageFiles");
+            }).ProducesResponse<List<FileStorageFileModel>>("ListStorageFiles");
 
             builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices] IFileStoragesService storages) =>
             {
-                var file = storages.CreateFileFromStorage(storageCode, model.FilePath);
+                var file = storages.CreateFileFromStorage(storageCode, model.Path);
                 return TypedResults.Ok(FilesMapper.Map(file));
-            }).ProducesResponse<FileLinksModel>("LinkStorageFile");
+            }).ProducesResponse<FileModel>("LinkStorageFile");
         }
     }
 }

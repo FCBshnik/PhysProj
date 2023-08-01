@@ -5,15 +5,15 @@ namespace Phys.Lib.Admin.Api.Api.Files
 {
     internal static class FilesMapper
     {
-        public static FileLinksModel Map(FileDbo file)
+        public static FileModel Map(FileDbo file)
         {
-            return new FileLinksModel
+            return new FileModel
             {
                 Id = file.Id,
                 Code = file.Code,
                 Format = file.Format,
                 Size = file.Size,
-                Links = file.Links.ConvertAll(l => new FileLinksModel.LinkModel { Type = l.Type, Path = l.Path }),
+                Links = file.Links.ConvertAll(l => new FileModel.LinkModel { Type = l.Type, Path = l.Path }),
             };
         }
 
@@ -26,9 +26,9 @@ namespace Phys.Lib.Admin.Api.Api.Files
             };
         }
 
-        public static FileStorageFileInfoModel Map(Lib.Files.FileInfo info)
+        public static FileStorageFileModel Map(Lib.Files.FileInfo info)
         {
-            return new FileStorageFileInfoModel
+            return new FileStorageFileModel
             {
                 Path = info.Path,
                 Size = info.Size,
