@@ -34,6 +34,10 @@
         [Theory]
         [InlineData("Decartes", "decartes")]
         [InlineData("Decartes Rene", "decartes-rene")]
+        [InlineData("Decartes@#Rene))", "decartes-rene")]
+        [InlineData("@Decartes+++Rene))", "decartes-rene")]
+        [InlineData("Decartes__Rene", "decartes-rene")]
+        [InlineData("Decartes____Rene", "decartes-rene")]
         [InlineData("Петровский, Фёдор Александрович", "petrovskij-fyodor-aleksandrovich")]
         public void NormalizeTests(string code, string expected)
         {

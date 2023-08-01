@@ -17,11 +17,10 @@ namespace Phys.Lib.Core
             if (string.IsNullOrWhiteSpace(value))
                 throw new ValidationException("code can not be empty");
 
-            var code = Regex.Replace(value, @"[^\w]", "-").Replace('_', '-')
-                .ToLowerInvariant().Trim()
-                .Replace("--", "-");
+            var code = RussianTranslitUtils.ConvertToLatin(value);
 
-            code = RussianTranslitUtils.ConvertToLatin(code);
+            code = Regex.Replace(code, @"[^A-Za-z0-9]+", "-")
+                .ToLowerInvariant().Trim(' ', '-');
 
             if (string.IsNullOrWhiteSpace(code))
                 throw new ValidationException("code can not be empty");
