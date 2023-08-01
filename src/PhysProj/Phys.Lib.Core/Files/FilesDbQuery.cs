@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Files
 {
-    public class FileLinksDbQuery
+    public class FilesDbQuery
     {
         public string? Code { get; set; }
 

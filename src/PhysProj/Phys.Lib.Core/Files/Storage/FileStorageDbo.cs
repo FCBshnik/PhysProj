@@ -1,4 +1,4 @@
-﻿namespace Phys.Lib.Core.Files
+﻿namespace Phys.Lib.Core.Files.Storage
 {
     public class FileStorageDbo
     {

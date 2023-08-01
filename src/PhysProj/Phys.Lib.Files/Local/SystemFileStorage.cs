@@ -39,10 +39,14 @@ namespace Phys.Lib.Files.Local
             return fileInfo.OpenRead();
         }
 
-        public FileInfo Get(string path)
+        public FileInfo? Get(string path)
         {
             ArgumentNullException.ThrowIfNull(path);
+
             var fileInfo = GetFileInfo(path);
+            if (!fileInfo.Exists)
+                return null;
+
             return MapFileInfo(fileInfo);
         }
 

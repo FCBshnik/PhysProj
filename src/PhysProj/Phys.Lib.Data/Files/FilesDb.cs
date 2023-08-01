@@ -31,7 +31,7 @@ namespace Phys.Lib.Data.Files
             collection.DeleteOne(FilterBuilder.Eq(i => i.Id, id));
         }
 
-        public List<FileDbo> Find(FileLinksDbQuery query)
+        public List<FileDbo> Find(FilesDbQuery query)
         {
             ArgumentNullException.ThrowIfNull(query);
 

@@ -7,5 +7,10 @@
         public DateTime? Updated { get; set; }
 
         public long? Size { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Path}";
+        }
     }
 }

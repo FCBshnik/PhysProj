@@ -2,7 +2,7 @@
 {
     public interface IFilesDb
     {
-        List<FileDbo> Find(FileLinksDbQuery query);
+        List<FileDbo> Find(FilesDbQuery query);
 
         FileDbo Create(FileDbo file);
 

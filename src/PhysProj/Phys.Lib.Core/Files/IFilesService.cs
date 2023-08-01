@@ -6,7 +6,9 @@
 
         FileDbo? FindByCode(string code);
 
-        FileDbo CreateFromStorageFile(string storageCode, string filePath);
+        FileDbo Create(string code, string? format, long? size);
+
+        FileDbo AddLink(FileDbo file, FileDbo.LinkDbo link);
 
         void Delete(FileDbo file);
     }

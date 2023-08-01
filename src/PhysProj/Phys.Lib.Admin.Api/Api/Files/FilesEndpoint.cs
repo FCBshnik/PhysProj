@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Admin.Api.Api.Models;
 using Phys.Lib.Core.Files;
+using Phys.Lib.Core.Files.Storage;
 
 namespace Phys.Lib.Admin.Api.Api.Files
 {
@@ -34,10 +35,10 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 return TypedResults.Ok(storage.List(query.Search).Select(FilesMapper.Map).ToList());
             }).ProducesResponse<List<FileStorageFileInfoModel>>("ListStorageFiles");
 
-            builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices]IFilesService service) =>
+            builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices] IFileStoragesService storages) =>
             {
-                var fileLinks = service.CreateFromStorageFile(storageCode, model.FilePath);
-                return TypedResults.Ok(FilesMapper.Map(fileLinks));
+                var file = storages.CreateFileFromStorage(storageCode, model.FilePath);
+                return TypedResults.Ok(FilesMapper.Map(file));
             }).ProducesResponse<FileLinksModel>("LinkStorageFile");
         }
     }

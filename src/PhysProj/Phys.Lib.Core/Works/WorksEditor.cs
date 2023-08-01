@@ -212,7 +212,7 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(work);
             ArgumentNullException.ThrowIfNull(fileCode);
 
-            var file = filesLinksDb.Find(new FileLinksDbQuery { Code = fileCode }).FirstOrDefault() ?? throw ValidationError($"file links '{fileCode}' not found");
+            var file = filesLinksDb.Find(new FilesDbQuery { Code = fileCode }).FirstOrDefault() ?? throw ValidationError($"file links '{fileCode}' not found");
             var update = new WorkDbUpdate { AddFile = file.Code };
             work = db.Update(work.Id, update);
             log.Info($"updated work {work}: linked file {file}");

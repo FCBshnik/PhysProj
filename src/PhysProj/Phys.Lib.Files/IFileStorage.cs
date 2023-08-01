@@ -4,7 +4,7 @@
     {
         List<FileInfo> List(string? search);
 
-        FileInfo Get(string path);
+        FileInfo? Get(string path);
 
         Stream Download(string path);
 
