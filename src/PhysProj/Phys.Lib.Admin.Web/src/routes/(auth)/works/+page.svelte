@@ -49,8 +49,8 @@
                 {#each works as work}
                 <tr class="border-b-2 border-b-gray-700">
                     <td><a href="/works/{work.code}">{work.code}</a></td>
-                    <td>{work.publish ?? '-'}</td>
-                    <td>{work.language ?? '-'}</td>
+                    <td>{work.publish ?? ''}</td>
+                    <td>{work.language ?? ''}</td>
                     <td class="flex flex-col">
                       {#each work.authorsCodes ?? [] as authorCode}
                         <a href="/authors/{authorCode}">{authorCode}</a>
@@ -59,8 +59,6 @@
                     <td>
                       {#if work.originalCode}
                       <a href="/works/{work.originalCode}">{work.originalCode}</a>
-                      {:else}
-                      -
                       {/if}
                     </td>
                     <td>
