@@ -1,5 +1,6 @@
 ﻿using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Files.Storage;
+using Phys.Lib.Files;
 
 namespace Phys.Lib.Admin.Api.Api.Files
 {
@@ -26,7 +27,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
             };
         }
 
-        public static FileStorageFileModel Map(Base.Files.StorageFileInfo info)
+        public static FileStorageFileModel Map(StorageFileInfo info)
         {
             return new FileStorageFileModel
             {

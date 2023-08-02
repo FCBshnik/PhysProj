@@ -1,4 +1,4 @@
-﻿namespace Phys.Lib.Base.Files
+﻿namespace Phys.Lib.Files
 {
     public class StorageFileInfo
     {

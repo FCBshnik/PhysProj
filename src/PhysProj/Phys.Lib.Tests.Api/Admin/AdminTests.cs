@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
-using Phys.Lib.Base.Files;
 using Phys.Lib.Files.Local;
+using Phys.Lib.Files;
 
 namespace Phys.Lib.Tests.Api.Admin
 {

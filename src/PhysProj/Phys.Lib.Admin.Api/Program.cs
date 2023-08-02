@@ -23,7 +23,7 @@ using Phys.Lib.Admin.Api.OpenApi;
 using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
 using Phys.Lib.Files.Local;
-using Phys.Lib.Base.Files;
+using Phys.Lib.Files;
 
 namespace Phys.Lib.Admin.Api
 {
