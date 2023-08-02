@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Authors;
-using Phys.Lib.Admin.Api.Api;
-using Phys.Lib.Admin.Api.Api.Authors;
 using Phys.Lib.Admin.Api.Api.Models;
+using Phys.Lib.Db.Authors;
 
 namespace Phys.Lib.Admin.Api.Api.Authors
 {

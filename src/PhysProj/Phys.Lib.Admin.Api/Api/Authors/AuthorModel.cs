@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Admin.Api.Api.Authors;
-
-namespace Phys.Lib.Admin.Api.Api.Authors
+﻿namespace Phys.Lib.Admin.Api.Api.Authors
 {
     public class AuthorModel
     {

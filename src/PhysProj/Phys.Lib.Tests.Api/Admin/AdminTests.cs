@@ -3,6 +3,7 @@ using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
 using Phys.Lib.Files.Local;
 using Phys.Lib.Files;
+using Phys.Lib.Mongo;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -47,7 +48,7 @@ namespace Phys.Lib.Tests.Api.Admin
         private IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new DbModule(GetMongoUrl()));
+            builder.RegisterModule(new MongoModule(GetMongoUrl()));
             builder.RegisterModule(new CoreModule());
             return builder.Build();
         }

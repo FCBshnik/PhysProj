@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using NLog;
+using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Core.Users
 {

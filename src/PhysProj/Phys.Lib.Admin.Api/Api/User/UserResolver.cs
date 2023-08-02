@@ -1,4 +1,5 @@
 ﻿using Phys.Lib.Core.Users;
+using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Admin.Api.Api.User
 {

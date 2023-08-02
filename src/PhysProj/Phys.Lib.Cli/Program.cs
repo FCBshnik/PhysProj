@@ -6,7 +6,7 @@ using Phys.Lib.Cli;
 using Phys.Lib.Cli.Test;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
-using Phys.Lib.Data;
+using Phys.Lib.Mongo;
 using System.Reflection;
 
 internal class Program
@@ -33,7 +33,7 @@ internal class Program
 
         if (options.GetType() != typeof(TestOptions))
         {
-            builder.RegisterModule(new DbModule(config.GetConnectionString("mongo")));
+            builder.RegisterModule(new MongoModule(config.GetConnectionString("mongo")));
             builder.RegisterModule(new CoreModule());
         }
 

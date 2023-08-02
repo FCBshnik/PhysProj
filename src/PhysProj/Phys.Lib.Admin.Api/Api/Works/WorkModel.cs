@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Admin.Api.Api.Works;
-
-namespace Phys.Lib.Admin.Api.Api.Works
+﻿namespace Phys.Lib.Admin.Api.Api.Works
 {
     public class WorkModel
     {

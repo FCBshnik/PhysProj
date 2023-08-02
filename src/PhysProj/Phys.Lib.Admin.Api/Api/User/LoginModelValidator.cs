@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Phys.Lib.Admin.Api.Api.User;
 
 namespace Phys.Lib.Admin.Api.Api.User
 {

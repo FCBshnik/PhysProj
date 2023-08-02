@@ -9,7 +9,6 @@ using NLog.Web;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Validation;
-using Phys.Lib.Data;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text.Json;
@@ -24,6 +23,7 @@ using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
 using Phys.Lib.Files.Local;
 using Phys.Lib.Files;
+using Phys.Lib.Mongo;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -106,19 +106,19 @@ namespace Phys.Lib.Admin.Api
             app.Run();
         }
 
-        private static void ConfigureContainer(ContainerBuilder b, string mongoUrl)
+        private static void ConfigureContainer(ContainerBuilder builder, string mongoUrl)
         {
-            b.RegisterModule(new DbModule(mongoUrl));
-            b.RegisterModule(new CoreModule());
-            b.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
+            builder.RegisterModule(new MongoModule(mongoUrl));
+            builder.RegisterModule(new CoreModule());
+            builder.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
 
-            b.Register(c => new SystemFileStorage("local", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files")))
+            builder.Register(c => new SystemFileStorage("local", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files")))
                 .As<IFileStorage>()
                 .SingleInstance();
 
-            b.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
-            b.RegisterType<UserResolver>().InstancePerDependency();
-            b.Register(c => c.Resolve<UserResolver>().GetUser()).InstancePerDependency();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            builder.RegisterType<UserResolver>().InstancePerDependency();
+            builder.Register(c => c.Resolve<UserResolver>().GetUser()).InstancePerDependency();
         }
 
         private static void ConfigureSwagger(SwaggerGenOptions o)

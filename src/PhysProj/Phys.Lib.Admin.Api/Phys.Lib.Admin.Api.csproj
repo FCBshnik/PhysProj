@@ -19,8 +19,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
-    <ProjectReference Include="..\Phys.Lib.Data\Phys.Lib.Data.csproj" />
+    <ProjectReference Include="..\Phys.Lib.Data\Phys.Lib.Mongo.csproj" />
     <ProjectReference Include="..\Phys.Lib.Files\Phys.Lib.Files.csproj" />
+    <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
   </ItemGroup>
 
 </Project>

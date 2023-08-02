@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Core.Validation;
-using Phys.Lib.Admin.Api.Api;
 using Phys.Lib.Admin.Api.Api.Models;
-using Phys.Lib.Admin.Api.Api.User;
+using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Admin.Api.Api.User
 {

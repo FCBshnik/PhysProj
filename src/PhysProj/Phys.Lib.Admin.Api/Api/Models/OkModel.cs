@@ -1,7 +1,4 @@
-﻿using Phys.Lib.Admin.Api;
-using Phys.Lib.Admin.Api.Api.Models;
-
-namespace Phys.Lib.Admin.Api.Api.Models
+﻿namespace Phys.Lib.Admin.Api.Api.Models
 {
     public class OkModel
     {

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Works;
-using Phys.Lib.Admin.Api.Api;
 using Phys.Lib.Admin.Api.Api.Models;
-using Phys.Lib.Admin.Api.Api.Works;
 
 namespace Phys.Lib.Admin.Api.Api.Works
 {

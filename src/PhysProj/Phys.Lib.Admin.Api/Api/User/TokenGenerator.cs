@@ -1,8 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using Phys.Lib.Core.Users;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Admin.Api.Api.User
 {

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Phys.Lib.Admin.Api.Api;
-using Phys.Lib.Admin.Api.Api.Models;
-
-namespace Phys.Lib.Admin.Api.Api.Models
+﻿namespace Phys.Lib.Admin.Api.Api.Models
 {
     public record ErrorModel
     {

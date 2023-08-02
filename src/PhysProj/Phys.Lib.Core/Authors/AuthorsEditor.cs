@@ -2,6 +2,7 @@
 using NLog;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Works;
+using Phys.Lib.Db.Authors;
 
 namespace Phys.Lib.Core.Authors
 {

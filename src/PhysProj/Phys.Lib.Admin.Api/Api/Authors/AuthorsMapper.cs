@@ -1,5 +1,5 @@
-﻿using Phys.Lib.Core.Authors;
-using Riok.Mapperly.Abstractions;
+﻿using Riok.Mapperly.Abstractions;
+using Phys.Lib.Db.Authors;
 
 namespace Phys.Lib.Admin.Api.Api.Authors
 {

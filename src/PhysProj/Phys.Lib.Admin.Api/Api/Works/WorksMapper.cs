@@ -1,5 +1,5 @@
-﻿using Phys.Lib.Core.Works;
-using Riok.Mapperly.Abstractions;
+﻿using Riok.Mapperly.Abstractions;
+using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Admin.Api.Api.Works
 {

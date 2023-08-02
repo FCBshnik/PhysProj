@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using NLog;
 using Phys.Lib.Files;
+using Phys.Lib.Db.Files;
 
 namespace Phys.Lib.Core.Files.Storage
 {

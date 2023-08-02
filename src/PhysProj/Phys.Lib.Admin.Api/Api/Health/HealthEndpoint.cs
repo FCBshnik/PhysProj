@@ -1,5 +1,4 @@
-﻿using Phys.Lib.Admin.Api.Api;
-using Phys.Lib.Admin.Api.Api.Models;
+﻿using Phys.Lib.Admin.Api.Api.Models;
 
 namespace Phys.Lib.Admin.Api.Api.Health
 {

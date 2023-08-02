@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Phys.Lib.Db\Phys.Lib.Db.csproj" />
     <ProjectReference Include="..\Phys.Lib.Files\Phys.Lib.Files.csproj" />
   </ItemGroup>
 

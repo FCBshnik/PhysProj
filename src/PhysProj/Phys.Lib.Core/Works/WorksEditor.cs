@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
 using NLog;
 using Phys.Lib.Core.Authors;
-using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Utils;
+using Phys.Lib.Db.Files;
+using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Core.Works
 {

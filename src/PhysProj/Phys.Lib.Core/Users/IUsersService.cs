@@ -1,4 +1,6 @@
-﻿namespace Phys.Lib.Core.Users
+﻿using Phys.Lib.Db.Users;
+
+namespace Phys.Lib.Core.Users
 {
     public interface IUsersService
     {

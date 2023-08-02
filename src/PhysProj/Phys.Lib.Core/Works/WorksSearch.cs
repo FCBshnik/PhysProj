@@ -1,4 +1,6 @@
-﻿namespace Phys.Lib.Core.Works
+﻿using Phys.Lib.Db.Works;
+
+namespace Phys.Lib.Core.Works
 {
     public class WorksSearch : IWorksSearch
     {
