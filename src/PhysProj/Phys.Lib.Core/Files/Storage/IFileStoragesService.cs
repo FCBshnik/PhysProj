@@ -1,10 +1,10 @@
-﻿using Phys.Lib.Files;
+﻿using Phys.Lib.Base.Files;
 
 namespace Phys.Lib.Core.Files.Storage
 {
     public interface IFileStoragesService
     {
-        List<FileStorageDbo> List();
+        List<FileStorageInfo> List();
 
         IFileStorage Get(string code);
 

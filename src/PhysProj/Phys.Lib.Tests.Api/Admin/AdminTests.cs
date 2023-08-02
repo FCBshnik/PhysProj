@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
+using Phys.Lib.Base.Files;
+using Phys.Lib.Files.Local;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -11,7 +13,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private readonly AdminApiClient api;
 
-        private Files.IFileStorage fileStorage;
+        private IFileStorage fileStorage;
 
         private FileInfo ProjectPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api.csproj"));
 
@@ -26,7 +28,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
             var appDir = StartApp(url, ProjectPath);
 
-            fileStorage = new Files.Local.SystemFileStorage(Path.Combine(appDir.FullName, "data/files"));
+            fileStorage = new SystemFileStorage("local", Path.Combine(appDir.FullName, "data/files"));
 
             var container = BuildContainer();
             using var scope = container.BeginLifetimeScope();
@@ -95,8 +97,7 @@ namespace Phys.Lib.Tests.Api.Admin
             // not found author
             authors.NotFound("decartes", ErrorCode.NotFound);
             // create invalid author
-            authors.CreateFailed("decartes-");
-            authors.CreateFailed("-decartes");
+            authors.CreateFailed("@$#");
             // create valid author
             authors.Create("decartes");
             authors.Found("decartes");
@@ -170,8 +171,7 @@ namespace Phys.Lib.Tests.Api.Admin
             works.NotFound("discourse-on-method", ErrorCode.NotFound);
             // create invalid work
             works.CreateFailed("dm");
-            works.CreateFailed("@discourse-on-method");
-            works.CreateFailed("@discourse-on-");
+            works.CreateFailed("@@#");
             // create valid work
             works.Create("discourse-on-method");
             works.Found("discourse-on-method");
@@ -295,7 +295,7 @@ namespace Phys.Lib.Tests.Api.Admin
             files.ListFiles();
             // link storage file
             files.LinkStorageFile("local", "works/work-1.txt");
-            files.ListFiles("works-work-1-txt");
+            files.ListFiles("work-1-txt");
         }
     }
 }

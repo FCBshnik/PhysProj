@@ -1,6 +1,6 @@
-﻿namespace Phys.Lib.Files
+﻿namespace Phys.Lib.Base.Files
 {
-    public class FileInfo
+    public class StorageFileInfo
     {
         public required string Path { get; set; }
 

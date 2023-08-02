@@ -1,4 +1,5 @@
 ﻿using NLog;
+using Phys.Lib.Base.Files;
 
 namespace Phys.Lib.Files.Local
 {
@@ -8,13 +9,19 @@ namespace Phys.Lib.Files.Local
 
         private readonly DirectoryInfo baseDir;
 
-        public SystemFileStorage(string baseDir)
+        public SystemFileStorage(string code, string baseDir)
         {
+            ArgumentException.ThrowIfNullOrEmpty(code);
             ArgumentException.ThrowIfNullOrEmpty(baseDir);
 
+            Code = code;
             this.baseDir = new DirectoryInfo(baseDir);
             log.Info($"base dir '{this.baseDir.FullName}'");
         }
+
+        public string Code { get; }
+
+        public string Name => "System file storage";
 
         public void Delete(string path)
         {
@@ -39,7 +46,7 @@ namespace Phys.Lib.Files.Local
             return fileInfo.OpenRead();
         }
 
-        public FileInfo? Get(string path)
+        public StorageFileInfo? Get(string path)
         {
             ArgumentNullException.ThrowIfNull(path);
 
@@ -50,10 +57,10 @@ namespace Phys.Lib.Files.Local
             return MapFileInfo(fileInfo);
         }
 
-        public List<FileInfo> List(string? search)
+        public List<StorageFileInfo> List(string? search)
         {
             if (!Directory.Exists(baseDir.FullName))
-                return Enumerable.Empty<FileInfo>().ToList();
+                return Enumerable.Empty<StorageFileInfo>().ToList();
 
             return baseDir.EnumerateFiles(search != null ? $"*{search}*" : "*", SearchOption.AllDirectories)
                 .Take(100)
@@ -61,7 +68,7 @@ namespace Phys.Lib.Files.Local
                 .ToList();
         }
 
-        public FileInfo Upload(string path, Stream data)
+        public StorageFileInfo Upload(string path, Stream data)
         {
             ArgumentNullException.ThrowIfNull(path);
             ArgumentNullException.ThrowIfNull(data);
@@ -74,19 +81,19 @@ namespace Phys.Lib.Files.Local
             return MapFileInfo(GetFileInfo(path));
         }
 
-        private FileInfo MapFileInfo(System.IO.FileInfo f)
+        private StorageFileInfo MapFileInfo(FileInfo f)
         {
-            return new FileInfo { Path = GetFilePath(f), Size = f.Length, Updated = f.LastWriteTimeUtc };
+            return new StorageFileInfo { Path = GetFilePath(f), Size = f.Length, Updated = f.LastWriteTimeUtc };
         }
 
-        private string GetFilePath(System.IO.FileInfo fileInfo)
+        private string GetFilePath(FileInfo fileInfo)
         {
             return NormalizePath(fileInfo.FullName.Replace(baseDir.FullName, string.Empty));
         }
 
-        private System.IO.FileInfo GetFileInfo(string path)
+        private FileInfo GetFileInfo(string path)
         {
-            return new System.IO.FileInfo(Path.Combine(baseDir.FullName, path));
+            return new FileInfo(Path.Combine(baseDir.FullName, path));
         }
 
         private static string NormalizePath(string path)

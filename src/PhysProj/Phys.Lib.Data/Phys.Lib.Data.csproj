@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Phys.Lib.Base\Phys.Lib.Base.csproj" />
     <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
   </ItemGroup>
 

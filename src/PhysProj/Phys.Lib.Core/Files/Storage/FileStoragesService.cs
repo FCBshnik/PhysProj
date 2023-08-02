@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using NLog;
-using Phys.Lib.Files;
-using Phys.Lib.Files.Local;
+using Phys.Lib.Base.Files;
 
 namespace Phys.Lib.Core.Files.Storage
 {
@@ -9,34 +8,31 @@ namespace Phys.Lib.Core.Files.Storage
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        private readonly Dictionary<FileStorageDbo, IFileStorage> storages = new Dictionary<FileStorageDbo, IFileStorage>
-        {
-            [new FileStorageDbo { Id = "local", Code = "local", Name = "File system storage" }] =
-                new SystemFileStorage(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files"))
-        };
-
-        private readonly Dictionary<string, IFileStorage> storagesMap;
+        private readonly Dictionary<string, IFileStorage> storages;
         private readonly IFilesService filesService;
 
-        public FileStoragesService(IFilesService filesService)
+        public FileStoragesService(IFilesService filesService, IEnumerable<IFileStorage> storages)
         {
-            storagesMap = storages.ToDictionary(s => s.Key.Code, s => s.Value, StringComparer.OrdinalIgnoreCase);
+            ArgumentNullException.ThrowIfNull(filesService);
+            ArgumentNullException.ThrowIfNull(storages);
+
             this.filesService = filesService;
+            this.storages = storages.ToDictionary(s => s.Code, s => s, StringComparer.OrdinalIgnoreCase);
         }
 
         public IFileStorage Get(string code)
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            if (storagesMap.TryGetValue(code, out var storage))
+            if (storages.TryGetValue(code, out var storage))
                 return storage;
 
             throw new ArgumentException($"invalid storage '{code}'");
         }
 
-        public List<FileStorageDbo> List()
+        public List<FileStorageInfo> List()
         {
-            return storages.Keys.ToList();
+            return storages.Select(s => new FileStorageInfo { Code = s.Key, Name = s.Key }).ToList();
         }
 
         public FileDbo CreateFileFromStorage(string storageCode, string filePath)

@@ -17,7 +17,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
             };
         }
 
-        public static FileStorageModel Map(FileStorageDbo storage)
+        public static FileStorageModel Map(FileStorageInfo storage)
         {
             return new FileStorageModel
             {
@@ -26,7 +26,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
             };
         }
 
-        public static FileStorageFileModel Map(Lib.Files.FileInfo info)
+        public static FileStorageFileModel Map(Base.Files.StorageFileInfo info)
         {
             return new FileStorageFileModel
             {

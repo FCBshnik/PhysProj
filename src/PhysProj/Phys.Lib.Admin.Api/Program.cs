@@ -22,6 +22,8 @@ using Phys.Lib.Admin.Api.Api.Works;
 using Phys.Lib.Admin.Api.OpenApi;
 using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
+using Phys.Lib.Files.Local;
+using Phys.Lib.Base.Files;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -109,6 +111,10 @@ namespace Phys.Lib.Admin.Api
             b.RegisterModule(new DbModule(mongoUrl));
             b.RegisterModule(new CoreModule());
             b.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
+
+            b.Register(c => new SystemFileStorage("local", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files")))
+                .As<IFileStorage>()
+                .SingleInstance();
 
             b.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             b.RegisterType<UserResolver>().InstancePerDependency();
