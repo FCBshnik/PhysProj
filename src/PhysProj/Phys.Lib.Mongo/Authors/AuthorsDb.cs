@@ -17,7 +17,7 @@ namespace Phys.Lib.Mongo.Authors
             collection.Indexes.CreateOne(new CreateIndexModel<AuthorDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
-        public AuthorDbo Create(string code)
+        public void Create(string code)
         {
             ArgumentNullException.ThrowIfNull(code);
 
@@ -27,7 +27,7 @@ namespace Phys.Lib.Mongo.Authors
                 Code = code
             };
 
-            return Insert(author);
+            Insert(author);
         }
 
         public List<AuthorDbo> Find(AuthorsDbQuery query)
@@ -56,7 +56,7 @@ namespace Phys.Lib.Mongo.Authors
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
 
-        public AuthorDbo Update(string id, AuthorDbUpdate author)
+        public void Update(string id, AuthorDbUpdate author)
         {
             ArgumentNullException.ThrowIfNull(id);
             ArgumentNullException.ThrowIfNull(author);
@@ -79,8 +79,8 @@ namespace Phys.Lib.Mongo.Authors
             if (author.DeleteInfo != null)
                 update = update.PullFilter(i => i.Infos, i => i.Language == author.DeleteInfo);
 
-            return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
-                ?? throw new ApplicationException($"author '{id}' was not updated due to not found in db");
+            if (collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter) == null)
+                throw new ApplicationException($"author '{id}' update failed");
         }
 
         public void Delete(string id)

@@ -4,9 +4,9 @@
     {
         List<AuthorDbo> Find(AuthorsDbQuery query);
 
-        AuthorDbo Create(string code);
+        void Create(string code);
 
-        AuthorDbo Update(string id, AuthorDbUpdate update);
+        void Update(string id, AuthorDbUpdate update);
 
         void Delete(string id);
     }

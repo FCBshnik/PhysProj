@@ -16,12 +16,12 @@ namespace Phys.Lib.Mongo.Files
             collection.Indexes.CreateOne(new CreateIndexModel<FileDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
-        public FileDbo Create(FileDbo file)
+        public void Create(FileDbo file)
         {
             ArgumentNullException.ThrowIfNull(file);
 
             file.Id = ObjectId.GenerateNewId().ToString();
-            return Insert(file);
+            Insert(file);
         }
 
         public void Delete(string id)
@@ -55,7 +55,7 @@ namespace Phys.Lib.Mongo.Files
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
 
-        public FileDbo Update(string id, FileDbUpdate file)
+        public void Update(string id, FileDbUpdate file)
         {
             ArgumentNullException.ThrowIfNull(id);
             ArgumentNullException.ThrowIfNull(file);
@@ -68,8 +68,8 @@ namespace Phys.Lib.Mongo.Files
             if (file.DeleteLink != null)
                 update = update.PullFilter(i => i.Links, l => l.Type == file.DeleteLink.Type && l.Path == file.DeleteLink.Path);
 
-            return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
-                ?? throw new ApplicationException($"file '{id}' was not updated due to not found in db");
+            if (collection.UpdateOne(filter, update).MatchedCount == 0)
+                throw new ApplicationException($"file '{id}' was not updated due to not found in db");
         }
     }
 }

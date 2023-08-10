@@ -64,7 +64,8 @@ namespace Phys.Lib.Core.Users
             if (user.HasRole(role))
                 return user;
 
-            user = db.Update(user.Id, new UserDbUpdate { AddRole = role });
+            db.Update(user.Id, new UserDbUpdate { AddRole = role });
+            user = db.Get(user.Id);
             log.Info($"updated user {user}: added role {role}");
             return user;
         }
@@ -77,7 +78,8 @@ namespace Phys.Lib.Core.Users
             if (!user.HasRole(role))
                 return user;
 
-            user = db.Update(user.Id, new UserDbUpdate { DeleteRole = role });
+            db.Update(user.Id, new UserDbUpdate { DeleteRole = role });
+            user = db.Get(user.Id);
             log.Info($"updated user {user}: deleted role {role}");
             return user;
         }
@@ -100,12 +102,13 @@ namespace Phys.Lib.Core.Users
                 PasswordHash = UserPasswordHasher.HashPassword(password),
             };
 
-            user = db.Create(user);
+            db.Create(user);
+            user = db.GetByName(user.Name);
             log.Info($"created user: {user}");
             return user;
         }
 
-        private Exception ValidationError(string message)
+        private ValidationException ValidationError(string message)
         {
             return new ValidationException(message);
         }

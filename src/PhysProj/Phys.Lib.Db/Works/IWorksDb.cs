@@ -4,9 +4,9 @@
     {
         List<WorkDbo> Find(WorksDbQuery query);
 
-        WorkDbo Create(string code);
+        void Create(string code);
 
-        WorkDbo Update(string id, WorkDbUpdate update);
+        void Update(string id, WorkDbUpdate update);
 
         void Delete(string id);
     }

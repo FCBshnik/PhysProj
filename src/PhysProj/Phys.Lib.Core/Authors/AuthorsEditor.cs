@@ -8,7 +8,7 @@ namespace Phys.Lib.Core.Authors
 {
     internal class AuthorsEditor : IAuthorsEditor
     {
-        private static readonly ILogger log = LogManager.GetLogger("authors-editor");
+        private static readonly Logger log = LogManager.GetLogger("authors-editor");
 
         private readonly IAuthorsDb db;
         private readonly IAuthorsSearch authorsSearch;
@@ -26,9 +26,10 @@ namespace Phys.Lib.Core.Authors
             code = Code.NormalizeAndValidate(code);
 
             if (authorsSearch.FindByCode(code) != null)
-                throw ValidationError($"author with the same code already exists");
+                throw ValidationError($"author with code '{code}' already exists");
 
-            var author = db.Create(code);
+            db.Create(code);
+            var author = db.GetByCode(code);
 
             log.Info($"created author {author}");
             return author;
@@ -54,7 +55,8 @@ namespace Phys.Lib.Core.Authors
             if (author.Infos.Any(i => i.Language == info.Language))
                 author = DeleteInfo(author, info.Language);
 
-            author = db.Update(author.Id, new AuthorDbUpdate { AddInfo = info });
+            db.Update(author.Id, new AuthorDbUpdate { AddInfo = info });
+            author = db.Get(author.Id);
             log.Info($"updated author {author}");
             return author;
         }
@@ -64,7 +66,8 @@ namespace Phys.Lib.Core.Authors
             ArgumentNullException.ThrowIfNull(author);
             ArgumentNullException.ThrowIfNull(language);
 
-            author = db.Update(author.Id, new AuthorDbUpdate { DeleteInfo = language });
+            db.Update(author.Id, new AuthorDbUpdate { DeleteInfo = language });
+            author = db.Get(author.Id);
             log.Info($"updated author {author}");
             return author;
         }
@@ -90,12 +93,13 @@ namespace Phys.Lib.Core.Authors
             if (update.Born.HasValue() || update.Died.HasValue())
                 Date.ValidateLifetime(update.Born ?? author.Born, update.Died ?? author.Died);
 
-            author = db.Update(author.Id, update);
+            db.Update(author.Id, update);
+            author = db.Get(author.Id);
             log.Info($"updated author {author}");
             return author;
         }
 
-        private Exception ValidationError(string message)
+        private ValidationException ValidationError(string message)
         {
             return new ValidationException(message);
         }

@@ -19,12 +19,14 @@ namespace Phys.Lib.Core.Files
         public FileDbo Create(string code, string? format, long? size)
         {
             code = Code.NormalizeAndValidate(code);
-            var file = db.Create(new FileDbo
+            db.Create(new FileDbo
             {
                 Code = code,
                 Format = format,
                 Size = size,
             });
+
+            var file = db.GetByCode(code);
 
             log.Info($"created file {file}");
             return file;
@@ -38,7 +40,8 @@ namespace Phys.Lib.Core.Files
             ArgumentNullException.ThrowIfNull(link.Type);
 
             var update = new FileDbUpdate { AddLink = link };
-            file = db.Update(file.Id, update);
+            db.Update(file.Id, update);
+            file = db.Get(file.Id);
             log.Info($"file {file} link added: {link}");
             return file;
         }

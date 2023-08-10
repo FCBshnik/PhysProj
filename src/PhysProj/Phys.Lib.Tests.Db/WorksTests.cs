@@ -18,12 +18,12 @@ namespace Phys.Lib.Tests.Db
             var works = db.Find(new WorksDbQuery());
             works.ShouldBeEmpty();
 
-            var work = db.Create("work-1");
+            db.Create("work-1");
             db.Create("work-2");
             db.Create("work-3");
             Should.Throw<Exception>(() => db.Create("work-3"));
 
-            FindByCode("work-1");
+            var work = FindByCode("work-1");
             FindByCode("work-3");
 
             Search("lalala");

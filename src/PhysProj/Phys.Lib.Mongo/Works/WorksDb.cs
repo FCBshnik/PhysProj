@@ -17,13 +17,17 @@ namespace Phys.Lib.Mongo.Works
             collection.Indexes.CreateOne(new CreateIndexModel<WorkDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
-        public WorkDbo Create(string code)
+        public void Create(string code)
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            var work = new WorkDbo { Code = code };
-            work.Id = ObjectId.GenerateNewId().ToString();
-            return Insert(work);
+            var work = new WorkDbo
+            {
+                Code = code,
+                Id = ObjectId.GenerateNewId().ToString()
+            };
+
+            Insert(work);
         }
 
         public void Delete(string id)
@@ -63,7 +67,7 @@ namespace Phys.Lib.Mongo.Works
             return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
         }
 
-        public WorkDbo Update(string id, WorkDbUpdate work)
+        public void Update(string id, WorkDbUpdate work)
         {
             ArgumentNullException.ThrowIfNull(id);
             ArgumentNullException.ThrowIfNull(work);
@@ -106,8 +110,8 @@ namespace Phys.Lib.Mongo.Works
             if (work.DeleteFile.HasValue())
                 update = update.Pull(i => i.FilesCodes, work.DeleteFile);
 
-            return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
-                ?? throw new ApplicationException($"work '{id}' was not updated due to not found in db");
+            if (collection.UpdateOne(filter, update).MatchedCount == 0)
+                throw new ApplicationException($"work '{id}' was not updated due to not found in db");
         }
     }
 }

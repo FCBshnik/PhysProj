@@ -4,9 +4,9 @@
     {
         List<FileDbo> Find(FilesDbQuery query);
 
-        FileDbo Create(FileDbo file);
+        void Create(FileDbo file);
 
-        FileDbo Update(string id, FileDbUpdate update);
+        void Update(string id, FileDbUpdate update);
 
         void Delete(string id);
     }

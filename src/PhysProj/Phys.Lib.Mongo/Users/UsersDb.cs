@@ -16,15 +16,15 @@ namespace Phys.Lib.Mongo.Users
             collection.Indexes.CreateOne(new CreateIndexModel<UserDbo>(IndexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
         }
 
-        public UserDbo Create(UserDbo user)
+        public void Create(UserDbo user)
         {
             ArgumentNullException.ThrowIfNull(user);
 
             user.Id = ObjectId.GenerateNewId().ToString();
-            return Insert(user);
+            Insert(user);
         }
 
-        public UserDbo Update(string id, UserDbUpdate user)
+        public void Update(string id, UserDbUpdate user)
         {
             ArgumentNullException.ThrowIfNull(id);
             ArgumentNullException.ThrowIfNull(user);
@@ -39,8 +39,8 @@ namespace Phys.Lib.Mongo.Users
             if (user.PasswordHash.HasValue())
                 update = update.Set(i => i.PasswordHash, user.PasswordHash);
 
-            return collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter)
-                ?? throw new ApplicationException($"user '{id}' was not updated due to not found in db");
+            if (collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter) == null)
+                throw new ApplicationException($"user '{id}' was not updated due to not found in db");
         }
 
         public List<UserDbo> Find(UsersDbQuery query)
