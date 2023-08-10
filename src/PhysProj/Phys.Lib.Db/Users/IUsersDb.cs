@@ -2,8 +2,6 @@
 {
     public interface IUsersDb
     {
-        UserDbo Get(string id);
-
         UserDbo Create(UserDbo user);
 
         List<UserDbo> Find(UsersDbQuery query);

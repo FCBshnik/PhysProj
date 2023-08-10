@@ -2,6 +2,8 @@
 {
     public class AuthorsDbQuery
     {
+        public string? Id { get; set; }
+
         public string? Search { get; set; }
 
         public string? Code { get; set; }

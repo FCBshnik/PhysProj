@@ -16,13 +16,6 @@ namespace Phys.Lib.Mongo.Users
             collection.Indexes.CreateOne(new CreateIndexModel<UserDbo>(IndexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
         }
 
-        public UserDbo Get(string id)
-        {
-            var filter = FilterBuilder.Eq(i => i.Id, id);
-
-            return collection.Find(filter).FirstOrDefault() ?? throw new ApplicationException($"user '{id}' not found");
-        }
-
         public UserDbo Create(UserDbo user)
         {
             ArgumentNullException.ThrowIfNull(user);
@@ -55,6 +48,8 @@ namespace Phys.Lib.Mongo.Users
             ArgumentNullException.ThrowIfNull(query);
 
             var filter = FilterBuilder.Empty;
+            if (query.Id != null)
+                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Id, query.Id));
             if (query.NameLowerCase != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.NameLowerCase, query.NameLowerCase));
 
