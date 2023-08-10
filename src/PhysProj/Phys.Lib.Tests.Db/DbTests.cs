@@ -2,7 +2,9 @@ using Autofac;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Db.Authors;
+using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
+using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Tests.Db
 {
@@ -35,6 +37,8 @@ namespace Phys.Lib.Tests.Db
             using var lifetimeScope = container.BeginLifetimeScope();
             new UsersTests(lifetimeScope.Resolve<IUsersDb>()).Run();
             new AuthorsTests(lifetimeScope.Resolve<IAuthorsDb>()).Run();
+            new WorksTests(lifetimeScope.Resolve<IWorksDb>()).Run();
+            new FilesTests(lifetimeScope.Resolve<IFilesDb>()).Run();
         }
 
         private IContainer BuildContainer()

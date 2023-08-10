@@ -37,6 +37,8 @@ namespace Phys.Lib.Mongo.Files
 
             var filter = FilterBuilder.Empty;
 
+            if (query.Id != null)
+                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Id, query.Id));
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.Search != null)

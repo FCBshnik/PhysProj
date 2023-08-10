@@ -4,7 +4,7 @@
     {
         List<WorkDbo> Find(WorksDbQuery query);
 
-        WorkDbo Create(WorkDbo work);
+        WorkDbo Create(string code);
 
         WorkDbo Update(string id, WorkDbUpdate update);
 

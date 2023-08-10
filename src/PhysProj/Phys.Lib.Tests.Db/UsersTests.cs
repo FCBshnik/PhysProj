@@ -19,6 +19,7 @@ namespace Phys.Lib.Tests.Db
 
             db.Create(new UserDbo { Name = "user", NameLowerCase = "user", PasswordHash = "123456" });
             db.Create(new UserDbo { Name = "admin", NameLowerCase = "admin", PasswordHash = "123456" });
+            Should.Throw<Exception>(() => db.Create(new UserDbo { Name = "user", NameLowerCase = "user", PasswordHash = "123456" }));
             users = db.Find(new UsersDbQuery());
             users.Count.ShouldBe(2);
 

@@ -17,10 +17,11 @@ namespace Phys.Lib.Mongo.Works
             collection.Indexes.CreateOne(new CreateIndexModel<WorkDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
-        public WorkDbo Create(WorkDbo work)
+        public WorkDbo Create(string code)
         {
-            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(code);
 
+            var work = new WorkDbo { Code = code };
             work.Id = ObjectId.GenerateNewId().ToString();
             return Insert(work);
         }
@@ -37,6 +38,8 @@ namespace Phys.Lib.Mongo.Works
             ArgumentNullException.ThrowIfNull(query);
 
             var filter = FilterBuilder.Empty;
+            if (query.Id != null)
+                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Id, query.Id));
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.AuthorCode != null)

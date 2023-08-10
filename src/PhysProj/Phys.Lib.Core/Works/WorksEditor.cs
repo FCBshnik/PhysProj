@@ -45,10 +45,7 @@ namespace Phys.Lib.Core.Works
             if (worksSearch.FindByCode(code) != null)
                 throw ValidationError($"work with the same code already exists");
 
-            var work = db.Create(new WorkDbo
-            {
-                Code = code,
-            });
+            var work = db.Create(code);
 
             log.Info($"created work {work}");
             return work;
