@@ -2,9 +2,9 @@
 {
     public class UsersDbQuery
     {
-        public string? NameLowerCase { get; set; }
+        public string? Id { get; set; }
 
-        public string? Code { get; set; }
+        public string? NameLowerCase { get; set; }
 
         public int Limit { get; set; } = 20;
     }

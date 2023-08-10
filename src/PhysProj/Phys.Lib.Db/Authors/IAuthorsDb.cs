@@ -4,7 +4,7 @@
     {
         List<AuthorDbo> Find(AuthorsDbQuery query);
 
-        AuthorDbo Create(AuthorDbo author);
+        AuthorDbo Create(string code);
 
         AuthorDbo Update(string id, AuthorDbUpdate update);
 

@@ -13,5 +13,7 @@ namespace Phys.Lib.Core.Users
         Result<UserDbo> Login(string name, string password, UserRole role);
 
         UserDbo GetByName(string name);
+
+        UserDbo? FindByName(string name);
     }
 }

@@ -16,9 +16,9 @@ namespace Phys.Lib.Core.Authors
 
         public AuthorsEditor(IAuthorsDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch)
         {
-            this.db = db ?? throw new ArgumentNullException();
-            this.worksSearch = worksSearch ?? throw new ArgumentNullException();
-            this.authorsSearch = authorsSearch ?? throw new ArgumentNullException();
+            this.db = db ?? throw new ArgumentNullException(nameof(db));
+            this.worksSearch = worksSearch ?? throw new ArgumentNullException(nameof(worksSearch));
+            this.authorsSearch = authorsSearch ?? throw new ArgumentNullException(nameof(authorsSearch));
         }
 
         public AuthorDbo Create(string code)
@@ -28,10 +28,7 @@ namespace Phys.Lib.Core.Authors
             if (authorsSearch.FindByCode(code) != null)
                 throw ValidationError($"author with the same code already exists");
 
-            var author = db.Create(new AuthorDbo
-            {
-                Code = code,
-            });
+            var author = db.Create(code);
 
             log.Info($"created author {author}");
             return author;

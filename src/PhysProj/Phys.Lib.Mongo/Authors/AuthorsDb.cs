@@ -17,11 +17,16 @@ namespace Phys.Lib.Mongo.Authors
             collection.Indexes.CreateOne(new CreateIndexModel<AuthorDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
-        public AuthorDbo Create(AuthorDbo author)
+        public AuthorDbo Create(string code)
         {
-            ArgumentNullException.ThrowIfNull(author);
+            ArgumentNullException.ThrowIfNull(code);
 
-            author.Id = ObjectId.GenerateNewId().ToString();
+            var author = new AuthorDbo
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Code = code
+            };
+
             return Insert(author);
         }
 

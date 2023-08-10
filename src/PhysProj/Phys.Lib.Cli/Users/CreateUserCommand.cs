@@ -13,8 +13,9 @@ namespace Phys.Lib.Cli.Users
 
         public void Run(CreateUserOptions options)
         {
-            var user = users.Create(options.Name, options.Password);
-            users.AddRole(user, UserRole.Parse(options.Role));
+            var user = users.FindByName(options.Name) ?? users.Create(options.Name, options.Password);
+            if (!user.HasRole(options.Role))
+                users.AddRole(user, UserRole.Parse(options.Role));
         }
     }
 }

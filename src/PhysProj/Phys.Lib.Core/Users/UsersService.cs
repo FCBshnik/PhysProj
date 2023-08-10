@@ -15,11 +15,16 @@ namespace Phys.Lib.Core.Users
             this.db = db;
         }
 
-        public UserDbo GetByName(string name)
+        public UserDbo? FindByName(string name)
         {
             ArgumentNullException.ThrowIfNull(name);
 
-            return db.Find(new UsersDbQuery { NameLowerCase = name.ToLowerInvariant() }).FirstOrDefault() ?? throw new ApplicationException($"user '{name}' not found");
+            return db.Find(new UsersDbQuery { NameLowerCase = name.ToLowerInvariant() }).FirstOrDefault();
+        }
+
+        public UserDbo GetByName(string name)
+        {
+            return FindByName(name) ?? throw new ApplicationException($"user '{name}' not found");
         }
 
         public Result<UserDbo> Login(string userName, string password, UserRole role)

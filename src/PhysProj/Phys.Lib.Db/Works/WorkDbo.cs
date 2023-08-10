@@ -59,7 +59,5 @@
         {
             return $"{Code} ({Id})";
         }
-
-        public static readonly WorkDbo None = new WorkDbo();
     }
 }
