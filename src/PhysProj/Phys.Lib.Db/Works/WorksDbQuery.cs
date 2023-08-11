@@ -2,11 +2,9 @@
 {
     public class WorksDbQuery
     {
-        public string? Id { get; set; }
+        public string? Code { get; set; }
 
         public string? Search { get; set; }
-
-        public string? Code { get; set; }
 
         public string? AuthorCode { get; set; }
 

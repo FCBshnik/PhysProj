@@ -6,22 +6,22 @@ using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Mongo.Works
 {
-    internal class WorksDb : Collection<WorkDbo>, IWorksDb
+    internal class WorksDb : Collection<WorkModel>, IWorksDb
     {
-        public WorksDb(Lazy<IMongoCollection<WorkDbo>> collection) : base(collection)
+        public WorksDb(Lazy<IMongoCollection<WorkModel>> collection) : base(collection)
         {
         }
 
-        protected override void Init(IMongoCollection<WorkDbo> collection)
+        protected override void Init(IMongoCollection<WorkModel> collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<WorkDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<WorkModel>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
         public void Create(string code)
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            var work = new WorkDbo
+            var work = new WorkModel
             {
                 Code = code,
                 Id = ObjectId.GenerateNewId().ToString()
@@ -30,11 +30,11 @@ namespace Phys.Lib.Mongo.Works
             Insert(work);
         }
 
-        public void Delete(string id)
+        public void Delete(string code)
         {
-            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(code);
 
-            collection.DeleteOne(FilterBuilder.Eq(i => i.Id, id));
+            collection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
         }
 
         public List<WorkDbo> Find(WorksDbQuery query)
@@ -42,8 +42,6 @@ namespace Phys.Lib.Mongo.Works
             ArgumentNullException.ThrowIfNull(query);
 
             var filter = FilterBuilder.Empty;
-            if (query.Id != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Id, query.Id));
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.AuthorCode != null)
@@ -55,7 +53,7 @@ namespace Phys.Lib.Mongo.Works
             if (query.Search != null)
             {
                 var regex = Regex.Escape(query.Search);
-                var infoFilterBuilder = Builders<WorkDbo.InfoDbo>.Filter;
+                var infoFilterBuilder = Builders<WorkModel.InfoModel>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),
                     FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.Name, regex)),
@@ -64,15 +62,15 @@ namespace Phys.Lib.Mongo.Works
 
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
+            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(WorkMapper.Map).ToList();
         }
 
-        public void Update(string id, WorkDbUpdate work)
+        public void Update(string code, WorkDbUpdate work)
         {
-            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(code);
             ArgumentNullException.ThrowIfNull(work);
 
-            var filter = FilterBuilder.Eq(i => i.Id, id);
+            var filter = FilterBuilder.Eq(i => i.Code, code);
             var update = UpdateBuilder.Combine();
 
             if (work.Publish.IsEmpty())
@@ -86,7 +84,7 @@ namespace Phys.Lib.Mongo.Works
                 update = update.Set(i => i.Language, work.Language);
 
             if (work.AddInfo != null)
-                update = update.Push(i => i.Infos, work.AddInfo);
+                update = update.Push(i => i.Infos, WorkMapper.Map(work.AddInfo));
             if (work.DeleteInfo.HasValue())
                 update = update.PullFilter(i => i.Infos, i => i.Language == work.DeleteInfo);
 
@@ -111,7 +109,7 @@ namespace Phys.Lib.Mongo.Works
                 update = update.Pull(i => i.FilesCodes, work.DeleteFile);
 
             if (collection.UpdateOne(filter, update).MatchedCount == 0)
-                throw new ApplicationException($"work '{id}' was not updated due to not found in db");
+                throw new ApplicationException($"work '{code}' update failed");
         }
     }
 }

@@ -2,10 +2,8 @@
 {
     public class WorkDbo
     {
-        public string Id { get; set; }
-
         /// <summary>
-        /// Url and file path representative code of work
+        /// Unique code of work
         /// </summary>
         public string Code { get; set; }
 
@@ -57,7 +55,7 @@
 
         public override string ToString()
         {
-            return $"{Code} ({Id})";
+            return $"{Code}";
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Phys.Lib.Mongo
 
             RegisterCollection<UserModel, UsersDb>(builder, "users");
             RegisterCollection<AuthorModel, AuthorsDb>(builder, "authors");
-            RegisterCollection<WorkDbo, WorksDb>(builder, "works");
+            RegisterCollection<WorkModel, WorksDb>(builder, "works");
             RegisterCollection<FileDbo, FilesDb>(builder, "files");
         }
 

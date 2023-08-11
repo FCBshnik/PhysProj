@@ -6,8 +6,8 @@
 
         void Create(string code);
 
-        void Update(string id, WorkDbUpdate update);
+        void Update(string code, WorkDbUpdate update);
 
-        void Delete(string id);
+        void Delete(string code);
     }
 }

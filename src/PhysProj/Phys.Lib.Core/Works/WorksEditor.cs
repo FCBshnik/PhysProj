@@ -33,8 +33,8 @@ namespace Phys.Lib.Core.Works
                 work = DeleteInfo(work, info.Language);
 
             var update = new WorkDbUpdate { AddInfo = info };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: added info {info}");
             return work;
         }
@@ -62,7 +62,7 @@ namespace Phys.Lib.Core.Works
             if (worksSearch.FindCollected(work.Code).Count != 0)
                 throw ValidationError("can not delete work linked as sub-work to collected work");
 
-            db.Delete(work.Id);
+            db.Delete(work.Code);
             log.Info($"deleted work {work}");
         }
 
@@ -72,8 +72,8 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(language);
 
             var update = new WorkDbUpdate { DeleteInfo = language };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: deleted info {language}");
             return work;
         }
@@ -85,8 +85,8 @@ namespace Phys.Lib.Core.Works
 
             var author = authorsSearch.FindByCode(authorCode) ?? throw ValidationError($"author '{authorCode}' not found");
             var update = new WorkDbUpdate { AddAuthor = author.Code };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: linked author {author}");
             return work;
         }
@@ -111,8 +111,8 @@ namespace Phys.Lib.Core.Works
             ValidateWorkIsNotLinked(subWork, work.Code, 0);
 
             var update = new WorkDbUpdate { AddSubWork = subWork.Code };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: linked work {subWork}");
             return work;
         }
@@ -123,8 +123,8 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(authorCode);
 
             var update = new WorkDbUpdate { DeleteAuthor = authorCode };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: unlinked author {authorCode}");
             return work;
         }
@@ -135,8 +135,8 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(workCode);
 
             var update = new WorkDbUpdate { DeleteSubWork = workCode };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: unlinked work {workCode}");
             return work;
         }
@@ -158,8 +158,8 @@ namespace Phys.Lib.Core.Works
             }
 
             var update = new WorkDbUpdate { Publish = date };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: updated date {date}");
             return work;
         }
@@ -173,8 +173,8 @@ namespace Phys.Lib.Core.Works
                 language = Language.NormalizeAndValidate(language);
 
             var update = new WorkDbUpdate { Language = language };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: updated language {language}");
             return work;
         }
@@ -199,8 +199,8 @@ namespace Phys.Lib.Core.Works
             ValidateWorkIsNotLinked(original, work.Code, 0);
 
             var update = new WorkDbUpdate { Original = original.Code };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: updated original {original}");
             return work;
         }
@@ -210,8 +210,8 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(work);
 
             var update = new WorkDbUpdate { Original = string.Empty };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: unlink original");
             return work;
         }
@@ -223,8 +223,8 @@ namespace Phys.Lib.Core.Works
 
             var file = filesLinksDb.Find(new FilesDbQuery { Code = fileCode }).FirstOrDefault() ?? throw ValidationError($"file links '{fileCode}' not found");
             var update = new WorkDbUpdate { AddFile = file.Code };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: linked file {file}");
             return work;
         }
@@ -235,8 +235,8 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(fileCode);
 
             var update = new WorkDbUpdate { DeleteFile = fileCode };
-            db.Update(work.Id, update);
-            work = db.Get(work.Id);
+            db.Update(work.Code, update);
+            work = db.GetByCode(work.Code);
             log.Info($"updated work {work}: unlinked file {fileCode}");
             return work;
         }

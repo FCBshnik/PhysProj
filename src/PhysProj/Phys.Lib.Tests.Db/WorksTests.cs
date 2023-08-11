@@ -30,31 +30,31 @@ namespace Phys.Lib.Tests.Db
             Search("3", "work-3");
             Search("or", "work-1", "work-2", "work-3");
 
-            AddInfo(work.Id, "ru");
-            DeleteInfo(work.Id, "en");
-            DeleteInfo(work.Id, "ru");
-            DeleteInfo(work.Id, "ru");
+            AddInfo(work.Code, "ru");
+            DeleteInfo(work.Code, "en");
+            DeleteInfo(work.Code, "ru");
+            DeleteInfo(work.Code, "ru");
 
-            SetOriginal(work.Id, "work-3");
-            SetOriginal(work.Id, string.Empty);
+            SetOriginal(work.Code, "work-3");
+            SetOriginal(work.Code, string.Empty);
 
-            AddAuthor(work.Id, "author-1");
-            AddAuthor(work.Id, "author-2");
-            DeleteAuthor(work.Id, "author-2");
-            DeleteAuthor(work.Id, "author-2");
-            DeleteAuthor(work.Id, "author-3");
+            AddAuthor(work.Code, "author-1");
+            AddAuthor(work. Code, "author-2");
+            DeleteAuthor(work.Code, "author-2");
+            DeleteAuthor(work.Code, "author-2");
+            DeleteAuthor(work.Code, "author-3");
 
-            AddSubWork(work.Id, "sub-work-1");
-            AddSubWork(work.Id, "sub-work-2");
-            DeleteSubWork(work.Id, "sub-work-2");
-            DeleteSubWork(work.Id, "sub-work-2");
-            DeleteSubWork(work.Id, "sub-work-3");
+            AddSubWork(work.Code, "sub-work-1");
+            AddSubWork(work.Code, "sub-work-2");
+            DeleteSubWork(work.Code, "sub-work-2");
+            DeleteSubWork(work.Code, "sub-work-2");
+            DeleteSubWork(work.Code, "sub-work-3");
 
-            AddFile(work.Id, "file-1");
-            AddFile(work.Id, "file-2");
-            DeleteFile(work.Id, "file-2");
-            DeleteFile(work.Id, "file-2");
-            DeleteFile(work.Id, "file-3");
+            AddFile(work.Code, "file-1");
+            AddFile(work.Code, "file-2");
+            DeleteFile(work.Code, "file-2");
+            DeleteFile(work.Code, "file-2");
+            DeleteFile(work.Code, "file-3");
         }
 
         private WorkDbo FindByCode(string code)
@@ -73,69 +73,69 @@ namespace Phys.Lib.Tests.Db
             authors.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
         }
 
-        private void AddInfo(string id, string language)
+        private void AddInfo(string code, string language)
         {
             var expected = new WorkDbo.InfoDbo { Language = language, Name = "fn", Description = "desc" };
-            db.Update(id, new WorkDbUpdate { AddInfo = expected });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { AddInfo = expected });
+            var author = db.GetByCode(code);
             var info = author.Infos.First(i => i.Language == language);
             info.Description.ShouldBe(expected.Description);
             info.Name.ShouldBe(expected.Name);
         }
 
-        private void DeleteInfo(string id, string language)
+        private void DeleteInfo(string code, string language)
         {
-            db.Update(id, new WorkDbUpdate { DeleteInfo = language });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { DeleteInfo = language });
+            var author = db.GetByCode(code);
             author.Infos.ShouldAllBe(i => i.Language != language);
         }
 
-        private void SetOriginal(string id, string originalCode)
+        private void SetOriginal(string code, string originalCode)
         {
-            db.Update(id, new WorkDbUpdate { Original = originalCode });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { Original = originalCode });
+            var author = db.GetByCode(code);
             author.OriginalCode.ShouldBe(originalCode == string.Empty ? null : originalCode);
         }
 
-        private void AddAuthor(string id, string authorCode)
+        private void AddAuthor(string code, string authorCode)
         {
-            db.Update(id, new WorkDbUpdate { AddAuthor = authorCode });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { AddAuthor = authorCode });
+            var author = db.GetByCode(code);
             author.AuthorsCodes.ShouldContain(authorCode);
         }
 
-        private void DeleteAuthor(string id, string authorCode)
+        private void DeleteAuthor(string code, string authorCode)
         {
-            db.Update(id, new WorkDbUpdate { DeleteAuthor = authorCode });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { DeleteAuthor = authorCode });
+            var author = db.GetByCode(code);
             author.AuthorsCodes.ShouldNotContain(authorCode);
         }
 
-        private void AddSubWork(string id, string subWorkCode)
+        private void AddSubWork(string code, string subWorkCode)
         {
-            db.Update(id, new WorkDbUpdate { AddSubWork = subWorkCode });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { AddSubWork = subWorkCode });
+            var author = db.GetByCode(code);
             author.SubWorksCodes.ShouldContain(subWorkCode);
         }
 
-        private void DeleteSubWork(string id, string subWorkCode)
+        private void DeleteSubWork(string code, string subWorkCode)
         {
-            db.Update(id, new WorkDbUpdate { DeleteSubWork = subWorkCode });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { DeleteSubWork = subWorkCode });
+            var author = db.GetByCode(code);
             author.SubWorksCodes.ShouldNotContain(subWorkCode);
         }
 
-        private void AddFile(string id, string fileCode)
+        private void AddFile(string code, string fileCode)
         {
-            db.Update(id, new WorkDbUpdate { AddFile = fileCode });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { AddFile = fileCode });
+            var author = db.GetByCode(code);
             author.FilesCodes.ShouldContain(fileCode);
         }
 
-        private void DeleteFile(string id, string fileCode)
+        private void DeleteFile(string code, string fileCode)
         {
-            db.Update(id, new WorkDbUpdate { DeleteFile = fileCode });
-            var author = db.Get(id);
+            db.Update(code, new WorkDbUpdate { DeleteFile = fileCode });
+            var author = db.GetByCode(code);
             author.FilesCodes.ShouldNotContain(fileCode);
         }
     }
