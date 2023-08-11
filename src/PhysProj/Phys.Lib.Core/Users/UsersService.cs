@@ -64,8 +64,8 @@ namespace Phys.Lib.Core.Users
             if (user.HasRole(role))
                 return user;
 
-            db.Update(user.Id, new UserDbUpdate { AddRole = role });
-            user = db.Get(user.Id);
+            db.Update(user.NameLowerCase, new UserDbUpdate { AddRole = role });
+            user = db.GetByName(user.NameLowerCase);
             log.Info($"updated user {user}: added role {role}");
             return user;
         }
@@ -78,8 +78,8 @@ namespace Phys.Lib.Core.Users
             if (!user.HasRole(role))
                 return user;
 
-            db.Update(user.Id, new UserDbUpdate { DeleteRole = role });
-            user = db.Get(user.Id);
+            db.Update(user.NameLowerCase, new UserDbUpdate { DeleteRole = role });
+            user = db.GetByName(user.NameLowerCase);
             log.Info($"updated user {user}: deleted role {role}");
             return user;
         }

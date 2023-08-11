@@ -26,11 +26,11 @@ namespace Phys.Lib.Tests.Db
             var user = FindByName("user");
             FindByName("admin");
 
-            UpdatePasswordHash(user.Id, "1234567");
-            AddRole(user.Id, "user");
-            DeleteRole(user.Id, "user");
-            DeleteRole(user.Id, "user");
-            DeleteRole(user.Id, "admin");
+            UpdatePasswordHash(user.NameLowerCase, "1234567");
+            AddRole(user.NameLowerCase, "user");
+            DeleteRole(user.NameLowerCase, "user");
+            DeleteRole(user.NameLowerCase, "user");
+            DeleteRole(user.NameLowerCase, "admin");
         }
 
         private UserDbo FindByName(string name)
@@ -42,24 +42,24 @@ namespace Phys.Lib.Tests.Db
             return user;
         }
 
-        private void UpdatePasswordHash(string id, string passwordHash)
+        private void UpdatePasswordHash(string nameLowerCase, string passwordHash)
         {
-            db.Update(id, new UserDbUpdate { PasswordHash = passwordHash });
-            var user = db.Get(id);
+            db.Update(nameLowerCase, new UserDbUpdate { PasswordHash = passwordHash });
+            var user = db.GetByName(nameLowerCase);
             user.PasswordHash.ShouldBe(passwordHash);
         }
 
-        private void AddRole(string id, string role)
+        private void AddRole(string nameLowerCase, string role)
         {
-            db.Update(id, new UserDbUpdate { AddRole = role });
-            var user = db.Get(id);
+            db.Update(nameLowerCase, new UserDbUpdate { AddRole = role });
+            var user = db.GetByName(nameLowerCase);
             user.Roles.ShouldContain(role);
         }
 
-        private void DeleteRole(string id, string role)
+        private void DeleteRole(string nameLowerCase, string role)
         {
-            db.Update(id, new UserDbUpdate { DeleteRole = role });
-            var user = db.Get(id);
+            db.Update(nameLowerCase, new UserDbUpdate { DeleteRole = role });
+            var user = db.GetByName(nameLowerCase);
             user.Roles.ShouldNotContain(role);
         }
     }

@@ -6,6 +6,6 @@
 
         List<UserDbo> Find(UsersDbQuery query);
 
-        void Update(string id, UserDbUpdate update);
+        void Update(string nameLowerCase, UserDbUpdate update);
     }
 }

@@ -5,31 +5,37 @@ using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Mongo.Users
 {
-    internal class UsersDb : Collection<UserDbo>, IUsersDb
+    internal class UsersDb : Collection<UserModel>, IUsersDb
     {
-        public UsersDb(Lazy<IMongoCollection<UserDbo>> collection) : base(collection)
+        public UsersDb(Lazy<IMongoCollection<UserModel>> collection) : base(collection)
         {
         }
 
-        protected override void Init(IMongoCollection<UserDbo> collection)
+        protected override void Init(IMongoCollection<UserModel> collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<UserDbo>(IndexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<UserModel>(IndexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));
         }
 
         public void Create(UserDbo user)
         {
             ArgumentNullException.ThrowIfNull(user);
 
-            user.Id = ObjectId.GenerateNewId().ToString();
-            Insert(user);
+            var userModel = new UserModel
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Name = user.Name,
+                NameLowerCase = user.NameLowerCase,
+                PasswordHash = user.PasswordHash
+            };
+            Insert(userModel);
         }
 
-        public void Update(string id, UserDbUpdate user)
+        public void Update(string nameLowerCase, UserDbUpdate user)
         {
-            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(nameLowerCase);
             ArgumentNullException.ThrowIfNull(user);
 
-            var filter = FilterBuilder.Eq(i => i.Id, id);
+            var filter = FilterBuilder.Eq(i => i.NameLowerCase, nameLowerCase);
             var update = UpdateBuilder.Combine();
 
             if (user.AddRole.HasValue())
@@ -39,8 +45,8 @@ namespace Phys.Lib.Mongo.Users
             if (user.PasswordHash.HasValue())
                 update = update.Set(i => i.PasswordHash, user.PasswordHash);
 
-            if (collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter) == null)
-                throw new ApplicationException($"user '{id}' was not updated due to not found in db");
+            if (collection.UpdateOne(filter, update).MatchedCount == 0)
+                throw new ApplicationException($"user '{nameLowerCase}' update failed");
         }
 
         public List<UserDbo> Find(UsersDbQuery query)
@@ -48,14 +54,12 @@ namespace Phys.Lib.Mongo.Users
             ArgumentNullException.ThrowIfNull(query);
 
             var filter = FilterBuilder.Empty;
-            if (query.Id != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Id, query.Id));
             if (query.NameLowerCase != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.NameLowerCase, query.NameLowerCase));
 
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
+            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(UserMapper.Map).ToList();
         }
     }
 }
