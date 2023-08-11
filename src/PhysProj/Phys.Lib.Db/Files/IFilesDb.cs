@@ -6,8 +6,8 @@
 
         void Create(FileDbo file);
 
-        void Update(string id, FileDbUpdate update);
+        void Update(string code, FileDbUpdate update);
 
-        void Delete(string id);
+        void Delete(string code);
     }
 }

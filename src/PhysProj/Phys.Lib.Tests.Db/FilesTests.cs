@@ -26,9 +26,9 @@ namespace Phys.Lib.Tests.Db
             var file = FindByCode("file-1");
             FindByCode("file-2");
 
-            AddLink(file.Id, "local", "file.pdf");
-            DeleteLink(file.Id, "local", "file1.pdf");
-            DeleteLink(file.Id, "local", "file.pdf");
+            AddLink(file.Code, "local", "file.pdf");
+            DeleteLink(file.Code, "local", "file1.pdf");
+            DeleteLink(file.Code, "local", "file.pdf");
         }
 
         private void Create(string code)
@@ -45,19 +45,19 @@ namespace Phys.Lib.Tests.Db
             return file;
         }
 
-        private void AddLink(string id, string type, string path)
+        private void AddLink(string code, string type, string path)
         {
             var link = new FileDbo.LinkDbo { Type = type, Path = path };
-            db.Update(id, new FileDbUpdate { AddLink = link });
-            var file = db.Get(id);
+            db.Update(code, new FileDbUpdate { AddLink = link });
+            var file = db.GetByCode(code);
             file.Links.ShouldContain(l => l.Type == link.Type && l.Path == link.Path);
         }
 
-        private void DeleteLink(string id, string type, string path)
+        private void DeleteLink(string code, string type, string path)
         {
             var link = new FileDbo.LinkDbo { Type = type, Path = path };
-            db.Update(id, new FileDbUpdate { DeleteLink = link });
-            var file = db.Get(id);
+            db.Update(code, new FileDbUpdate { DeleteLink = link });
+            var file = db.GetByCode(code);
             file.Links.ShouldNotContain(l => l.Type == link.Type && l.Path == link.Path);
         }
     }

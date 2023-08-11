@@ -5,10 +5,6 @@ using Phys.Lib.Mongo.Authors;
 using Phys.Lib.Mongo.Files;
 using Phys.Lib.Mongo.Users;
 using Phys.Lib.Mongo.Works;
-using Phys.Lib.Db.Authors;
-using Phys.Lib.Db.Files;
-using Phys.Lib.Db.Users;
-using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Mongo
 {
@@ -20,7 +16,9 @@ namespace Phys.Lib.Mongo
 
         public MongoModule(string connectionString)
         {
-            this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            ArgumentNullException.ThrowIfNull(connectionString);
+
+            this.connectionString = connectionString;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -37,7 +35,7 @@ namespace Phys.Lib.Mongo
             RegisterCollection<UserModel, UsersDb>(builder, "users");
             RegisterCollection<AuthorModel, AuthorsDb>(builder, "authors");
             RegisterCollection<WorkModel, WorksDb>(builder, "works");
-            RegisterCollection<FileDbo, FilesDb>(builder, "files");
+            RegisterCollection<FileModel, FilesDb>(builder, "files");
         }
 
         private void RegisterCollection<TItem, TDb>(ContainerBuilder builder, string collectionName) where TDb: Collection<TItem>

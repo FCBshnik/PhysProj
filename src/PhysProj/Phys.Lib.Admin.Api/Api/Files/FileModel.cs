@@ -2,8 +2,6 @@
 {
     public class FileModel
     {
-        public string Id { get; set; }
-
         public string Code { get; set; }
 
         public string? Format { get; set; }

@@ -40,8 +40,8 @@ namespace Phys.Lib.Core.Files
             ArgumentNullException.ThrowIfNull(link.Type);
 
             var update = new FileDbUpdate { AddLink = link };
-            db.Update(file.Id, update);
-            file = db.Get(file.Id);
+            db.Update(file.Code, update);
+            file = db.GetByCode(file.Code);
             log.Info($"file {file} link added: {link}");
             return file;
         }
@@ -62,7 +62,7 @@ namespace Phys.Lib.Core.Files
         {
             ArgumentNullException.ThrowIfNull(file);
 
-            db.Delete(file.Id);
+            db.Delete(file.Code);
 
             log.Info($"deletd file '{file}'");
         }

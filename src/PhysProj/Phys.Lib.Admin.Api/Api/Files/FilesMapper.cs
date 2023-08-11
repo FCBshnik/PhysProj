@@ -10,7 +10,6 @@ namespace Phys.Lib.Admin.Api.Api.Files
         {
             return new FileModel
             {
-                Id = file.Id,
                 Code = file.Code,
                 Format = file.Format,
                 Size = file.Size,

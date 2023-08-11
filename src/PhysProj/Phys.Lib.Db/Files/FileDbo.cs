@@ -2,8 +2,6 @@
 {
     public class FileDbo
     {
-        public string Id { get; set; }
-
         public string Code { get; set; }
 
         public string? Format { get; set; }

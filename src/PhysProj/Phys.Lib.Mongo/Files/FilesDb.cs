@@ -5,30 +5,36 @@ using Phys.Lib.Db.Files;
 
 namespace Phys.Lib.Mongo.Files
 {
-    internal class FilesDb : Collection<FileDbo>, IFilesDb
+    internal class FilesDb : Collection<FileModel>, IFilesDb
     {
-        public FilesDb(Lazy<IMongoCollection<FileDbo>> collection) : base(collection)
+        public FilesDb(Lazy<IMongoCollection<FileModel>> collection) : base(collection)
         {
         }
 
-        protected override void Init(IMongoCollection<FileDbo> collection)
+        protected override void Init(IMongoCollection<FileModel> collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<FileDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<FileModel>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
         public void Create(FileDbo file)
         {
             ArgumentNullException.ThrowIfNull(file);
 
-            file.Id = ObjectId.GenerateNewId().ToString();
-            Insert(file);
+            var fileModel = new FileModel
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Code = file.Code,
+                Format = file.Format,
+                Size = file.Size
+            };
+            Insert(fileModel);
         }
 
-        public void Delete(string id)
+        public void Delete(string code)
         {
-            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(code);
 
-            collection.DeleteOne(FilterBuilder.Eq(i => i.Id, id));
+            collection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
         }
 
         public List<FileDbo> Find(FilesDbQuery query)
@@ -37,14 +43,12 @@ namespace Phys.Lib.Mongo.Files
 
             var filter = FilterBuilder.Empty;
 
-            if (query.Id != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Id, query.Id));
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.Search != null)
             {
                 var regex = Regex.Escape(query.Search);
-                var linkFilterBuilder = Builders<FileDbo.LinkDbo>.Filter;
+                var linkFilterBuilder = Builders<FileModel.LinkModel>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),
                     FilterBuilder.ElemMatch(u => u.Links, linkFilterBuilder.Regex(i => i.Path, regex))));
@@ -52,24 +56,24 @@ namespace Phys.Lib.Mongo.Files
 
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
+            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(FileMapper.Map).ToList();
         }
 
-        public void Update(string id, FileDbUpdate file)
+        public void Update(string code, FileDbUpdate file)
         {
-            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(code);
             ArgumentNullException.ThrowIfNull(file);
 
-            var filter = FilterBuilder.Eq(i => i.Id, id);
+            var filter = FilterBuilder.Eq(i => i.Code, code);
             var update = UpdateBuilder.Combine();
 
             if (file.AddLink != null)
-                update = update.Push(i => i.Links, file.AddLink);
+                update = update.Push(i => i.Links, FileMapper.Map(file.AddLink));
             if (file.DeleteLink != null)
                 update = update.PullFilter(i => i.Links, l => l.Type == file.DeleteLink.Type && l.Path == file.DeleteLink.Path);
 
             if (collection.UpdateOne(filter, update).MatchedCount == 0)
-                throw new ApplicationException($"file '{id}' was not updated due to not found in db");
+                throw new ApplicationException($"file '{code}' update failed");
         }
     }
 }
