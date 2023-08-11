@@ -17,20 +17,6 @@ namespace Phys.Lib.Mongo
         {
             ConfigureConventions();
 
-            BsonClassMap.RegisterClassMap<AuthorDbo>(m =>
-            {
-                m.AutoMap();
-                m.MapIdProperty(u => u.Id).SetSerializer(idSerializer);
-            });
-
-            BsonClassMap.RegisterClassMap<AuthorDbo.InfoDbo>(m =>
-            {
-                m.AutoMap();
-                m.MapProperty(u => u.Language).SetElementName("lang");
-                m.MapProperty(u => u.FullName).SetElementName("name");
-                m.MapProperty(u => u.Description).SetElementName("desc");
-            });
-
             BsonClassMap.RegisterClassMap<WorkDbo>(m =>
             {
                 m.AutoMap();

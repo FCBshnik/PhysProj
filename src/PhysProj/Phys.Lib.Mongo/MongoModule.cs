@@ -35,7 +35,7 @@ namespace Phys.Lib.Mongo
                 .SingleInstance();
 
             RegisterCollection<UserModel, UsersDb>(builder, "users");
-            RegisterCollection<AuthorDbo, AuthorsDb>(builder, "authors");
+            RegisterCollection<AuthorModel, AuthorsDb>(builder, "authors");
             RegisterCollection<WorkDbo, WorksDb>(builder, "works");
             RegisterCollection<FileDbo, FilesDb>(builder, "files");
         }

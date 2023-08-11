@@ -31,13 +31,22 @@ namespace Phys.Lib.Tests.Db
             Search("3", "author-3");
             Search("th", "author-1", "author-2", "author-3");
 
-            UpdateLifetime(author.Id, "1200", "1300");
-            UpdateLifetime(author.Id, string.Empty, string.Empty);
+            UpdateLifetime(author.Code, "1200", "1300");
+            UpdateLifetime(author.Code, string.Empty, string.Empty);
 
-            AddInfo(author.Id, "ru");
-            DeleteInfo(author.Id, "en");
-            DeleteInfo(author.Id, "ru");
-            DeleteInfo(author.Id, "ru");
+            AddInfo(author.Code, "ru");
+            DeleteInfo(author.Code, "en");
+            DeleteInfo(author.Code, "ru");
+            DeleteInfo(author.Code, "ru");
+
+            Delete("author-1");
+        }
+
+        private void Delete(string code)
+        {
+            db.Delete(code);
+            var authors = db.Find(new AuthorsDbQuery { Code = code });
+            authors.Count.ShouldBe(0);
         }
 
         private AuthorDbo FindByCode(string code)
@@ -63,30 +72,30 @@ namespace Phys.Lib.Tests.Db
             authors.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
         }
 
-        private void UpdateLifetime(string id, string? born, string? died)
+        private void UpdateLifetime(string code, string? born, string? died)
         {
-            db.Update(id, new AuthorDbUpdate { Born = born, Died = died });
-            var author = db.Get(id);
+            db.Update(code, new AuthorDbUpdate { Born = born, Died = died });
+            var author = db.GetByCode(code);
             if (born != null)
                 author.Born.ShouldBe(born == string.Empty ? null : born);
             if (died != null)
                 author.Died.ShouldBe(died == string.Empty ? null : died);
         }
 
-        private void AddInfo(string id, string language)
+        private void AddInfo(string code, string language)
         {
             var expected = new AuthorDbo.InfoDbo { Language = language, FullName = "fn", Description = "desc" };
-            db.Update(id, new AuthorDbUpdate { AddInfo = expected });
-            var author = db.Get(id);
+            db.Update(code, new AuthorDbUpdate { AddInfo = expected });
+            var author = db.GetByCode(code);
             var info = author.Infos.First(i => i.Language == language);
             info.Description.ShouldBe(expected.Description);
             info.FullName.ShouldBe(expected.FullName);
         }
 
-        private void DeleteInfo(string id, string language)
+        private void DeleteInfo(string code, string language)
         {
-            db.Update(id, new AuthorDbUpdate { DeleteInfo = language });
-            var author = db.Get(id);
+            db.Update(code, new AuthorDbUpdate { DeleteInfo = language });
+            var author = db.GetByCode(code);
             author.Infos.ShouldAllBe(i => i.Language != language);
         }
     }

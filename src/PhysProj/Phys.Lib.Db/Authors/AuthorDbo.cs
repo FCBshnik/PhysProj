@@ -2,8 +2,6 @@
 {
     public class AuthorDbo
     {
-        public string Id { get; set; }
-
         public string Code { get; set; }
 
         public string Born { get; set; }
@@ -23,7 +21,7 @@
 
         public override string ToString()
         {
-            return $"{Code} ({Id})";
+            return $"{Code}";
         }
     }
 }

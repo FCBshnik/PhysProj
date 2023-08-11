@@ -6,8 +6,8 @@
 
         void Create(string code);
 
-        void Update(string id, AuthorDbUpdate update);
+        void Update(string code, AuthorDbUpdate update);
 
-        void Delete(string id);
+        void Delete(string code);
     }
 }

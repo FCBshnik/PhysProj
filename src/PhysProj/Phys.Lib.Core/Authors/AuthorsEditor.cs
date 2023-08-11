@@ -43,7 +43,7 @@ namespace Phys.Lib.Core.Authors
             if (works.Count != 0)
                 throw ValidationError($"can not delete author linked to work");
 
-            db.Delete(author.Id);
+            db.Delete(author.Code);
             log.Info($"deleted author {author}");
         }
 
@@ -55,8 +55,8 @@ namespace Phys.Lib.Core.Authors
             if (author.Infos.Any(i => i.Language == info.Language))
                 author = DeleteInfo(author, info.Language);
 
-            db.Update(author.Id, new AuthorDbUpdate { AddInfo = info });
-            author = db.Get(author.Id);
+            db.Update(author.Code, new AuthorDbUpdate { AddInfo = info });
+            author = db.GetByCode(author.Code);
             log.Info($"updated author {author}");
             return author;
         }
@@ -66,8 +66,8 @@ namespace Phys.Lib.Core.Authors
             ArgumentNullException.ThrowIfNull(author);
             ArgumentNullException.ThrowIfNull(language);
 
-            db.Update(author.Id, new AuthorDbUpdate { DeleteInfo = language });
-            author = db.Get(author.Id);
+            db.Update(author.Code, new AuthorDbUpdate { DeleteInfo = language });
+            author = db.GetByCode(author.Code);
             log.Info($"updated author {author}");
             return author;
         }
@@ -93,8 +93,8 @@ namespace Phys.Lib.Core.Authors
             if (update.Born.HasValue() || update.Died.HasValue())
                 Date.ValidateLifetime(update.Born ?? author.Born, update.Died ?? author.Died);
 
-            db.Update(author.Id, update);
-            author = db.Get(author.Id);
+            db.Update(author.Code, update);
+            author = db.GetByCode(author.Code);
             log.Info($"updated author {author}");
             return author;
         }

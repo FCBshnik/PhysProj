@@ -6,22 +6,22 @@ using Phys.Lib.Db.Authors;
 
 namespace Phys.Lib.Mongo.Authors
 {
-    internal class AuthorsDb : Collection<AuthorDbo>, IAuthorsDb
+    internal class AuthorsDb : Collection<AuthorModel>, IAuthorsDb
     {
-        public AuthorsDb(Lazy<IMongoCollection<AuthorDbo>> collection) : base(collection)
+        public AuthorsDb(Lazy<IMongoCollection<AuthorModel>> collection) : base(collection)
         {
         }
 
-        protected override void Init(IMongoCollection<AuthorDbo> collection)
+        protected override void Init(IMongoCollection<AuthorModel> collection)
         {
-            collection.Indexes.CreateOne(new CreateIndexModel<AuthorDbo>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
+            collection.Indexes.CreateOne(new CreateIndexModel<AuthorModel>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
         public void Create(string code)
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            var author = new AuthorDbo
+            var author = new AuthorModel
             {
                 Id = ObjectId.GenerateNewId().ToString(),
                 Code = code
@@ -35,8 +35,6 @@ namespace Phys.Lib.Mongo.Authors
             ArgumentNullException.ThrowIfNull(query);
 
             var filter = FilterBuilder.Empty;
-            if (query.Id != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Id, query.Id));
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.Codes != null)
@@ -44,7 +42,7 @@ namespace Phys.Lib.Mongo.Authors
             if (query.Search != null)
             {
                 var regex = Regex.Escape(query.Search);
-                var infoFilterBuilder = Builders<AuthorDbo.InfoDbo>.Filter;
+                var infoFilterBuilder = Builders<AuthorModel.InfoModel>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),
                     FilterBuilder.ElemMatch(u => u.Infos, infoFilterBuilder.Regex(i => i.FullName, regex)),
@@ -53,15 +51,15 @@ namespace Phys.Lib.Mongo.Authors
 
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
+            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(AuthorMapper.Map).ToList();
         }
 
-        public void Update(string id, AuthorDbUpdate author)
+        public void Update(string code, AuthorDbUpdate author)
         {
-            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(code);
             ArgumentNullException.ThrowIfNull(author);
 
-            var filter = FilterBuilder.Eq(i => i.Id, id);
+            var filter = FilterBuilder.Eq(i => i.Code, code);
             var update = UpdateBuilder.Combine();
 
             if (author.Born.IsEmpty())
@@ -75,19 +73,19 @@ namespace Phys.Lib.Mongo.Authors
                 update = update.Set(i => i.Died, author.Died);
 
             if (author.AddInfo != null)
-                update = update.Push(i => i.Infos, author.AddInfo);
+                update = update.Push(i => i.Infos, AuthorMapper.Map(author.AddInfo));
             if (author.DeleteInfo != null)
                 update = update.PullFilter(i => i.Infos, i => i.Language == author.DeleteInfo);
 
             if (collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter) == null)
-                throw new ApplicationException($"author '{id}' update failed");
+                throw new ApplicationException($"author '{code}' update failed");
         }
 
-        public void Delete(string id)
+        public void Delete(string code)
         {
-            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(code);
 
-            collection.DeleteOne(FilterBuilder.Eq(i => i.Id, id));
+            collection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
         }
     }
 }
