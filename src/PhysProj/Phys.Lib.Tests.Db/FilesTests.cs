@@ -21,19 +21,34 @@ namespace Phys.Lib.Tests.Db
             Create("file-1");
             Create("file-2");
             Create("file-3");
+
             Should.Throw<Exception>(() => Create("file-3"));
 
             var file = FindByCode("file-1");
             FindByCode("file-2");
 
-            AddLink(file.Code, "local", "file.pdf");
-            DeleteLink(file.Code, "local", "file1.pdf");
-            DeleteLink(file.Code, "local", "file.pdf");
+            AddLink(file.Code, "local", "file-1.pdf");
+            AddLink(file.Code, "local", "file-2.pdf");
+            DeleteLink(file.Code, "local", "file-3.pdf");
+            DeleteLink(file.Code, "local", "file-1.pdf");
+
+            Delete("file-1");
+            Delete("file-2");
+            Delete("file-3");
         }
 
         private void Create(string code)
         {
             db.Create(new FileDbo { Code = code });
+            var files = db.Find(new FilesDbQuery { Code = code });
+            files.Count.ShouldBe(1);
+        }
+
+        private void Delete(string code)
+        {
+            db.Delete(code);
+            var files = db.Find(new FilesDbQuery { Code = code });
+            files.Count.ShouldBe(0);
         }
 
         private FileDbo FindByCode(string code)

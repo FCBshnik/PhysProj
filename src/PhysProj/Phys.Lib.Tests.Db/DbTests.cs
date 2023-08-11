@@ -35,10 +35,14 @@ namespace Phys.Lib.Tests.Db
         {
             using var container = BuildContainer();
             using var lifetimeScope = container.BeginLifetimeScope();
-            new UsersTests(lifetimeScope.Resolve<IUsersDb>()).Run();
-            new AuthorsTests(lifetimeScope.Resolve<IAuthorsDb>()).Run();
-            new WorksTests(lifetimeScope.Resolve<IWorksDb>()).Run();
-            new FilesTests(lifetimeScope.Resolve<IFilesDb>()).Run();
+            var users = lifetimeScope.Resolve<IUsersDb>();
+            var authors = lifetimeScope.Resolve<IAuthorsDb>();
+            var works = lifetimeScope.Resolve<IWorksDb>();
+            var files = lifetimeScope.Resolve<IFilesDb>();
+            new UsersTests(users).Run();
+            new AuthorsTests(authors).Run();
+            new FilesTests(files).Run();
+            new WorksTests(works, authors, files).Run();
         }
 
         private IContainer BuildContainer()

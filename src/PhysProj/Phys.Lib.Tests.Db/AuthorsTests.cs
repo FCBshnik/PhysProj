@@ -20,6 +20,7 @@ namespace Phys.Lib.Tests.Db
             db.Create("author-1");
             db.Create("author-2");
             db.Create("author-3");
+
             Should.Throw<Exception>(() => db.Create("author-3"));
             authors = db.Find(new AuthorsDbQuery());
             authors.Count.ShouldBe(3);
@@ -35,11 +36,14 @@ namespace Phys.Lib.Tests.Db
             UpdateLifetime(author.Code, string.Empty, string.Empty);
 
             AddInfo(author.Code, "ru");
+            AddInfo(author.Code, "es");
             DeleteInfo(author.Code, "en");
             DeleteInfo(author.Code, "ru");
             DeleteInfo(author.Code, "ru");
 
             Delete("author-1");
+            Delete("author-2");
+            Delete("author-3");
         }
 
         private void Delete(string code)
