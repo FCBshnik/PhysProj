@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="Shouldly" Version="4.2.1" />
     <PackageReference Include="Testcontainers.MongoDb" Version="3.3.0" />
+    <PackageReference Include="Testcontainers.PostgreSql" Version="3.4.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
     <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
+    <ProjectReference Include="..\Phys.Lib.Postgre\Phys.Lib.Postgres.csproj" />
   </ItemGroup>
 
 </Project>
