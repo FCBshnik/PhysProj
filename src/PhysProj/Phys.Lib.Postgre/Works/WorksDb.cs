@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Postgres.Utils;
@@ -16,8 +17,8 @@ namespace Phys.Lib.Postgres.Works
         private readonly WorksFilesTable worksFiles;
 
         public WorksDb(string tableName, NpgsqlDataSource dataSource,
-            WorksAuthorsTable worksAuthors, WorksSubWorksTable worksSubWorks, WorksFilesTable worksFiles, WorksInfosTable worksInfos)
-            : base(tableName)
+            WorksAuthorsTable worksAuthors, WorksSubWorksTable worksSubWorks, WorksFilesTable worksFiles, WorksInfosTable worksInfos, ILogger<WorksDb> logger)
+            : base(tableName, logger)
         {
             this.dataSource = dataSource;
             this.worksAuthors = worksAuthors;

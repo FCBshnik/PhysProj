@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using NLog;
+using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Db.Authors;
@@ -8,17 +8,17 @@ namespace Phys.Lib.Core.Authors
 {
     internal class AuthorsEditor : IAuthorsEditor
     {
-        private static readonly Logger log = LogManager.GetLogger("authors-editor");
-
+        private readonly ILogger<AuthorsEditor> log;
         private readonly IAuthorsDb db;
         private readonly IAuthorsSearch authorsSearch;
         private readonly IWorksSearch worksSearch;
 
-        public AuthorsEditor(IAuthorsDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch)
+        public AuthorsEditor(IAuthorsDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, ILogger<AuthorsEditor> log)
         {
             this.db = db ?? throw new ArgumentNullException(nameof(db));
             this.worksSearch = worksSearch ?? throw new ArgumentNullException(nameof(worksSearch));
             this.authorsSearch = authorsSearch ?? throw new ArgumentNullException(nameof(authorsSearch));
+            this.log = log;
         }
 
         public AuthorDbo Create(string code)
@@ -31,7 +31,7 @@ namespace Phys.Lib.Core.Authors
             db.Create(code);
             var author = db.GetByCode(code);
 
-            log.Info($"created author {author}");
+            log.Log(LogLevel.Information, $"created author {author}");
             return author;
         }
 
@@ -44,7 +44,7 @@ namespace Phys.Lib.Core.Authors
                 throw ValidationError($"can not delete author linked to work");
 
             db.Delete(author.Code);
-            log.Info($"deleted author {author}");
+            log.Log(LogLevel.Information, $"deleted author {author}");
         }
 
         public AuthorDbo UpdateInfo(AuthorDbo author, AuthorDbo.InfoDbo info)
@@ -57,7 +57,7 @@ namespace Phys.Lib.Core.Authors
 
             db.Update(author.Code, new AuthorDbUpdate { AddInfo = info });
             author = db.GetByCode(author.Code);
-            log.Info($"updated author {author}");
+            log.Log(LogLevel.Information, $"updated author {author}");
             return author;
         }
 
@@ -68,7 +68,7 @@ namespace Phys.Lib.Core.Authors
 
             db.Update(author.Code, new AuthorDbUpdate { DeleteInfo = language });
             author = db.GetByCode(author.Code);
-            log.Info($"updated author {author}");
+            log.Log(LogLevel.Information, $"updated author {author}");
             return author;
         }
 
@@ -95,7 +95,7 @@ namespace Phys.Lib.Core.Authors
 
             db.Update(author.Code, update);
             author = db.GetByCode(author.Code);
-            log.Info($"updated author {author}");
+            log.Log(LogLevel.Information, $"updated author {author}");
             return author;
         }
 

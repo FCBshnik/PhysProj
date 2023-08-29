@@ -1,7 +1,5 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Extensions.Logging;
 using Npgsql;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
@@ -16,13 +14,15 @@ namespace Phys.Lib.Postgres
 {
     public class PostgresModule : Module
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
-
+        private readonly ILoggerFactory loggerFactory;
+        private readonly ILogger log;
         private readonly string connectionString;
 
-        public PostgresModule(string connectionString)
+        public PostgresModule(string connectionString, ILoggerFactory loggerFactory)
         {
             this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            this.loggerFactory = loggerFactory;
+            log = loggerFactory.CreateLogger<PostgresModule>();
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -53,9 +53,7 @@ namespace Phys.Lib.Postgres
 
         private NpgsqlDataSource CreateNpgsqlDataSource()
         {
-            log.Info($"postgres connection: {connectionString}");
-
-            var loggerFactory = LoggerFactory.Create(builder => builder.AddNLog());
+            log.LogInformation($"postgres connection: {connectionString}");
 
             var dataSource = new NpgsqlDataSourceBuilder(connectionString)
                 .EnableParameterLogging(false)
@@ -64,7 +62,7 @@ namespace Phys.Lib.Postgres
 
             // don't resolve until migrations completed
             using (var cnx = dataSource.OpenConnection())
-                EvoleMigrations.Migrate(cnx);
+                EvoleMigrations.Migrate(cnx, loggerFactory.CreateLogger(typeof(EvoleMigrations)));
 
             return dataSource;
         }

@@ -2,12 +2,13 @@
 using MongoDB.Driver;
 using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Users;
+using Microsoft.Extensions.Logging;
 
 namespace Phys.Lib.Mongo.Users
 {
     internal class UsersDb : Collection<UserModel>, IUsersDb
     {
-        public UsersDb(Lazy<IMongoCollection<UserModel>> collection) : base(collection)
+        public UsersDb(Lazy<IMongoCollection<UserModel>> collection, ILogger<UsersDb> logger) : base(collection, logger)
         {
         }
 

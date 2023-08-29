@@ -30,7 +30,7 @@ namespace Phys.Lib.Tests.Db
         protected override void Register(ContainerBuilder builder)
         {
             base.Register(builder);
-            builder.RegisterModule(new MongoModule(mongo.GetConnectionString()));
+            builder.RegisterModule(new MongoModule(mongo.GetConnectionString(), loggerFactory));
         }
     }
 }

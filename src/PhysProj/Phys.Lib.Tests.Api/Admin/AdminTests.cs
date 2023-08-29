@@ -4,11 +4,15 @@ using Phys.Lib.Admin.Client;
 using Phys.Lib.Files.Local;
 using Phys.Lib.Files;
 using Phys.Lib.Mongo;
+using Microsoft.Extensions.Logging;
+using Phys.Shared.Logging;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
     public partial class AdminTests : ApiTests
     {
+        private static readonly ILoggerFactory loggerFactory = new LoggerFactory();
+
         private const string nonExistentCode = "non-existent";
         private const string url = "https://localhost:17188/";
 
@@ -29,7 +33,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
             var appDir = StartApp(url, ProjectPath);
 
-            fileStorage = new SystemFileStorage("local", Path.Combine(appDir.FullName, "data/files"));
+            fileStorage = new SystemFileStorage("local", Path.Combine(appDir.FullName, "data/files"), loggerFactory.CreateLogger<SystemFileStorage>());
 
             var container = BuildContainer();
             using var scope = container.BeginLifetimeScope();
@@ -48,7 +52,8 @@ namespace Phys.Lib.Tests.Api.Admin
         private IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new MongoModule(GetMongoUrl()));
+            builder.RegisterModule(new NLogModule(loggerFactory));
+            builder.RegisterModule(new MongoModule(GetMongoUrl(), loggerFactory));
             builder.RegisterModule(new CoreModule());
             return builder.Build();
         }

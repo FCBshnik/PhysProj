@@ -3,12 +3,13 @@ using MongoDB.Driver;
 using System.Text.RegularExpressions;
 using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Authors;
+using Microsoft.Extensions.Logging;
 
 namespace Phys.Lib.Mongo.Authors
 {
     internal class AuthorsDb : Collection<AuthorModel>, IAuthorsDb
     {
-        public AuthorsDb(Lazy<IMongoCollection<AuthorModel>> collection) : base(collection)
+        public AuthorsDb(Lazy<IMongoCollection<AuthorModel>> collection, ILogger<AuthorsDb> logger) : base(collection, logger)
         {
         }
 

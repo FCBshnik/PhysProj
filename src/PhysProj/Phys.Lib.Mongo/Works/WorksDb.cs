@@ -3,12 +3,13 @@ using MongoDB.Driver;
 using System.Text.RegularExpressions;
 using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Works;
+using Microsoft.Extensions.Logging;
 
 namespace Phys.Lib.Mongo.Works
 {
     internal class WorksDb : Collection<WorkModel>, IWorksDb
     {
-        public WorksDb(Lazy<IMongoCollection<WorkModel>> collection) : base(collection)
+        public WorksDb(Lazy<IMongoCollection<WorkModel>> collection, ILogger<WorksDb> logger) : base(collection, logger)
         {
         }
 

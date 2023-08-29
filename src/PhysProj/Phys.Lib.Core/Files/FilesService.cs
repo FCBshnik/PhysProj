@@ -1,19 +1,19 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Logging;
 using Phys.Lib.Db.Files;
 
 namespace Phys.Lib.Core.Files
 {
     internal class FilesService : IFilesService
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
-
+        private readonly ILogger<FilesService> log;
         private readonly IFilesDb db;
 
-        public FilesService(IFilesDb db)
+        public FilesService(IFilesDb db, ILogger<FilesService> log)
         {
             ArgumentNullException.ThrowIfNull(db);
 
             this.db = db;
+            this.log = log;
         }
 
         public FileDbo Create(string code, string? format, long? size)
@@ -28,7 +28,7 @@ namespace Phys.Lib.Core.Files
 
             var file = db.GetByCode(code);
 
-            log.Info($"created file {file}");
+            log.Log(LogLevel.Information, $"created file {file}");
             return file;
         }
 
@@ -42,7 +42,7 @@ namespace Phys.Lib.Core.Files
             var update = new FileDbUpdate { AddLink = link };
             db.Update(file.Code, update);
             file = db.GetByCode(file.Code);
-            log.Info($"file {file} link added: {link}");
+            log.Log(LogLevel.Information, $"file {file} link added: {link}");
             return file;
         }
 
@@ -64,7 +64,7 @@ namespace Phys.Lib.Core.Files
 
             db.Delete(file.Code);
 
-            log.Info($"deletd file '{file}'");
+            log.Log(LogLevel.Information, $"deletd file '{file}'");
         }
     }
 }

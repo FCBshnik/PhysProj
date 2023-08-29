@@ -8,12 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="7.0.1" />
-    <PackageReference Include="FluentValidation" Version="11.5.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Phys.Lib.Db\Phys.Lib.Db.csproj" />
-    <ProjectReference Include="..\Phys.Lib.Files\Phys.Lib.Files.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
+    <PackageReference Include="NLog" Version="5.2.2" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.3" />
   </ItemGroup>
 
 </Project>

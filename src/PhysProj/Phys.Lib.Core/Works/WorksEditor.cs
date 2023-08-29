@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using NLog;
+using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Db.Files;
@@ -9,19 +9,19 @@ namespace Phys.Lib.Core.Works
 {
     public class WorksEditor : IWorksEditor
     {
-        private static readonly Logger log = LogManager.GetLogger("works-editor");
-
+        private readonly ILogger<WorksEditor> log;
         private readonly IWorksDb db;
         private readonly IFilesDb filesLinksDb;
         private readonly IWorksSearch worksSearch;
         private readonly IAuthorsSearch authorsSearch;
 
-        public WorksEditor(IWorksDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesDb filesLinksDb)
+        public WorksEditor(IWorksDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesDb filesLinksDb, ILogger<WorksEditor> log)
         {
             this.db = db;
             this.worksSearch = worksSearch;
             this.authorsSearch = authorsSearch;
             this.filesLinksDb = filesLinksDb;
+            this.log = log;
         }
 
         public WorkDbo AddInfo(WorkDbo work, WorkDbo.InfoDbo info)
@@ -35,7 +35,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { AddInfo = info };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: added info {info}");
+            log.Log(LogLevel.Information, $"updated work {work}: added info {info}");
             return work;
         }
 
@@ -49,7 +49,7 @@ namespace Phys.Lib.Core.Works
             db.Create(code);
             var work = db.GetByCode(code);
 
-            log.Info($"created work {work}");
+            log.Log(LogLevel.Information, $"created work {work}");
             return work;
         }
 
@@ -63,7 +63,7 @@ namespace Phys.Lib.Core.Works
                 throw ValidationError("can not delete work linked as sub-work to collected work");
 
             db.Delete(work.Code);
-            log.Info($"deleted work {work}");
+            log.Log(LogLevel.Information, $"deleted work {work}");
         }
 
         public WorkDbo DeleteInfo(WorkDbo work, string language)
@@ -74,7 +74,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { DeleteInfo = language };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: deleted info {language}");
+            log.Log(LogLevel.Information, $"updated work {work}: deleted info {language}");
             return work;
         }
 
@@ -87,7 +87,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { AddAuthor = author.Code };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: linked author {author}");
+            log.Log(LogLevel.Information, $"updated work {work}: linked author {author}");
             return work;
         }
 
@@ -113,7 +113,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { AddSubWork = subWork.Code };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: linked work {subWork}");
+            log.Log(LogLevel.Information, $"updated work {work}: linked work {subWork}");
             return work;
         }
 
@@ -125,7 +125,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { DeleteAuthor = authorCode };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: unlinked author {authorCode}");
+            log.Log(LogLevel.Information, $"updated work {work}: unlinked author {authorCode}");
             return work;
         }
 
@@ -137,7 +137,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { DeleteSubWork = workCode };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: unlinked work {workCode}");
+            log.Log(LogLevel.Information, $"updated work {work}: unlinked work {workCode}");
             return work;
         }
 
@@ -160,7 +160,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { Publish = date };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: updated date {date}");
+            log.Log(LogLevel.Information, $"updated work {work}: updated date {date}");
             return work;
         }
 
@@ -175,7 +175,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { Language = language };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: updated language {language}");
+            log.Log(LogLevel.Information, $"updated work {work}: updated language {language}");
             return work;
         }
 
@@ -201,7 +201,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { Original = original.Code };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: updated original {original}");
+            log.Log(LogLevel.Information, $"updated work {work}: updated original {original}");
             return work;
         }
 
@@ -212,7 +212,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { Original = string.Empty };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: unlink original");
+            log.Log(LogLevel.Information, $"updated work {work}: unlink original");
             return work;
         }
 
@@ -225,7 +225,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { AddFile = file.Code };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: linked file {file}");
+            log.Log(LogLevel.Information, $"updated work {work}: linked file {file}");
             return work;
         }
 
@@ -237,7 +237,7 @@ namespace Phys.Lib.Core.Works
             var update = new WorkDbUpdate { DeleteFile = fileCode };
             db.Update(work.Code, update);
             work = db.GetByCode(work.Code);
-            log.Info($"updated work {work}: unlinked file {fileCode}");
+            log.Log(LogLevel.Information, $"updated work {work}: unlinked file {fileCode}");
             return work;
         }
 

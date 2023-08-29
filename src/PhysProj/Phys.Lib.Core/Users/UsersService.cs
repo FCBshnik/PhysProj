@@ -1,18 +1,18 @@
 ﻿using FluentValidation;
-using NLog;
+using Microsoft.Extensions.Logging;
 using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Core.Users
 {
     public class UsersService : IUsersService
     {
-        private static readonly ILogger log = LogManager.GetLogger("users");
-
+        private readonly ILogger<UsersService> log;
         private readonly IUsersDb db;
 
-        public UsersService(IUsersDb db)
+        public UsersService(IUsersDb db, ILogger<UsersService> log)
         {
             this.db = db;
+            this.log = log;
         }
 
         public UserDbo? FindByName(string name)
@@ -36,23 +36,23 @@ namespace Phys.Lib.Core.Users
             var user = db.Find(new UsersDbQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
             if (user == null)
             {
-                log.Info($"login '{userName}' failed: user not found");
+                log.Log(LogLevel.Information, $"login '{userName}' failed: user not found");
                 return Result.Fail<UserDbo>("login failed");
             }
 
             if (!user.HasRole(role))
             {
-                log.Info($"login '{userName}' failed: not in role");
+                log.Log(LogLevel.Information, $"login '{userName}' failed: not in role");
                 return Result.Fail<UserDbo>("login failed");
             }
 
             if (!string.Equals(UserPasswordHasher.HashPassword(password), user.PasswordHash))
             {
-                log.Info($"login '{userName}' failed: invalid password");
+                log.Log(LogLevel.Information, $"login '{userName}' failed: invalid password");
                 return Result.Fail<UserDbo>("login failed");
             }
 
-            log.Info($"login: {user}");
+            log.Log(LogLevel.Information, $"login: {user}");
             return Result.Ok(user);
         }
 
@@ -66,7 +66,7 @@ namespace Phys.Lib.Core.Users
 
             db.Update(user.NameLowerCase, new UserDbUpdate { AddRole = role });
             user = db.GetByName(user.NameLowerCase);
-            log.Info($"updated user {user}: added role {role}");
+            log.Log(LogLevel.Information, $"updated user {user}: added role {role}");
             return user;
         }
 
@@ -80,7 +80,7 @@ namespace Phys.Lib.Core.Users
 
             db.Update(user.NameLowerCase, new UserDbUpdate { DeleteRole = role });
             user = db.GetByName(user.NameLowerCase);
-            log.Info($"updated user {user}: deleted role {role}");
+            log.Log(LogLevel.Information, $"updated user {user}: deleted role {role}");
             return user;
         }
 
@@ -104,7 +104,7 @@ namespace Phys.Lib.Core.Users
 
             db.Create(user);
             user = db.GetByName(user.Name);
-            log.Info($"created user: {user}");
+            log.Log(LogLevel.Information, $"created user: {user}");
             return user;
         }
 

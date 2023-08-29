@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="7.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
-    <PackageReference Include="NLog" Version="5.1.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,15 +1,20 @@
 using Autofac;
+using Microsoft.Extensions.Logging;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
+using Phys.Shared.Logging;
+using Phys.Shared.Utils;
 
 namespace Phys.Lib.Tests.Db
 {
     public abstract class DbTests : IDisposable
     {
+        protected readonly LoggerFactory loggerFactory = new LoggerFactory();
+
         protected readonly ITestOutputHelper output;
 
         public DbTests(ITestOutputHelper output)
@@ -18,7 +23,7 @@ namespace Phys.Lib.Tests.Db
 
             try
             {
-                ConsoleUtils.OnRun();
+                ProgramUtils.OnRun();
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");
@@ -48,6 +53,7 @@ namespace Phys.Lib.Tests.Db
         private IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
+            builder.RegisterModule(new NLogModule(loggerFactory));
             builder.RegisterModule(new CoreModule());
             Register(builder);
             return builder.Build();

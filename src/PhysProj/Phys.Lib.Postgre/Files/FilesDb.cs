@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Logging;
+using Npgsql;
 using Phys.Lib.Db.Files;
 using SqlKata;
 using System.Text.RegularExpressions;
@@ -10,7 +11,7 @@ namespace Phys.Lib.Postgres.Files
         private readonly NpgsqlDataSource dataSource;
         private readonly FilesLinksTable filesLinks;
 
-        public FilesDb(string tableName, NpgsqlDataSource dataSource, FilesLinksTable filesLinks) : base(tableName)
+        public FilesDb(string tableName, NpgsqlDataSource dataSource, FilesLinksTable filesLinks, ILogger<FilesDb> logger) : base(tableName, logger)
         {
             this.dataSource = dataSource;
             this.filesLinks = filesLinks;

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Phys.Lib.Postgres.Works
 {
     internal class WorksSubWorksTable : PostgresTable
     {
-        public WorksSubWorksTable(string tableName) : base(tableName)
+        public WorksSubWorksTable(string tableName, ILogger<WorksSubWorksTable> logger) : base(tableName, logger)
         {
         }
     }

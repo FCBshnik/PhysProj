@@ -1,21 +1,22 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Phys.Lib.Files.Local
 {
     public class SystemFileStorage : IFileStorage
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
-
+        private readonly ILogger<SystemFileStorage> log;
         private readonly DirectoryInfo baseDir;
 
-        public SystemFileStorage(string code, string baseDir)
+        public SystemFileStorage(string code, string baseDir, ILogger<SystemFileStorage> log)
         {
             ArgumentException.ThrowIfNullOrEmpty(code);
             ArgumentException.ThrowIfNullOrEmpty(baseDir);
 
             Code = code;
             this.baseDir = new DirectoryInfo(baseDir);
-            log.Info($"base dir '{this.baseDir.FullName}'");
+            this.log = log;
+
+            log.Log(LogLevel.Information, $"base dir '{this.baseDir.FullName}'");
         }
 
         public string Code { get; }
@@ -26,14 +27,14 @@ namespace Phys.Lib.Files.Local
         {
             ArgumentNullException.ThrowIfNull(path);
 
-            log.Info($"deleting '{path}'");
+            log.Log(LogLevel.Information, $"deleting '{path}'");
 
             var fileInfo = GetFileInfo(path);
             if (fileInfo.Exists)
             {
-                log.Info($"deleting '{fileInfo.FullName}'");
+                log.Log(LogLevel.Information, $"deleting '{fileInfo.FullName}'");
                 fileInfo.Delete();
-                log.Info($"deleted '{fileInfo.FullName}'");
+                log.Log(LogLevel.Information, $"deleted '{fileInfo.FullName}'");
             }
         }
 

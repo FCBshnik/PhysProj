@@ -1,12 +1,11 @@
-﻿using MongoDB.Driver;
-using NLog;
+﻿using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 
 namespace Phys.Lib.Mongo
 {
     internal class Collection<T>
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
-
+        private readonly ILogger<Collection<T>> log;
         protected static FilterDefinitionBuilder<T> FilterBuilder => Builders<T>.Filter;
         protected static UpdateDefinitionBuilder<T> UpdateBuilder => Builders<T>.Update;
         protected static SortDefinitionBuilder<T> SortBuilder => Builders<T>.Sort;
@@ -29,16 +28,17 @@ namespace Phys.Lib.Mongo
                 {
                     Init(value);
                     initialized = true;
-                    log.Info($"initialized '{value.CollectionNamespace.CollectionName}' collection");
+                    log.LogInformation($"initialized '{value.CollectionNamespace.CollectionName}' collection");
                 }
 
                 return value;
             }
         }
 
-        public Collection(Lazy<IMongoCollection<T>> collection)
+        public Collection(Lazy<IMongoCollection<T>> collection, ILogger<Collection<T>> log)
         {
             lazyCollection = collection;
+            this.log = log;
         }
 
         protected T Insert(T item)

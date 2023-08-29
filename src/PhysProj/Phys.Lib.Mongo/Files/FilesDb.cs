@@ -2,12 +2,13 @@
 using MongoDB.Driver;
 using System.Text.RegularExpressions;
 using Phys.Lib.Db.Files;
+using Microsoft.Extensions.Logging;
 
 namespace Phys.Lib.Mongo.Files
 {
     internal class FilesDb : Collection<FileModel>, IFilesDb
     {
-        public FilesDb(Lazy<IMongoCollection<FileModel>> collection) : base(collection)
+        public FilesDb(Lazy<IMongoCollection<FileModel>> collection, ILogger<FilesDb> logger) : base(collection, logger)
         {
         }
 

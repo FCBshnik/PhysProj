@@ -1,10 +1,15 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Phys.Lib.Admin.Api.Filters
 {
     public class InternalErrorFilter : IEndpointFilter
     {
-        private static readonly Logger log = LogManager.GetLogger("api-internal-err");
+        private readonly ILogger log;
+
+        public InternalErrorFilter(ILoggerFactory loggerFactory)
+        {
+            log = loggerFactory.CreateLogger("api-internal-err");
+        }
 
         public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
         {
@@ -14,7 +19,7 @@ namespace Phys.Lib.Admin.Api.Filters
             }
             catch (Exception e)
             {
-                log.Error(e, $"internal error");
+                log.LogError(e, $"internal error");
                 return Results.StatusCode(500);
             }
         }

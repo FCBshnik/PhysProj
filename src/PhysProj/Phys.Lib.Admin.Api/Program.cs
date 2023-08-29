@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NLog;
 using NLog.Web;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
@@ -24,19 +23,22 @@ using Phys.Lib.Admin.Api.Api.Files;
 using Phys.Lib.Files.Local;
 using Phys.Lib.Files;
 using Phys.Lib.Mongo;
+using Phys.Shared.Utils;
+using Phys.Shared.Logging;
 
 namespace Phys.Lib.Admin.Api
 {
     public static class Program
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+        private static readonly LoggerFactory loggerFactory = new LoggerFactory();
+        private static readonly ILogger log = loggerFactory.CreateLogger(nameof(Program));
 
         internal static Lazy<string> version = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty);
         internal static string Version => version.Value;
 
         public static void Main(string[] args)
         {
-            ConsoleUtils.OnRun();
+            ProgramUtils.OnRun();
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -83,10 +85,10 @@ namespace Phys.Lib.Admin.Api
             app.Use(async (ctx, next) =>
             {
                 if (ctx.Request.Method != "GET")
-                    log.Info($"req [{ctx.Request.Method}] {ctx.Request.Path}");
+                    log.LogInformation($"req [{ctx.Request.Method}] {ctx.Request.Path}");
                 await next();
                 if (ctx.Response.StatusCode != (int)System.Net.HttpStatusCode.OK)
-                    log.Info($"res [{ctx.Response.StatusCode}] to [{ctx.Request.Method}] {ctx.Request.Path}");
+                    log.LogInformation($"res [{ctx.Response.StatusCode}] to [{ctx.Request.Method}] {ctx.Request.Path}");
             });
 
             app.UseCors();
@@ -100,19 +102,20 @@ namespace Phys.Lib.Admin.Api
             app.MapEndpoint("works", WorksEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("files", FilesEndpoint.Map);//.RequireAuthorization();
 
-            app.Lifetime.ApplicationStarted.Register(() => log.Info($"api started at {string.Join(";", app.Urls)}"));
-            app.Lifetime.ApplicationStopped.Register(() => log.Info($"api stopped"));
+            app.Lifetime.ApplicationStarted.Register(() => log.LogInformation($"api started at {string.Join(";", app.Urls)}"));
+            app.Lifetime.ApplicationStopped.Register(() => log.LogInformation($"api stopped"));
 
             app.Run();
         }
 
         private static void ConfigureContainer(ContainerBuilder builder, string mongoUrl)
         {
-            builder.RegisterModule(new MongoModule(mongoUrl));
+            builder.RegisterModule(new NLogModule(loggerFactory));
+            builder.RegisterModule(new MongoModule(mongoUrl, loggerFactory));
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
 
-            builder.Register(c => new SystemFileStorage("local", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files")))
+            builder.Register(c => new SystemFileStorage("local", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files"), c.Resolve<ILogger<SystemFileStorage>>()))
                 .As<IFileStorage>()
                 .SingleInstance();
 

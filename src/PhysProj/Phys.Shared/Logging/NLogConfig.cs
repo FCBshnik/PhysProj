@@ -4,7 +4,7 @@ using NLog.Layouts;
 using NLog.Targets;
 using NLog;
 
-namespace Phys.Lib.Core.Utils
+namespace Phys.Shared.Logging
 {
     internal static class NLogConfig
     {

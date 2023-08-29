@@ -1,6 +1,6 @@
 ﻿using Autofac;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using NLog;
 using Phys.Lib.Mongo.Authors;
 using Phys.Lib.Mongo.Files;
 using Phys.Lib.Mongo.Users;
@@ -10,22 +10,22 @@ namespace Phys.Lib.Mongo
 {
     public class MongoModule : Module
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
-
         private readonly string connectionString;
+        private readonly ILogger log;
 
-        public MongoModule(string connectionString)
+        public MongoModule(string connectionString, ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(connectionString);
 
             this.connectionString = connectionString;
+            log = loggerFactory.CreateLogger<MongoModule>();
         }
 
         protected override void Load(ContainerBuilder builder)
         {
             MongoConfig.Configure();
 
-            log.Info($"mongo connection: {connectionString}");
+            log.LogInformation($"mongo connection: {connectionString}");
             var client = new MongoClient(new MongoUrl(connectionString));
 
             builder.Register(_ => client.GetDatabase("phys-lib"))

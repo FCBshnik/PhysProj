@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Logging;
+using Npgsql;
 using Phys.Lib.Db.Users;
 using SqlKata;
 
@@ -8,7 +9,7 @@ namespace Phys.Lib.Postgres.Users
     {
         private readonly NpgsqlDataSource dataSource;
 
-        public UsersDb(NpgsqlDataSource dataSource, string tableName) : base(tableName)
+        public UsersDb(NpgsqlDataSource dataSource, string tableName, ILogger<UsersDb> logger) : base(tableName, logger)
         {
             this.dataSource = dataSource;
         }

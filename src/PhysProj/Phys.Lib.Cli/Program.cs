@@ -1,26 +1,27 @@
 ﻿using Autofac;
 using CommandLine;
 using Microsoft.Extensions.Configuration;
-using NLog;
 using Phys.Lib.Cli;
-using Phys.Lib.Cli.Test;
 using Phys.Lib.Core;
-using Phys.Lib.Core.Utils;
 using Phys.Lib.Mongo;
 using System.Reflection;
 using Phys.Lib.Postgres;
+using Microsoft.Extensions.Logging;
+using Phys.Shared.Utils;
+using Phys.Shared.Logging;
 
-internal class Program
+internal static class Program
 {
-    private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+    private static readonly ILoggerFactory loggerFactory = new LoggerFactory();
+    private static readonly ILogger log = loggerFactory.CreateLogger(nameof(Program));
 
     private static void Main(string[] args)
     {
-        ConsoleUtils.OnRun();
+        ProgramUtils.OnRun();
 
         var parser = new Parser();
         var result = parser.ParseArguments(args, LoadVerbs());
-        result.WithNotParsed(e => { log.Error("parse failed: {errors}", e); });
+        result.WithNotParsed(e => { log.LogError("parse failed: {errors}", e); });
         result.WithParsed(RunCommand);
     }
 
@@ -34,10 +35,11 @@ internal class Program
 
         var mongoUrl = config.GetConnectionString("mongo");
         if (mongoUrl != null)
-            builder.RegisterModule(new MongoModule(mongoUrl));
+            builder.RegisterModule(new MongoModule(mongoUrl, loggerFactory));
         var postgresUrl = config.GetConnectionString("postgres");
         if (postgresUrl != null)
-            builder.RegisterModule(new PostgresModule(postgresUrl));
+            builder.RegisterModule(new PostgresModule(postgresUrl, loggerFactory));
+        builder.RegisterModule(new NLogModule(loggerFactory));
         builder.RegisterModule(new CoreModule());
 
         builder.RegisterModule(new CliModule());
@@ -56,10 +58,11 @@ internal class Program
                 var command = scope.Resolve(commandType);
                 var run = commandType.GetMethods().First();
                 run.Invoke(command, new[] { options });
+                log.LogInformation("command completed");
             }
             catch (Exception e)
             {
-                log.Error(e, "failed command");
+                log.LogError(e, "failed command");
             }
         }
     }

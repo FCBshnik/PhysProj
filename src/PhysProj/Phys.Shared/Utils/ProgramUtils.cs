@@ -1,9 +1,10 @@
 ﻿using NLog;
+using Phys.Shared.Logging;
 using System.Reflection;
 
-namespace Phys.Lib.Core.Utils
+namespace Phys.Shared.Utils
 {
-    public static class ConsoleUtils
+    public static class ProgramUtils
     {
         public static void OnRun()
         {
@@ -17,7 +18,7 @@ namespace Phys.Lib.Core.Utils
 
             log.Info($"run {version} with args: {string.Join(" ", args)}");
 
-            try { Console.Title = name; } catch {}
+            try { Console.Title = name; } catch { }
 
             AppDomain.CurrentDomain.UnhandledException += (_, e) =>
             {

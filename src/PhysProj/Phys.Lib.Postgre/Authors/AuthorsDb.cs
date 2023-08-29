@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Logging;
+using Npgsql;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Postgres.Utils;
 using SqlKata;
@@ -11,7 +12,7 @@ namespace Phys.Lib.Postgres.Authors
         private readonly NpgsqlDataSource dataSource;
         private readonly AuthorsInfosTable authorsInfos;
 
-        public AuthorsDb(NpgsqlDataSource dataSource, string tableName, AuthorsInfosTable authorsInfos) : base(tableName)
+        public AuthorsDb(NpgsqlDataSource dataSource, string tableName, AuthorsInfosTable authorsInfos, ILogger<AuthorsDb> logger) : base(tableName, logger)
         {
             this.dataSource = dataSource;
             this.authorsInfos = authorsInfos;
