@@ -8,6 +8,7 @@ using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Mongo;
 using System.Reflection;
+using Phys.Lib.Postgres;
 
 internal class Program
 {
@@ -31,11 +32,13 @@ internal class Program
 
         var builder = new ContainerBuilder();
 
-        if (options.GetType() != typeof(TestOptions))
-        {
-            builder.RegisterModule(new MongoModule(config.GetConnectionString("mongo")));
-            builder.RegisterModule(new CoreModule());
-        }
+        var mongoUrl = config.GetConnectionString("mongo");
+        if (mongoUrl != null)
+            builder.RegisterModule(new MongoModule(mongoUrl));
+        var postgresUrl = config.GetConnectionString("postgres");
+        if (postgresUrl != null)
+            builder.RegisterModule(new PostgresModule(postgresUrl));
+        builder.RegisterModule(new CoreModule());
 
         builder.RegisterModule(new CliModule());
         builder.RegisterInstance(options).AsSelf().SingleInstance();
