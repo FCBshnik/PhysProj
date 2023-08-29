@@ -6,5 +6,16 @@ services:
       - "27017:27017"
     volumes:
       - mongo:/data/db
+  postgres:
+    container_name: physproj-postgres
+    image: postgres:15.3
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
 volumes:
   mongo:
+  postgres:
