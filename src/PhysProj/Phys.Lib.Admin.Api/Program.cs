@@ -3,12 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using NLog.Web;
-using Phys.Lib.Core;
-using Phys.Lib.Core.Utils;
-using Phys.Lib.Core.Validation;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -17,14 +12,10 @@ using Phys.Lib.Admin.Api.Api.Authors;
 using Phys.Lib.Admin.Api.Api.Health;
 using Phys.Lib.Admin.Api.Api.User;
 using Phys.Lib.Admin.Api.Api.Works;
-using Phys.Lib.Admin.Api.OpenApi;
 using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
-using Phys.Lib.Files.Local;
-using Phys.Lib.Files;
-using Phys.Lib.Mongo;
 using Phys.Shared.Utils;
-using Phys.Shared.Logging;
+using Phys.Lib.Admin.Api.Filters;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -44,7 +35,6 @@ namespace Phys.Lib.Admin.Api
 
             var config = builder.Configuration;
             var urls = config.GetConnectionString("urls") ?? throw new ApplicationException();
-            var mongoUrl = config.GetConnectionString("mongo") ?? throw new ApplicationException();
 
             builder.WebHost.UseUrls(urls);
             builder.Logging.ClearProviders();
@@ -66,11 +56,11 @@ namespace Phys.Lib.Admin.Api
             });
 
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            builder.Host.ConfigureContainer((ContainerBuilder b) => ConfigureContainer(b, mongoUrl));
+            builder.Host.ConfigureContainer<ContainerBuilder>(b => b.RegisterModule(new ApiModule(loggerFactory, config)));
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(ConfigureSwagger);
+            builder.Services.AddSwaggerGen(SwaggerConfig.Configure);
 
             builder.Services.Configure<JsonOptions>(o =>
             {
@@ -82,14 +72,7 @@ namespace Phys.Lib.Admin.Api
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.Use(async (ctx, next) =>
-            {
-                if (ctx.Request.Method != "GET")
-                    log.LogInformation($"req [{ctx.Request.Method}] {ctx.Request.Path}");
-                await next();
-                if (ctx.Response.StatusCode != (int)System.Net.HttpStatusCode.OK)
-                    log.LogInformation($"res [{ctx.Response.StatusCode}] to [{ctx.Request.Method}] {ctx.Request.Path}");
-            });
+            app.UseMiddleware<StatusCodeLoggingMiddlware>();
 
             app.UseCors();
             app.UseAuthentication();
@@ -100,56 +83,12 @@ namespace Phys.Lib.Admin.Api
             app.MapEndpoint("config", ConfigEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("authors", AuthorsEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("works", WorksEndpoint.Map).RequireAuthorization();
-            app.MapEndpoint("files", FilesEndpoint.Map);//.RequireAuthorization();
+            app.MapEndpoint("files", FilesEndpoint.Map).RequireAuthorization();
 
-            app.Lifetime.ApplicationStarted.Register(() => log.LogInformation($"api started at {string.Join(";", app.Urls)}"));
-            app.Lifetime.ApplicationStopped.Register(() => log.LogInformation($"api stopped"));
+            app.Lifetime.ApplicationStarted.Register(() => log.LogInformation("{event} at {urls}", "start", string.Join(";", app.Urls)));
+            app.Lifetime.ApplicationStopped.Register(() => log.LogInformation("{event}", "stop"));
 
             app.Run();
-        }
-
-        private static void ConfigureContainer(ContainerBuilder builder, string mongoUrl)
-        {
-            builder.RegisterModule(new NLogModule(loggerFactory));
-            builder.RegisterModule(new MongoModule(mongoUrl, loggerFactory));
-            builder.RegisterModule(new CoreModule());
-            builder.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
-
-            builder.Register(c => new SystemFileStorage("local", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files"), c.Resolve<ILogger<SystemFileStorage>>()))
-                .As<IFileStorage>()
-                .SingleInstance();
-
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
-            builder.RegisterType<UserResolver>().InstancePerDependency();
-            builder.Register(c => c.Resolve<UserResolver>().GetUser()).InstancePerDependency();
-        }
-
-        private static void ConfigureSwagger(SwaggerGenOptions o)
-        {
-            o.SchemaFilter<KebabCaseEnumSchemaFilter>();
-            o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                In = ParameterLocation.Header,
-                Description = "Please enter token",
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT",
-                Scheme = JwtBearerDefaults.AuthenticationScheme,
-            });
-            o.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = JwtBearerDefaults.AuthenticationScheme
-                            }
-                        },
-                        new string[]{}
-                    }
-                });
         }
     }
 }

@@ -13,11 +13,21 @@ namespace Phys.Shared.Logging
             var config = new LoggingConfiguration();
 
             var layout = new JsonLayout { IncludeEventProperties = true };
-            layout.Attributes.Add(new JsonAttribute { Name = "l", Layout = "${logger}" });
-            layout.Attributes.Add(new JsonAttribute { Name = "dt", Layout = "${longdate}" });
-            layout.Attributes.Add(new JsonAttribute { Name = "lv", Layout = "${level}" });
-            layout.Attributes.Add(new JsonAttribute { Name = "m", Layout = "${message}" });
-            layout.Attributes.Add(new JsonAttribute { Name = "error", Layout = "${exception:format=tostring,StackTrace}" });
+            layout.Attributes.Add(new JsonAttribute { Name = "src", Layout = "${logger}" });
+            layout.Attributes.Add(new JsonAttribute { Name = "time", Layout = "${longdate}" });
+            layout.Attributes.Add(new JsonAttribute { Name = "lvl", Layout = "${level}" });
+            layout.Attributes.Add(new JsonAttribute { Name = "thr", Layout = "${threadid}" });
+            layout.Attributes.Add(new JsonAttribute { Name = "msg", Layout = "${message}" });
+            layout.Attributes.Add(new JsonAttribute { Name = "err", Encode = false, Layout = new JsonLayout
+            {
+                Attributes =
+                {
+                    new JsonAttribute("type", "${exception:format=type}"),
+                    new JsonAttribute("message", "${exception:format=message}"),
+                    new JsonAttribute("stacktrace", "${exception:format=tostring}"),
+                }
+            }
+            });
 
             var microsoftFilter = new ConditionBasedFilter()
             {
