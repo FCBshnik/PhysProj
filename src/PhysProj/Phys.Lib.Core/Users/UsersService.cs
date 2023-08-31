@@ -27,32 +27,32 @@ namespace Phys.Lib.Core.Users
             return FindByName(name) ?? throw new ApplicationException($"user '{name}' not found");
         }
 
-        public Result<UserDbo> Login(string userName, string password, UserRole role)
+        public Result<UserDbo> Login(string name, string password, UserRole role)
         {
-            ArgumentNullException.ThrowIfNull(userName);
+            ArgumentNullException.ThrowIfNull(name);
             ArgumentNullException.ThrowIfNull(password);
             ArgumentNullException.ThrowIfNull(role);
 
-            var user = db.Find(new UsersDbQuery { NameLowerCase = userName.ToLowerInvariant() }).FirstOrDefault();
+            var user = db.Find(new UsersDbQuery { NameLowerCase = name.ToLowerInvariant() }).FirstOrDefault();
             if (user == null)
             {
-                log.Log(LogLevel.Information, $"login '{userName}' failed: user not found");
+                log.Log(LogLevel.Information, "{event} as '{name}': {reason}", "login-fail", name, "user not found");
                 return Result.Fail<UserDbo>("login failed");
             }
 
             if (!user.HasRole(role))
             {
-                log.Log(LogLevel.Information, $"login '{userName}' failed: not in role");
+                log.Log(LogLevel.Information, "{event} as '{name}': {reason}", "login-fail", name, "not in role");
                 return Result.Fail<UserDbo>("login failed");
             }
 
             if (!string.Equals(UserPasswordHasher.HashPassword(password), user.PasswordHash))
             {
-                log.Log(LogLevel.Information, $"login '{userName}' failed: invalid password");
+                log.Log(LogLevel.Information, "{event} as '{name}': {reason}", "login-fail", name, "invalid password");
                 return Result.Fail<UserDbo>("login failed");
             }
 
-            log.Log(LogLevel.Information, $"login: {user}");
+            log.Log(LogLevel.Information, "{event} as '{name}'", "login-success", name);
             return Result.Ok(user);
         }
 
@@ -66,7 +66,7 @@ namespace Phys.Lib.Core.Users
 
             db.Update(user.NameLowerCase, new UserDbUpdate { AddRole = role });
             user = db.GetByName(user.NameLowerCase);
-            log.Log(LogLevel.Information, $"updated user {user}: added role {role}");
+            log.Log(LogLevel.Information, "role {role} added to user {name}", role.Code, user.Name);
             return user;
         }
 
@@ -80,7 +80,7 @@ namespace Phys.Lib.Core.Users
 
             db.Update(user.NameLowerCase, new UserDbUpdate { DeleteRole = role });
             user = db.GetByName(user.NameLowerCase);
-            log.Log(LogLevel.Information, $"updated user {user}: deleted role {role}");
+            log.Log(LogLevel.Information, "role '{role}' deleted from user '{name}'", role.Code, user.Name);
             return user;
         }
 
@@ -104,7 +104,7 @@ namespace Phys.Lib.Core.Users
 
             db.Create(user);
             user = db.GetByName(user.Name);
-            log.Log(LogLevel.Information, $"created user: {user}");
+            log.Log(LogLevel.Information, "{event} user '{user}'", LogEvent.Created, user.Name);
             return user;
         }
 

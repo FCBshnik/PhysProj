@@ -34,9 +34,8 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { AddInfo = info };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: added info {info}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} info {lang}", LogEvent.Added, work.Code, info.Language);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo Create(string code)
@@ -47,10 +46,8 @@ namespace Phys.Lib.Core.Works
                 throw ValidationError($"work with the same code already exists");
 
             db.Create(code);
-            var work = db.GetByCode(code);
-
-            log.Log(LogLevel.Information, $"created work {work}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work}", LogEvent.Created, code);
+            return db.GetByCode(code);
         }
 
         public void Delete(WorkDbo work)
@@ -63,7 +60,7 @@ namespace Phys.Lib.Core.Works
                 throw ValidationError("can not delete work linked as sub-work to collected work");
 
             db.Delete(work.Code);
-            log.Log(LogLevel.Information, $"deleted work {work}");
+            log.Log(LogLevel.Information, "{event} work {work}", LogEvent.Deleted, work.Code);
         }
 
         public WorkDbo DeleteInfo(WorkDbo work, string language)
@@ -73,9 +70,8 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { DeleteInfo = language };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: deleted info {language}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} info {lang}", LogEvent.Removed, work.Code, language);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo LinkAuthor(WorkDbo work, string authorCode)
@@ -86,9 +82,8 @@ namespace Phys.Lib.Core.Works
             var author = authorsSearch.FindByCode(authorCode) ?? throw ValidationError($"author '{authorCode}' not found");
             var update = new WorkDbUpdate { AddAuthor = author.Code };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: linked author {author}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} author {author}", LogEvent.Linked, work.Code, author.Code);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo LinkWork(WorkDbo work, string subWorkCode)
@@ -112,9 +107,8 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { AddSubWork = subWork.Code };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: linked work {subWork}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} sub-work {sub-work}", LogEvent.Linked, work.Code, subWorkCode);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo UnlinkAuthor(WorkDbo work, string authorCode)
@@ -124,21 +118,19 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { DeleteAuthor = authorCode };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: unlinked author {authorCode}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} author {author}", LogEvent.Unlinked, work.Code, authorCode);
+            return db.GetByCode(work.Code);
         }
 
-        public WorkDbo UnlinkWork(WorkDbo work, string workCode)
+        public WorkDbo UnlinkWork(WorkDbo work, string subWorkCode)
         {
             ArgumentNullException.ThrowIfNull(work);
-            ArgumentNullException.ThrowIfNull(workCode);
+            ArgumentNullException.ThrowIfNull(subWorkCode);
 
-            var update = new WorkDbUpdate { DeleteSubWork = workCode };
+            var update = new WorkDbUpdate { DeleteSubWork = subWorkCode };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: unlinked work {workCode}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} sub-work {sub-work}", LogEvent.Unlinked, work.Code, subWorkCode);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo UpdateDate(WorkDbo work, string date)
@@ -159,9 +151,8 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { Publish = date };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: updated date {date}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} date", LogEvent.Updated, work.Code);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo UpdateLanguage(WorkDbo work, string language)
@@ -174,9 +165,8 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { Language = language };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: updated language {language}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} language", LogEvent.Updated, work.Code);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo LinkOriginal(WorkDbo work, string originalCode)
@@ -200,20 +190,21 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { Original = original.Code };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: updated original {original}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} original {original}", LogEvent.Linked, work.Code, original.Code);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo UnlinkOriginal(WorkDbo work)
         {
             ArgumentNullException.ThrowIfNull(work);
 
+            if (work.OriginalCode == null)
+                return work;
+
             var update = new WorkDbUpdate { Original = string.Empty };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: unlink original");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} original", LogEvent.Unlinked, work.Code);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo LinkFile(WorkDbo work, string fileCode)
@@ -224,9 +215,8 @@ namespace Phys.Lib.Core.Works
             var file = filesLinksDb.Find(new FilesDbQuery { Code = fileCode }).FirstOrDefault() ?? throw ValidationError($"file links '{fileCode}' not found");
             var update = new WorkDbUpdate { AddFile = file.Code };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: linked file {file}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} file {file}", LogEvent.Linked, work.Code, fileCode);
+            return db.GetByCode(work.Code);
         }
 
         public WorkDbo UnlinkFile(WorkDbo work, string fileCode)
@@ -236,9 +226,8 @@ namespace Phys.Lib.Core.Works
 
             var update = new WorkDbUpdate { DeleteFile = fileCode };
             db.Update(work.Code, update);
-            work = db.GetByCode(work.Code);
-            log.Log(LogLevel.Information, $"updated work {work}: unlinked file {fileCode}");
-            return work;
+            log.Log(LogLevel.Information, "{event} work {work} file {file}", LogEvent.Unlinked, work.Code, fileCode);
+            return db.GetByCode(work.Code);
         }
 
         private void ValidateWorkIsNotLinked(WorkDbo work, string linkedCode, int depth)

@@ -18,7 +18,7 @@ namespace Phys.Lib.Core.Authors
             this.db = db ?? throw new ArgumentNullException(nameof(db));
             this.worksSearch = worksSearch ?? throw new ArgumentNullException(nameof(worksSearch));
             this.authorsSearch = authorsSearch ?? throw new ArgumentNullException(nameof(authorsSearch));
-            this.log = log;
+            this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
         public AuthorDbo Create(string code)
@@ -31,7 +31,7 @@ namespace Phys.Lib.Core.Authors
             db.Create(code);
             var author = db.GetByCode(code);
 
-            log.Log(LogLevel.Information, $"created author {author}");
+            log.Log(LogLevel.Information, "{event} author {author}", LogEvent.Created, code);
             return author;
         }
 
@@ -44,7 +44,7 @@ namespace Phys.Lib.Core.Authors
                 throw ValidationError($"can not delete author linked to work");
 
             db.Delete(author.Code);
-            log.Log(LogLevel.Information, $"deleted author {author}");
+            log.Log(LogLevel.Information, "{event} author {author}", LogEvent.Deleted, author.Code);
         }
 
         public AuthorDbo UpdateInfo(AuthorDbo author, AuthorDbo.InfoDbo info)
@@ -56,8 +56,8 @@ namespace Phys.Lib.Core.Authors
                 author = DeleteInfo(author, info.Language);
 
             db.Update(author.Code, new AuthorDbUpdate { AddInfo = info });
+            log.Log(LogLevel.Information, "{event} author {author} info {lang}", LogEvent.Added, author.Code, info.Language);
             author = db.GetByCode(author.Code);
-            log.Log(LogLevel.Information, $"updated author {author}");
             return author;
         }
 
@@ -67,15 +67,17 @@ namespace Phys.Lib.Core.Authors
             ArgumentNullException.ThrowIfNull(language);
 
             db.Update(author.Code, new AuthorDbUpdate { DeleteInfo = language });
+            log.Log(LogLevel.Information, "{event} author {author} info {lang}", LogEvent.Removed, author.Code, language);
             author = db.GetByCode(author.Code);
-            log.Log(LogLevel.Information, $"updated author {author}");
             return author;
         }
 
         public AuthorDbo UpdateLifetime(AuthorDbo author, string? born, string? died)
         {
             ArgumentNullException.ThrowIfNull(author);
-            if (born is null && died is null) throw new ArgumentNullException();
+
+            if (born is null && died is null)
+                return author;
 
             var update = new AuthorDbUpdate();
 
@@ -94,8 +96,8 @@ namespace Phys.Lib.Core.Authors
                 Date.ValidateLifetime(update.Born ?? author.Born, update.Died ?? author.Died);
 
             db.Update(author.Code, update);
+            log.Log(LogLevel.Information, "{event} author {author} lifetime", LogEvent.Updated, author.Code);
             author = db.GetByCode(author.Code);
-            log.Log(LogLevel.Information, $"updated author {author}");
             return author;
         }
 
