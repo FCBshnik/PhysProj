@@ -9,9 +9,9 @@
 
             var authors = db.Find(new AuthorsDbQuery { Code = code });
             if (authors.Count == 1)
-                return authors.First();
+                return authors[0];
 
-            throw new ApplicationException($"failed get author with code '{code}' from '{db.GetType().FullName}' due to found {authors.Count} authors");
+            throw new PhysDbException($"failed get author with code '{code}' from '{db.GetType().FullName}' due to found {authors.Count} authors");
         }
     }
 }

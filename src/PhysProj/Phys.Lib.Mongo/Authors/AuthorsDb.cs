@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Authors;
 using Microsoft.Extensions.Logging;
+using Phys.Lib.Db;
 
 namespace Phys.Lib.Mongo.Authors
 {
@@ -79,7 +80,7 @@ namespace Phys.Lib.Mongo.Authors
                 update = update.PullFilter(i => i.Infos, i => i.Language == author.DeleteInfo);
 
             if (collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter) == null)
-                throw new ApplicationException($"author '{code}' update failed");
+                throw new PhysDbException($"author '{code}' update failed");
         }
 
         public void Delete(string code)

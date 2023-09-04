@@ -11,7 +11,7 @@
             if (works.Count == 1)
                 return works[0];
 
-            throw new ApplicationException($"failed get work with code '{code}' from '{db.GetType().FullName}' due to found {works.Count} works");
+            throw new PhysDbException($"failed get work with code '{code}' from '{db.GetType().FullName}' due to found {works.Count} works");
         }
     }
 }

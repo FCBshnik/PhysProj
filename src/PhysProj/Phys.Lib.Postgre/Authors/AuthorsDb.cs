@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Npgsql;
+using Phys.Lib.Db;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Postgres.Utils;
 using SqlKata;
@@ -94,7 +95,7 @@ namespace Phys.Lib.Postgres.Authors
 
                     var res = Execute(cnx, updateCmd);
                     if (res == 0)
-                        throw new ApplicationException($"author '{code}' update failed");
+                        throw new PhysDbException($"author '{code}' update failed");
                 }
 
                 if (update.DeleteInfo != null)

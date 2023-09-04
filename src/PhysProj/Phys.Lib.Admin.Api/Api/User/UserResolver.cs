@@ -1,5 +1,6 @@
 ﻿using Phys.Lib.Core.Users;
 using Phys.Lib.Db.Users;
+using Phys.Shared;
 
 namespace Phys.Lib.Admin.Api.Api.User
 {
@@ -16,7 +17,11 @@ namespace Phys.Lib.Admin.Api.Api.User
 
         public UserDbo GetUser()
         {
-            return users.GetByName(httpContext.HttpContext.User.Identity.Name);
+            var name = httpContext.HttpContext?.User?.Identity?.Name;
+            if (name == null)
+                throw new PhysException($"identity name is missed in http context");
+
+            return users.GetByName(name);
         }
     }
 }

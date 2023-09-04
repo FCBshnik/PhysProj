@@ -12,13 +12,20 @@ namespace Phys.Shared.Utils
 
             var args = Environment.GetCommandLineArgs();
             var assembly = Assembly.GetEntryAssembly();
-            var name = assembly.GetName().Name;
+            var name = assembly!.GetName().Name;
             var version = assembly.GetName().Version;
             var log = LogManager.GetLogger(name);
 
             log.Info($"run {version} with args: {string.Join(" ", args)}");
 
-            try { Console.Title = name; } catch { }
+            try
+            {
+                Console.Title = name!;
+            }
+            catch
+            {
+                // dont care
+            }
 
             AppDomain.CurrentDomain.UnhandledException += (_, e) =>
             {

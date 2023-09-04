@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Works;
 using Microsoft.Extensions.Logging;
+using Phys.Lib.Db;
 
 namespace Phys.Lib.Mongo.Works
 {
@@ -110,7 +111,7 @@ namespace Phys.Lib.Mongo.Works
                 update = update.Pull(i => i.FilesCodes, work.DeleteFile);
 
             if (collection.UpdateOne(filter, update).MatchedCount == 0)
-                throw new ApplicationException($"work '{code}' update failed");
+                throw new PhysDbException($"work '{code}' update failed");
         }
     }
 }

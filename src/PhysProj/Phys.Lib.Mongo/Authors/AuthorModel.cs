@@ -13,10 +13,10 @@ namespace Phys.Lib.Mongo.Authors
         public string Code { get; set; }
 
         [BsonElement("born")]
-        public string Born { get; set; }
+        public string? Born { get; set; }
 
         [BsonElement("died")]
-        public string Died { get; set; }
+        public string? Died { get; set; }
 
         [BsonElement("infos")]
         public List<InfoModel> Infos { get; set; } = new List<InfoModel>();
@@ -27,10 +27,10 @@ namespace Phys.Lib.Mongo.Authors
             public string Language { get; set; }
 
             [BsonElement("name")]
-            public string FullName { get; set; }
+            public string? FullName { get; set; }
 
             [BsonElement("desc")]
-            public string Description { get; set; }
+            public string? Description { get; set; }
         }
     }
 }

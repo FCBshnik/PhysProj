@@ -41,7 +41,7 @@ namespace Phys.Lib.Postgres.Works
         public class InfoModel
         {
             public static readonly string WorkCodeColumn = SchemaUtils.GetColumn<InfoModel, string>(i => i.WorkCode);
-            public static readonly string LanguageColumn = SchemaUtils.GetColumn<InfoModel, string>(i => i.Language);
+            public static readonly string InfoLanguageColumn = SchemaUtils.GetColumn<InfoModel, string>(i => i.Language);
 
             [Column("work_code")]
             public string WorkCode { get; set; }
@@ -50,10 +50,10 @@ namespace Phys.Lib.Postgres.Works
             public string Language { get; set; }
 
             [Column("name")]
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             [Column("description")]
-            public string Description { get; set; }
+            public string? Description { get; set; }
         }
 
         public class SubWorkModel

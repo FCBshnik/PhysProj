@@ -2,11 +2,11 @@
 {
     public class UserDbo
     {
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string NameLowerCase { get; set; }
+        public required string NameLowerCase { get; set; }
 
-        public string PasswordHash { get; set; }
+        public required string PasswordHash { get; set; }
 
         public List<string> Roles { get; set; } = new List<string>();
 

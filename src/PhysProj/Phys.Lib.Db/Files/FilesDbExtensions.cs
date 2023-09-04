@@ -11,7 +11,7 @@
             if (files.Count == 1)
                 return files[0];
 
-            throw new ApplicationException($"failed get file with code '{code}' from '{db.GetType().FullName}' due to found {files.Count} files");
+            throw new PhysDbException($"failed get file with code '{code}' from '{db.GetType().FullName}' due to found {files.Count} files");
         }
     }
 }

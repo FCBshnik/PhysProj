@@ -11,7 +11,7 @@
             if (users.Count == 1)
                 return users[0];
 
-            throw new ApplicationException($"failed get user with name '{name}' from '{db.GetType().FullName}' due to found {users.Count} users");
+            throw new PhysDbException($"failed get user with name '{name}' from '{db.GetType().FullName}' due to found {users.Count} users");
         }
     }
 }

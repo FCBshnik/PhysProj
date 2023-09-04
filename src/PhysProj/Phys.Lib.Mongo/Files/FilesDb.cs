@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using System.Text.RegularExpressions;
 using Phys.Lib.Db.Files;
 using Microsoft.Extensions.Logging;
+using Phys.Lib.Db;
 
 namespace Phys.Lib.Mongo.Files
 {
@@ -74,7 +75,7 @@ namespace Phys.Lib.Mongo.Files
                 update = update.PullFilter(i => i.Links, l => l.Type == file.DeleteLink.Type && l.Path == file.DeleteLink.Path);
 
             if (collection.UpdateOne(filter, update).MatchedCount == 0)
-                throw new ApplicationException($"file '{code}' update failed");
+                throw new PhysDbException($"file '{code}' update failed");
         }
     }
 }

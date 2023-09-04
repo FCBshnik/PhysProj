@@ -13,10 +13,10 @@ namespace Phys.Lib.Mongo.Works
         public string Code { get; set; }
 
         [BsonElement("pubd")]
-        public string Publish { get; set; }
+        public string? Publish { get; set; }
 
         [BsonElement("lang")]
-        public string Language { get; set; }
+        public string? Language { get; set; }
 
         [BsonElement("infos")]
         public List<InfoModel> Infos { get; set; } = new List<InfoModel>();
@@ -39,10 +39,10 @@ namespace Phys.Lib.Mongo.Works
             public string Language { get; set; }
 
             [BsonElement("name")]
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             [BsonElement("desc")]
-            public string Description { get; set; }
+            public string? Description { get; set; }
         }
     }
 }

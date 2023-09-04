@@ -1,4 +1,5 @@
-﻿using SqlKata;
+﻿using Phys.Lib.Db;
+using SqlKata;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ namespace Phys.Lib.Postgres.Utils
         {
             var memberExpr = (MemberExpression)property.Body;
             var attr = memberExpr.Member.GetCustomAttribute<ColumnAttribute>();
-            return attr?.Name ?? throw new ApplicationException($"missed {nameof(ColumnAttribute)} on member {memberExpr.Member.Name} of {memberExpr.Type.Name}");
+            return attr?.Name ?? throw new PhysDbException($"missed {nameof(ColumnAttribute)} on member {memberExpr.Member.Name} of {memberExpr.Type.Name}");
         }
     }
 }

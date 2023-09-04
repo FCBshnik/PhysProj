@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Phys.Lib.Db;
 using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Core.Users
@@ -24,7 +25,7 @@ namespace Phys.Lib.Core.Users
 
         public UserDbo GetByName(string name)
         {
-            return FindByName(name) ?? throw new ApplicationException($"user '{name}' not found");
+            return FindByName(name) ?? throw new PhysDbException($"user '{name}' not found");
         }
 
         public Result<UserDbo> Login(string name, string password, UserRole role)

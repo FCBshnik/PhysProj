@@ -5,12 +5,12 @@
         public static Result<T> Fail<T>(string error)
         {
             ArgumentNullException.ThrowIfNull(error);
-            return new Result<T>(default, error);
+            return new Result<T>(default!, error);
         }
 
         public static Result<T> Ok<T>(T value)
         {
-            return new Result<T>(value, null);
+            return new Result<T>(value, null!);
         }
     }
 
@@ -21,7 +21,7 @@
         }
     }
 
-    public class Result<T, E> where E: class
+    public class Result<T, E> where E : class
     {
         private readonly T value;
         private readonly E error;
@@ -40,6 +40,6 @@
 
         public E Error => Fail ? error : throw new InvalidOperationException();
 
-        public static implicit operator bool(Result<T,E> result) => result.Ok;
+        public static implicit operator bool(Result<T, E> result) => result.Ok;
     }
 }

@@ -2,7 +2,7 @@
 {
     public class FileDbo
     {
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         public string? Format { get; set; }
 
@@ -12,9 +12,9 @@
 
         public class LinkDbo
         {
-            public string Type { get; set; }
+            public required string Type { get; set; }
 
-            public string Path { get; set; }
+            public required string Path { get; set; }
 
             public override string ToString()
             {

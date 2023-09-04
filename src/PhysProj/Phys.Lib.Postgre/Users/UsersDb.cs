@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Npgsql;
+using Phys.Lib.Db;
 using Phys.Lib.Db.Users;
 using SqlKata;
 
@@ -34,19 +35,19 @@ namespace Phys.Lib.Postgres.Users
                 cmd = cmd.Where(UserModel.NameLowerCaseColumn, query.NameLowerCase);
 
             using var cnx = dataSource.OpenConnection();
-            return Find<UserDbo>(cnx, cmd);
+            return Find<UserModel>(cnx, cmd).ConvertAll(UserMapper.Map);
         }
 
-        public void Update(string nameLowerCase, UserDbUpdate update)
+        public void Update(string name, UserDbUpdate update)
         {
-            ArgumentNullException.ThrowIfNull(nameLowerCase);
+            ArgumentNullException.ThrowIfNull(name);
             ArgumentNullException.ThrowIfNull(update);
 
             using var cnx = dataSource.OpenConnection();
             using (var trx = cnx.BeginTransaction())
             {
                 var updateDic = new Dictionary<string, object>();
-                var user = Find(new UsersDbQuery { NameLowerCase = nameLowerCase }).FirstOrDefault() ?? throw new ApplicationException($"user '{nameLowerCase}' not not found");
+                var user = Find(new UsersDbQuery { NameLowerCase = name.ToLowerInvariant() }).FirstOrDefault() ?? throw new PhysDbException($"user '{name}' not not found");
 
                 if (update.AddRole != null)
                 {
@@ -66,11 +67,11 @@ namespace Phys.Lib.Postgres.Users
                     updateDic[UserModel.PasswordHashColumn] = update.PasswordHash;
 
                 var updateCmd = new Query(tableName)
-                    .Where(UserModel.NameLowerCaseColumn, nameLowerCase)
+                    .Where(UserModel.NameLowerCaseColumn, name)
                     .AsUpdate(updateDic);
 
                 // SqlKata can't deal with arrays, replace array binding in compiled sql to array field (dapper can do it)
-                // todo: try to use postgres function 'array_append'
+                // TODO: try to use postgres function 'array_append'
                 var res = Execute(cnx, updateCmd, sql =>
                 {
                     var pair = sql.NamedBindings.FirstOrDefault(p => (p.Value as string) == $"#{UserModel.RolesColumn}#");
@@ -78,7 +79,7 @@ namespace Phys.Lib.Postgres.Users
                         sql.NamedBindings[pair.Key] = user.Roles;
                 });
                 if (res == 0)
-                    throw new ApplicationException($"user '{nameLowerCase}' update failed");
+                    throw new PhysDbException($"user '{name}' update failed");
 
                 trx.Commit();
             }

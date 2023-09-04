@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Users;
 using Microsoft.Extensions.Logging;
+using Phys.Lib.Db;
 
 namespace Phys.Lib.Mongo.Users
 {
@@ -31,23 +32,23 @@ namespace Phys.Lib.Mongo.Users
             Insert(userModel);
         }
 
-        public void Update(string nameLowerCase, UserDbUpdate user)
+        public void Update(string name, UserDbUpdate update)
         {
-            ArgumentNullException.ThrowIfNull(nameLowerCase);
-            ArgumentNullException.ThrowIfNull(user);
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(update);
 
-            var filter = FilterBuilder.Eq(i => i.NameLowerCase, nameLowerCase);
-            var update = UpdateBuilder.Combine();
+            var filter = FilterBuilder.Eq(i => i.NameLowerCase, name.ToLowerInvariant());
+            var upd = UpdateBuilder.Combine();
 
-            if (user.AddRole.HasValue())
-                update = update.Push(i => i.Roles, user.AddRole);
-            if (user.DeleteRole.HasValue())
-                update = update.Pull(i => i.Roles, user.DeleteRole);
-            if (user.PasswordHash.HasValue())
-                update = update.Set(i => i.PasswordHash, user.PasswordHash);
+            if (update.AddRole.HasValue())
+                upd = upd.Push(i => i.Roles, update.AddRole);
+            if (update.DeleteRole.HasValue())
+                upd = upd.Pull(i => i.Roles, update.DeleteRole);
+            if (update.PasswordHash.HasValue())
+                upd = upd.Set(i => i.PasswordHash, update.PasswordHash);
 
-            if (collection.UpdateOne(filter, update).MatchedCount == 0)
-                throw new ApplicationException($"user '{nameLowerCase}' update failed");
+            if (collection.UpdateOne(filter, upd).MatchedCount == 0)
+                throw new PhysDbException($"user '{name}' update failed");
         }
 
         public List<UserDbo> Find(UsersDbQuery query)

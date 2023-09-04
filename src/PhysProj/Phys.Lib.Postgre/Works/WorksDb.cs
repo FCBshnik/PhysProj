@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Phys.Lib.Db;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Postgres.Utils;
 using SqlKata;
@@ -122,12 +123,12 @@ namespace Phys.Lib.Postgres.Works
 
                     var res = Execute(cnx, updateCmd);
                     if (res == 0)
-                        throw new ApplicationException($"work '{code}' update failed");
+                        throw new PhysDbException($"work '{code}' update failed");
                 }
 
                 if (update.DeleteInfo != null)
                     worksInfos.Delete(cnx, q => q.Where(WorkModel.InfoModel.WorkCodeColumn, code)
-                        .Where(WorkModel.InfoModel.LanguageColumn, update.DeleteInfo));
+                        .Where(WorkModel.InfoModel.InfoLanguageColumn, update.DeleteInfo));
                 if (update.AddInfo != null)
                     worksInfos.Insert(cnx, new WorkModel.InfoModel
                     {

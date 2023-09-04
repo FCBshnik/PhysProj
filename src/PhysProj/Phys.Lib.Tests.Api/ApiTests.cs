@@ -77,8 +77,8 @@ namespace Phys.Lib.Tests.Api
             if (!appSettingsFile.Exists)
                 throw new InvalidOperationException($"Project '{projectPath}' settings file '{appSettingsFile}' not found");
             var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appSettingsFile.FullName));
-            appSettings["ConnectionStrings"]["mongo"] = GetMongoUrl();
-            appSettings["ConnectionStrings"]["urls"] = url;
+            appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl();
+            appSettings!["ConnectionStrings"]!["urls"] = url;
             File.WriteAllText(appSettingsFile.FullName, JsonConvert.SerializeObject(appSettings));
 
             // run

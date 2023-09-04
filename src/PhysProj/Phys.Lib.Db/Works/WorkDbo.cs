@@ -5,17 +5,17 @@
         /// <summary>
         /// Unique code of work
         /// </summary>
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         /// <summary>
         /// Published date
         /// </summary>
-        public string Publish { get; set; }
+        public string? Publish { get; set; }
 
         /// <summary>
         /// Language the work is written on
         /// </summary>
-        public string Language { get; set; }
+        public string? Language { get; set; }
 
         /// <summary>
         /// Translatable information about work
@@ -41,11 +41,11 @@
 
         public class InfoDbo
         {
-            public string Language { get; set; }
+            public required string Language { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
             public override string? ToString()
             {

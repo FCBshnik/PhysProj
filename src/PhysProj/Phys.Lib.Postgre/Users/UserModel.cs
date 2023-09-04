@@ -17,6 +17,6 @@ namespace Phys.Lib.Postgres.Users
         public long Id { get; set; }
 
         [Column("roles")]
-        public string[] Roles { get; set; }
+        public string[]? Roles { get; set; }
     }
 }

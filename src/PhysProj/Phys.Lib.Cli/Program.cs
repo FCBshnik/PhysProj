@@ -56,7 +56,7 @@ internal static class Program
             {
                 var commandType = typeof(ICommand<>).MakeGenericType(options.GetType());
                 var command = scope.Resolve(commandType);
-                var run = commandType.GetMethods().First();
+                var run = commandType.GetMethods()[0];
                 run.Invoke(command, new[] { options });
                 log.LogInformation("command completed");
             }
