@@ -52,7 +52,7 @@ namespace Phys.Lib.Tests.Api.Admin
         private IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new NLogModule(loggerFactory));
+            builder.RegisterModule(new LoggerModule(loggerFactory));
             builder.RegisterModule(new MongoModule(GetMongoUrl(), loggerFactory));
             builder.RegisterModule(new CoreModule());
             return builder.Build();

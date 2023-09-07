@@ -1,7 +1,9 @@
 ﻿using CliWrap;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Phys.Lib.Core.Utils;
+using Phys.Shared.Logging;
 using Phys.Shared.Utils;
 using Testcontainers.MongoDb;
 
@@ -9,6 +11,7 @@ namespace Phys.Lib.Tests.Api
 {
     public class ApiTests : IDisposable
     {
+        protected readonly LoggerFactory loggerFactory = new LoggerFactory();
         private readonly CancellationTokenSource cts = new();
         private readonly MongoDbContainer mongo = new MongoDbBuilder().WithImage("mongo:4.4.18").Build();
 
@@ -23,7 +26,8 @@ namespace Phys.Lib.Tests.Api
 
             try
             {
-                ProgramUtils.OnRun();
+                NLogConfig.Configure(loggerFactory, "testsapi");
+                ProgramUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

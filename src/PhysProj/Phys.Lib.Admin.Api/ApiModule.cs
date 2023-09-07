@@ -28,7 +28,7 @@ namespace Phys.Lib.Admin.Api
         {
             var mongoUrl = configuration.GetConnectionString("mongo") ?? throw new ApplicationException();
 
-            builder.RegisterModule(new NLogModule(loggerFactory));
+            builder.RegisterModule(new LoggerModule(loggerFactory));
             builder.RegisterModule(new MongoModule(mongoUrl, loggerFactory));
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));

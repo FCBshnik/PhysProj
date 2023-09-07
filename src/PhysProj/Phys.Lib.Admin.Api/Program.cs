@@ -16,6 +16,7 @@ using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
 using Phys.Shared.Utils;
 using Phys.Lib.Admin.Api.Filters;
+using Phys.Shared.Logging;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -24,12 +25,13 @@ namespace Phys.Lib.Admin.Api
         private static readonly LoggerFactory loggerFactory = new LoggerFactory();
         private static readonly ILogger log = loggerFactory.CreateLogger(nameof(Program));
 
-        internal static Lazy<string> version = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty);
+        internal static readonly Lazy<string> version = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty);
         internal static string Version => version.Value;
 
         public static void Main(string[] args)
         {
-            ProgramUtils.OnRun();
+            NLogConfig.Configure(loggerFactory, "adminapi");
+            ProgramUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
 

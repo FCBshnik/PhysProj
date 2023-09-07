@@ -23,7 +23,8 @@ namespace Phys.Lib.Tests.Db
 
             try
             {
-                ProgramUtils.OnRun();
+                NLogConfig.Configure(loggerFactory, "testsdb");
+                ProgramUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");
@@ -53,7 +54,7 @@ namespace Phys.Lib.Tests.Db
         private IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new NLogModule(loggerFactory));
+            builder.RegisterModule(new LoggerModule(loggerFactory));
             builder.RegisterModule(new CoreModule());
             Register(builder);
             return builder.Build();

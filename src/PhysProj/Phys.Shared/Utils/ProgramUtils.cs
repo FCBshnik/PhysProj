@@ -1,40 +1,28 @@
-﻿using NLog;
-using Phys.Shared.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System.Reflection;
 
 namespace Phys.Shared.Utils
 {
     public static class ProgramUtils
     {
-        public static void OnRun()
+        public static void OnRun(ILoggerFactory loggerFactory)
         {
-            NLogConfig.Configure();
-
             var args = Environment.GetCommandLineArgs();
             var assembly = Assembly.GetEntryAssembly();
             var name = assembly!.GetName().Name;
             var version = assembly.GetName().Version;
-            var log = LogManager.GetLogger(name);
+            var log = loggerFactory.CreateLogger(name!);
 
-            log.Info($"run {version} with args: {string.Join(" ", args)}");
-
-            try
-            {
-                Console.Title = name!;
-            }
-            catch
-            {
-                // dont care
-            }
+            log.LogInformation($"run {version} with args: {string.Join(" ", args)}");
 
             AppDomain.CurrentDomain.UnhandledException += (_, e) =>
             {
-                log.Error(e.ExceptionObject as Exception, "UnhandledException");
+                log.LogError(e.ExceptionObject as Exception, "UnhandledException");
             };
 
             TaskScheduler.UnobservedTaskException += (_, e) =>
             {
-                log.Error(e.Exception, "UnobservedTaskException");
+                log.LogError(e.Exception, "UnobservedTaskException");
                 e.SetObserved();
             };
         }
