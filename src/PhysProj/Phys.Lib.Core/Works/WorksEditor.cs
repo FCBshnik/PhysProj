@@ -29,7 +29,7 @@ namespace Phys.Lib.Core.Works
             ArgumentNullException.ThrowIfNull(work);
             ArgumentNullException.ThrowIfNull(info);
 
-            if (work.Infos.Any(i => i.Language == info.Language))
+            if (work.Infos.Exists(i => i.Language == info.Language))
                 work = DeleteInfo(work, info.Language);
 
             var update = new WorkDbUpdate { AddInfo = info };
