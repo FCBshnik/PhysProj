@@ -2,8 +2,8 @@
   "profiles": {
     "Phys.Lib.Cli": {
       "commandName": "Project",
-      //"commandLineArgs": "test",
-      "commandLineArgs": "user-create --name admin --password 123456 --role admin"
+      "commandLineArgs": "dev-config-mongo",
+      //"commandLineArgs": "user-create --name admin --password 123456 --role admin"
     }
   }
 }

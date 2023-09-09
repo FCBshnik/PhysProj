@@ -49,7 +49,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Postgres", "Phys.L
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Tests.Db", "Phys.Lib.Tests.Db\Phys.Lib.Tests.Db.csproj", "{442E09EE-33BE-4E87-83FC-8D229CEB749C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Shared", "Phys.Shared\Phys.Shared.csproj", "{A33D97B4-87B3-4E8B-A6CB-8D5B585D9039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Shared", "Phys.Shared\Phys.Shared.csproj", "{A33D97B4-87B3-4E8B-A6CB-8D5B585D9039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Shared.Mongo", "Phys.Shared.Mongo\Phys.Shared.Mongo.csproj", "{DA1FB4AD-BDA9-4225-ACFF-9749BF781B11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{A33D97B4-87B3-4E8B-A6CB-8D5B585D9039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A33D97B4-87B3-4E8B-A6CB-8D5B585D9039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A33D97B4-87B3-4E8B-A6CB-8D5B585D9039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA1FB4AD-BDA9-4225-ACFF-9749BF781B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA1FB4AD-BDA9-4225-ACFF-9749BF781B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA1FB4AD-BDA9-4225-ACFF-9749BF781B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA1FB4AD-BDA9-4225-ACFF-9749BF781B11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +133,7 @@ Global
 		{387E1B92-1E24-4AA4-8632-CBFCDE1C86BA} = {15BD3D73-3DAD-4F8B-9C99-99F5C6AF9703}
 		{442E09EE-33BE-4E87-83FC-8D229CEB749C} = {3A760A5A-61B5-40DF-82EB-05177A752C50}
 		{A33D97B4-87B3-4E8B-A6CB-8D5B585D9039} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
+		{DA1FB4AD-BDA9-4225-ACFF-9749BF781B11} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {616FF1DB-DD01-46E8-A34F-B45851EEE112}

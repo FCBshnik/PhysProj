@@ -9,9 +9,15 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="dev-config.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="dev-config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -32,6 +38,7 @@
     <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
     <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
     <ProjectReference Include="..\Phys.Lib.Postgre\Phys.Lib.Postgres.csproj" />
+    <ProjectReference Include="..\Phys.Shared.Mongo\Phys.Shared.Mongo.csproj" />
     <ProjectReference Include="..\Phys.Shared\Phys.Shared.csproj" />
   </ItemGroup>
 

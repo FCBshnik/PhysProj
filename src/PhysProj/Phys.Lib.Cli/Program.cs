@@ -8,6 +8,8 @@ using Phys.Lib.Postgres;
 using Microsoft.Extensions.Logging;
 using Phys.Shared.Utils;
 using Phys.Shared.Logging;
+using Phys.Shared;
+using Phys.Shared.Mongo.Configuration;
 
 namespace Phys.Lib.Cli
 {
@@ -18,7 +20,7 @@ namespace Phys.Lib.Cli
 
         private static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory);
+            NLogConfig.Configure(loggerFactory, "cli");
             ProgramUtils.OnRun(loggerFactory);
 
             var parser = new Parser();
@@ -31,9 +33,11 @@ namespace Phys.Lib.Cli
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
+                .AddMongo(loggerFactory)
                 .Build();
 
             var builder = new ContainerBuilder();
+            builder.Register(_ => config).AsImplementedInterfaces().SingleInstance();
 
             var mongoUrl = config.GetConnectionString("mongo");
             if (mongoUrl != null)
@@ -41,10 +45,11 @@ namespace Phys.Lib.Cli
             var postgresUrl = config.GetConnectionString("postgres");
             if (postgresUrl != null)
                 builder.RegisterModule(new PostgresModule(postgresUrl, loggerFactory));
+
             builder.RegisterModule(new LoggerModule(loggerFactory));
             builder.RegisterModule(new CoreModule());
-
             builder.RegisterModule(new CliModule());
+
             builder.RegisterInstance(options).AsSelf().SingleInstance();
 
             return builder.Build();
