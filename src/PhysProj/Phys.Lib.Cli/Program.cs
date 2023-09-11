@@ -8,7 +8,6 @@ using Phys.Lib.Postgres;
 using Microsoft.Extensions.Logging;
 using Phys.Shared.Utils;
 using Phys.Shared.Logging;
-using Phys.Shared;
 using Phys.Shared.Mongo.Configuration;
 
 namespace Phys.Lib.Cli
@@ -33,7 +32,7 @@ namespace Phys.Lib.Cli
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
-                .AddMongo(loggerFactory)
+                .AddMongo(loggerFactory, "config")
                 .Build();
 
             var builder = new ContainerBuilder();
