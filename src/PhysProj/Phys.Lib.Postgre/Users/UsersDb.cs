@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Npgsql;
 using Phys.Lib.Db;
+using Phys.Lib.Db.Reader;
 using Phys.Lib.Db.Users;
 using SqlKata;
 
 namespace Phys.Lib.Postgres.Users
 {
-    internal class UsersDb : PostgresTable, IUsersDb
+    internal class UsersDb : PostgresTable, IUsersDb, IDbReader<UserDbo>
     {
         private readonly NpgsqlDataSource dataSource;
 
@@ -83,6 +84,19 @@ namespace Phys.Lib.Postgres.Users
 
                 trx.Commit();
             }
+        }
+
+        IDbReaderResult<UserDbo> IDbReader<UserDbo>.Read(DbReaderQuery query)
+        {
+            ArgumentNullException.ThrowIfNull(query);
+
+            var cmd = new Query(tableName).Limit(query.Limit).OrderBy(UserModel.IdColumn);
+            if (query.Cursor != null)
+                cmd = cmd.Where(UserModel.IdColumn, ">", int.Parse(query.Cursor));
+
+            using var cnx = dataSource.OpenConnection();
+            var users = Find<UserModel>(cnx, cmd);
+            return new DbReaderResult<UserDbo>(users.Select(UserMapper.Map).ToList(), users.LastOrDefault()?.Id.ToString());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Phys.Lib.Db.Users;
+﻿using Phys.Lib.Db.Reader;
+using Phys.Lib.Db.Users;
 using Shouldly;
 
 namespace Phys.Lib.Tests.Db
@@ -6,10 +7,12 @@ namespace Phys.Lib.Tests.Db
     internal class UsersTests
     {
         private readonly IUsersDb db;
+        private readonly IDbReader<UserDbo> usersReader;
 
-        public UsersTests(IUsersDb db)
+        public UsersTests(IUsersDb db, IDbReader<UserDbo> usersReader)
         {
             this.db = db;
+            this.usersReader = usersReader;
         }
 
         public void Run()
@@ -31,6 +34,10 @@ namespace Phys.Lib.Tests.Db
             DeleteRole(user.NameLowerCase, "user");
             DeleteRole(user.NameLowerCase, "user");
             DeleteRole(user.NameLowerCase, "admin");
+
+            Read(1, "user", "admin");
+            Read(2, "user", "admin");
+            Read(10, "user", "admin");
         }
 
         private UserDbo FindByName(string name)
@@ -61,6 +68,20 @@ namespace Phys.Lib.Tests.Db
             db.Update(nameLowerCase, new UserDbUpdate { DeleteRole = role });
             var user = db.GetByName(nameLowerCase);
             user.Roles.ShouldNotContain(role);
+        }
+
+        private void Read(int limit, params string[] expectedNames)
+        {
+            IDbReaderResult<UserDbo> res = null!;
+            List<string> actualNames = new List<string>();
+
+            do
+            {
+                res = usersReader.Read(new DbReaderQuery(limit, res?.Cursor));
+                actualNames.AddRange(res.Values.Select(u => u.Name));
+            } while (!res.IsCompleted);
+
+            actualNames.ShouldBeEquivalentTo(expectedNames.ToList());
         }
     }
 }

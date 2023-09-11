@@ -48,7 +48,7 @@ namespace Phys.Lib.Postgres
         private void RegisterTable<Table, As>(ContainerBuilder builder, string tableName) where Table : PostgresTable where As : notnull
         {
             builder.RegisterType<Table>().WithParameter(TypedParameter.From(tableName))
-                .As<As>().SingleInstance();
+                .As<As>().AsImplementedInterfaces().SingleInstance();
         }
 
         private NpgsqlDataSource CreateNpgsqlDataSource()
