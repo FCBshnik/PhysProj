@@ -20,14 +20,12 @@ namespace Phys.Lib.Core.Migration
         public void Migrate(IDbReader<T> source, IDbWriter<T> destination, MigrationDto migration)
         {
             IDbReaderResult<T> result = null!;
-            var migrated = 0;
 
             do
             {
                 result = source.Read(new DbReaderQuery(100, result?.Cursor));
                 destination.Write(result.Values);
-                migrated += result.Values.Count;
-                migration.Stats["migrated_count"] = migrated.ToString();
+                migration.MigratedCount += result.Values.Count;
             } while (!result.IsCompleted);
         }
 

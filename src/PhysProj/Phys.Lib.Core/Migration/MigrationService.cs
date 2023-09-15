@@ -32,6 +32,7 @@ namespace Phys.Lib.Core.Migration
                 Migrator = task.Migrator,
                 Source = task.Source,
                 Destination = task.Destination,
+                CreatedAt = DateTime.UtcNow,
                 Status = "created",
             };
             migrationsHistory.Save(migration);
@@ -43,15 +44,19 @@ namespace Phys.Lib.Core.Migration
         {
             ArgumentNullException.ThrowIfNull(migration);
 
-            log.LogInformation($"migration '{migration.Id}' started");
-
             try
             {
+                migration.StartedAt = DateTime.UtcNow;
+                migration.Status = "inprogress";
+                migrationsHistory.Save(migration);
+                log.LogInformation($"migration '{migration.Id}' started");
+
                 var migrator = migrators.Find(r => string.Equals(r.Name, migration.Migrator, StringComparison.OrdinalIgnoreCase));
                 if (migrator == null)
                     throw new PhysException($"migrator '{migration.Migrator}' not found");
 
                 migrator.Migrate(migration);
+
                 migration.CompletedAt = DateTime.UtcNow;
                 migration.Status = "completed";
                 migration.Result = "success";
@@ -67,6 +72,11 @@ namespace Phys.Lib.Core.Migration
                 migrationsHistory.Save(migration);
                 log.LogError(e, $"migration '{migration.Id}' failed");
             }
+        }
+
+        public List<MigrationDto> List(HistoryDbQuery query)
+        {
+            return migrationsHistory.List(query);
         }
     }
 }
