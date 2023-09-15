@@ -11,8 +11,6 @@ namespace Phys.Lib.Tests.Api.Admin
 {
     public partial class AdminTests : ApiTests
     {
-        private static readonly ILoggerFactory loggerFactory = new LoggerFactory();
-
         private const string nonExistentCode = "non-existent";
         private const string url = "https://localhost:17188/";
 
