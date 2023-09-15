@@ -1,11 +1,18 @@
 ﻿using Autofac;
+using Autofac.Core;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Files.Storage;
+using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Validation;
 using Phys.Lib.Core.Works;
+using Phys.Lib.Db.Reader;
+using Phys.Lib.Db.Users;
+using Phys.Shared;
+using Phys.Shared.HistoryDb;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Phys.Lib.Tests.Unit")]
@@ -25,7 +32,17 @@ namespace Phys.Lib.Core
                 .RegisterService<WorksSearch, IWorksSearch>()
                 .RegisterService<WorksEditor, IWorksEditor>()
                 .RegisterService<FileStoragesService, IFileStoragesService>()
-                .RegisterService<FilesService, IFilesService>();
+                .RegisterService<FilesService, IFilesService>()
+                .RegisterService<MigrationService, IMigrationService>();
+
+            builder.Register(c => c.Resolve<IHistoryDbFactory>().Create<MigrationDto>("migrations"))
+                .As<IHistoryDb<MigrationDto>>()
+                .SingleInstance();
+            builder.RegisterType<Migrator<UserDbo>>().WithParameter(TypedParameter.From("users"))
+                .As<IMigrator>()
+                .SingleInstance();
+            builder.Register(c => c.Resolve<IEnumerable<IUsersDb>>().Select(db => new UsersWriter(db)))
+                .As<IEnumerable<IDbWriter<UserDbo>>>();
 
             builder.RegisterModule(new ValidationModule(ThisAssembly));
         }

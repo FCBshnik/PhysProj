@@ -1,6 +1,8 @@
-﻿namespace Phys.Lib.Db.Users
+﻿using Phys.Shared;
+
+namespace Phys.Lib.Db.Users
 {
-    public interface IUsersDb
+    public interface IUsersDb : INamed
     {
         void Create(UserDbo user);
 

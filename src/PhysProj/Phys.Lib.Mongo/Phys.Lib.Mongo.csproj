@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Phys.Lib.Db\Phys.Lib.Db.csproj" />
+    <ProjectReference Include="..\Phys.Shared.Mongo\Phys.Shared.Mongo.csproj" />
+    <ProjectReference Include="..\Phys.Shared\Phys.Shared.csproj" />
   </ItemGroup>
 
 </Project>

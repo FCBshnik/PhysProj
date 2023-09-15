@@ -1,6 +1,8 @@
-﻿namespace Phys.Lib.Db.Reader
+﻿using Phys.Shared;
+
+namespace Phys.Lib.Db.Reader
 {
-    public interface IDbReader<T>
+    public interface IDbReader<T> : INamed
     {
         IDbReaderResult<T> Read(DbReaderQuery query);
     }

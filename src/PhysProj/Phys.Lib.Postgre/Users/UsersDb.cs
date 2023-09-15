@@ -11,6 +11,8 @@ namespace Phys.Lib.Postgres.Users
     {
         private readonly NpgsqlDataSource dataSource;
 
+        public string Name => "postgres";
+
         public UsersDb(NpgsqlDataSource dataSource, string tableName, ILogger<UsersDb> logger) : base(tableName, logger)
         {
             this.dataSource = dataSource;

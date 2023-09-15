@@ -14,6 +14,8 @@ namespace Phys.Lib.Mongo.Users
         {
         }
 
+        public string Name => "mongo";
+
         protected override void Init(IMongoCollection<UserModel> collection)
         {
             collection.Indexes.CreateOne(new CreateIndexModel<UserModel>(IndexBuilder.Ascending(i => i.NameLowerCase), new CreateIndexOptions { Unique = true }));

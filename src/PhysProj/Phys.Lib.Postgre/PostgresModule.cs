@@ -14,6 +14,8 @@ namespace Phys.Lib.Postgres
 {
     public class PostgresModule : Module
     {
+        private const string dbTypeName = "postgres";
+
         private readonly ILoggerFactory loggerFactory;
         private readonly ILogger log;
         private readonly string connectionString;
@@ -45,10 +47,11 @@ namespace Phys.Lib.Postgres
             RegisterTable<WorksFilesTable, WorksFilesTable>(builder, "works_files");
         }
 
-        private void RegisterTable<Table, As>(ContainerBuilder builder, string tableName) where Table : PostgresTable where As : notnull
+        private void RegisterTable<ImplDb, IDb>(ContainerBuilder builder, string tableName) where ImplDb : PostgresTable where IDb : notnull
         {
-            builder.RegisterType<Table>().WithParameter(TypedParameter.From(tableName))
-                .As<As>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<ImplDb>().WithParameter(TypedParameter.From(tableName))
+                .As<IDb>().Named<IDb>(dbTypeName).AsImplementedInterfaces()
+                .SingleInstance();
         }
 
         private NpgsqlDataSource CreateNpgsqlDataSource()
