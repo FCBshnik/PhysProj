@@ -1,6 +1,0 @@
-{
-  "connectionStrings": {
-    "mongo": "mongodb://localhost:27017",
-    "postgres": "Host=localhost;Username=admin;Password=123456;Database=phys-lib"
-  }
-}

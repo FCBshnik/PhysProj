@@ -33,22 +33,12 @@ namespace Phys.Lib.Cli
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
-                .AddMongo(loggerFactory, "config")
                 .Build();
 
             var builder = new ContainerBuilder();
             builder.Register(_ => config).AsImplementedInterfaces().SingleInstance();
 
-            var mongoUrl = config.GetConnectionString("mongo");
-            if (mongoUrl != null)
-                builder.RegisterModule(new MongoModule(mongoUrl, loggerFactory));
-            var postgresUrl = config.GetConnectionString("postgres");
-            if (postgresUrl != null)
-                builder.RegisterModule(new PostgresModule(postgresUrl, loggerFactory));
-
-            builder.RegisterModule(new LoggerModule(loggerFactory));
-            builder.RegisterModule(new CoreModule());
-            builder.RegisterModule(new CliModule());
+            builder.RegisterModule(new CliModule(config, loggerFactory));
 
             builder.RegisterInstance(options).AsSelf().SingleInstance();
 

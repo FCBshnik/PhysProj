@@ -39,11 +39,7 @@ namespace Phys.Lib.Admin.Api
 
             var builder = WebApplication.CreateBuilder(args);
 
-            var config = builder
-                .Configuration
-                .AddMongo(loggerFactory, "config")
-                .Build();
-
+            var config = builder.Configuration;
             var urls = config.GetConnectionString("urls") ?? throw new PhysException("connection 'urls' not found in configuration");
 
             builder.WebHost.UseUrls(urls);

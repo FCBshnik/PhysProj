@@ -22,8 +22,12 @@ namespace Phys.Lib.Postgres
 
         public PostgresModule(string connectionString, ILoggerFactory loggerFactory)
         {
-            this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            ArgumentNullException.ThrowIfNull(connectionString);
+            ArgumentNullException.ThrowIfNull(loggerFactory);
+
+            this.connectionString = connectionString;
             this.loggerFactory = loggerFactory;
+
             log = loggerFactory.CreateLogger<PostgresModule>();
         }
 

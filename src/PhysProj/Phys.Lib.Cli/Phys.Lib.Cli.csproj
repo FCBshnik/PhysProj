@@ -9,15 +9,9 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="dev-config.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="dev-config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
