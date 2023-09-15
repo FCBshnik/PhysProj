@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Phys.Shared.HistoryDb;
 
@@ -35,7 +38,9 @@ namespace Phys.Shared.Mongo.HistoryDb
             BsonClassMap.TryRegisterClassMap<T>(m =>
             {
                 m.AutoMap();
-                m.MapIdProperty(obj => obj.Id);
+                m.MapIdProperty(obj => obj.Id)
+                    .SetIdGenerator(StringObjectIdGenerator.Instance)
+                    .SetSerializer(new StringSerializer(BsonType.ObjectId));
             });
 
             var client = new MongoClient(new MongoUrl(connectionString));

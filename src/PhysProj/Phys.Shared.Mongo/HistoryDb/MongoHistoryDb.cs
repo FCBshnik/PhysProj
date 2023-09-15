@@ -40,7 +40,9 @@ namespace Phys.Shared.Mongo.HistoryDb
                 builder.Gte(e => e.Id, query.Interval.Start.ToObjectId().ToString()),
                 builder.Lt(e => e.Id, query.Interval.End.ToObjectId().ToString()));
 
-            return collection.Find(filter).Skip(query.Skip).Limit(query.Limit).ToList();
+            var sort = Builders<T>.Sort.Descending(e => e.Id);
+
+            return collection.Find(filter).Sort(sort).Skip(query.Skip).Limit(query.Limit).ToList();
         }
     }
 }

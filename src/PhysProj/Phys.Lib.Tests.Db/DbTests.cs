@@ -38,7 +38,7 @@ namespace Phys.Lib.Tests.Db
         }
 
         [Fact]
-        public void AllTests()
+        public void Tests()
         {
             using var container = BuildContainer();
             using var lifetimeScope = container.BeginLifetimeScope();
@@ -53,7 +53,7 @@ namespace Phys.Lib.Tests.Db
             new WorksTests(works, authors, files).Run();
         }
 
-        private IContainer BuildContainer()
+        protected IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggerModule(loggerFactory));
