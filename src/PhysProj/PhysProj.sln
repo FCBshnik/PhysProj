@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Shared.Mongo", "Phys.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Tests.Queue", "Phys.Tests.Queue\Phys.Tests.Queue.csproj", "{06B0BC1B-0A41-443A-B7C5-F2EAD66F5CAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Shared.NLog", "Phys.Shared.NLog\Phys.Shared.NLog.csproj", "{AA75F9E3-1293-4D55-92CB-E35E7780D9DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{06B0BC1B-0A41-443A-B7C5-F2EAD66F5CAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06B0BC1B-0A41-443A-B7C5-F2EAD66F5CAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06B0BC1B-0A41-443A-B7C5-F2EAD66F5CAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA75F9E3-1293-4D55-92CB-E35E7780D9DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA75F9E3-1293-4D55-92CB-E35E7780D9DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA75F9E3-1293-4D55-92CB-E35E7780D9DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA75F9E3-1293-4D55-92CB-E35E7780D9DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +147,7 @@ Global
 		{A33D97B4-87B3-4E8B-A6CB-8D5B585D9039} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
 		{DA1FB4AD-BDA9-4225-ACFF-9749BF781B11} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
 		{06B0BC1B-0A41-443A-B7C5-F2EAD66F5CAF} = {3A760A5A-61B5-40DF-82EB-05177A752C50}
+		{AA75F9E3-1293-4D55-92CB-E35E7780D9DB} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {616FF1DB-DD01-46E8-A34F-B45851EEE112}

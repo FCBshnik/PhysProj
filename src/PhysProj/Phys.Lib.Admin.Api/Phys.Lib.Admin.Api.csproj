@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Phys.Lib.Files\Phys.Lib.Files.csproj" />
     <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
     <ProjectReference Include="..\Phys.Shared.Mongo\Phys.Shared.Mongo.csproj" />
+    <ProjectReference Include="..\Phys.Shared.NLog\Phys.Shared.NLog.csproj" />
     <ProjectReference Include="..\Phys.Shared\Phys.Shared.csproj" />
   </ItemGroup>
 

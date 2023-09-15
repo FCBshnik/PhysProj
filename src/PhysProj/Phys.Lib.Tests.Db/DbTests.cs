@@ -8,6 +8,7 @@ using Phys.Lib.Db.Reader;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.Shared.Logging;
+using Phys.Shared.NLog;
 using Phys.Shared.Utils;
 
 namespace Phys.Lib.Tests.Db

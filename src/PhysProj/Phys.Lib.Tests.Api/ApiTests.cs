@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Phys.Shared.Logging;
+using Phys.Shared.NLog;
 using Phys.Shared.Utils;
 using Testcontainers.MongoDb;
 

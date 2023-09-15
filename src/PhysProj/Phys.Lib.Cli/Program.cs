@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Phys.Shared.Utils;
 using Phys.Shared.Logging;
 using Phys.Shared.Mongo.Configuration;
+using Phys.Shared.NLog;
 
 namespace Phys.Lib.Cli
 {

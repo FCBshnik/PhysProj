@@ -7,6 +7,7 @@ using Phys.Lib.Mongo;
 using Phys.Lib.Postgres;
 using Phys.Shared.Logging;
 using Phys.Shared.Mongo.HistoryDb;
+using Phys.Shared.NLog;
 using Phys.Shared.Utils;
 using Shouldly;
 using Testcontainers.MongoDb;

@@ -20,6 +20,7 @@ using Phys.Shared.Logging;
 using Phys.Shared.Mongo.Configuration;
 using Phys.Shared;
 using Phys.Lib.Admin.Api.Api.Migration;
+using Phys.Shared.NLog;
 
 namespace Phys.Lib.Admin.Api
 {

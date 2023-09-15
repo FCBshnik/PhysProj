@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Phys.Shared.Logging;
+using Phys.Shared.NLog;
 using Phys.Shared.Queue;
 
 namespace Phys.Tests.Queue
