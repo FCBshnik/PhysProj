@@ -1,32 +1,34 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using Phys.Shared.ItemsLog;
-using Phys.Shared.ObjectsLog;
+using Phys.Shared.HistoryDb;
 
-namespace Phys.Shared.Mongo.ObjectsLog
+namespace Phys.Shared.Mongo.HistoryDb
 {
-    public class MongoObjectsLogFactory : IObjectsLogFactory
+    public class MongoHistoryDbFactory : IHistoryDbFactory
     {
         private readonly string connectionString;
         private readonly string databaseName;
+        private readonly string collectionNamePrefix;
         private readonly ILoggerFactory loggerFactory;
-        private readonly ILogger<MongoObjectsLogFactory> log;
+        private readonly ILogger<MongoHistoryDbFactory> log;
 
-        public MongoObjectsLogFactory(string connectionString, string databaseName, ILoggerFactory loggerFactory)
+        public MongoHistoryDbFactory(string connectionString, string databaseName, string collectionNamePrefix, ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(nameof(connectionString));
             ArgumentNullException.ThrowIfNull(nameof(databaseName));
+            ArgumentNullException.ThrowIfNull(nameof(collectionNamePrefix));
             ArgumentNullException.ThrowIfNull(nameof(loggerFactory));
 
             this.connectionString = connectionString;
             this.databaseName = databaseName;
+            this.collectionNamePrefix = collectionNamePrefix;
             this.loggerFactory = loggerFactory;
 
-            log = loggerFactory.CreateLogger<MongoObjectsLogFactory>();
+            log = loggerFactory.CreateLogger<MongoHistoryDbFactory>();
         }
 
-        public IObjectsLog<T> Create<T>(string name) where T : IObjectsLogId
+        public IHistoryDb<T> Create<T>(string name) where T : IHistoryDbo
         {
             log.LogInformation($"creating objects log '{name}': server '{connectionString}', database '{databaseName}'");
 
@@ -38,8 +40,8 @@ namespace Phys.Shared.Mongo.ObjectsLog
 
             var client = new MongoClient(new MongoUrl(connectionString));
             var db = client.GetDatabase(databaseName);
-            var collection = db.GetCollection<T>($"log-{name}");
-            var objectLog = new MongoObjectsLog<T>(collection);
+            var collection = db.GetCollection<T>($"{collectionNamePrefix}{name}");
+            var objectLog = new MongoHistoryDb<T>(collection);
             log.LogInformation($"created objects log '{name}': collection '{collection.CollectionNamespace.CollectionName}'");
             return objectLog;
         }

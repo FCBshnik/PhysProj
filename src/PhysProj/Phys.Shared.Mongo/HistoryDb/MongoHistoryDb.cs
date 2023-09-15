@@ -1,23 +1,25 @@
 ﻿using MongoDB.Driver;
-using Phys.Shared.ItemsLog;
-using Phys.Shared.ObjectsLog;
+using Phys.Shared.HistoryDb;
 
-namespace Phys.Shared.Mongo.ObjectsLog
+namespace Phys.Shared.Mongo.HistoryDb
 {
-    internal class MongoObjectsLog<T> : IObjectsLog<T> where T : IObjectsLogId
+    internal class MongoHistoryDb<T> : IHistoryDb<T> where T : IHistoryDbo
     {
         private readonly IMongoCollection<T> collection;
 
-        public MongoObjectsLog(IMongoCollection<T> collection)
+        public MongoHistoryDb(IMongoCollection<T> collection)
         {
             this.collection = collection;
         }
 
-        public void Add(T obj)
+        public void Save(T obj)
         {
             ArgumentNullException.ThrowIfNull(obj);
 
-            collection.InsertOne(obj);
+            if (obj.Id == null)
+                collection.InsertOne(obj);
+            else
+                collection.ReplaceOne(Builders<T>.Filter.Eq(i => i.Id, obj.Id), obj);
         }
 
         public T Get(string id)
@@ -28,7 +30,7 @@ namespace Phys.Shared.Mongo.ObjectsLog
             return collection.Find(filter).FirstOrDefault();
         }
 
-        public List<T> List(ObjectsLogQuery query)
+        public List<T> List(HistoryDbQuery query)
         {
             ArgumentNullException.ThrowIfNull(query);
 

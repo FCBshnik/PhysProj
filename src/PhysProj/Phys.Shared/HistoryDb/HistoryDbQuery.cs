@@ -1,8 +1,8 @@
 ﻿using NodaTime;
 
-namespace Phys.Shared.ObjectsLog
+namespace Phys.Shared.HistoryDb
 {
-    public record ObjectsLogQuery
+    public record HistoryDbQuery
     {
         public Interval Interval { get; }
 
@@ -10,7 +10,7 @@ namespace Phys.Shared.ObjectsLog
 
         public int Limit { get; }
 
-        public ObjectsLogQuery(Interval interval, int skip, int limit)
+        public HistoryDbQuery(Interval interval, int skip, int limit)
         {
             if (skip < 0)
                 throw new ArgumentOutOfRangeException(nameof(skip));
