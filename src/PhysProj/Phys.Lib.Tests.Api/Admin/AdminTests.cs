@@ -66,8 +66,20 @@ namespace Phys.Lib.Tests.Api.Admin
             TestAuthors();
             TestWorks();
             TestFiles();
+            TestMigrations();
 
             Log("tested");
+        }
+
+        private void TestMigrations()
+        {
+            var tests = new MigrationTests(api);
+
+            tests.List(0);
+
+            var usersMigration = tests.Start(new MigrationTaskModel { Migrator = "users", Source = "mongo", Destination = "postgres" });
+            tests.List(1);
+            tests.WaitCompleted(usersMigration.Id, TimeSpan.FromSeconds(10), "success", 2);
         }
 
         private void TestUsers()

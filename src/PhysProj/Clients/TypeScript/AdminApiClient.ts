@@ -726,6 +726,152 @@ export class AdminApiClient {
     /**
      * @return OK
      */
+    startMigration(body: MigrationTaskModel): Promise<MigrationModel> {
+        let url_ = this.baseUrl + "/api/migrations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processStartMigration(_response));
+        });
+    }
+
+    protected processStartMigration(response: Response): Promise<MigrationModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MigrationModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<MigrationModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    listMigrations(): Promise<MigrationModel[]> {
+        let url_ = this.baseUrl + "/api/migrations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processListMigrations(_response));
+        });
+    }
+
+    protected processListMigrations(response: Response): Promise<MigrationModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(MigrationModel.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<MigrationModel[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getMigration(id: string): Promise<MigrationModel> {
+        let url_ = this.baseUrl + "/api/migrations/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetMigration(_response));
+        });
+    }
+
+    protected processGetMigration(response: Response): Promise<MigrationModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MigrationModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<MigrationModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     login(body: LoginModel): Promise<LoginSuccessModel> {
         let url_ = this.baseUrl + "/api/user/login";
         url_ = url_.replace(/[?&]$/, "");
@@ -1720,7 +1866,6 @@ export interface IAuthorLifetimeUpdateModel {
 }
 
 export class AuthorModel implements IAuthorModel {
-    id?: string | undefined;
     code?: string | undefined;
     born?: string | undefined;
     died?: string | undefined;
@@ -1737,7 +1882,6 @@ export class AuthorModel implements IAuthorModel {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.code = _data["code"];
             this.born = _data["born"];
             this.died = _data["died"];
@@ -1758,7 +1902,6 @@ export class AuthorModel implements IAuthorModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["code"] = this.code;
         data["born"] = this.born;
         data["died"] = this.died;
@@ -1772,7 +1915,6 @@ export class AuthorModel implements IAuthorModel {
 }
 
 export interface IAuthorModel {
-    id?: string | undefined;
     code?: string | undefined;
     born?: string | undefined;
     died?: string | undefined;
@@ -1826,7 +1968,6 @@ export interface IErrorModel {
 }
 
 export class FileModel implements IFileModel {
-    id?: string | undefined;
     code?: string | undefined;
     format?: string | undefined;
     size?: number | undefined;
@@ -1843,7 +1984,6 @@ export class FileModel implements IFileModel {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.code = _data["code"];
             this.format = _data["format"];
             this.size = _data["size"];
@@ -1864,7 +2004,6 @@ export class FileModel implements IFileModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["code"] = this.code;
         data["format"] = this.format;
         data["size"] = this.size;
@@ -1878,7 +2017,6 @@ export class FileModel implements IFileModel {
 }
 
 export interface IFileModel {
-    id?: string | undefined;
     code?: string | undefined;
     format?: string | undefined;
     size?: number | undefined;
@@ -2161,6 +2299,126 @@ export interface ILoginSuccessModel {
     token?: string | undefined;
 }
 
+export class MigrationModel implements IMigrationModel {
+    id?: string | undefined;
+    migrator?: string | undefined;
+    source?: string | undefined;
+    destination?: string | undefined;
+    status?: string | undefined;
+    createdAt?: Date;
+    startedAt?: Date | undefined;
+    completedAt?: Date | undefined;
+    result?: string | undefined;
+    error?: string | undefined;
+    migratedCount?: number;
+
+    constructor(data?: IMigrationModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.migrator = _data["migrator"];
+            this.source = _data["source"];
+            this.destination = _data["destination"];
+            this.status = _data["status"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.startedAt = _data["startedAt"] ? new Date(_data["startedAt"].toString()) : <any>undefined;
+            this.completedAt = _data["completedAt"] ? new Date(_data["completedAt"].toString()) : <any>undefined;
+            this.result = _data["result"];
+            this.error = _data["error"];
+            this.migratedCount = _data["migratedCount"];
+        }
+    }
+
+    static fromJS(data: any): MigrationModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new MigrationModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["migrator"] = this.migrator;
+        data["source"] = this.source;
+        data["destination"] = this.destination;
+        data["status"] = this.status;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["startedAt"] = this.startedAt ? this.startedAt.toISOString() : <any>undefined;
+        data["completedAt"] = this.completedAt ? this.completedAt.toISOString() : <any>undefined;
+        data["result"] = this.result;
+        data["error"] = this.error;
+        data["migratedCount"] = this.migratedCount;
+        return data;
+    }
+}
+
+export interface IMigrationModel {
+    id?: string | undefined;
+    migrator?: string | undefined;
+    source?: string | undefined;
+    destination?: string | undefined;
+    status?: string | undefined;
+    createdAt?: Date;
+    startedAt?: Date | undefined;
+    completedAt?: Date | undefined;
+    result?: string | undefined;
+    error?: string | undefined;
+    migratedCount?: number;
+}
+
+export class MigrationTaskModel implements IMigrationTaskModel {
+    migrator?: string | undefined;
+    source?: string | undefined;
+    destination?: string | undefined;
+
+    constructor(data?: IMigrationTaskModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.migrator = _data["migrator"];
+            this.source = _data["source"];
+            this.destination = _data["destination"];
+        }
+    }
+
+    static fromJS(data: any): MigrationTaskModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new MigrationTaskModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["migrator"] = this.migrator;
+        data["source"] = this.source;
+        data["destination"] = this.destination;
+        return data;
+    }
+}
+
+export interface IMigrationTaskModel {
+    migrator?: string | undefined;
+    source?: string | undefined;
+    destination?: string | undefined;
+}
+
 export class OkModel implements IOkModel {
     time?: Date;
     version?: string | undefined;
@@ -2370,7 +2628,6 @@ export interface IWorkInfoUpdateModel {
 }
 
 export class WorkModel implements IWorkModel {
-    id?: string | undefined;
     code?: string | undefined;
     publish?: string | undefined;
     language?: string | undefined;
@@ -2391,7 +2648,6 @@ export class WorkModel implements IWorkModel {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.code = _data["code"];
             this.publish = _data["publish"];
             this.language = _data["language"];
@@ -2428,7 +2684,6 @@ export class WorkModel implements IWorkModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["code"] = this.code;
         data["publish"] = this.publish;
         data["language"] = this.language;
@@ -2458,7 +2713,6 @@ export class WorkModel implements IWorkModel {
 }
 
 export interface IWorkModel {
-    id?: string | undefined;
     code?: string | undefined;
     publish?: string | undefined;
     language?: string | undefined;

@@ -10,7 +10,6 @@ using Phys.Lib.Mongo.Authors;
 using Phys.Lib.Mongo.Files;
 using Phys.Lib.Mongo.Users;
 using Phys.Lib.Mongo.Works;
-using Phys.Shared;
 using Phys.Shared.Mongo;
 
 namespace Phys.Lib.Mongo
@@ -61,10 +60,6 @@ namespace Phys.Lib.Mongo
             builder.RegisterType<ImplDb>()
                 .As<IDb>().Named<IDb>(dbTypeName).AsImplementedInterfaces()
                 .SingleInstance();
-
-            //builder.Register(c => new NamedValue<TDb>(dbTypeName, c.ResolveNamed<TDb>(dbTypeName)))
-            //    .As<INamedValue<TDb>>()
-            //    .SingleInstance();
         }
     }
 }

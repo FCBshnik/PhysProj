@@ -50,22 +50,24 @@ namespace Phys.Lib.Tests.Db
             }
         }
 
-        [Fact]
-        public void Tests()
+        [Theory]
+        [InlineData("mongo", "postgres")]
+        [InlineData("postgres", "mongo")]
+        public void Tests(string source, string destination)
         {
             using var container = BuildContainer();
             using var lifetimeScope = container.BeginLifetimeScope();
-            var srcUsers = lifetimeScope.ResolveNamed<IUsersDb>("mongo");
+            var srcUsers = lifetimeScope.ResolveNamed<IUsersDb>(source);
             var migrations = lifetimeScope.Resolve<IMigrationService>();
 
             srcUsers.Create(new UserDbo { Name = "user-1", NameLowerCase = "user-1", PasswordHash = "1" });
             srcUsers.Create(new UserDbo { Name = "user-2", NameLowerCase = "user-2", PasswordHash = "1" });
 
-            var migration = migrations.Create(new MigrationTask { Migrator = "users", Source = "mongo", Destination = "postgres" });
+            var migration = migrations.Create(new MigrationTask { Migrator = "users", Source = source, Destination = destination });
             migrations.Execute(migration);
             migration.Error.ShouldBeNull(migration.Error);
 
-            var destUsers = lifetimeScope.ResolveNamed<IUsersDb>("postgres");
+            var destUsers = lifetimeScope.ResolveNamed<IUsersDb>(destination);
             var migratedUsers = destUsers.Find(new UsersDbQuery());
             migratedUsers.Count.ShouldBe(2);
         }

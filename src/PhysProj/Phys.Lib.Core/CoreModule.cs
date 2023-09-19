@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Files.Storage;
@@ -10,9 +9,7 @@ using Phys.Lib.Core.Validation;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Db.Reader;
 using Phys.Lib.Db.Users;
-using Phys.Shared;
 using Phys.Shared.HistoryDb;
-using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Phys.Lib.Tests.Unit")]
@@ -42,7 +39,10 @@ namespace Phys.Lib.Core
                 .As<IMigrator>()
                 .SingleInstance();
             builder.Register(c => c.Resolve<IEnumerable<IUsersDb>>().Select(db => new UsersWriter(db)))
-                .As<IEnumerable<IDbWriter<UserDbo>>>();
+                .As<IEnumerable<IDbWriter<UserDbo>>>()
+                .SingleInstance();
+
+            builder.RegisterType<UsersDb>().As<IUsersDb>().SingleInstance();
 
             builder.RegisterModule(new ValidationModule(ThisAssembly));
         }

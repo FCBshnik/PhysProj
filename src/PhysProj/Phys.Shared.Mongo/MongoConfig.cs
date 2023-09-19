@@ -10,7 +10,8 @@ namespace Phys.Shared.Mongo
             {
                 new CamelCaseElementNameConvention(),
                 new IgnoreIfNullConvention(true),
-                new IgnoreExtraElementsConvention(true)
+                new IgnoreExtraElementsConvention(true),
+                new EnumRepresentationConvention(MongoDB.Bson.BsonType.String),
             };
 
             ConventionRegistry.Register("app", conventions, _ => true);

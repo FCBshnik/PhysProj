@@ -21,14 +21,11 @@ namespace Phys.Lib.Cli
 
         protected override void Load(ContainerBuilder builder)
         {
-            var mongoUrl = config.GetConnectionString("mongo");
-            if (mongoUrl != null)
-                builder.RegisterModule(new MongoModule(mongoUrl, loggerFactory));
-            var postgresUrl = config.GetConnectionString("postgres");
-            if (postgresUrl != null)
-                builder.RegisterModule(new PostgresModule(postgresUrl, loggerFactory));
-
             builder.RegisterModule(new LoggerModule(loggerFactory));
+
+            builder.RegisterModule(new MongoModule(config.GetConnectionString("mongo"), loggerFactory));
+            builder.RegisterModule(new PostgresModule(config.GetConnectionString("postgres"), loggerFactory));
+
             builder.RegisterModule(new CoreModule());
 
             builder.RegisterAssemblyTypes(ThisAssembly)

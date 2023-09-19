@@ -6,6 +6,8 @@ namespace Phys.Lib.Core.Migration
     {
         MigrationDto Create(MigrationTask task);
 
+        MigrationDto Get(string id);
+
         void Execute(MigrationDto migration);
 
         List<MigrationDto> List(HistoryDbQuery query);

@@ -1,7 +1,4 @@
 ﻿using Autofac;
-using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
-using Nest;
 using Phys.Lib.Admin.Api.Api.User;
 using Phys.Lib.Admin.Api.Filters;
 using Phys.Lib.Core;
@@ -9,6 +6,7 @@ using Phys.Lib.Core.Validation;
 using Phys.Lib.Files;
 using Phys.Lib.Files.Local;
 using Phys.Lib.Mongo;
+using Phys.Lib.Postgres;
 using Phys.Shared.Logging;
 using Phys.Shared.Mongo.HistoryDb;
 using System.Reflection;
@@ -28,10 +26,11 @@ namespace Phys.Lib.Admin.Api
 
         protected override void Load(ContainerBuilder builder)
         {
-            var mongoUrl = configuration.GetConnectionString("mongo") ?? throw new ApplicationException();
-
             builder.RegisterModule(new LoggerModule(loggerFactory));
-            builder.RegisterModule(new MongoModule(mongoUrl, loggerFactory));
+            
+            builder.RegisterModule(new MongoModule(configuration.GetConnectionString("mongo"), loggerFactory));
+            builder.RegisterModule(new PostgresModule(configuration.GetConnectionString("postgres"), loggerFactory));
+
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
 
@@ -39,7 +38,7 @@ namespace Phys.Lib.Admin.Api
                 .As<IFileStorage>()
             .SingleInstance();
 
-            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "physlib", "history-", loggerFactory))
+            builder.Register(c => new MongoHistoryDbFactory(configuration.GetConnectionString("mongo"), "phys-lib", "history-", loggerFactory))
                 .SingleInstance()
                 .AsImplementedInterfaces();
 

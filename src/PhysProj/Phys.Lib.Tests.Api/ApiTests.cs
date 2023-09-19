@@ -68,11 +68,9 @@ namespace Phys.Lib.Tests.Api
                 throw new InvalidOperationException($"Project file '{projectPath}' not found");
 
             // build
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var appTestDir = new DirectoryInfo(projectPath.Directory.Name);
+            var appTestDir = new DirectoryInfo(projectPath.Directory!.Name);
             if (appTestDir.Exists)
                 appTestDir.Delete(true);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
             appTestDir.Create();
             DotNetBuild(projectPath, appTestDir);
 
@@ -118,15 +116,13 @@ namespace Phys.Lib.Tests.Api
             if (!appFile.Exists)
                 throw new InvalidOperationException($"App file '{appFile.FullName}' not found");
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            _ = Cli.Wrap("dotnet")
-                .WithArguments(a =>
-                {
-                    a.Add(appFile.FullName);
-                })
-                .WithWorkingDirectory(appFile.Directory.FullName)
-                .ExecuteAsync(cts.Token);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        _ = Cli.Wrap("dotnet")
+            .WithArguments(a =>
+            {
+                a.Add(appFile.FullName);
+            })
+            .WithWorkingDirectory(appFile.Directory!.FullName)
+            .ExecuteAsync(cts.Token);
         }
 
         protected void Log(string message)

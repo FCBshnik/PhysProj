@@ -1,6 +1,6 @@
 ﻿using Phys.Lib.Core.Migration;
 
-namespace Phys.Lib.Admin.Api.Api.Migration
+namespace Phys.Lib.Admin.Api.Api.Migrations
 {
     public class MigrationModel
     {

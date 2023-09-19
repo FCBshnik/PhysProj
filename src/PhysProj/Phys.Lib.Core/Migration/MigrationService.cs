@@ -47,7 +47,7 @@ namespace Phys.Lib.Core.Migration
             try
             {
                 migration.StartedAt = DateTime.UtcNow;
-                migration.Status = "inprogress";
+                migration.Status = "migrating";
                 migrationsHistory.Save(migration);
                 log.LogInformation($"migration '{migration.Id}' started");
 
@@ -74,8 +74,17 @@ namespace Phys.Lib.Core.Migration
             }
         }
 
+        public MigrationDto Get(string id)
+        {
+            ArgumentNullException.ThrowIfNull(id);
+
+            return migrationsHistory.Get(id) ?? throw new PhysException($"migration '{id}' not found");
+        }
+
         public List<MigrationDto> List(HistoryDbQuery query)
         {
+            ArgumentNullException.ThrowIfNull(query);
+
             return migrationsHistory.List(query);
         }
     }
