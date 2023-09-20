@@ -6,6 +6,7 @@ using Phys.Lib.Files;
 using Phys.Lib.Mongo;
 using Microsoft.Extensions.Logging;
 using Phys.Shared.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -13,6 +14,9 @@ namespace Phys.Lib.Tests.Api.Admin
     {
         private const string nonExistentCode = "non-existent";
         private const string url = "https://localhost:17188/";
+
+        private readonly IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?> { {"ConnectionStrings:db", "mongo"} }).Build();
 
         private readonly AdminApiClient api;
 
@@ -50,6 +54,7 @@ namespace Phys.Lib.Tests.Api.Admin
         private IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
+            builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new LoggerModule(loggerFactory));
             builder.RegisterModule(new MongoModule(GetMongoUrl(), loggerFactory));
             builder.RegisterModule(new CoreModule());

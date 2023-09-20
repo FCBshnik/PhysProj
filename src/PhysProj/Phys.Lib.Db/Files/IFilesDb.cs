@@ -2,6 +2,8 @@
 {
     public interface IFilesDb
     {
+        string Name { get; }
+
         List<FileDbo> Find(FilesDbQuery query);
 
         void Create(FileDbo file);

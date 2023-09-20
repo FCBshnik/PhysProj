@@ -4,9 +4,9 @@ namespace Phys.Lib.Core.Works
 {
     public class WorksSearch : IWorksSearch
     {
-        private readonly IWorksDb db;
+        private readonly IWorksDbs db;
 
-        public WorksSearch(IWorksDb db)
+        public WorksSearch(IWorksDbs db)
         {
             this.db = db;
         }

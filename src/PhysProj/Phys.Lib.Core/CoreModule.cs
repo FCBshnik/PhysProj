@@ -22,8 +22,7 @@ namespace Phys.Lib.Core
         {
             builder.RegisterType<Validator>().AsImplementedInterfaces().SingleInstance();
 
-            builder
-                .RegisterService<UsersService, IUsersService>()
+            builder.RegisterService<UsersService, IUsersService>()
                 .RegisterService<AuthorsSearch, IAuthorsSearch>()
                 .RegisterService<AuthorsEditor, IAuthorsEditor>()
                 .RegisterService<WorksSearch, IWorksSearch>()
@@ -32,17 +31,21 @@ namespace Phys.Lib.Core
                 .RegisterService<FilesService, IFilesService>()
                 .RegisterService<MigrationService, IMigrationService>();
 
+            builder.RegisterType<UsersDb>().As<IUsersDb>().SingleInstance();
+            builder.RegisterType<AuthorsDbs>().As<IAuthorsDbs>().SingleInstance();
+            builder.RegisterType<WorksDbs>().As<IWorksDbs>().SingleInstance();
+            builder.RegisterType<FilesDbs>().As<IFilesDbs>().SingleInstance();
+
+            builder.Register(c => c.Resolve<IEnumerable<IUsersDb>>().Select(db => new UsersWriter(db)))
+                .As<IEnumerable<IDbWriter<UserDbo>>>()
+                .SingleInstance();
+
             builder.Register(c => c.Resolve<IHistoryDbFactory>().Create<MigrationDto>("migrations"))
                 .As<IHistoryDb<MigrationDto>>()
                 .SingleInstance();
             builder.RegisterType<Migrator<UserDbo>>().WithParameter(TypedParameter.From("users"))
                 .As<IMigrator>()
                 .SingleInstance();
-            builder.Register(c => c.Resolve<IEnumerable<IUsersDb>>().Select(db => new UsersWriter(db)))
-                .As<IEnumerable<IDbWriter<UserDbo>>>()
-                .SingleInstance();
-
-            builder.RegisterType<UsersDb>().As<IUsersDb>().SingleInstance();
 
             builder.RegisterModule(new ValidationModule(ThisAssembly));
         }

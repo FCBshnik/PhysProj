@@ -6,6 +6,7 @@ using Phys.Shared.Logging;
 using Phys.Shared.NLog;
 using Phys.Shared.Utils;
 using Testcontainers.MongoDb;
+using Testcontainers.PostgreSql;
 
 namespace Phys.Lib.Tests.Api
 {
@@ -13,7 +14,10 @@ namespace Phys.Lib.Tests.Api
     {
         protected readonly LoggerFactory loggerFactory = new LoggerFactory();
         private readonly CancellationTokenSource cts = new();
-        private readonly MongoDbContainer mongo = new MongoDbBuilder().WithImage("mongo:4.4.18").Build();
+        private readonly MongoDbContainer mongo = new MongoDbBuilder()
+            .WithImage("mongo:4.4.18").WithName("physlib-tests-api-mongo").Build();
+        private readonly PostgreSqlContainer postgres = new PostgreSqlBuilder()
+            .WithImage("postgres:15.3").WithName("physlib-tests-api-postgres").Build();
 
         protected readonly ITestOutputHelper output;
 
@@ -49,16 +53,19 @@ namespace Phys.Lib.Tests.Api
         public virtual async Task Init()
         {
             await mongo.StartAsync();
+            await postgres.StartAsync();
         }
 
         public virtual async Task Release()
         {
             await cts.CancelAsync();
             await mongo.DisposeAsync().AsTask();
+            await postgres.DisposeAsync().AsTask();
             http.Dispose();
         }
 
         protected string GetMongoUrl() => mongo.GetConnectionString();
+        protected string GetPostgresUrl() => postgres.GetConnectionString();
 
         protected DirectoryInfo StartApp(string url, FileInfo projectPath)
         {
@@ -80,6 +87,7 @@ namespace Phys.Lib.Tests.Api
                 throw new InvalidOperationException($"Project '{projectPath}' settings file '{appSettingsFile}' not found");
             var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appSettingsFile.FullName));
             appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl();
+            appSettings!["ConnectionStrings"]!["postgres"] = GetPostgresUrl();
             appSettings!["ConnectionStrings"]!["urls"] = url;
             File.WriteAllText(appSettingsFile.FullName, JsonConvert.SerializeObject(appSettings));
 

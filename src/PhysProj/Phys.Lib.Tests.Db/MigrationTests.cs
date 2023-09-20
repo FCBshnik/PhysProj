@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Core;
 using Phys.Lib.Core.Migration;
@@ -17,6 +18,9 @@ namespace Phys.Lib.Tests.Db
 {
     public class MigrationTests : IDisposable
     {
+        private readonly IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?> { { "ConnectionStrings:db", "mongo" } }).Build();
+
         private readonly PostgreSqlContainer postgres = new PostgreSqlBuilder()
             .WithImage("postgres:15.3")
             .WithName("physproj-tests-db-postgres")
@@ -75,6 +79,7 @@ namespace Phys.Lib.Tests.Db
         private IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
+            builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new LoggerModule(loggerFactory));
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new PostgresModule(postgres.GetConnectionString(), loggerFactory));

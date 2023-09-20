@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Authors;
+using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
@@ -10,12 +11,12 @@ namespace Phys.Lib.Core.Works
     public class WorksEditor : IWorksEditor
     {
         private readonly ILogger<WorksEditor> log;
-        private readonly IWorksDb db;
-        private readonly IFilesDb filesLinksDb;
+        private readonly IWorksDbs db;
+        private readonly IFilesDbs filesLinksDb;
         private readonly IWorksSearch worksSearch;
         private readonly IAuthorsSearch authorsSearch;
 
-        public WorksEditor(IWorksDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesDb filesLinksDb, ILogger<WorksEditor> log)
+        public WorksEditor(IWorksDbs db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesDbs filesLinksDb, ILogger<WorksEditor> log)
         {
             this.db = db;
             this.worksSearch = worksSearch;

@@ -4,9 +4,9 @@ namespace Phys.Lib.Core.Authors
 {
     internal class AuthorsSearch : IAuthorsSearch
     {
-        private readonly IAuthorsDb db;
+        private readonly IAuthorsDbs db;
 
-        public AuthorsSearch(IAuthorsDb db)
+        public AuthorsSearch(IAuthorsDbs db)
         {
             this.db = db ?? throw new ArgumentNullException(nameof(db));
         }

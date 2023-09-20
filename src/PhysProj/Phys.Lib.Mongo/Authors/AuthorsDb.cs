@@ -19,6 +19,8 @@ namespace Phys.Lib.Mongo.Authors
             collection.Indexes.CreateOne(new CreateIndexModel<AuthorModel>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
+        public string Name => "mongo";
+
         public void Create(string code)
         {
             ArgumentNullException.ThrowIfNull(code);

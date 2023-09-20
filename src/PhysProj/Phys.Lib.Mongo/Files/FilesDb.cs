@@ -9,6 +9,8 @@ namespace Phys.Lib.Mongo.Files
 {
     internal class FilesDb : Collection<FileModel>, IFilesDb
     {
+        public string Name => "mongo";
+
         public FilesDb(Lazy<IMongoCollection<FileModel>> collection, ILogger<FilesDb> logger) : base(collection, logger)
         {
         }

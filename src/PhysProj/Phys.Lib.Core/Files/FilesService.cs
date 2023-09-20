@@ -6,9 +6,9 @@ namespace Phys.Lib.Core.Files
     internal class FilesService : IFilesService
     {
         private readonly ILogger<FilesService> log;
-        private readonly IFilesDb db;
+        private readonly IFilesDbs db;
 
-        public FilesService(IFilesDb db, ILogger<FilesService> log)
+        public FilesService(IFilesDbs db, ILogger<FilesService> log)
         {
             ArgumentNullException.ThrowIfNull(db);
 

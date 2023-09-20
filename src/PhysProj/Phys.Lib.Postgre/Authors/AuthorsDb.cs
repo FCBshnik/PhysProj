@@ -19,6 +19,8 @@ namespace Phys.Lib.Postgres.Authors
             this.authorsInfos = authorsInfos;
         }
 
+        public string Name => "postgres";
+
         public void Create(string code)
         {
             ArgumentNullException.ThrowIfNull(code);

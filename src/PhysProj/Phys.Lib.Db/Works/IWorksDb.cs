@@ -2,6 +2,8 @@
 {
     public interface IWorksDb
     {
+        string Name { get; }
+
         List<WorkDbo> Find(WorksDbQuery query);
 
         void Create(string code);

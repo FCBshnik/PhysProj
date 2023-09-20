@@ -10,6 +10,8 @@ namespace Phys.Lib.Mongo.Works
 {
     internal class WorksDb : Collection<WorkModel>, IWorksDb
     {
+        public string Name => "mongo";
+
         public WorksDb(Lazy<IMongoCollection<WorkModel>> collection, ILogger<WorksDb> logger) : base(collection, logger)
         {
         }

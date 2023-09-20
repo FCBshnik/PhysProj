@@ -17,6 +17,8 @@ namespace Phys.Lib.Postgres.Works
         private readonly WorksSubWorksTable worksSubWorks;
         private readonly WorksFilesTable worksFiles;
 
+        public string Name => "postgres";
+
         public WorksDb(string tableName, NpgsqlDataSource dataSource,
             WorksAuthorsTable worksAuthors, WorksSubWorksTable worksSubWorks, WorksFilesTable worksFiles, WorksInfosTable worksInfos, ILogger<WorksDb> logger)
             : base(tableName, logger)

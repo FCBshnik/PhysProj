@@ -2,6 +2,8 @@
 {
     public interface IAuthorsDb
     {
+        string Name { get; }
+
         List<AuthorDbo> Find(AuthorsDbQuery query);
 
         void Create(string code);
