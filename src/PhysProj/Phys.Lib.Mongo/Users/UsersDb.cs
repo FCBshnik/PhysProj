@@ -4,7 +4,7 @@ using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Users;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Reader;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Users
 {
@@ -68,15 +68,7 @@ namespace Phys.Lib.Mongo.Users
 
         IDbReaderResult<UserDbo> IDbReader<UserDbo>.Read(DbReaderQuery query)
         {
-            ArgumentNullException.ThrowIfNull(query);
-
-            var filter = FilterBuilder.Empty;
-            if (query.Cursor != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Gt(u => u.Id, query.Cursor));
-            var sort = SortBuilder.Ascending(i => i.Id);
-
-            var users = collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
-            return new DbReaderResult<UserDbo>(users.Select(UserMapper.Map).ToList(), users.LastOrDefault()?.Id);
+            return Read(query, UserMapper.Map);
         }
     }
 }

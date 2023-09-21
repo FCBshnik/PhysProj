@@ -1,5 +1,5 @@
-﻿using Phys.Lib.Db.Reader;
-using Phys.Lib.Db.Users;
+﻿using Phys.Lib.Db.Users;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Core.Users
 {

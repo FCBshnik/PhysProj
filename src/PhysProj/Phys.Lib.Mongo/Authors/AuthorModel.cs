@@ -3,12 +3,8 @@ using MongoDB.Bson;
 
 namespace Phys.Lib.Mongo.Authors
 {
-    internal class AuthorModel
+    internal class AuthorModel : MongoModel
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         [BsonElement("code")]
         public string Code { get; set; }
 

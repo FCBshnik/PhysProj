@@ -3,12 +3,8 @@ using MongoDB.Bson;
 
 namespace Phys.Lib.Mongo.Files
 {
-    internal class FileModel
+    internal class FileModel : MongoModel
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         [BsonElement("code")]
         public string Code { get; set; }
 

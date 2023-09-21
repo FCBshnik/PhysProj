@@ -1,5 +1,5 @@
-﻿using Phys.Lib.Db.Reader;
-using Phys.Shared;
+﻿using Phys.Shared;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Core.Migration
 {

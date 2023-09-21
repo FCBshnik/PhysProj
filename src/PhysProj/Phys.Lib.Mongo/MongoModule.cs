@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
-using Phys.Lib.Db.Reader;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Mongo.Authors;
@@ -11,6 +10,7 @@ using Phys.Lib.Mongo.Files;
 using Phys.Lib.Mongo.Users;
 using Phys.Lib.Mongo.Works;
 using Phys.Shared.Mongo;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo
 {
@@ -52,6 +52,7 @@ namespace Phys.Lib.Mongo
 
         private void RegisterCollection<TModel, ImplDb, IDb>(ContainerBuilder builder, string collectionName) where ImplDb: Collection<TModel>, IDb
             where IDb : class
+            where TModel: MongoModel
         {
             builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<TModel>(collectionName))
                 .AsImplementedInterfaces()

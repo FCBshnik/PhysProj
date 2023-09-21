@@ -11,7 +11,7 @@ namespace Phys.Lib.Postgres.Files
         private readonly NpgsqlDataSource dataSource;
         private readonly FilesLinksTable filesLinks;
 
-        public string Name => "postres";
+        public string Name => "postgres";
 
         public FilesDb(string tableName, NpgsqlDataSource dataSource, FilesLinksTable filesLinks, ILogger<FilesDb> logger) : base(tableName, logger)
         {

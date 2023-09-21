@@ -4,10 +4,11 @@ using System.Text.RegularExpressions;
 using Phys.Lib.Db.Files;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Files
 {
-    internal class FilesDb : Collection<FileModel>, IFilesDb
+    internal class FilesDb : Collection<FileModel>, IFilesDb, IDbReader<FileDbo>
     {
         public string Name => "mongo";
 
@@ -78,6 +79,11 @@ namespace Phys.Lib.Mongo.Files
 
             if (collection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"file '{code}' update failed");
+        }
+
+        IDbReaderResult<FileDbo> IDbReader<FileDbo>.Read(DbReaderQuery query)
+        {
+            return Read(query, FileMapper.Map);
         }
     }
 }

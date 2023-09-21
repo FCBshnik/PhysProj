@@ -4,12 +4,12 @@ using Phys.Lib.Core;
 using Phys.Lib.Core.Utils;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
-using Phys.Lib.Db.Reader;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.Shared.Logging;
 using Phys.Shared.NLog;
 using Phys.Shared.Utils;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Tests.Db
 {

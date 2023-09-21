@@ -3,12 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Phys.Lib.Mongo.Users
 {
-    internal class UserModel
+    internal class UserModel : MongoModel
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         [BsonElement("name")]
         public string Name { get; set; }
 

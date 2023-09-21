@@ -5,10 +5,11 @@ using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Authors;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Authors
 {
-    internal class AuthorsDb : Collection<AuthorModel>, IAuthorsDb
+    internal class AuthorsDb : Collection<AuthorModel>, IAuthorsDb, IDbReader<AuthorDbo>
     {
         public AuthorsDb(Lazy<IMongoCollection<AuthorModel>> collection, ILogger<AuthorsDb> logger) : base(collection, logger)
         {
@@ -90,6 +91,11 @@ namespace Phys.Lib.Mongo.Authors
             ArgumentNullException.ThrowIfNull(code);
 
             collection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
+        }
+
+        IDbReaderResult<AuthorDbo> IDbReader<AuthorDbo>.Read(DbReaderQuery query)
+        {
+            return Read(query, AuthorMapper.Map);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Phys.Lib.Db.Reader
+﻿namespace Phys.Lib.Db.Migrations
 {
     public class DbReaderResult<T> : IDbReaderResult<T>
     {

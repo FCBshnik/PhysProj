@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Npgsql;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Reader;
 using Phys.Lib.Db.Users;
 using SqlKata;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Postgres.Users
 {
