@@ -5,10 +5,11 @@ using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Works;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Works
 {
-    internal class WorksDb : Collection<WorkModel>, IWorksDb
+    internal class WorksDb : Collection<WorkModel>, IWorksDb, IDbReader<WorkDbo>
     {
         public string Name => "mongo";
 
@@ -75,7 +76,7 @@ namespace Phys.Lib.Mongo.Works
             ArgumentNullException.ThrowIfNull(work);
 
             var filter = FilterBuilder.Eq(i => i.Code, code);
-            var update = UpdateBuilder.Combine();
+            var update = UpdateBuilder.Set(i => i.UpdatedAt, DateTime.UtcNow);
 
             if (work.Publish.IsEmpty())
                 update = update.Unset(i => i.Publish);
@@ -114,6 +115,11 @@ namespace Phys.Lib.Mongo.Works
 
             if (collection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"work '{code}' update failed");
+        }
+
+        IDbReaderResult<WorkDbo> IDbReader<WorkDbo>.Read(DbReaderQuery query)
+        {
+            return Read(query, WorkMapper.Map);
         }
     }
 }

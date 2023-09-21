@@ -35,22 +35,22 @@ namespace Phys.Lib.Mongo.Users
             Insert(userModel);
         }
 
-        public void Update(string name, UserDbUpdate update)
+        public void Update(string name, UserDbUpdate user)
         {
             ArgumentNullException.ThrowIfNull(name);
-            ArgumentNullException.ThrowIfNull(update);
+            ArgumentNullException.ThrowIfNull(user);
 
             var filter = FilterBuilder.Eq(i => i.NameLowerCase, name.ToLowerInvariant());
-            var upd = UpdateBuilder.Combine();
+            var update = UpdateBuilder.Set(i => i.UpdatedAt, DateTime.UtcNow);
 
-            if (update.AddRole.HasValue())
-                upd = upd.Push(i => i.Roles, update.AddRole);
-            if (update.DeleteRole.HasValue())
-                upd = upd.Pull(i => i.Roles, update.DeleteRole);
-            if (update.PasswordHash.HasValue())
-                upd = upd.Set(i => i.PasswordHash, update.PasswordHash);
+            if (user.AddRole.HasValue())
+                update = update.Push(i => i.Roles, user.AddRole);
+            if (user.DeleteRole.HasValue())
+                update = update.Pull(i => i.Roles, user.DeleteRole);
+            if (user.PasswordHash.HasValue())
+                update = update.Set(i => i.PasswordHash, user.PasswordHash);
 
-            if (collection.UpdateOne(filter, upd).MatchedCount == 0)
+            if (collection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"user '{name}' update failed");
         }
 

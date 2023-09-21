@@ -65,7 +65,7 @@ namespace Phys.Lib.Mongo.Authors
             ArgumentNullException.ThrowIfNull(author);
 
             var filter = FilterBuilder.Eq(i => i.Code, code);
-            var update = UpdateBuilder.Combine();
+            var update = UpdateBuilder.Set(i => i.UpdatedAt, DateTime.UtcNow);
 
             if (author.Born.IsEmpty())
                 update = update.Unset(i => i.Born);
@@ -82,7 +82,7 @@ namespace Phys.Lib.Mongo.Authors
             if (author.DeleteInfo != null)
                 update = update.PullFilter(i => i.Infos, i => i.Language == author.DeleteInfo);
 
-            if (collection.FindOneAndUpdate(filter, update, findOneAndUpdateReturnAfter) == null)
+            if (collection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"author '{code}' update failed");
         }
 

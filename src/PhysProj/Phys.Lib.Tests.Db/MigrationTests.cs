@@ -6,6 +6,7 @@ using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
+using Phys.Lib.Db.Works;
 using Phys.Lib.Mongo;
 using Phys.Lib.Postgres;
 using Phys.Shared.Logging;
@@ -67,6 +68,41 @@ namespace Phys.Lib.Tests.Db
             UsersTests(source, destination, lifetimeScope);
             AuthorsTests(source, destination, lifetimeScope);
             FilesTests(source, destination, lifetimeScope);
+            WorksTests(source, destination, lifetimeScope);
+        }
+
+        private static void WorksTests(string source, string destination, ILifetimeScope lifetimeScope)
+        {
+            var srcDb = lifetimeScope.ResolveNamed<IWorksDb>(source);
+            var migrations = lifetimeScope.Resolve<IMigrationService>();
+
+            var works = new[]
+            {
+                new WorkDbo { Code = "work-1", Language = "ru", Publish = "1234" },
+                new WorkDbo { Code = "work-2", Infos = new List<WorkDbo.InfoDbo> { new WorkDbo.InfoDbo { Language = "en", Description = "desc" } } },
+                new WorkDbo { Code = "work-3", AuthorsCodes = new List<string> { "author-1" } },
+                new WorkDbo { Code = "work-4", FilesCodes = new List<string> { "file-1" } },
+                new WorkDbo { Code = "work-5", SubWorksCodes = new List<string> { "work-6" } },
+                new WorkDbo { Code = "work-6", OriginalCode = "work-7" },
+                new WorkDbo { Code = "work-7" },
+            }.OrderBy(u => u.Code).ToList();
+            works.ForEach(w =>
+            {
+                srcDb.Create(w.Code);
+                srcDb.Update(w.Code, new WorkDbUpdate { Language = w.Language, Original = w.OriginalCode, Publish = w.Publish });
+                w.Infos.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddInfo = i }));
+                w.SubWorksCodes.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddSubWork = i }));
+                w.AuthorsCodes.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddAuthor = i }));
+                w.FilesCodes.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddFile = i }));
+            });
+
+            var migration = migrations.Create(new MigrationTask { Migrator = "works", Source = source, Destination = destination });
+            migrations.Execute(migration);
+            migration.Error.ShouldBeNull(migration.Error);
+
+            var dstUsers = lifetimeScope.ResolveNamed<IWorksDb>(destination);
+            var migrated = dstUsers.Find(new WorksDbQuery()).OrderBy(u => u.Code).ToList();
+            migrated.ShouldBeEquivalentTo(works);
         }
 
         private static void FilesTests(string source, string destination, ILifetimeScope lifetimeScope)

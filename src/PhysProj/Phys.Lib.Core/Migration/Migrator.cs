@@ -5,8 +5,8 @@ namespace Phys.Lib.Core.Migration
 {
     internal class Migrator<T> : IMigrator
     {
-        private readonly List<IDbReader<T>> readers;
-        private readonly List<IDbWriter<T>> writers;
+        protected readonly List<IDbReader<T>> readers;
+        protected readonly List<IDbWriter<T>> writers;
 
         public Migrator(string name, IEnumerable<IDbReader<T>> readers, IEnumerable<IDbWriter<T>> writers)
         {
@@ -17,7 +17,7 @@ namespace Phys.Lib.Core.Migration
 
         public string Name { get; }
 
-        public void Migrate(IDbReader<T> source, IDbWriter<T> destination, MigrationDto migration)
+        public static void Migrate(IDbReader<T> source, IDbWriter<T> destination, MigrationDto migration)
         {
             IDbReaderResult<T> result = null!;
 
@@ -29,7 +29,7 @@ namespace Phys.Lib.Core.Migration
             } while (!result.IsCompleted);
         }
 
-        public void Migrate(MigrationDto migration)
+        public virtual void Migrate(MigrationDto migration)
         {
             var reader = readers.Find(r => string.Equals(r.Name, migration.Source, StringComparison.OrdinalIgnoreCase));
             if (reader == null)
@@ -39,7 +39,7 @@ namespace Phys.Lib.Core.Migration
             if (writer == null)
                 throw new PhysException($"writer '{migration.Destination}' not found for '{typeof(T)}' values");
 
-            Migrate(reader, writer, migration);
+            Migrator<T>.Migrate(reader, writer, migration);
         }
     }
 }

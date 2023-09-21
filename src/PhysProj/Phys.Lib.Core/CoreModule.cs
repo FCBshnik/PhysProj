@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
+using Phys.Lib.Db.Works;
 
 [assembly: InternalsVisibleTo("Phys.Lib.Tests.Unit")]
 
@@ -57,6 +58,9 @@ namespace Phys.Lib.Core
                 .As<IMigrator>()
                 .SingleInstance();
             builder.RegisterType<Migrator<FileDbo>>().WithParameter(TypedParameter.From("files"))
+                .As<IMigrator>()
+                .SingleInstance();
+            builder.RegisterType<WorksMigrator>()
                 .As<IMigrator>()
                 .SingleInstance();
 

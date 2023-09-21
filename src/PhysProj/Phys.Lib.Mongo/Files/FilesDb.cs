@@ -70,7 +70,7 @@ namespace Phys.Lib.Mongo.Files
             ArgumentNullException.ThrowIfNull(file);
 
             var filter = FilterBuilder.Eq(i => i.Code, code);
-            var update = UpdateBuilder.Combine();
+            var update = UpdateBuilder.Set(i => i.UpdatedAt, DateTime.UtcNow);
 
             if (file.AddLink != null)
                 update = update.Push(i => i.Links, FileMapper.Map(file.AddLink));
