@@ -4,20 +4,15 @@ using System.Linq.Expressions;
 
 namespace Phys.Lib.Postgres.Files
 {
-    internal class FileModel
+    internal class FileModel : FileInsertModel, IPostgresModel
     {
+        public static readonly string IdColumn = GetColumn(i => i.Id);
         public static readonly string CodeColumn = GetColumn(i => i.Code);
 
         public static string GetColumn<T>(Expression<Func<FileModel, T>> property) => SchemaUtils.GetColumn(property);
 
-        [Column("code")]
-        public string Code { get; set; }
-
-        [Column("format")]
-        public string? Format { get; set; }
-
-        [Column("size")]
-        public long? Size { get; set; }
+        [Column("id")]
+        public long Id { get; set; }
 
         [Ignore]
         public List<LinkModel> Links { get; set; } = new List<LinkModel>();

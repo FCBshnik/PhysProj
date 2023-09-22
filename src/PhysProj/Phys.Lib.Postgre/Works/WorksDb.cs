@@ -2,14 +2,17 @@
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Phys.Lib.Db;
+using Phys.Lib.Db.Authors;
+using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
+using Phys.Lib.Postgres.Authors;
 using Phys.Lib.Postgres.Utils;
 using SqlKata;
 using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Postgres.Works
 {
-    internal class WorksDb : PostgresTable, IWorksDb
+    internal class WorksDb : PostgresTable, IWorksDb, IDbReader<WorkDbo>
     {
         private readonly NpgsqlDataSource dataSource;
         private readonly WorksInfosTable worksInfos;
@@ -56,40 +59,21 @@ namespace Phys.Lib.Postgres.Works
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            var cmd = new Query(tableName)
+            var q = new Query(tableName)
                 .LeftJoin(worksInfos.TableName, TableName + "." + WorkModel.CodeColumn, worksInfos.TableName + "." + WorkModel.InfoModel.WorkCodeColumn)
                 .LeftJoin(worksAuthors.TableName, TableName + "." + WorkModel.CodeColumn, worksAuthors.TableName + "." + WorkModel.AuthorModel.WorkCodeColumn)
                 .LeftJoin(worksSubWorks.TableName, TableName + "." + WorkModel.CodeColumn, worksSubWorks.TableName + "." + WorkModel.SubWorkModel.WorkCodeColumn)
                 .LeftJoin(worksFiles.TableName, TableName + "." + WorkModel.CodeColumn, worksFiles.TableName + "." + WorkModel.FileModel.WorkCodeColumn)
                 .Limit(query.Limit);
 
-            if (query.Code != null)
-                cmd = cmd.Where(WorkModel.CodeColumn, query.Code);
-            if (query.Search != null)
-                cmd = cmd.WhereRaw($"{WorkModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
-
-            using var cnx = dataSource.OpenConnection();
-            var sql = compiler.Compile(cmd);
-            var works = new Dictionary<string, WorkModel>();
-
-            cnx.Query<WorkModel, WorkModel.InfoModel, WorkModel.AuthorModel, WorkModel.SubWorkModel, WorkModel.FileModel, WorkModel>(sql.Sql, (w, i, a, s, f) =>
+            return Find(q =>
             {
-                works.TryAdd(w.Code, w);
-                var work = works[w.Code];
-
-                if (i != null)
-                    work.Infos.Add(i);
-                if (a != null)
-                    work.Authors.Add(a);
-                if (s != null)
-                    work.SubWorks.Add(s);
-                if (f != null)
-                    work.Files.Add(f);
-
-                return work;
-            }, sql.NamedBindings, splitOn: WorkModel.InfoModel.WorkCodeColumn).ToList();
-
-            return works.Values.Select(WorksMapper.Map).ToList();
+                if (query.Code != null)
+                    q = q.Where(WorkModel.CodeColumn, query.Code);
+                if (query.Search != null)
+                    q = q.WhereRaw($"{WorkModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
+                return q;
+            }, query.Limit).Select(WorksMapper.Map).ToList();
         }
 
         public void Update(string code, WorkDbUpdate update)
@@ -172,6 +156,55 @@ namespace Phys.Lib.Postgres.Works
 
                 trx.Commit();
             }
+        }
+
+        private List<WorkModel> Find(Func<Query, Query> enrichQuery, int limit)
+        {
+            var cmd = new Query(tableName)
+                .LeftJoin(worksInfos.TableName, TableName + "." + WorkModel.CodeColumn, worksInfos.TableName + "." + WorkModel.InfoModel.WorkCodeColumn)
+                .LeftJoin(worksAuthors.TableName, TableName + "." + WorkModel.CodeColumn, worksAuthors.TableName + "." + WorkModel.AuthorModel.WorkCodeColumn)
+                .LeftJoin(worksSubWorks.TableName, TableName + "." + WorkModel.CodeColumn, worksSubWorks.TableName + "." + WorkModel.SubWorkModel.WorkCodeColumn)
+                .LeftJoin(worksFiles.TableName, TableName + "." + WorkModel.CodeColumn, worksFiles.TableName + "." + WorkModel.FileModel.WorkCodeColumn)
+                .Limit(limit);
+
+            enrichQuery(cmd);
+
+            using var cnx = dataSource.OpenConnection();
+            var sql = compiler.Compile(cmd);
+            var works = new Dictionary<string, WorkModel>();
+
+            cnx.Query<WorkModel, WorkModel.InfoModel, WorkModel.AuthorModel, WorkModel.SubWorkModel, WorkModel.FileModel, WorkModel>(sql.Sql, (w, i, a, s, f) =>
+            {
+                works.TryAdd(w.Code, w);
+                var work = works[w.Code];
+
+                if (i != null)
+                    work.Infos.Add(i);
+                if (a != null)
+                    work.Authors.Add(a);
+                if (s != null)
+                    work.SubWorks.Add(s);
+                if (f != null)
+                    work.Files.Add(f);
+
+                return work;
+            }, sql.NamedBindings, splitOn: WorkModel.InfoModel.WorkCodeColumn).ToList();
+
+            return works.Values.ToList();
+        }
+
+        IDbReaderResult<WorkDbo> IDbReader<WorkDbo>.Read(DbReaderQuery query)
+        {
+            ArgumentNullException.ThrowIfNull(query);
+
+            var works = Find(q =>
+            {
+                q = q.OrderBy(WorkModel.IdColumn);
+                if (query.Cursor != null)
+                    q = q.Where(WorkModel.IdColumn, ">", int.Parse(query.Cursor));
+                return q;
+            }, query.Limit);
+            return new DbReaderResult<WorkDbo>(works.Select(WorksMapper.Map).ToList(), works.LastOrDefault()?.Id.ToString());
         }
     }
 }

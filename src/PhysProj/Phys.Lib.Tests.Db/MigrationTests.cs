@@ -89,11 +89,16 @@ namespace Phys.Lib.Tests.Db
             works.ForEach(w =>
             {
                 srcDb.Create(w.Code);
-                srcDb.Update(w.Code, new WorkDbUpdate { Language = w.Language, Original = w.OriginalCode, Publish = w.Publish });
+                srcDb.Update(w.Code, new WorkDbUpdate { Language = w.Language, Publish = w.Publish });
                 w.Infos.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddInfo = i }));
-                w.SubWorksCodes.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddSubWork = i }));
                 w.AuthorsCodes.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddAuthor = i }));
                 w.FilesCodes.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddFile = i }));
+            });
+            works.ForEach(w =>
+            {
+                if (w.OriginalCode != null)
+                    srcDb.Update(w.Code, new WorkDbUpdate { Original = w.OriginalCode });
+                w.SubWorksCodes.ForEach(i => srcDb.Update(w.Code, new WorkDbUpdate { AddSubWork = i }));
             });
 
             var migration = migrations.Create(new MigrationTask { Migrator = "works", Source = source, Destination = destination });
@@ -146,13 +151,14 @@ namespace Phys.Lib.Tests.Db
                 srcDb.Update(a.Code, new AuthorDbUpdate { Born = a.Born, Died = a.Died });
                 a.Infos.ForEach(i => srcDb.Update(a.Code, new AuthorDbUpdate { AddInfo = i }));
             });
+            authors = srcDb.Find(new AuthorsDbQuery()).OrderBy(u => u.Code).ToList();
 
             var migration = migrations.Create(new MigrationTask { Migrator = "authors", Source = source, Destination = destination });
             migrations.Execute(migration);
             migration.Error.ShouldBeNull(migration.Error);
 
-            var dstUsers = lifetimeScope.ResolveNamed<IAuthorsDb>(destination);
-            var migrated = dstUsers.Find(new AuthorsDbQuery()).OrderBy(u => u.Code).ToList();
+            var dstAuthors = lifetimeScope.ResolveNamed<IAuthorsDb>(destination);
+            var migrated = dstAuthors.Find(new AuthorsDbQuery()).OrderBy(u => u.Code).ToList();
             migrated.ShouldBeEquivalentTo(authors);
         }
 

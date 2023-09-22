@@ -2,13 +2,14 @@
 using Npgsql;
 using Phys.Lib.Db;
 using Phys.Lib.Db.Authors;
+using Phys.Lib.Db.Migrations;
 using Phys.Lib.Postgres.Utils;
 using SqlKata;
 using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Postgres.Authors
 {
-    internal class AuthorsDb : PostgresTable, IAuthorsDb
+    internal class AuthorsDb : PostgresTable, IAuthorsDb, IDbReader<AuthorDbo>
     {
         private readonly NpgsqlDataSource dataSource;
         private readonly AuthorsInfosTable authorsInfos;
@@ -44,30 +45,16 @@ namespace Phys.Lib.Postgres.Authors
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            var cmd = new Query(tableName)
-                .LeftJoin(authorsInfos.TableName, AuthorModel.CodeColumn, AuthorModel.InfoModel.AuthorCodeColumn)
-                .Limit(query.Limit);
-
-            if (query.Code != null)
-                cmd = cmd.Where(AuthorModel.CodeColumn, query.Code);
-            if (query.Codes != null)
-                cmd = cmd.WhereIn(AuthorModel.CodeColumn, query.Codes);
-            if (query.Search != null)
-                cmd = cmd.WhereRaw($"{AuthorModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
-
-            var authors = new Dictionary<string, AuthorModel>();
-            using var cnx = dataSource.OpenConnection();
-            FindJoin<AuthorModel, AuthorModel.InfoModel>(cnx, cmd, AuthorModel.InfoModel.AuthorCodeColumn, (a, i) =>
+            return Find(q =>
             {
-                authors.TryAdd(a.Code, a);
-                var author = authors[a.Code];
-
-                if (i != null)
-                    author.Infos.Add(i);
-                return author;
-            }).ToList();
-
-            return authors.Values.Select(AuthorMapper.Map).ToList();
+                if (query.Code != null)
+                    q = q.Where(AuthorModel.CodeColumn, query.Code);
+                if (query.Codes != null)
+                    q = q.WhereIn(AuthorModel.CodeColumn, query.Codes);
+                if (query.Search != null)
+                    q = q.WhereRaw($"{AuthorModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
+                return q;
+            }, query.Limit).Select(AuthorMapper.Map).ToList();
         }
 
         public void Update(string code, AuthorDbUpdate update)
@@ -114,6 +101,43 @@ namespace Phys.Lib.Postgres.Authors
 
                 trx.Commit();
             }
+        }
+
+        private List<AuthorModel> Find(Func<Query, Query> enrichQuery, int limit)
+        {
+            var cmd = new Query(tableName)
+                .LeftJoin(authorsInfos.TableName, AuthorModel.CodeColumn, AuthorModel.InfoModel.AuthorCodeColumn)
+                .Limit(limit);
+
+            enrichQuery(cmd);
+
+            var authors = new Dictionary<string, AuthorModel>();
+            using var cnx = dataSource.OpenConnection();
+            FindJoin<AuthorModel, AuthorModel.InfoModel>(cnx, cmd, AuthorModel.InfoModel.AuthorCodeColumn, (a, i) =>
+            {
+                authors.TryAdd(a.Code, a);
+                var author = authors[a.Code];
+
+                if (i != null)
+                    author.Infos.Add(i);
+                return author;
+            }).ToList();
+
+            return authors.Values.ToList();
+        }
+
+        IDbReaderResult<AuthorDbo> IDbReader<AuthorDbo>.Read(DbReaderQuery query)
+        {
+            ArgumentNullException.ThrowIfNull(query);
+
+            var authors = Find(q =>
+            {
+                q = q.OrderBy(AuthorModel.IdColumn);
+                if (query.Cursor != null)
+                    q = q.Where(AuthorModel.IdColumn, ">", int.Parse(query.Cursor));
+                return q;
+            }, query.Limit);
+            return new DbReaderResult<AuthorDbo>(authors.Select(AuthorMapper.Map).ToList(), authors.LastOrDefault()?.Id.ToString());
         }
     }
 }

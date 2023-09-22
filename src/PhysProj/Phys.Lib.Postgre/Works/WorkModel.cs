@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Phys.Lib.Postgres.Works
 {
-    internal class WorkModel : WorkInsertModel
+    internal class WorkModel : WorkInsertModel, IPostgresModel
     {
         public static readonly string IdColumn = GetColumn(i => i.Id);
         public static readonly string CodeColumn = GetColumn(i => i.Code);

@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Phys.Lib.Postgres.Users
 {
-    internal class UserModel : UserInsertModel
+    internal class UserModel : UserInsertModel, IPostgresModel
     {
         public static readonly string IdColumn = GetColumn(i => i.Id);
         public static readonly string NameLowerCaseColumn = GetColumn(i => i.NameLowerCase);

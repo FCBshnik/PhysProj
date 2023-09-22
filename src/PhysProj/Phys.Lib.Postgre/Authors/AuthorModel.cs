@@ -4,13 +4,17 @@ using System.Linq.Expressions;
 
 namespace Phys.Lib.Postgres.Authors
 {
-    internal class AuthorModel : AuthorInsertModel
+    internal class AuthorModel : AuthorInsertModel, IPostgresModel
     {
+        public static readonly string IdColumn = GetColumn(i => i.Id);
         public static readonly string CodeColumn = GetColumn(i => i.Code);
         public static readonly string BornColumn = GetColumn(i => i.Born);
         public static readonly string DiedColumn = GetColumn(i => i.Died);
 
         public static string GetColumn<T>(Expression<Func<AuthorModel, T>> property) => SchemaUtils.GetColumn(property);
+
+        [Column("id")]
+        public long Id { get; set; }
 
         [Column("born")]
         public string Born { get; set; }

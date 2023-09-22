@@ -90,15 +90,8 @@ namespace Phys.Lib.Postgres.Users
 
         IDbReaderResult<UserDbo> IDbReader<UserDbo>.Read(DbReaderQuery query)
         {
-            ArgumentNullException.ThrowIfNull(query);
-
-            var cmd = new Query(tableName).Limit(query.Limit).OrderBy(UserModel.IdColumn);
-            if (query.Cursor != null)
-                cmd = cmd.Where(UserModel.IdColumn, ">", int.Parse(query.Cursor));
-
             using var cnx = dataSource.OpenConnection();
-            var users = Find<UserModel>(cnx, cmd);
-            return new DbReaderResult<UserDbo>(users.Select(UserMapper.Map).ToList(), users.LastOrDefault()?.Id.ToString());
+            return Read<UserDbo, UserModel>(cnx, query, UserModel.IdColumn, UserMapper.Map);
         }
     }
 }
