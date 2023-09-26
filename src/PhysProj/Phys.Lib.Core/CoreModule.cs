@@ -34,7 +34,7 @@ namespace Phys.Lib.Core
                 .RegisterService<FilesService, IFilesService>()
                 .RegisterService<MigrationService, IMigrationService>();
 
-            builder.RegisterType<UsersDb>().As<IUsersDb>().SingleInstance();
+            builder.RegisterType<UsersDbs>().As<IUsersDbs>().SingleInstance();
             builder.RegisterType<AuthorsDbs>().As<IAuthorsDbs>().SingleInstance();
             builder.RegisterType<WorksDbs>().As<IWorksDbs>().SingleInstance();
             builder.RegisterType<FilesDbs>().As<IFilesDbs>().SingleInstance();

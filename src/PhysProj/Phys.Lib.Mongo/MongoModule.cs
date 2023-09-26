@@ -44,10 +44,6 @@ namespace Phys.Lib.Mongo
             RegisterCollection<AuthorModel, AuthorsDb, IAuthorsDb>(builder, "authors");
             RegisterCollection<WorkModel, WorksDb, IWorksDb>(builder, "works");
             RegisterCollection<FileModel, FilesDb, IFilesDb>(builder, "files");
-
-            builder.Register(c => (UsersDb)c.ResolveNamed<IUsersDb>("mongo"))
-                .As<IDbReader<UserDbo>>()
-                .SingleInstance();
         }
 
         private void RegisterCollection<TModel, ImplDb, IDb>(ContainerBuilder builder, string collectionName) where ImplDb: Collection<TModel>, IDb

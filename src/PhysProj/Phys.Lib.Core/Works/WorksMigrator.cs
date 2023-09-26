@@ -18,6 +18,10 @@ namespace Phys.Lib.Core.Works
 
         public string Name => "works";
 
+        public IEnumerable<string> Sources => readers.Select(x => x.Name);
+
+        public IEnumerable<string> Destinations => dbs.Select(x => x.Name);
+
         public void Migrate(MigrationDto migration)
         {
             var reader = readers.Find(r => string.Equals(r.Name, migration.Source, StringComparison.OrdinalIgnoreCase));

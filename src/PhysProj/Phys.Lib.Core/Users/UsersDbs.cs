@@ -5,15 +5,15 @@ using Phys.Shared;
 
 namespace Phys.Lib.Core.Users
 {
-    internal class UsersDb : IUsersDb
+    internal class UsersDbs : IUsersDbs
     {
         private readonly Lazy<IUsersDb> db;
         private readonly IConfiguration configuration;
-        private readonly ILogger<UsersDb> log;
+        private readonly ILogger<UsersDbs> log;
 
         public string Name => "main";
 
-        public UsersDb(Lazy<IEnumerable<IUsersDb>> dbs, IConfiguration configuration, ILogger<UsersDb> log)
+        public UsersDbs(Lazy<IEnumerable<IUsersDb>> dbs, IConfiguration configuration, ILogger<UsersDbs> log)
         {
             this.configuration = configuration;
             this.log = log;

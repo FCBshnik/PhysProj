@@ -9,6 +9,12 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
     {
         public static void Map(RouteGroupBuilder builder)
         {
+            builder.MapGet("/migrators", ([FromServices] IMigrationService migrationService) =>
+            {
+                var migrators = migrationService.ListMigrators();
+                return migrators.Select(MigratorModel.Map).ToList();
+            }).ProducesResponse<List<MigratorModel>>("ListMigrators");
+
             builder.MapPost("/", ([FromBody]MigrationTaskModel model,
                 [FromServices]IMigrationService migrationService, ILoggerFactory loggerFactory) =>
             {
@@ -30,7 +36,7 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
             {
                 var end = SystemClock.Instance.GetCurrentInstant();
                 var start = end.Minus(Duration.FromDays(7));
-                var migrations = migrationService.List(new HistoryDbQuery(new Interval(start, end), 0, 10));
+                var migrations = migrationService.ListHistory(new HistoryDbQuery(new Interval(start, end), 0, 10));
                 return migrations.Select(MigrationModel.Map).ToList();
             }).ProducesResponse<List<MigrationModel>>("ListMigrations");
         }

@@ -8,9 +8,9 @@ namespace Phys.Lib.Core.Users
     public class UsersService : IUsersService
     {
         private readonly ILogger<UsersService> log;
-        private readonly IUsersDb db;
+        private readonly IUsersDbs db;
 
-        public UsersService(IUsersDb db, ILogger<UsersService> log)
+        public UsersService(IUsersDbs db, ILogger<UsersService> log)
         {
             this.db = db;
             this.log = log;

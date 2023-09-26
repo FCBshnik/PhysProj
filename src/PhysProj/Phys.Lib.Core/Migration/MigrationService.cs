@@ -81,11 +81,16 @@ namespace Phys.Lib.Core.Migration
             return migrationsHistory.Get(id) ?? throw new PhysException($"migration '{id}' not found");
         }
 
-        public List<MigrationDto> List(HistoryDbQuery query)
+        public List<MigrationDto> ListHistory(HistoryDbQuery query)
         {
             ArgumentNullException.ThrowIfNull(query);
 
             return migrationsHistory.List(query);
+        }
+
+        public List<IMigrator> ListMigrators()
+        {
+            return migrators;
         }
     }
 }

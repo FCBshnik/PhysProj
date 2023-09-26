@@ -17,6 +17,10 @@ namespace Phys.Lib.Core.Migration
 
         public string Name { get; }
 
+        public IEnumerable<string> Sources => readers.Select(x => x.Name);
+
+        public IEnumerable<string> Destinations => writers.Select(x => x.Name);
+
         public static void Migrate(IDbReader<T> source, IDbWriter<T> destination, MigrationDto migration)
         {
             IDbReaderResult<T> result = null!;

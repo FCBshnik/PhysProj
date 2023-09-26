@@ -10,6 +10,8 @@ namespace Phys.Lib.Core.Migration
 
         void Execute(MigrationDto migration);
 
-        List<MigrationDto> List(HistoryDbQuery query);
+        List<MigrationDto> ListHistory(HistoryDbQuery query);
+
+        List<IMigrator> ListMigrators();
     }
 }
