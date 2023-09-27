@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Phys.Shared;
 using Phys.Shared.HistoryDb;
 
@@ -25,7 +26,9 @@ namespace Phys.Lib.Core.Migration
 
             var migrator = migrators.Find(r => string.Equals(r.Name, task.Migrator, StringComparison.OrdinalIgnoreCase));
             if (migrator == null)
-                throw new PhysException($"migrator '{task.Migrator}' not found");
+                throw new ValidationException($"migrator '{task.Migrator}' not found");
+            if (task.Source == task.Destination)
+                throw new ValidationException($"source and destination must differ");
 
             var migration = new MigrationDto
             {
