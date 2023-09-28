@@ -63,7 +63,7 @@ namespace Phys.Shared.NLog
             var elasticTarget = new ElasticSearchTarget
             {
                 Uri = "http://192.168.1.107:9200/",
-                Index = $"physproj-{appName}-" + "${date:universalTime=true:format=yyyy-MM-dd}",
+                Index = $"phys-{appName}-" + "${date:universalTime=true:format=yyyy-MM-dd}",
                 DocumentType = null, // deprecated since 8 version of elasticsearch, if not set to null than elasticsearch respond with error
                 IncludeAllProperties = true,
                 IncludeDefaultFields = true,

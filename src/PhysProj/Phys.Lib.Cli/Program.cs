@@ -1,14 +1,9 @@
 ﻿using Autofac;
 using CommandLine;
 using Microsoft.Extensions.Configuration;
-using Phys.Lib.Core;
-using Phys.Lib.Mongo;
 using System.Reflection;
-using Phys.Lib.Postgres;
 using Microsoft.Extensions.Logging;
 using Phys.Shared.Utils;
-using Phys.Shared.Logging;
-using Phys.Shared.Mongo.Configuration;
 using Phys.Shared.NLog;
 
 namespace Phys.Lib.Cli
@@ -20,7 +15,7 @@ namespace Phys.Lib.Cli
 
         private static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory, "cli");
+            NLogConfig.Configure(loggerFactory, "lib-cli");
             ProgramUtils.OnRun(loggerFactory);
 
             var parser = new Parser();

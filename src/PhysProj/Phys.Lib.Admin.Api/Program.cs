@@ -34,7 +34,7 @@ namespace Phys.Lib.Admin.Api
 
         public static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory, "adminapi");
+            NLogConfig.Configure(loggerFactory, "lib-admin");
             ProgramUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
