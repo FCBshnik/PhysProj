@@ -1,27 +1,24 @@
 ﻿using Autofac;
-using Phys.Lib.Admin.Api.Api.User;
-using Phys.Lib.Admin.Api.Filters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Phys.Lib.Core;
-using Phys.Lib.Core.Validation;
-using Phys.Lib.Files;
-using Phys.Lib.Files.Local;
-using Phys.Lib.Mongo;
-using Phys.Lib.Postgres;
 using Phys.Shared.Logging;
-using Phys.Shared.Mongo.HistoryDb;
 using Phys.Shared.Queue;
-using Phys.Shared.RabbitMQ;
 using RabbitMQ.Client;
-using System.Reflection;
+using Phys.Lib.Postgres;
+using Phys.Lib.Mongo;
+using Phys.Shared.RabbitMQ;
+using Phys.Shared.Mongo.HistoryDb;
 
-namespace Phys.Lib.Admin.Api
+namespace Phys.Lib.App
 {
-    internal class ApiModule : Autofac.Module
+    internal class AppModule : Module
     {
         private readonly ILoggerFactory loggerFactory;
         private readonly IConfiguration configuration;
 
-        public ApiModule(ILoggerFactory loggerFactory, IConfiguration configuration)
+        public AppModule(ILoggerFactory loggerFactory, IConfiguration configuration)
         {
             this.loggerFactory = loggerFactory;
             this.configuration = configuration;
@@ -33,15 +30,14 @@ namespace Phys.Lib.Admin.Api
 
             builder.RegisterModule(new MongoModule(configuration.GetConnectionString("mongo"), loggerFactory));
             builder.RegisterModule(new PostgresModule(configuration.GetConnectionString("postgres"), loggerFactory));
-            builder.Register(c => new SystemFileStorage("local", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/files"), c.Resolve<ILogger<SystemFileStorage>>()))
-                .As<IFileStorage>()
-            .SingleInstance();
             builder.Register(c => new MongoHistoryDbFactory(configuration.GetConnectionString("mongo"), "phys-lib", "history-", loggerFactory))
                 .SingleInstance()
                 .AsImplementedInterfaces();
 
             builder.RegisterModule(new CoreModule());
-            builder.RegisterModule(new ValidationModule(Assembly.GetExecutingAssembly()));
+
+            builder.RegisterType<MigrationsExecutor>()
+                .As<IHostedService>().SingleInstance();
 
             builder.Register(c => new ConnectionFactory { HostName = configuration.GetConnectionString("rabbitmq") })
                 .As<IConnectionFactory>().SingleInstance();
@@ -49,11 +45,6 @@ namespace Phys.Lib.Admin.Api
                 .As<IMessageQueue>().SingleInstance();
             builder.RegisterType<JsonQueue>()
                 .As<IObjectQueue>().SingleInstance();
-
-            builder.RegisterType<StatusCodeLoggingMiddlware>().AsSelf().SingleInstance();
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
-            builder.RegisterType<UserResolver>().InstancePerDependency();
-            builder.Register(c => c.Resolve<UserResolver>().GetUser()).InstancePerDependency();
         }
     }
 }

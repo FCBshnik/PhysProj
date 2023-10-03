@@ -60,29 +60,32 @@ import * as api from '$lib/services/ApiService';
           <th>Id</th>
           <th>Name</th>
           <th>Source</th>
-          <th>Dest</th>
-          <th>Start</th>
+          <th>Destination</th>
           <th>Status</th>
+          <th>Start</th>
           <th>End</th>
           <th>Count</th>
           <th>Result</th>
-          <th>Error</th>
         </tr>
       </thead>
       <tbody>
         {#each migrations as migration}
-        <tr class="border-b-2 border-b-gray-700">
+        <tr class="border-t-2 border-t-gray-700">
           <td>{migration.id}</td>
           <td>{migration.migrator}</td>
           <td>{migration.source}</td>
           <td>{migration.destination}</td>
-          <td><DateTime dateTime={migration.createdAt}/></td>
           <td>{migration.status}</td>
+          <td><DateTime dateTime={migration.createdAt}/></td>
           <td><DateTime dateTime={migration.completedAt}/></td>
           <td>{migration.migratedCount}</td>
           <td>{migration.result}</td>
-          <td>{migration.error}</td>
         </tr>
+        {#if migration.error}
+        <tr>
+          <td colspan=9>{migration.error}</td>
+        </tr>
+        {/if}
         {/each}
       </tbody>
     </table>

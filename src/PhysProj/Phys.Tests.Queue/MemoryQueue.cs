@@ -4,10 +4,13 @@ using System.Collections.Concurrent;
 
 namespace Phys.Tests.Queue
 {
-    internal class MemoryQueue : IQueue
+    internal class MemoryQueue : IMessageQueue
     {
-        private readonly ConcurrentDictionary<string, IConsumer> consumers =
-            new ConcurrentDictionary<string, IConsumer>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<int, Subscription>> subscriptions =
+            new ConcurrentDictionary<string, ConcurrentDictionary<int, Subscription>>();
+
+        private readonly ConcurrentDictionary<string, ConcurrentQueue<string>> messages =
+            new ConcurrentDictionary<string, ConcurrentQueue<string>>();
 
         private readonly ILogger<MemoryQueue> log;
 
@@ -16,18 +19,85 @@ namespace Phys.Tests.Queue
             this.log = log;
         }
 
-        public void Consume(string queue, IConsumer consumer)
+        public IDisposable Consume(string queueName, IMessageConsumer consumer)
         {
-            consumers[queue] = consumer;
+            var subs = subscriptions.GetOrAdd(queueName, _ => new ConcurrentDictionary<int, Subscription>());
+            var key = consumer.GetHashCode();
+            var sub = new Subscription(() => subs.Remove(key, out _), consumer, log);
+            subs.TryAdd(key, sub);
+            ConsumeAsync(queueName);
+            return sub;
         }
 
-        public void Publish(string queue, object message)
+        public void Publish(string queueName, string message)
         {
-            if (!consumers.TryGetValue(queue, out var consumer))
-                throw new InvalidOperationException($"there is no consumer for queue '{queue}'");
+            var msgs = messages.GetOrAdd(queueName, _ => new ConcurrentQueue<string>());
+            msgs.Enqueue(message);
+            ConsumeAsync(queueName);
+        }
 
-            Task.Factory.StartNew(() => consumer.Consume(message))
-                .ContinueWith(t => { }, TaskContinuationOptions.OnlyOnFaulted);
+        private Task ConsumeAsync(string queueName)
+        {
+            return Task.Factory.StartNew(() => Consume(queueName));
+        }
+
+        private void Consume(string queue)
+        {
+            if (!subscriptions.TryGetValue(queue, out var subs))
+                return;
+
+            var sub = subs.Values.FirstOrDefault(s => !s.IsBusy);
+            if (sub == null || !messages.TryGetValue(queue, out var msgs))
+                return;
+
+            if (!msgs.TryDequeue(out var msg))
+                return;
+
+            sub.Consume(msg);
+
+            if (!msgs.IsEmpty)
+                Consume(queue);
+        }
+
+        private class Subscription : IDisposable
+        {
+            private readonly Action dispose;
+            private readonly IMessageConsumer consumer;
+            private readonly ILogger<MemoryQueue> log;
+
+            public bool IsBusy { get; private set; }
+
+            public Subscription(Action dispose, IMessageConsumer consumer, ILogger<MemoryQueue> log)
+            {
+                this.dispose = dispose;
+                this.consumer = consumer;
+                this.log = log;
+            }
+
+            public bool Consume(string message)
+            {
+                try
+                {
+                    IsBusy = true;
+                    consumer.Consume(message);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    log.LogError(e, $"failed consume '{message}'");
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+
+                return false;
+            }
+
+            public void Dispose()
+            {
+                dispose();
+            }
         }
     }
 }

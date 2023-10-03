@@ -16,6 +16,15 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123456
+  rabbitmq:
+    container_name: physproj-rabbitmq
+    image: rabbitmq:3.12-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq/
 volumes:
   mongo:
   postgres:
+  rabbitmq:

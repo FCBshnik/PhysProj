@@ -2,6 +2,7 @@
 using NodaTime;
 using Phys.Lib.Core.Migration;
 using Phys.Shared.HistoryDb;
+using Phys.Shared.Queue;
 
 namespace Phys.Lib.Admin.Api.Api.Migrations
 {
@@ -16,13 +17,10 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
             }).ProducesResponse<List<MigratorModel>>("ListMigrators");
 
             builder.MapPost("/", ([FromBody]MigrationTaskModel model,
-                [FromServices]IMigrationService migrationService, ILoggerFactory loggerFactory) =>
+                [FromServices]IMigrationService migrationService, [FromServices] IObjectQueue objectQueue) =>
             {
-                var log = loggerFactory.CreateLogger("api-migrations");
                 var migration = migrationService.Create(model.Map());
-                // TODO: move task to service app
-                Task.Factory.StartNew(() => migrationService.Execute(migration))
-                    .ContinueWith(t => log.LogError(t.Exception, "migration failed"), TaskContinuationOptions.OnlyOnFaulted);
+                objectQueue.Publish("migrations", migration);
                 return Results.Ok(MigrationModel.Map(migration));
             }).ProducesResponse<MigrationModel>("StartMigration");
 
