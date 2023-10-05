@@ -30,7 +30,7 @@ namespace Phys.Lib.Mongo.Users
                 Id = ObjectId.GenerateNewId().ToString(),
                 Name = user.Name,
                 NameLowerCase = user.NameLowerCase,
-                PasswordHash = user.PasswordHash
+                PasswordHash = user.PasswordHash,
             };
             Insert(userModel);
         }

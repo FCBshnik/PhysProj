@@ -16,8 +16,6 @@ using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
 using Phys.Shared.Utils;
 using Phys.Lib.Admin.Api.Filters;
-using Phys.Shared.Logging;
-using Phys.Shared.Mongo.Configuration;
 using Phys.Shared;
 using Phys.Lib.Admin.Api.Api.Migrations;
 using Phys.Shared.NLog;
@@ -38,7 +36,6 @@ namespace Phys.Lib.Admin.Api
             ProgramUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
-
             var config = builder.Configuration;
             var urls = config.GetConnectionString("urls") ?? throw new PhysException("connection 'urls' not found in configuration");
 

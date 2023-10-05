@@ -10,6 +10,7 @@ using Phys.Lib.Postgres;
 using Phys.Lib.Mongo;
 using Phys.Shared.RabbitMQ;
 using Phys.Shared.Mongo.HistoryDb;
+using Phys.Lib.Core.Migration;
 
 namespace Phys.Lib.App
 {

@@ -58,15 +58,23 @@ namespace Phys.Shared.RabbitMQ
 
             public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, ReadOnlyMemory<byte> body)
             {
-                var msg = Encoding.UTF8.GetString(body.Span);
-                consumer.Consume(msg);
                 log.LogInformation($"HandleBasicDeliver: routingKey {routingKey}");
+                var msg = Encoding.UTF8.GetString(body.Span);
+
+                try
+                {
+                    consumer.Consume(msg);
+                }
+                catch (Exception e)
+                {
+                    log.LogError(e.Message, "consume failed");
+                }
             }
 
             public override void HandleModelShutdown(object model, ShutdownEventArgs reason)
             {
-                base.HandleModelShutdown(model, reason);
                 log.LogInformation($"HandleModelShutdown: {reason.ReplyText}");
+                base.HandleModelShutdown(model, reason);
             }
 
             public void Dispose()

@@ -23,7 +23,8 @@ namespace Phys.Lib.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Validator>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<Validator>()
+                .AsImplementedInterfaces().SingleInstance();
 
             builder.RegisterService<UsersService, IUsersService>()
                 .RegisterService<AuthorsSearch, IAuthorsSearch>()

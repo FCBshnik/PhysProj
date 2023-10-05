@@ -48,7 +48,7 @@ namespace Phys.Lib.Tests.Db
 
             try
             {
-                NLogConfig.Configure(loggerFactory, "testsdb");
+                NLogConfig.Configure(loggerFactory, "tests-db");
                 ProgramUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();

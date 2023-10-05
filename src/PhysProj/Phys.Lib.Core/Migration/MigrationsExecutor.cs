@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Phys.Lib.Core.Migration;
 using Phys.Shared.Queue;
 
-namespace Phys.Lib.App
+namespace Phys.Lib.Core.Migration
 {
-    internal class MigrationsExecutor : IHostedService, IObjectConsumer<MigrationDto>
+    public class MigrationsExecutor : IHostedService, IObjectConsumer<MigrationDto>
     {
         private readonly ILogger<MigrationsExecutor> log;
         private readonly IObjectQueue objectQueue;

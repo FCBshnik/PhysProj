@@ -12,7 +12,7 @@ namespace Phys.Shared.NLog
 {
     public static class NLogConfig
     {
-        public static void Configure(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory, string appName)
+        public static void Configure(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory, string appName, string elasticUrl = "http://192.168.1.107:9200/")
         {
             loggerFactory.AddNLog(new NLogProviderOptions
             {
@@ -62,7 +62,7 @@ namespace Phys.Shared.NLog
 
             var elasticTarget = new ElasticSearchTarget
             {
-                Uri = "http://192.168.1.107:9200/",
+                Uri = elasticUrl,
                 Index = $"phys-{appName}-" + "${date:universalTime=true:format=yyyy-MM-dd}",
                 DocumentType = null, // deprecated since 8 version of elasticsearch, if not set to null than elasticsearch respond with error
                 IncludeAllProperties = true,

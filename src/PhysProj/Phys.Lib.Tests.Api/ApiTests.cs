@@ -30,7 +30,7 @@ namespace Phys.Lib.Tests.Api
 
             try
             {
-                NLogConfig.Configure(loggerFactory, "testsapi");
+                NLogConfig.Configure(loggerFactory, "tests-api");
                 ProgramUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();

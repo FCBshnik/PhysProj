@@ -1,5 +1,6 @@
 ﻿using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Migrations;
+using System.Data;
 
 namespace Phys.Lib.Core.Users
 {
@@ -18,7 +19,18 @@ namespace Phys.Lib.Core.Users
         {
             foreach (var user in values)
             {
-                db.Create(user);
+                var existing = db.FindByName(user.Name);
+                if (existing != null)
+                {
+                    db.Update(user.NameLowerCase, new UserDbUpdate { PasswordHash = user.PasswordHash });
+                    foreach (var role in existing.Roles)
+                        db.Update(user.NameLowerCase, new UserDbUpdate { DeleteRole = role });
+                }
+                else
+                {
+                    db.Create(user);
+                }
+
                 foreach (var role in user.Roles)
                     db.Update(user.NameLowerCase, new UserDbUpdate { AddRole = role });
             }
