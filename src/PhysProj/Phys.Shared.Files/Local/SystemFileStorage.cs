@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Phys.Lib.Files.Local
+namespace Phys.Shared.Files.Local
 {
     public class SystemFileStorage : IFileStorage
     {

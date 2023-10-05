@@ -1,12 +1,12 @@
 ﻿using Autofac;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
-using Phys.Lib.Files.Local;
-using Phys.Lib.Files;
 using Phys.Lib.Mongo;
 using Microsoft.Extensions.Logging;
 using Phys.Shared.Logging;
 using Microsoft.Extensions.Configuration;
+using Phys.Shared.Files;
+using Phys.Shared.Files.Local;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
