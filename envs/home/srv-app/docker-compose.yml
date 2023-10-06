@@ -1,4 +1,11 @@
 services:
+  app:
+    container_name: app
+    build: app
+    image: physproj-home-app
+    restart: always
+    volumes:
+      - /opt/physproj/app/data:/app/data
   admin-api:
     container_name: admin-api
     build: admin-api
