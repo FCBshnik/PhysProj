@@ -4,9 +4,9 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using Phys.Shared.HistoryDb;
+using Phys.HistoryDb;
 
-namespace Phys.Shared.Mongo.HistoryDb
+namespace Phys.Mongo.HistoryDb
 {
     public class MongoHistoryDbFactory : IHistoryDbFactory
     {

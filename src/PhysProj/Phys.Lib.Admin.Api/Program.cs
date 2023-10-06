@@ -14,11 +14,11 @@ using Phys.Lib.Admin.Api.Api.User;
 using Phys.Lib.Admin.Api.Api.Works;
 using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
-using Phys.Shared.Utils;
+using Phys.Utils;
 using Phys.Lib.Admin.Api.Filters;
 using Phys.Shared;
 using Phys.Lib.Admin.Api.Api.Migrations;
-using Phys.Shared.NLog;
+using Phys.NLog;
 
 namespace Phys.Lib.Admin.Api
 {

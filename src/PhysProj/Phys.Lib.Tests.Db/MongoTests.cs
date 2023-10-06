@@ -2,8 +2,8 @@
 using NodaTime;
 using NodaTime.Extensions;
 using Phys.Lib.Mongo;
-using Phys.Shared.HistoryDb;
-using Phys.Shared.Mongo.HistoryDb;
+using Phys.HistoryDb;
+using Phys.Mongo.HistoryDb;
 using Shouldly;
 using Testcontainers.MongoDb;
 

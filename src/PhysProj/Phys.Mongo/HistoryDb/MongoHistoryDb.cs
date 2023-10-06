@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
-using Phys.Shared.HistoryDb;
+using Phys.HistoryDb;
 
-namespace Phys.Shared.Mongo.HistoryDb
+namespace Phys.Mongo.HistoryDb
 {
     internal class MongoHistoryDb<T> : IHistoryDb<T> where T : IHistoryDbo
     {

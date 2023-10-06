@@ -29,10 +29,9 @@
     <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
     <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
     <ProjectReference Include="..\Phys.Lib.Postgre\Phys.Lib.Postgres.csproj" />
-    <ProjectReference Include="..\Phys.Shared.Mongo\Phys.Shared.Mongo.csproj" />
-    <ProjectReference Include="..\Phys.Shared.NLog\Phys.Shared.NLog.csproj" />
-    <ProjectReference Include="..\Phys.Shared.RabbitMQ\Phys.Shared.RabbitMQ.csproj" />
-    <ProjectReference Include="..\Phys.Shared\Phys.Shared.csproj" />
+    <ProjectReference Include="..\Phys.Mongo\Phys.Mongo.csproj" />
+    <ProjectReference Include="..\Phys.NLog\Phys.NLog.csproj" />
+    <ProjectReference Include="..\Phys.RabbitMQ\Phys.RabbitMQ.csproj" />
   </ItemGroup>
 
 </Project>

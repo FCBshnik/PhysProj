@@ -3,13 +3,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Core;
-using Phys.Shared.Logging;
-using Phys.Shared.Queue;
+using Phys.Logging;
+using Phys.Queue;
 using RabbitMQ.Client;
 using Phys.Lib.Postgres;
 using Phys.Lib.Mongo;
-using Phys.Shared.RabbitMQ;
-using Phys.Shared.Mongo.HistoryDb;
+using Phys.RabbitMQ;
+using Phys.Mongo.HistoryDb;
 using Phys.Lib.Core.Migration;
 
 namespace Phys.Lib.App

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Reflection;
 
-namespace Phys.Shared.Utils
+namespace Phys.Utils
 {
     public static class ProgramUtils
     {

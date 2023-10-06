@@ -1,6 +1,6 @@
 ﻿using NodaTime;
 
-namespace Phys.Shared.HistoryDb
+namespace Phys.HistoryDb
 {
     public record HistoryDbQuery
     {

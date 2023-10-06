@@ -1,4 +1,4 @@
-﻿using Phys.Shared.HistoryDb;
+﻿using Phys.HistoryDb;
 
 namespace Phys.Lib.Core.Migration
 {

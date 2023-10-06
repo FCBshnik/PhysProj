@@ -1,6 +1,6 @@
 ﻿using Phys.Lib.Core.Files.Storage;
 using Phys.Lib.Db.Files;
-using Phys.Shared.Files;
+using Phys.Files;
 
 namespace Phys.Lib.Admin.Api.Api.Files
 {

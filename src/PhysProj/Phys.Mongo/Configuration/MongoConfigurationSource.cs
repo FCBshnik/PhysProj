@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Phys.Shared.Mongo.Configuration
+namespace Phys.Mongo.Configuration
 {
     public class MongoConfigurationSource : IConfigurationSource
     {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Phys.Lib.Core;
 using Phys.Lib.Mongo;
 using Phys.Lib.Postgres;
-using Phys.Shared.Logging;
+using Phys.Logging;
 
 namespace Phys.Lib.Cli
 {

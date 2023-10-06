@@ -8,7 +8,7 @@ using NLog.Targets.ElasticSearch;
 using NLog.Targets.Wrappers;
 using NLog.Extensions.Logging;
 
-namespace Phys.Shared.NLog
+namespace Phys.NLog
 {
     public static class NLogConfig
     {

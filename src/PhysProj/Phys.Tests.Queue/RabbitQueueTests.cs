@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Phys.Shared.Queue;
-using Phys.Shared.RabbitMQ;
+using Phys.Queue;
+using Phys.RabbitMQ;
 using RabbitMQ.Client;
 
 namespace Phys.Tests.Queue

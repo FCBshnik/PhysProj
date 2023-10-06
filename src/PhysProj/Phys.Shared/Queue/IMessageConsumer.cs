@@ -1,4 +1,4 @@
-﻿namespace Phys.Shared.Queue
+﻿namespace Phys.Queue
 {
     public interface IMessageConsumer
     {

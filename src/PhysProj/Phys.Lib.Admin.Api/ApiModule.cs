@@ -5,14 +5,14 @@ using Phys.Lib.Core;
 using Phys.Lib.Core.Validation;
 using Phys.Lib.Mongo;
 using Phys.Lib.Postgres;
-using Phys.Shared.Logging;
-using Phys.Shared.Mongo.HistoryDb;
-using Phys.Shared.Queue;
-using Phys.Shared.RabbitMQ;
+using Phys.Logging;
+using Phys.Mongo.HistoryDb;
+using Phys.Queue;
+using Phys.RabbitMQ;
 using RabbitMQ.Client;
 using System.Reflection;
-using Phys.Shared.Files;
-using Phys.Shared.Files.Local;
+using Phys.Files;
+using Phys.Files.Local;
 
 namespace Phys.Lib.Admin.Api
 {

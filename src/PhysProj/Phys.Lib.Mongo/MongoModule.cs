@@ -9,7 +9,7 @@ using Phys.Lib.Mongo.Authors;
 using Phys.Lib.Mongo.Files;
 using Phys.Lib.Mongo.Users;
 using Phys.Lib.Mongo.Works;
-using Phys.Shared.Mongo;
+using Phys.Mongo;
 using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo

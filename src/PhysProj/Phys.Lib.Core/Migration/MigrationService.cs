@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Phys.Shared;
-using Phys.Shared.HistoryDb;
+using Phys.HistoryDb;
 
 namespace Phys.Lib.Core.Migration
 {

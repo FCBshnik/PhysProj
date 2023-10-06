@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using Phys.Lib.Core.Migration;
-using Phys.Shared.HistoryDb;
-using Phys.Shared.Queue;
+using Phys.HistoryDb;
+using Phys.Queue;
 
 namespace Phys.Lib.Admin.Api.Api.Migrations
 {

@@ -3,8 +3,8 @@ using CommandLine;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Phys.Shared.Utils;
-using Phys.Shared.NLog;
+using Phys.Utils;
+using Phys.NLog;
 
 namespace Phys.Lib.Cli
 {

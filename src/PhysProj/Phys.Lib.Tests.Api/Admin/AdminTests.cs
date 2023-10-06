@@ -3,10 +3,10 @@ using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
 using Phys.Lib.Mongo;
 using Microsoft.Extensions.Logging;
-using Phys.Shared.Logging;
+using Phys.Logging;
 using Microsoft.Extensions.Configuration;
-using Phys.Shared.Files;
-using Phys.Shared.Files.Local;
+using Phys.Files;
+using Phys.Files.Local;
 
 namespace Phys.Lib.Tests.Api.Admin
 {

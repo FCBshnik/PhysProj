@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Phys.Shared.Queue;
+using Phys.Queue;
 
 namespace Phys.Lib.Core.Migration
 {

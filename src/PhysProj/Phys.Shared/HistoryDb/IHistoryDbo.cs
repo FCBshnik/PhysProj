@@ -1,4 +1,4 @@
-﻿namespace Phys.Shared.HistoryDb
+﻿namespace Phys.HistoryDb
 {
     public interface IHistoryDbo
     {

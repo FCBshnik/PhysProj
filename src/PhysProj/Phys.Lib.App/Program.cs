@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Phys.Shared.NLog;
-using Phys.Shared.Utils;
+using Phys.NLog;
+using Phys.Utils;
 using Autofac.Extensions.DependencyInjection;
 
 namespace Phys.Lib.App

@@ -8,7 +8,7 @@ using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Validation;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Db.Users;
-using Phys.Shared.HistoryDb;
+using Phys.HistoryDb;
 using System.Runtime.CompilerServices;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Authors;

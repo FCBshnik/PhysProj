@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Phys.Shared.Queue
+namespace Phys.Queue
 {
     public class JsonQueue : IObjectQueue
     {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Phys.Lib.Db.Files;
 using Microsoft.Extensions.Logging;
-using Phys.Shared.Files;
+using Phys.Files;
 
 namespace Phys.Lib.Core.Files.Storage
 {

@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Conventions;
 
-namespace Phys.Shared.Mongo
+namespace Phys.Mongo
 {
     public static class MongoConfig
     {

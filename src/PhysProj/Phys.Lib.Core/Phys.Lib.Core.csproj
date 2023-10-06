@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Phys.Lib.Db\Phys.Lib.Db.csproj" />
-    <ProjectReference Include="..\Phys.Shared.Files\Phys.Shared.Files.csproj" />
+    <ProjectReference Include="..\Phys.Files\Phys.Files.csproj" />
     <ProjectReference Include="..\Phys.Shared\Phys.Shared.csproj" />
   </ItemGroup>
 

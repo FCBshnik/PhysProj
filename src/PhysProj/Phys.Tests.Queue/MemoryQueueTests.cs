@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Phys.Shared.Queue;
+using Phys.Queue;
 
 namespace Phys.Tests.Queue
 {

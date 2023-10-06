@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Phys.Shared.Mongo.Configuration
+namespace Phys.Mongo.Configuration
 {
     public class MongoConfigurationProvider : ConfigurationProvider
     {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Phys.Shared.Queue;
+using Phys.Queue;
 using RabbitMQ.Client;
 using System.Text;
 
-namespace Phys.Shared.RabbitMQ
+namespace Phys.RabbitMQ
 {
     public class RabbitQueue : IMessageQueue
     {

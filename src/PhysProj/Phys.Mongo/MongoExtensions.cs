@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using NodaTime;
 
-namespace Phys.Shared.Mongo
+namespace Phys.Mongo
 {
     internal static class MongoExtensions
     {
