@@ -1,15 +1,13 @@
 using Autofac;
 using Microsoft.Extensions.Logging;
-using Phys.Lib.Core;
-using Phys.Lib.Core.Utils;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
-using Phys.Logging;
 using Phys.NLog;
 using Phys.Utils;
 using Phys.Lib.Db.Migrations;
+using Phys.Lib.Autofac;
 
 namespace Phys.Lib.Tests.Db
 {

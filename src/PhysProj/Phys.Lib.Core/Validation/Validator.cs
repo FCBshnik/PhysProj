@@ -1,21 +1,20 @@
-﻿using Autofac;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Phys.Lib.Core.Validation
 {
     public class Validator : IValidator
     {
-        // todo: get rid off autofac interface
-        private readonly ILifetimeScope scope;
+        private readonly Func<Type, object> validatorFactory;
 
-        public Validator(ILifetimeScope scope)
+        public Validator(Func<Type, object> validatorFactory)
         {
-            this.scope = scope;
+            this.validatorFactory = validatorFactory;
         }
 
         public void Validate<T>(T value)
         {
-            scope.Resolve<IValidator<T>>().ValidateAndThrow(value);
+            var validatorType = typeof(IValidator<>).MakeGenericType(typeof(T));
+            ((IValidator<T>)validatorFactory(validatorType)).ValidateAndThrow(value);
         }
     }
 }

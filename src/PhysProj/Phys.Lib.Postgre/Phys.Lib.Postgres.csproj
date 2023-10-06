@@ -10,10 +10,6 @@
     <PackageReference Include="Dapper" Version="2.0.143" />
     <PackageReference Include="Evolve" Version="3.2.0" />
     <PackageReference Include="Npgsql" Version="7.0.4" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.8.0.76515">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="SqlKata" Version="2.4.0" />
   </ItemGroup>
 

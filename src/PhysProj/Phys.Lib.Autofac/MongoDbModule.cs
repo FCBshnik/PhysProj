@@ -5,28 +5,28 @@ using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
+using Phys.Lib.Mongo;
 using Phys.Lib.Mongo.Authors;
 using Phys.Lib.Mongo.Files;
 using Phys.Lib.Mongo.Users;
 using Phys.Lib.Mongo.Works;
 using Phys.Mongo;
-using Phys.Lib.Db.Migrations;
 
-namespace Phys.Lib.Mongo
+namespace Phys.Lib.Autofac
 {
-    public class MongoModule : Module
+    public class MongoDbModule : Module
     {
         private const string dbTypeName = "mongo";
 
         private readonly string connectionString;
         private readonly ILogger log;
 
-        public MongoModule(string connectionString, ILoggerFactory loggerFactory)
+        public MongoDbModule(string connectionString, ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(connectionString);
 
             this.connectionString = connectionString;
-            log = loggerFactory.CreateLogger<MongoModule>();
+            log = loggerFactory.CreateLogger<MongoDbModule>();
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -46,9 +46,9 @@ namespace Phys.Lib.Mongo
             RegisterCollection<FileModel, FilesDb, IFilesDb>(builder, "files");
         }
 
-        private void RegisterCollection<TModel, ImplDb, IDb>(ContainerBuilder builder, string collectionName) where ImplDb: Collection<TModel>, IDb
+        private void RegisterCollection<TModel, ImplDb, IDb>(ContainerBuilder builder, string collectionName) where ImplDb : Collection<TModel>, IDb
             where IDb : class
-            where TModel: MongoModel
+            where TModel : MongoModel
         {
             builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<TModel>(collectionName))
                 .AsImplementedInterfaces()

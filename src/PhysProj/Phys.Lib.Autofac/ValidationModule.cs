@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using FluentValidation;
 
-namespace Phys.Lib.Core.Validation
+namespace Phys.Lib.Autofac
 {
     public class ValidationModule : Module
     {

@@ -5,14 +5,15 @@ using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
+using Phys.Lib.Postgres;
 using Phys.Lib.Postgres.Authors;
 using Phys.Lib.Postgres.Files;
 using Phys.Lib.Postgres.Users;
 using Phys.Lib.Postgres.Works;
 
-namespace Phys.Lib.Postgres
+namespace Phys.Lib.Autofac
 {
-    public class PostgresModule : Module
+    public class PostgresDbModule : Module
     {
         private const string dbTypeName = "postgres";
 
@@ -20,7 +21,7 @@ namespace Phys.Lib.Postgres
         private readonly ILogger log;
         private readonly string connectionString;
 
-        public PostgresModule(string connectionString, ILoggerFactory loggerFactory)
+        public PostgresDbModule(string connectionString, ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(connectionString);
             ArgumentNullException.ThrowIfNull(loggerFactory);
@@ -28,7 +29,7 @@ namespace Phys.Lib.Postgres
             this.connectionString = connectionString;
             this.loggerFactory = loggerFactory;
 
-            log = loggerFactory.CreateLogger<PostgresModule>();
+            log = loggerFactory.CreateLogger<PostgresDbModule>();
         }
 
         protected override void Load(ContainerBuilder builder)

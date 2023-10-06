@@ -1,11 +1,11 @@
 ﻿using Autofac;
 using NodaTime;
 using NodaTime.Extensions;
-using Phys.Lib.Mongo;
 using Phys.HistoryDb;
 using Phys.Mongo.HistoryDb;
 using Shouldly;
 using Testcontainers.MongoDb;
+using Phys.Lib.Autofac;
 
 namespace Phys.Lib.Tests.Db
 {
@@ -68,7 +68,7 @@ namespace Phys.Lib.Tests.Db
         protected override void Register(ContainerBuilder builder)
         {
             base.Register(builder);
-            builder.RegisterModule(new MongoModule(mongo.GetConnectionString(), loggerFactory));
+            builder.RegisterModule(new MongoDbModule(mongo.GetConnectionString(), loggerFactory));
 
             builder.Register(c => new MongoHistoryDbFactory(mongo.GetConnectionString(), "physlib", "history-", loggerFactory))
                 .SingleInstance()

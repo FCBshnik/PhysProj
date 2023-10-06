@@ -3,10 +3,10 @@ using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
 using Phys.Lib.Mongo;
 using Microsoft.Extensions.Logging;
-using Phys.Logging;
 using Microsoft.Extensions.Configuration;
 using Phys.Files;
 using Phys.Files.Local;
+using Phys.Lib.Autofac;
 
 namespace Phys.Lib.Tests.Api.Admin
 {
@@ -58,7 +58,7 @@ namespace Phys.Lib.Tests.Api.Admin
             var builder = new ContainerBuilder();
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new LoggerModule(loggerFactory));
-            builder.RegisterModule(new MongoModule(GetMongoUrl(), loggerFactory));
+            builder.RegisterModule(new MongoDbModule(GetMongoUrl(), loggerFactory));
             builder.RegisterModule(new CoreModule());
             return builder.Build();
         }

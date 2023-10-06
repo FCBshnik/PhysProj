@@ -4,27 +4,28 @@ using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Files.Storage;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Users;
-using Phys.Lib.Core.Utils;
 using Phys.Lib.Core.Validation;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Db.Users;
 using Phys.HistoryDb;
-using System.Runtime.CompilerServices;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 
-[assembly: InternalsVisibleTo("Phys.Lib.Tests.Unit")]
-[assembly: InternalsVisibleTo("Phys.Lib.Tests.Db")]
-
-namespace Phys.Lib.Core
+namespace Phys.Lib.Autofac
 {
     public class CoreModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Validator>()
-                .AsImplementedInterfaces().SingleInstance();
+            builder.Register(c =>
+            {
+                var childCtx = c.Resolve<Func<IComponentContext>>();
+                return new Validator(t => childCtx().Resolve(t));
+            })
+                .As<IValidator>().SingleInstance();
+            builder.RegisterModule(new ValidationModule(System.Reflection.Assembly.GetEntryAssembly()!));
+            builder.RegisterModule(new ValidationModule(ThisAssembly));
 
             builder.RegisterService<UsersService, IUsersService>()
                 .RegisterService<AuthorsSearch, IAuthorsSearch>()
@@ -64,8 +65,6 @@ namespace Phys.Lib.Core
             builder.RegisterType<WorksMigrator>()
                 .As<IMigrator>()
                 .SingleInstance();
-
-            builder.RegisterModule(new ValidationModule(ThisAssembly));
         }
     }
 }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Core", "Phys.Lib.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Cli", "Phys.Lib.Cli\Phys.Lib.Cli.csproj", "{BE91FB56-F9F0-4F56-A9DD-B30907BF771C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Phys.Shared", "Phys.Shared\Phys.Shared.csproj", "{C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Phys.Shared", "Phys.Shared", "{C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api\Phys.Lib.Admin.Api.csproj", "{A71533D2-3809-4B8D-BD54-37A0AA494613}"
 EndProject
@@ -58,6 +58,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.RabbitMQ", "Phys.RabbitMQ\Phys.RabbitMQ.csproj", "{E7559A0D-E6B5-479C-ADE6-8D752463ACAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CBC25E25-67EE-4BDD-B0D1-04B1CDA2B3BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Lib.Autofac", "Phys.Lib.Autofac\Phys.Lib.Autofac.csproj", "{548AB080-7A57-4344-BE8B-3F80D93212C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +131,10 @@ Global
 		{E7559A0D-E6B5-479C-ADE6-8D752463ACAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7559A0D-E6B5-479C-ADE6-8D752463ACAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7559A0D-E6B5-479C-ADE6-8D752463ACAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548AB080-7A57-4344-BE8B-3F80D93212C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548AB080-7A57-4344-BE8B-3F80D93212C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548AB080-7A57-4344-BE8B-3F80D93212C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548AB080-7A57-4344-BE8B-3F80D93212C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +162,7 @@ Global
 		{C9EE4D9C-1BF9-42C2-AA43-68ED58AC4900} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
 		{E7559A0D-E6B5-479C-ADE6-8D752463ACAF} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
 		{CBC25E25-67EE-4BDD-B0D1-04B1CDA2B3BC} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
+		{548AB080-7A57-4344-BE8B-3F80D93212C3} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {616FF1DB-DD01-46E8-A34F-B45851EEE112}

@@ -2,15 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Phys.Lib.Core;
-using Phys.Logging;
-using Phys.Queue;
-using RabbitMQ.Client;
-using Phys.Lib.Postgres;
-using Phys.Lib.Mongo;
-using Phys.RabbitMQ;
-using Phys.Mongo.HistoryDb;
 using Phys.Lib.Core.Migration;
+using Phys.Lib.Autofac;
 
 namespace Phys.Lib.App
 {
@@ -28,24 +21,11 @@ namespace Phys.Lib.App
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule(new LoggerModule(loggerFactory));
-
-            builder.RegisterModule(new MongoModule(configuration.GetConnectionString("mongo"), loggerFactory));
-            builder.RegisterModule(new PostgresModule(configuration.GetConnectionString("postgres"), loggerFactory));
-            builder.Register(c => new MongoHistoryDbFactory(configuration.GetConnectionString("mongo"), "phys-lib", "history-", loggerFactory))
-                .SingleInstance()
-                .AsImplementedInterfaces();
-
+            builder.RegisterModule(new DataModule(configuration, loggerFactory));
             builder.RegisterModule(new CoreModule());
 
             builder.RegisterType<MigrationsExecutor>()
                 .As<IHostedService>().SingleInstance();
-
-            builder.Register(c => new ConnectionFactory { HostName = configuration.GetConnectionString("rabbitmq") })
-                .As<IConnectionFactory>().SingleInstance();
-            builder.RegisterType<RabbitQueue>()
-                .As<IMessageQueue>().SingleInstance();
-            builder.RegisterType<JsonQueue>()
-                .As<IObjectQueue>().SingleInstance();
         }
     }
 }

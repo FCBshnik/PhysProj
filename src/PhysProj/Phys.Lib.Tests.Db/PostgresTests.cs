@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Phys.Lib.Postgres;
+using Phys.Lib.Autofac;
 using Testcontainers.PostgreSql;
 
 namespace Phys.Lib.Tests.Db
@@ -30,7 +30,7 @@ namespace Phys.Lib.Tests.Db
         protected override void Register(ContainerBuilder builder)
         {
             base.Register(builder);
-            builder.RegisterModule(new PostgresModule(postgres.GetConnectionString(), loggerFactory));
+            builder.RegisterModule(new PostgresDbModule(postgres.GetConnectionString(), loggerFactory));
         }
     }
 }

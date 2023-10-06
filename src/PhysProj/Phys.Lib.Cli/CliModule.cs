@@ -1,10 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Phys.Lib.Core;
-using Phys.Lib.Mongo;
-using Phys.Lib.Postgres;
-using Phys.Logging;
+using Phys.Lib.Autofac;
 
 namespace Phys.Lib.Cli
 {
@@ -22,10 +19,7 @@ namespace Phys.Lib.Cli
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule(new LoggerModule(loggerFactory));
-
-            builder.RegisterModule(new MongoModule(config.GetConnectionString("mongo"), loggerFactory));
-            builder.RegisterModule(new PostgresModule(config.GetConnectionString("postgres"), loggerFactory));
-
+            builder.RegisterModule(new DataModule(config, loggerFactory));
             builder.RegisterModule(new CoreModule());
 
             builder.RegisterAssemblyTypes(ThisAssembly)

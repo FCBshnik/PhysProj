@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.1.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
+    <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
+    <ProjectReference Include="..\Phys.Lib.Postgre\Phys.Lib.Postgres.csproj" />
+    <ProjectReference Include="..\Phys.Mongo\Phys.Mongo.csproj" />
+    <ProjectReference Include="..\Phys.RabbitMQ\Phys.RabbitMQ.csproj" />
+  </ItemGroup>
+
+</Project>

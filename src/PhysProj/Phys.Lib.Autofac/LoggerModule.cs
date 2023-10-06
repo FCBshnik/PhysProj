@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
 
-namespace Phys.Logging
+namespace Phys.Lib.Autofac
 {
     public class LoggerModule : Module
     {
