@@ -22,7 +22,8 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private IFileStorage fileStorage;
 
-        private FileInfo ProjectPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api.csproj"));
+        private FileInfo AdminApiPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api.csproj"));
+        private FileInfo AppPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.App", "Phys.Lib.App.csproj"));
 
         public AdminTests(ITestOutputHelper output) : base(output)
         {
@@ -33,7 +34,8 @@ namespace Phys.Lib.Tests.Api.Admin
         {
             await base.Init();
 
-            var appDir = StartApp(url, ProjectPath);
+            StartApp(url, AppPath);
+            var appDir = StartApp(url, AdminApiPath);
 
             fileStorage = new SystemFileStorage("local", Path.Combine(appDir.FullName, "data/files"), loggerFactory.CreateLogger<SystemFileStorage>());
 
