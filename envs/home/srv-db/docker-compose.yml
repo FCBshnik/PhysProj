@@ -7,3 +7,21 @@ services:
       - "27017:27017"
     volumes:
       - /opt/physproj/mongo/data:/data/db
+  postgres:
+    container_name: physproj-postgres
+    image: postgres:15.3
+    ports:
+      - "5432:5432"
+    volumes:
+      - /opt/physproj/postgres/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+  rabbitmq:
+    container_name: physproj-rabbitmq
+    image: rabbitmq:3.12-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - /opt/physproj/rabbitmq/data:/var/lib/rabbitmq/
