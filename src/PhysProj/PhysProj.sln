@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Core", "Phys.Lib.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Cli", "Phys.Lib.Cli\Phys.Lib.Cli.csproj", "{BE91FB56-F9F0-4F56-A9DD-B30907BF771C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Phys.Shared", "Phys.Shared", "{C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api\Phys.Lib.Admin.Api.csproj", "{A71533D2-3809-4B8D-BD54-37A0AA494613}"
 EndProject
