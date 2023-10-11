@@ -19,8 +19,8 @@ namespace Phys.Lib.Postgres.Files
         {
             return new FileDbo.LinkDbo
             {
-                Type = link.Type,
-                Path = link.Path,
+                StorageCode = link.Type,
+                FileId = link.Path,
             };
         }
     }

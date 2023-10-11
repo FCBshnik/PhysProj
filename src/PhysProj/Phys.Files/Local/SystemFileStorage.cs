@@ -23,13 +23,13 @@ namespace Phys.Files.Local
 
         public string Name => "System file storage";
 
-        public void Delete(string path)
+        public void Delete(string fileId)
         {
-            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(fileId);
 
-            log.Log(LogLevel.Information, $"deleting '{path}'");
+            log.Log(LogLevel.Information, $"deleting '{fileId}'");
 
-            var fileInfo = GetFileInfo(path);
+            var fileInfo = GetFileInfo(fileId);
             if (fileInfo.Exists)
             {
                 log.Log(LogLevel.Information, $"deleting '{fileInfo.FullName}'");
@@ -38,19 +38,19 @@ namespace Phys.Files.Local
             }
         }
 
-        public Stream Download(string path)
+        public Stream Download(string fileId)
         {
-            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(fileId);
 
-            var fileInfo = GetFileInfo(path);
+            var fileInfo = GetFileInfo(fileId);
             return fileInfo.OpenRead();
         }
 
-        public StorageFileInfo? Get(string path)
+        public StorageFileInfo? Get(string fileId)
         {
-            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(fileId);
 
-            var fileInfo = GetFileInfo(path);
+            var fileInfo = GetFileInfo(fileId);
             if (!fileInfo.Exists)
                 return null;
 
@@ -68,22 +68,28 @@ namespace Phys.Files.Local
                 .ToList();
         }
 
-        public StorageFileInfo Upload(string path, Stream data)
+        public StorageFileInfo Upload(Stream data, string name)
         {
-            ArgumentNullException.ThrowIfNull(path);
+            ArgumentNullException.ThrowIfNull(name);
             ArgumentNullException.ThrowIfNull(data);
 
-            var fileInfo = GetFileInfo(path);
+            var fileInfo = GetFileInfo(name);
             if (fileInfo.Directory?.Exists == false)
                 fileInfo.Directory.Create();
             using var fileStream = File.OpenWrite(fileInfo.FullName);
             data.CopyTo(fileStream);
-            return MapFileInfo(GetFileInfo(path));
+            return MapFileInfo(GetFileInfo(name));
         }
 
-        private StorageFileInfo MapFileInfo(FileInfo f)
+        private StorageFileInfo MapFileInfo(FileInfo fi)
         {
-            return new StorageFileInfo { Path = GetFilePath(f), Size = f.Length, Updated = f.LastWriteTimeUtc };
+            return new StorageFileInfo
+            {
+                Id = GetFilePath(fi),
+                Size = fi.Length,
+                Updated = fi.LastWriteTimeUtc,
+                Name = GetFilePath(fi),
+            };
         }
 
         private string GetFilePath(FileInfo fileInfo)

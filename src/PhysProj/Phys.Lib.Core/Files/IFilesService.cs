@@ -8,7 +8,7 @@ namespace Phys.Lib.Core.Files
 
         FileDbo? FindByCode(string code);
 
-        FileDbo Create(string code, string? format, long? size);
+        FileDbo Create(string code, long size, string? format);
 
         FileDbo AddLink(FileDbo file, FileDbo.LinkDbo link);
 

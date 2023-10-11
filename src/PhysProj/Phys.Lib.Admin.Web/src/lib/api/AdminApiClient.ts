@@ -2021,7 +2021,7 @@ export interface IErrorModel {
 export class FileModel implements IFileModel {
     code?: string | undefined;
     format?: string | undefined;
-    size?: number | undefined;
+    size?: number;
     links?: LinkModel[] | undefined;
 
     constructor(data?: IFileModel) {
@@ -2070,14 +2070,15 @@ export class FileModel implements IFileModel {
 export interface IFileModel {
     code?: string | undefined;
     format?: string | undefined;
-    size?: number | undefined;
+    size?: number;
     links?: LinkModel[] | undefined;
 }
 
 export class FileStorageFileModel implements IFileStorageFileModel {
-    path?: string | undefined;
+    fileId?: string | undefined;
+    name?: string | undefined;
+    size?: number;
     updated?: Date | undefined;
-    size?: number | undefined;
 
     constructor(data?: IFileStorageFileModel) {
         if (data) {
@@ -2090,9 +2091,10 @@ export class FileStorageFileModel implements IFileStorageFileModel {
 
     init(_data?: any) {
         if (_data) {
-            this.path = _data["path"];
-            this.updated = _data["updated"] ? new Date(_data["updated"].toString()) : <any>undefined;
+            this.fileId = _data["fileId"];
+            this.name = _data["name"];
             this.size = _data["size"];
+            this.updated = _data["updated"] ? new Date(_data["updated"].toString()) : <any>undefined;
         }
     }
 
@@ -2105,21 +2107,23 @@ export class FileStorageFileModel implements IFileStorageFileModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["path"] = this.path;
-        data["updated"] = this.updated ? this.updated.toISOString() : <any>undefined;
+        data["fileId"] = this.fileId;
+        data["name"] = this.name;
         data["size"] = this.size;
+        data["updated"] = this.updated ? this.updated.toISOString() : <any>undefined;
         return data;
     }
 }
 
 export interface IFileStorageFileModel {
-    path?: string | undefined;
+    fileId?: string | undefined;
+    name?: string | undefined;
+    size?: number;
     updated?: Date | undefined;
-    size?: number | undefined;
 }
 
 export class FileStorageLinkModel implements IFileStorageLinkModel {
-    path?: string | undefined;
+    fileId?: string | undefined;
 
     constructor(data?: IFileStorageLinkModel) {
         if (data) {
@@ -2132,7 +2136,7 @@ export class FileStorageLinkModel implements IFileStorageLinkModel {
 
     init(_data?: any) {
         if (_data) {
-            this.path = _data["path"];
+            this.fileId = _data["fileId"];
         }
     }
 
@@ -2145,13 +2149,13 @@ export class FileStorageLinkModel implements IFileStorageLinkModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["path"] = this.path;
+        data["fileId"] = this.fileId;
         return data;
     }
 }
 
 export interface IFileStorageLinkModel {
-    path?: string | undefined;
+    fileId?: string | undefined;
 }
 
 export class FileStorageModel implements IFileStorageModel {
@@ -2235,8 +2239,8 @@ export interface ILanguageModel {
 }
 
 export class LinkModel implements ILinkModel {
-    type?: string | undefined;
-    path?: string | undefined;
+    storageCode?: string | undefined;
+    fileId?: string | undefined;
 
     constructor(data?: ILinkModel) {
         if (data) {
@@ -2249,8 +2253,8 @@ export class LinkModel implements ILinkModel {
 
     init(_data?: any) {
         if (_data) {
-            this.type = _data["type"];
-            this.path = _data["path"];
+            this.storageCode = _data["storageCode"];
+            this.fileId = _data["fileId"];
         }
     }
 
@@ -2263,15 +2267,15 @@ export class LinkModel implements ILinkModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["type"] = this.type;
-        data["path"] = this.path;
+        data["storageCode"] = this.storageCode;
+        data["fileId"] = this.fileId;
         return data;
     }
 }
 
 export interface ILinkModel {
-    type?: string | undefined;
-    path?: string | undefined;
+    storageCode?: string | undefined;
+    fileId?: string | undefined;
 }
 
 export class LoginModel implements ILoginModel {

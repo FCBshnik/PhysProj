@@ -9,6 +9,6 @@ namespace Phys.Lib.Core.Files.Storage
 
         IFileStorage Get(string code);
 
-        FileDbo CreateFileFromStorage(string storageCode, string filePath);
+        FileDbo CreateFileFromStorage(string storageCode, string fileId);
     }
 }

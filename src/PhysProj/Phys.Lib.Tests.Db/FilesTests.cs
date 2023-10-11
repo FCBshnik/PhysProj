@@ -62,18 +62,18 @@ namespace Phys.Lib.Tests.Db
 
         private void AddLink(string code, string type, string path)
         {
-            var link = new FileDbo.LinkDbo { Type = type, Path = path };
+            var link = new FileDbo.LinkDbo { StorageCode = type, FileId = path };
             db.Update(code, new FileDbUpdate { AddLink = link });
             var file = db.GetByCode(code);
-            file.Links.ShouldContain(l => l.Type == link.Type && l.Path == link.Path);
+            file.Links.ShouldContain(l => l.StorageCode == link.StorageCode && l.FileId == link.FileId);
         }
 
         private void DeleteLink(string code, string type, string path)
         {
-            var link = new FileDbo.LinkDbo { Type = type, Path = path };
+            var link = new FileDbo.LinkDbo { StorageCode = type, FileId = path };
             db.Update(code, new FileDbUpdate { DeleteLink = link });
             var file = db.GetByCode(code);
-            file.Links.ShouldNotContain(l => l.Type == link.Type && l.Path == link.Path);
+            file.Links.ShouldNotContain(l => l.StorageCode == link.StorageCode && l.FileId == link.FileId);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Phys.Lib.Mongo.Files
         public string? Format { get; set; }
 
         [BsonElement("size")]
-        public long? Size { get; set; }
+        public long Size { get; set; }
 
         [BsonElement("links")]
         public List<LinkModel> Links { get; set; } = new List<LinkModel>();

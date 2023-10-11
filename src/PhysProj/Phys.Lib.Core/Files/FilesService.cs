@@ -16,7 +16,7 @@ namespace Phys.Lib.Core.Files
             this.log = log;
         }
 
-        public FileDbo Create(string code, string? format, long? size)
+        public FileDbo Create(string code, long size, string? format)
         {
             code = Code.NormalizeAndValidate(code);
             db.Create(new FileDbo
@@ -36,8 +36,8 @@ namespace Phys.Lib.Core.Files
         {
             ArgumentNullException.ThrowIfNull(file);
             ArgumentNullException.ThrowIfNull(link);
-            ArgumentNullException.ThrowIfNull(link.Path);
-            ArgumentNullException.ThrowIfNull(link.Type);
+            ArgumentNullException.ThrowIfNull(link.FileId);
+            ArgumentNullException.ThrowIfNull(link.StorageCode);
 
             var update = new FileDbUpdate { AddLink = link };
             db.Update(file.Code, update);

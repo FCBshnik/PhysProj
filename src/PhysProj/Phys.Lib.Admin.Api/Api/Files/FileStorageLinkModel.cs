@@ -2,6 +2,6 @@
 {
     public class FileStorageLinkModel
     {
-        public string Path { get; set; }
+        public string FileId { get; set; }
     }
 }

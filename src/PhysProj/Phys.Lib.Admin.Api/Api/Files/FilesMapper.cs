@@ -13,7 +13,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 Code = file.Code,
                 Format = file.Format,
                 Size = file.Size,
-                Links = file.Links.ConvertAll(l => new FileModel.LinkModel { Type = l.Type, Path = l.Path }),
+                Links = file.Links.ConvertAll(l => new FileModel.LinkModel { StorageCode = l.StorageCode, FileId = l.FileId }),
             };
         }
 
@@ -30,7 +30,8 @@ namespace Phys.Lib.Admin.Api.Api.Files
         {
             return new FileStorageFileModel
             {
-                Path = info.Path,
+                FileId = info.Id,
+                Name = info.Name,
                 Size = info.Size,
                 Updated = info.Updated,
             };

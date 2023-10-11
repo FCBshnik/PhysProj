@@ -2,15 +2,17 @@
 {
     public class StorageFileInfo
     {
-        public required string Path { get; set; }
+        public required string Id { get; set; }
+
+        public required string Name { get; set; }
+
+        public required long Size { get; set; }
 
         public DateTime? Updated { get; set; }
 
-        public long? Size { get; set; }
-
         public override string ToString()
         {
-            return $"{Path}";
+            return $"{Id}";
         }
     }
 }

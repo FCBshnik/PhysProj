@@ -8,12 +8,12 @@
 
         List<StorageFileInfo> List(string? search);
 
-        StorageFileInfo? Get(string path);
+        StorageFileInfo? Get(string fileId);
 
-        Stream Download(string path);
+        Stream Download(string fileId);
 
-        StorageFileInfo Upload(string path, Stream data);
+        StorageFileInfo Upload(Stream data, string name);
 
-        void Delete(string path);
+        void Delete(string fileId);
     }
 }

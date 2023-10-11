@@ -19,8 +19,8 @@ namespace Phys.Lib.Mongo.Files
         {
             return new FileDbo.LinkDbo
             {
-                Type = link.Type,
-                Path = link.Path,
+                StorageCode = link.Type,
+                FileId = link.Path,
             };
         }
 
@@ -28,8 +28,8 @@ namespace Phys.Lib.Mongo.Files
         {
             return new FileModel.LinkModel
             {
-                Type = link.Type,
-                Path = link.Path,
+                Type = link.StorageCode,
+                Path = link.FileId,
             };
         }
     }

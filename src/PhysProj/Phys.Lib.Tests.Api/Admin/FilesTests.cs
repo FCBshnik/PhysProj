@@ -22,7 +22,7 @@ namespace Phys.Lib.Tests.Api.Admin
             public void ListStorageFiles(string storageCode, params string[] expectedPaths)
             {
                 var result = api.ListStorageFilesAsync(storageCode, search: null).Result;
-                result.Select(a => a.Path).Should().BeEquivalentTo(expectedPaths);
+                result.Select(a => a.Name).Should().BeEquivalentTo(expectedPaths);
             }
 
             public void ListFiles(params string[] expectedCodes)
@@ -31,12 +31,12 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Select(a => a.Code).Should().BeEquivalentTo(expectedCodes);
             }
 
-            public void LinkStorageFile(string storageCode, string path)
+            public void LinkStorageFile(string storageCode, string fileId)
             {
-                var result = api.LinkStorageFileAsync(storageCode, new FileStorageLinkModel { Path = path }).Result;
+                var result = api.LinkStorageFileAsync(storageCode, new FileStorageLinkModel { FileId = fileId }).Result;
                 result.Links.Should().HaveCount(1);
-                result.Links.First().Type.Should().Be(storageCode);
-                result.Links.First().Path.Should().Be(path);
+                result.Links.First().StorageCode.Should().Be(storageCode);
+                result.Links.First().FileId.Should().Be(fileId);
             }
 
             public void Delete(string code)

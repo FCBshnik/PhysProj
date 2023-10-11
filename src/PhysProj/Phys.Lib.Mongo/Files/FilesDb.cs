@@ -75,7 +75,7 @@ namespace Phys.Lib.Mongo.Files
             if (file.AddLink != null)
                 update = update.Push(i => i.Links, FileMapper.Map(file.AddLink));
             if (file.DeleteLink != null)
-                update = update.PullFilter(i => i.Links, l => l.Type == file.DeleteLink.Type && l.Path == file.DeleteLink.Path);
+                update = update.PullFilter(i => i.Links, l => l.Type == file.DeleteLink.StorageCode && l.Path == file.DeleteLink.FileId);
 
             if (collection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"file '{code}' update failed");

@@ -6,19 +6,19 @@
 
         public string? Format { get; set; }
 
-        public long? Size { get; set; }
+        public long Size { get; set; }
 
         public List<LinkDbo> Links { get; set; } = new List<LinkDbo>();
 
         public class LinkDbo
         {
-            public required string Type { get; set; }
+            public required string StorageCode { get; set; }
 
-            public required string Path { get; set; }
+            public required string FileId { get; set; }
 
             public override string ToString()
             {
-                return $"{Path} ({Type})";
+                return $"{FileId} ({StorageCode})";
             }
         }
 

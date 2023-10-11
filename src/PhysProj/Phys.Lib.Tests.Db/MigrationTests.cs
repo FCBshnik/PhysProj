@@ -109,8 +109,8 @@ namespace Phys.Lib.Tests.Db
 
             var files = new[]
             {
-                new FileDbo { Code = "file-1", Format = "pdf", Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { Type = "type-1", Path = "path-1" } } },
-                new FileDbo { Code = "file-2", Size = 1024, Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { Type = "type-2", Path = "path-2" } } },
+                new FileDbo { Code = "file-1", Format = "pdf", Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { StorageCode = "type-1", FileId = "path-1" } } },
+                new FileDbo { Code = "file-2", Size = 1024, Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { StorageCode = "type-2", FileId = "path-2" } } },
             }.OrderBy(u => u.Code).ToList();
             new FilesWriter(srcDb).Write(files);
 

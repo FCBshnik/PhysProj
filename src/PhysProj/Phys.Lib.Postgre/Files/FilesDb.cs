@@ -67,15 +67,15 @@ namespace Phys.Lib.Postgres.Files
             {
                 if (update.DeleteLink != null)
                     filesLinks.Delete(cnx, q => q.Where(FileModel.LinkModel.FileCodeColumn, code)
-                        .Where(FileModel.LinkModel.PathColumn, update.DeleteLink.Path)
-                        .Where(FileModel.LinkModel.PathColumn, update.DeleteLink.Path));
+                        .Where(FileModel.LinkModel.PathColumn, update.DeleteLink.FileId)
+                        .Where(FileModel.LinkModel.PathColumn, update.DeleteLink.FileId));
 
                 if (update.AddLink != null)
                     filesLinks.Insert(cnx, new FileModel.LinkModel
                     {
                         FileCode = code,
-                        Type = update.AddLink.Type,
-                        Path = update.AddLink.Path,
+                        Type = update.AddLink.StorageCode,
+                        Path = update.AddLink.FileId,
                     });
 
                 trx.Commit();

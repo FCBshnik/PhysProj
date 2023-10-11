@@ -11,6 +11,6 @@ namespace Phys.Lib.Postgres.Files
         public string? Format { get; set; }
 
         [Column("size")]
-        public long? Size { get; set; }
+        public long Size { get; set; }
     }
 }

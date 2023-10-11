@@ -37,25 +37,25 @@ namespace Phys.Lib.Core.Files.Storage
             return storages.Select(s => new FileStorageInfo { Code = s.Key, Name = s.Key }).ToList();
         }
 
-        public FileDbo CreateFileFromStorage(string storageCode, string filePath)
+        public FileDbo CreateFileFromStorage(string storageCode, string fileId)
         {
             ArgumentNullException.ThrowIfNull(storageCode);
-            ArgumentNullException.ThrowIfNull(filePath);
+            ArgumentNullException.ThrowIfNull(fileId);
 
             var storage = Get(storageCode);
-            var storageFile = storage.Get(filePath);
+            var storageFile = storage.Get(fileId);
             if (storageFile == null)
-                throw ValidationError($"storage '{storageCode}' file '{filePath}' not found");
+                throw ValidationError($"storage '{storageCode}' file '{fileId}' not found");
 
             log.Log(LogLevel.Information, $"creating file from storage '{storageCode}' file {storageFile}");
-            var fileName = Path.GetFileName(filePath);
+            var fileName = Path.GetFileName(storageFile.Name);
             var code = Code.NormalizeAndValidate(fileName);
             var file = filesService.FindByCode(code);
             if (file != null)
                 throw ValidationError($"file with code '{code}' already exists");
 
-            file = filesService.Create(code, Path.GetExtension(storageFile.Path).Trim('.'), storageFile.Size);
-            file = filesService.AddLink(file, new FileDbo.LinkDbo { Type = storageCode, Path = storageFile.Path });
+            file = filesService.Create(code, storageFile.Size, Path.GetExtension(storageFile.Id)?.Trim('.'));
+            file = filesService.AddLink(file, new FileDbo.LinkDbo { StorageCode = storageCode, FileId = storageFile.Id });
             return file;
         }
 

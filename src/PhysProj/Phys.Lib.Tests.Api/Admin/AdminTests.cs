@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Admin.Client;
-using Phys.Lib.Mongo;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Phys.Files;
@@ -294,7 +293,7 @@ namespace Phys.Lib.Tests.Api.Admin
             works.LinkFileFailed("discourse-on-method", nonExistentCode);
             // link existing file
             using (var stream = files.GetMockStream())
-                fileStorage.Upload("discourse-on-method.pdf", stream);
+                fileStorage.Upload(stream, "discourse-on-method.pdf");
             files.LinkStorageFile("local", "discourse-on-method.pdf");
             works.LinkFile("discourse-on-method", "discourse-on-method-pdf");
             fileStorage.Delete("discourse-on-method.pdf");
@@ -312,7 +311,7 @@ namespace Phys.Lib.Tests.Api.Admin
             // list local storage files files
             files.ListStorageFiles("local");
             using (var stream = files.GetMockStream())
-                fileStorage.Upload("works/work-1.txt", stream);
+                fileStorage.Upload(stream, "works/work-1.txt");
             files.ListStorageFiles("local", "works/work-1.txt");
             // list empty files links
             files.ListFiles();

@@ -37,7 +37,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
 
             builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices] IFileStoragesService storages) =>
             {
-                var file = storages.CreateFileFromStorage(storageCode, model.Path);
+                var file = storages.CreateFileFromStorage(storageCode, model.FileId);
                 return TypedResults.Ok(FilesMapper.Map(file));
             }).ProducesResponse<FileModel>("LinkStorageFile");
         }

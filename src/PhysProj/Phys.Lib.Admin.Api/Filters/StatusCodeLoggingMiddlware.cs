@@ -9,15 +9,15 @@
             log = loggerFactory.CreateLogger("api");
         }
 
-        public async Task InvokeAsync(HttpContext ctx, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (ctx.Request.Method != "GET")
-                log.LogInformation("req {method} {path}", ctx.Request.Method, ctx.Request.Path.ToString());
+            if (context.Request.Method != "GET")
+                log.LogInformation("req {method} {path}", context.Request.Method, context.Request.Path.ToString());
 
-            await next(ctx);
+            await next(context);
 
-            if (ctx.Response.StatusCode != (int)System.Net.HttpStatusCode.OK)
-                log.LogInformation("res {status} to {method} {path}", ctx.Response.StatusCode, ctx.Request.Method, ctx.Request.Path.ToString());
+            if (context.Response.StatusCode != (int)System.Net.HttpStatusCode.OK)
+                log.LogInformation("res {status} to {method} {path}", context.Response.StatusCode, context.Request.Method, context.Request.Path.ToString());
         }
     }
 }
