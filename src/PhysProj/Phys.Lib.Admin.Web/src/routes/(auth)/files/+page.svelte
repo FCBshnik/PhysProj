@@ -26,7 +26,7 @@
 	}
 
   async function linkStorageFile() {
-    await api.service.linkStorageFile(selectedStorage.code, new api.FileStorageLinkModel({ path: selectedStorageFile.path }));
+    await api.service.linkStorageFile(selectedStorage.code, new api.FileStorageLinkModel({ fileId: selectedStorageFile?.fileId }));
     refreshFiles();
   }
 
@@ -52,7 +52,7 @@
     <div class="w-full">
       <select bind:value={selectedStorageFile}>
         {#each storageFiles as f}
-          <option value={f}>{f.path}</option>
+          <option value={f}>{f.name}</option>
         {/each}
       </select>
 		</div>
