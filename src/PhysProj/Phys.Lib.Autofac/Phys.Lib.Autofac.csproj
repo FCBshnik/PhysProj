@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Phys.Files.PCloud\Phys.Files.PCloud.csproj" />
     <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
     <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
     <ProjectReference Include="..\Phys.Lib.Postgre\Phys.Lib.Postgres.csproj" />

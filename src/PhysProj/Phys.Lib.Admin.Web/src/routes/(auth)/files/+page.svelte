@@ -40,14 +40,14 @@
 <article>
   <section class="p-2">Storage files</section>
 	<section class="flex flex-row items-center p-4 gap-4">
-		<div class="w-auto">
+		<div class="w-1/6">
       <select bind:value={selectedStorage}>
         {#each storages as s}
           <option value={s}>{s.name}</option>
         {/each}
       </select>
 		</div>
-    <input class="w-auto" type="search" bind:value={storageFilesSearch} placeholder="Text to search file" />
+    <input class="w-1/12" type="search" bind:value={storageFilesSearch} placeholder="Text to search file" />
     <button class="w-auto" on:click={refreshStorageFiles}>Search</button>
     <div class="w-full">
       <select bind:value={selectedStorageFile}>
@@ -73,6 +73,7 @@
 					<th>Code</th>
 					<th>Format</th>
 					<th>Size</th>
+          <th>Links</th>
 					<th />
 				</tr>
 			</thead>
@@ -82,6 +83,11 @@
 						<td><a href="/works/{file.code}">{file.code}</a></td>
 						<td>{file.format ?? '-'}</td>
 						<td>{file.size ?? '-'}</td>
+            <td>
+              {#each file.links as link}
+                [{link.storageCode}] {link.fileId}
+              {/each}
+            </td>
 						<td class="flex justify-end">
 							<button class="w-min text-xs" on:click={() => deleteFile(file)}>X</button>
 						</td>

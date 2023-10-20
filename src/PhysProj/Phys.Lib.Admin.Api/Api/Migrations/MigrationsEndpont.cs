@@ -33,7 +33,7 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
             builder.MapGet("/", ([FromServices] IMigrationService migrationService) =>
             {
                 var end = SystemClock.Instance.GetCurrentInstant();
-                var start = end.Minus(Duration.FromDays(7));
+                var start = end.Minus(Duration.FromDays(30));
                 var migrations = migrationService.ListHistory(new HistoryDbQuery(new Interval(start, end), 0, 10));
                 return migrations.Select(MigrationModel.Map).ToList();
             }).ProducesResponse<List<MigrationModel>>("ListMigrations");

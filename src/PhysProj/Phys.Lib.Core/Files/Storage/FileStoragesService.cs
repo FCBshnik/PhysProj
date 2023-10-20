@@ -54,7 +54,7 @@ namespace Phys.Lib.Core.Files.Storage
             if (file != null)
                 throw ValidationError($"file with code '{code}' already exists");
 
-            file = filesService.Create(code, storageFile.Size, Path.GetExtension(storageFile.Id)?.Trim('.'));
+            file = filesService.Create(code, storageFile.Size, Path.GetExtension(storageFile.Name)?.Trim('.'));
             file = filesService.AddLink(file, new FileDbo.LinkDbo { StorageCode = storageCode, FileId = storageFile.Id });
             return file;
         }
