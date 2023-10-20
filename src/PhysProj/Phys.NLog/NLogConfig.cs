@@ -71,11 +71,11 @@ namespace Phys.NLog
                 Layout = layout,
                 DisableCertificateValidation = true,
             };
-            AddTarget(config, new BufferingTargetWrapper("buffer", elasticTarget)
+            AddTarget(config, new BufferingTargetWrapper(new AsyncTargetWrapper(elasticTarget))
             {
-                BufferSize = 50,
-                OverflowAction = BufferingTargetWrapperOverflowAction.Discard,
-                FlushTimeout = 1000,
+                BufferSize = 10,
+                OverflowAction = BufferingTargetWrapperOverflowAction.Flush,
+                FlushTimeout = 5 * 60 * 1000,
             });
 
             InternalLogger.LogLevel = LogLevel.Info;

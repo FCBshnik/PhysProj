@@ -6,12 +6,14 @@ namespace Phys.Shared.Logging
     public sealed class HttpRequestsObserver : IDisposable, IObserver<DiagnosticListener>
     {
         private readonly ILoggerFactory loggerFactory;
+        private readonly ILogger<HttpRequestsObserver> logger;
 
         private IDisposable? subscription;
 
         public HttpRequestsObserver(ILoggerFactory loggerFactory)
         {
             this.loggerFactory = loggerFactory;
+            logger = loggerFactory.CreateLogger<HttpRequestsObserver>();
         }
 
         public void OnNext(DiagnosticListener value)
@@ -19,6 +21,7 @@ namespace Phys.Shared.Logging
             if (value.Name == "HttpHandlerDiagnosticListener")
             {
                 subscription = value.Subscribe(new HttpHandlerDiagnosticListener(loggerFactory.CreateLogger("http")));
+                logger.LogInformation($"subscribed to {value.Name}");
             }
         }
 
@@ -59,12 +62,14 @@ namespace Phys.Shared.Logging
                     case "System.Net.Http.HttpRequestOut.Start":
                         var type = value.Value!.GetType();
                         var request = type.GetProperty("Request")!.GetValue(value.Value) as HttpRequestMessage;
-                        log.LogInformation("req {method} {path}", request!.Method.Method, request.RequestUri);
+                        if (request != null)
+                            log.LogInformation("req {method} {path}", request!.Method.Method, request.RequestUri);
                         break;
                     case "System.Net.Http.HttpRequestOut.Stop":
                         type = value.Value!.GetType();
                         var response = type.GetProperty("Response")!.GetValue(value.Value) as HttpResponseMessage;
-                        log.LogInformation("res {status} to {method} {path}", response!.StatusCode, response.RequestMessage?.Method.Method, response.RequestMessage?.RequestUri);
+                        if (response != null)
+                            log.LogInformation("res {status} to {method} {path}", response!.StatusCode, response.RequestMessage?.Method.Method, response.RequestMessage?.RequestUri);
                         break;
                 }
             }

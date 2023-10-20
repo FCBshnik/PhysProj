@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Phys.Shared.Logging;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Phys.Utils
@@ -25,6 +27,8 @@ namespace Phys.Utils
                 log.LogError(e.Exception, "UnobservedTaskException");
                 e.SetObserved();
             };
+
+            DiagnosticListener.AllListeners.Subscribe(new HttpRequestsObserver(loggerFactory));
         }
     }
 }
