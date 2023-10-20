@@ -9,11 +9,11 @@ namespace Phys.Lib.Postgres.Users
 {
     internal class UsersDb : PostgresTable, IUsersDb, IDbReader<UserDbo>
     {
-        private readonly NpgsqlDataSource dataSource;
+        private readonly Lazy<NpgsqlDataSource> dataSource;
 
         public string Name => "postgres";
 
-        public UsersDb(NpgsqlDataSource dataSource, string tableName, ILogger<UsersDb> logger) : base(tableName, logger)
+        public UsersDb(Lazy<NpgsqlDataSource> dataSource, string tableName, ILogger<UsersDb> logger) : base(tableName, logger)
         {
             this.dataSource = dataSource;
         }
@@ -24,7 +24,7 @@ namespace Phys.Lib.Postgres.Users
 
             var userModel = new UserInsertModel { Name = user.Name, NameLowerCase = user.NameLowerCase, PasswordHash = user.PasswordHash };
 
-            using (var cnx = dataSource.OpenConnection())
+            using (var cnx = dataSource.Value.OpenConnection())
             Insert(cnx, userModel);
         }
 
@@ -37,7 +37,7 @@ namespace Phys.Lib.Postgres.Users
             if (query.NameLowerCase != null)
                 cmd = cmd.Where(UserModel.NameLowerCaseColumn, query.NameLowerCase);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             return Find<UserModel>(cnx, cmd).ConvertAll(UserMapper.Map);
         }
 
@@ -46,7 +46,7 @@ namespace Phys.Lib.Postgres.Users
             ArgumentNullException.ThrowIfNull(name);
             ArgumentNullException.ThrowIfNull(update);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             using (var trx = cnx.BeginTransaction())
             {
                 var updateDic = new Dictionary<string, object>();
@@ -90,7 +90,7 @@ namespace Phys.Lib.Postgres.Users
 
         IDbReaderResult<UserDbo> IDbReader<UserDbo>.Read(DbReaderQuery query)
         {
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             return Read<UserDbo, UserModel>(cnx, query, UserModel.IdColumn, UserMapper.Map);
         }
     }

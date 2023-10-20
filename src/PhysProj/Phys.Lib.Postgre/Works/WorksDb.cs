@@ -14,7 +14,7 @@ namespace Phys.Lib.Postgres.Works
 {
     internal class WorksDb : PostgresTable, IWorksDb, IDbReader<WorkDbo>
     {
-        private readonly NpgsqlDataSource dataSource;
+        private readonly Lazy<NpgsqlDataSource> dataSource;
         private readonly WorksInfosTable worksInfos;
         private readonly WorksAuthorsTable worksAuthors;
         private readonly WorksSubWorksTable worksSubWorks;
@@ -22,7 +22,7 @@ namespace Phys.Lib.Postgres.Works
 
         public string Name => "postgres";
 
-        public WorksDb(string tableName, NpgsqlDataSource dataSource,
+        public WorksDb(string tableName, Lazy<NpgsqlDataSource> dataSource,
             WorksAuthorsTable worksAuthors, WorksSubWorksTable worksSubWorks, WorksFilesTable worksFiles, WorksInfosTable worksInfos, ILogger<WorksDb> logger)
             : base(tableName, logger)
         {
@@ -37,7 +37,7 @@ namespace Phys.Lib.Postgres.Works
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             Insert(cnx, new WorkInsertModel { Code = code });
         }
 
@@ -45,7 +45,7 @@ namespace Phys.Lib.Postgres.Works
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             using var trx = cnx.BeginTransaction();
             worksInfos.Delete(cnx, q => q.Where(WorkModel.InfoModel.WorkCodeColumn, code));
             worksAuthors.Delete(cnx, q => q.Where(WorkModel.AuthorModel.WorkCodeColumn, code));
@@ -81,7 +81,7 @@ namespace Phys.Lib.Postgres.Works
             ArgumentNullException.ThrowIfNull(code);
             ArgumentNullException.ThrowIfNull(update);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             using (var trx = cnx.BeginTransaction())
             {
                 var updateDic = new Dictionary<string, object?>();
@@ -169,7 +169,7 @@ namespace Phys.Lib.Postgres.Works
 
             enrichQuery(cmd);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             var sql = compiler.Compile(cmd);
             var works = new Dictionary<string, WorkModel>();
 

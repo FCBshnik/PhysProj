@@ -11,12 +11,12 @@ namespace Phys.Lib.Postgres.Files
 {
     internal class FilesDb : PostgresTable, IFilesDb, IDbReader<FileDbo>
     {
-        private readonly NpgsqlDataSource dataSource;
+        private readonly Lazy<NpgsqlDataSource> dataSource;
         private readonly FilesLinksTable filesLinks;
 
         public string Name => "postgres";
 
-        public FilesDb(string tableName, NpgsqlDataSource dataSource, FilesLinksTable filesLinks, ILogger<FilesDb> logger) : base(tableName, logger)
+        public FilesDb(string tableName, Lazy<NpgsqlDataSource> dataSource, FilesLinksTable filesLinks, ILogger<FilesDb> logger) : base(tableName, logger)
         {
             this.dataSource = dataSource;
             this.filesLinks = filesLinks;
@@ -28,7 +28,7 @@ namespace Phys.Lib.Postgres.Files
             ArgumentNullException.ThrowIfNull(file.Code);
 
             var insert = new FileInsertModel { Code = file.Code, Format = file.Format, Size = file.Size };
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             Insert(cnx, insert);
         }
 
@@ -36,7 +36,7 @@ namespace Phys.Lib.Postgres.Files
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             using var trx = cnx.BeginTransaction();
             filesLinks.Delete(cnx, q => q.Where(FileModel.LinkModel.FileCodeColumn, code));
             Delete(cnx, q => q.Where(FileModel.CodeColumn, code));
@@ -62,7 +62,7 @@ namespace Phys.Lib.Postgres.Files
             ArgumentNullException.ThrowIfNull(code);
             ArgumentNullException.ThrowIfNull(update);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             using (var trx = cnx.BeginTransaction())
             {
                 if (update.DeleteLink != null)
@@ -91,7 +91,7 @@ namespace Phys.Lib.Postgres.Files
             enrichQuery(cmd);
 
             var files = new Dictionary<string, FileModel>();
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             FindJoin<FileModel, FileModel.LinkModel>(cnx, cmd, FileModel.LinkModel.FileCodeColumn, (f, l) =>
             {
                 files.TryAdd(f.Code, f);

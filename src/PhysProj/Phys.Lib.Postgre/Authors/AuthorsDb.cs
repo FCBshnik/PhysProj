@@ -11,10 +11,10 @@ namespace Phys.Lib.Postgres.Authors
 {
     internal class AuthorsDb : PostgresTable, IAuthorsDb, IDbReader<AuthorDbo>
     {
-        private readonly NpgsqlDataSource dataSource;
+        private readonly Lazy<NpgsqlDataSource> dataSource;
         private readonly AuthorsInfosTable authorsInfos;
 
-        public AuthorsDb(NpgsqlDataSource dataSource, string tableName, AuthorsInfosTable authorsInfos, ILogger<AuthorsDb> logger) : base(tableName, logger)
+        public AuthorsDb(Lazy<NpgsqlDataSource> dataSource, string tableName, AuthorsInfosTable authorsInfos, ILogger<AuthorsDb> logger) : base(tableName, logger)
         {
             this.dataSource = dataSource;
             this.authorsInfos = authorsInfos;
@@ -26,7 +26,7 @@ namespace Phys.Lib.Postgres.Authors
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            using (var cnx = dataSource.OpenConnection())
+            using (var cnx = dataSource.Value.OpenConnection())
                 Insert(cnx, new AuthorInsertModel { Code = code });
         }
 
@@ -34,7 +34,7 @@ namespace Phys.Lib.Postgres.Authors
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             using var trx = cnx.BeginTransaction();
             authorsInfos.Delete(cnx, q => q.Where(AuthorModel.InfoModel.AuthorCodeColumn, code));
             Delete(cnx, q => q.Where(AuthorModel.CodeColumn, code));
@@ -62,7 +62,7 @@ namespace Phys.Lib.Postgres.Authors
             ArgumentNullException.ThrowIfNull(code);
             ArgumentNullException.ThrowIfNull(update);
 
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             using (var trx = cnx.BeginTransaction())
             {
                 var updateDic = new Dictionary<string, object?>();
@@ -112,7 +112,7 @@ namespace Phys.Lib.Postgres.Authors
             enrichQuery(cmd);
 
             var authors = new Dictionary<string, AuthorModel>();
-            using var cnx = dataSource.OpenConnection();
+            using var cnx = dataSource.Value.OpenConnection();
             FindJoin<AuthorModel, AuthorModel.InfoModel>(cnx, cmd, AuthorModel.InfoModel.AuthorCodeColumn, (a, i) =>
             {
                 authors.TryAdd(a.Code, a);
