@@ -11,6 +11,7 @@ using Phys.Files.PCloud;
 using Refit;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Files.Storage;
+using Phys.Shared;
 
 namespace Phys.Lib.Autofac
 {
@@ -27,7 +28,9 @@ namespace Phys.Lib.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule(new MongoDbModule(configuration.GetConnectionString("mongo"), loggerFactory));
+            var mongoUrl = configuration.GetConnectionString("mongo") ?? throw new PhysException($"connection string 'mongo' is missed");
+
+            builder.RegisterModule(new MongoDbModule(mongoUrl, loggerFactory));
             builder.RegisterModule(new PostgresDbModule(configuration.GetConnectionString("postgres"), loggerFactory));
 
             // files
@@ -50,7 +53,7 @@ namespace Phys.Lib.Autofac
                 .SingleInstance();
 
             // history
-            builder.Register(c => new MongoHistoryDbFactory(configuration.GetConnectionString("mongo"), "phys-lib", "history-", loggerFactory))
+            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "phys-lib", "history-", loggerFactory))
                 .SingleInstance().AsImplementedInterfaces();
 
             // rabbit

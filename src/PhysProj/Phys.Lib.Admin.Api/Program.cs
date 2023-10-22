@@ -36,6 +36,9 @@ namespace Phys.Lib.Admin.Api
             ProgramUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
+            var envSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"appsettings.lib-{builder.Environment.EnvironmentName.ToLowerInvariant()}.json");
+            builder.Configuration.AddJsonFile(envSettingsPath, optional: true);
+
             var config = builder.Configuration;
             var urls = config.GetConnectionString("urls") ?? throw new PhysException("connection 'urls' not found in configuration");
 
@@ -87,7 +90,7 @@ namespace Phys.Lib.Admin.Api
             app.MapEndpoint("authors", AuthorsEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("works", WorksEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("files", FilesEndpoint.Map).RequireAuthorization();
-            app.MapEndpoint("migrations", MigrationsEndpont.Map);//.RequireAuthorization();
+            app.MapEndpoint("migrations", MigrationsEndpont.Map);
 
             app.Lifetime.ApplicationStarted.Register(() => log.LogInformation("{event} at {urls}", "start", string.Join(";", app.Urls)));
             app.Lifetime.ApplicationStopped.Register(() => log.LogInformation("{event}", "stop"));

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Phys.Lib.App": {
+      "commandName": "Project",
+      "commandLineArgs": "--environment Development"
+    }
+  }
+}
