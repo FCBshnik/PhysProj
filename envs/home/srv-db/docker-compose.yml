@@ -9,6 +9,7 @@ services:
       - /opt/physproj/mongo/data:/data/db
   postgres:
     container_name: physproj-postgres
+    restart: always
     image: postgres:15.3
     ports:
       - "5432:5432"
@@ -19,6 +20,7 @@ services:
       POSTGRES_PASSWORD: 123456
   rabbitmq:
     container_name: physproj-rabbitmq
+    restart: always
     image: rabbitmq:3.12-management
     ports:
       - 5672:5672
