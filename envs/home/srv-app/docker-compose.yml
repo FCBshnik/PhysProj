@@ -6,6 +6,7 @@ services:
     restart: always
     volumes:
       - /opt/physproj/app/data:/app/data
+      - /mnt/publications:/app/files:ro
   admin-api:
     container_name: admin-api
     build: admin-api
