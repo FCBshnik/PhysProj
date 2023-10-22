@@ -60,7 +60,10 @@ namespace Phys.Files.Local
         public List<StorageFileInfo> List(string? search)
         {
             if (!Directory.Exists(baseDir.FullName))
+            {
+                log.LogInformation($"dir '{baseDir.FullName}' not exists");
                 return Enumerable.Empty<StorageFileInfo>().ToList();
+            }
 
             return baseDir.EnumerateFiles(search != null ? $"*{search}*" : "*", SearchOption.AllDirectories)
                 .Take(100)

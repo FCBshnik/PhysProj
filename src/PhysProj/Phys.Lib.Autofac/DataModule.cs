@@ -32,7 +32,7 @@ namespace Phys.Lib.Autofac
             builder.RegisterModule(new PostgresDbModule(configuration.GetConnectionString("postgres"), loggerFactory));
 
             // files
-            builder.Register(c => new SystemFileStorage("local", "C:\\@yan\\dev\\projects\\physics\\dev\\files\\works\\", c.Resolve<ILogger<SystemFileStorage>>()))
+            builder.Register(c => new SystemFileStorage("local", "files", c.Resolve<ILogger<SystemFileStorage>>()))
                 .As<IFileStorage>().SingleInstance();
             builder.Register(c => RestService.For<IPCloudApiClient>("https://eapi.pcloud.com/"))
                 .As<IPCloudApiClient>().SingleInstance();

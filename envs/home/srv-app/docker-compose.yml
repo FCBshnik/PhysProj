@@ -15,6 +15,7 @@ services:
       - "7188:7188"
     volumes:
       - /opt/physproj/admin-api/data:/app/data
+      - /mnt/publications:/app/files:ro
   admin-web:
     container_name: admin-web
     build: admin-web
