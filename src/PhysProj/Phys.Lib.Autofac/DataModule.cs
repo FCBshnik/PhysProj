@@ -9,7 +9,6 @@ using Phys.RabbitMQ;
 using RabbitMQ.Client;
 using Phys.Files.PCloud;
 using Refit;
-using Phys.HistoryDb;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Files.Storage;
 
@@ -32,8 +31,10 @@ namespace Phys.Lib.Autofac
             builder.RegisterModule(new PostgresDbModule(configuration.GetConnectionString("postgres"), loggerFactory));
 
             // files
-            builder.Register(c => new SystemFileStorage("local", "files", c.Resolve<ILogger<SystemFileStorage>>()))
-                .As<IFileStorage>().SingleInstance();
+            var worksFilesPath = configuration.GetConnectionString("works-files");
+            if (worksFilesPath != null)
+                builder.Register(c => new LocalFileStorage("local", new DirectoryInfo(worksFilesPath), c.Resolve<ILogger<LocalFileStorage>>()))
+                    .As<IFileStorage>().SingleInstance();
             builder.Register(c => RestService.For<IPCloudApiClient>("https://eapi.pcloud.com/"))
                 .As<IPCloudApiClient>().SingleInstance();
             builder.RegisterType<PCloudFileStorage>()
@@ -48,7 +49,7 @@ namespace Phys.Lib.Autofac
                 .As<IMigrator>()
                 .SingleInstance();
 
-            // historyt
+            // history
             builder.Register(c => new MongoHistoryDbFactory(configuration.GetConnectionString("mongo"), "phys-lib", "history-", loggerFactory))
                 .SingleInstance().AsImplementedInterfaces();
 

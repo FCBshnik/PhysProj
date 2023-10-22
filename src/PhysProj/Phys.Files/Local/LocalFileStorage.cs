@@ -1,27 +1,29 @@
 ﻿using Microsoft.Extensions.Logging;
+using Phys.Shared.Cache;
 
 namespace Phys.Files.Local
 {
-    public class SystemFileStorage : IFileStorage
+    public class LocalFileStorage : IFileStorage
     {
-        private readonly ILogger<SystemFileStorage> log;
+        private readonly ILogger<LocalFileStorage> log;
         private readonly DirectoryInfo baseDir;
+        private readonly Expirable<List<FileInfo>> filesCache;
 
-        public SystemFileStorage(string code, string baseDir, ILogger<SystemFileStorage> log)
+        public LocalFileStorage(string code, DirectoryInfo baseDir, ILogger<LocalFileStorage> log)
         {
             ArgumentException.ThrowIfNullOrEmpty(code);
-            ArgumentException.ThrowIfNullOrEmpty(baseDir);
+            ArgumentNullException.ThrowIfNull(baseDir);
 
             Code = code;
-            this.baseDir = new DirectoryInfo(baseDir);
+            this.baseDir = baseDir;
             this.log = log;
 
             log.Log(LogLevel.Information, $"base dir '{this.baseDir.FullName}'");
+
+            filesCache = new Expirable<List<FileInfo>>(ListFiles, TimeSpan.FromDays(1));
         }
 
         public string Code { get; }
-
-        public string Name => "System file storage";
 
         public void Delete(string fileId)
         {
@@ -36,6 +38,8 @@ namespace Phys.Files.Local
                 fileInfo.Delete();
                 log.Log(LogLevel.Information, $"deleted '{fileInfo.FullName}'");
             }
+
+            filesCache.Reset();
         }
 
         public Stream Download(string fileId)
@@ -65,8 +69,9 @@ namespace Phys.Files.Local
                 return Enumerable.Empty<StorageFileInfo>().ToList();
             }
 
-            return baseDir.EnumerateFiles(search != null ? $"*{search}*" : "*", SearchOption.AllDirectories)
-                .Take(100)
+            return filesCache.Value
+                .Where(i => search == null || i.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+                .Take(20)
                 .Select(MapFileInfo)
                 .ToList();
         }
@@ -81,7 +86,18 @@ namespace Phys.Files.Local
                 fileInfo.Directory.Create();
             using var fileStream = File.OpenWrite(fileInfo.FullName);
             data.CopyTo(fileStream);
+            filesCache.Reset();
             return MapFileInfo(GetFileInfo(name));
+        }
+
+        private List<FileInfo> ListFiles()
+        {
+            var files = baseDir.EnumerateFiles("*", SearchOption.AllDirectories)
+                .ToList();
+
+            log.LogInformation($"found {files.Count} files at '{baseDir}'");
+
+            return files;
         }
 
         private StorageFileInfo MapFileInfo(FileInfo fi)

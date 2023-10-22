@@ -4,8 +4,6 @@
     {
         string Code { get; }
 
-        string Name { get; }
-
         List<StorageFileInfo> List(string? search);
 
         StorageFileInfo? Get(string fileId);

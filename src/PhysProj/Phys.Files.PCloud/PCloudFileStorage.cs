@@ -26,8 +26,6 @@ namespace Phys.Files.PCloud
 
         public string Code => "pcloud";
 
-        public string Name => "pCloud";
-
         public void Delete(string path)
         {
             throw new NotImplementedException();
@@ -62,6 +60,7 @@ namespace Phys.Files.PCloud
             return list!
                 .Where(i => !i.Isfolder)
                 .Where(i => search == null || i.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+                .Take(20)
                 .Select(Map)
                 .ToList();
         }

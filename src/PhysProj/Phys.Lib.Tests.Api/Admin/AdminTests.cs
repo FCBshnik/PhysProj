@@ -36,7 +36,7 @@ namespace Phys.Lib.Tests.Api.Admin
             StartApp(url, AppPath);
             var appDir = StartApp(url, AdminApiPath);
 
-            fileStorage = new SystemFileStorage("local", Path.Combine(appDir.FullName, "data/files"), loggerFactory.CreateLogger<SystemFileStorage>());
+            fileStorage = new LocalFileStorage("local", new DirectoryInfo(Path.Combine(appDir.FullName, "data/files")), loggerFactory.CreateLogger<LocalFileStorage>());
 
             var container = BuildContainer();
             using var scope = container.BeginLifetimeScope();
