@@ -25,6 +25,12 @@ namespace Phys.Files.Local
 
         public string Code { get; }
 
+        public void Refresh()
+        {
+            filesCache.Reset();
+            log.LogInformation("reset cache");
+        }
+
         public void Delete(string fileId)
         {
             ArgumentNullException.ThrowIfNull(fileId);

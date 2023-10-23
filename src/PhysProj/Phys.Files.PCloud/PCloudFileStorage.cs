@@ -26,6 +26,12 @@ namespace Phys.Files.PCloud
 
         public string Code => "pcloud";
 
+        public void Refresh()
+        {
+            list = null;
+            log.LogInformation("reset cache");
+        }
+
         public void Delete(string path)
         {
             throw new NotImplementedException();

@@ -37,10 +37,7 @@ namespace Phys.Lib.Core.Users
 
         private IUsersDb GetDb(Lazy<IEnumerable<IUsersDb>> dbs)
         {
-            var dbName = configuration.GetConnectionString("db");
-            if (dbName == null)
-                throw new PhysException($"connection string 'db' is missed");
-
+            var dbName = configuration.GetConnectionStringOrThrow("db");
             log.LogInformation($"use db '{dbName}' as {typeof(IUsersDb)}");
             return dbs.Value.FirstOrDefault(db => db.Name == dbName && dbName != Name)
                 ?? throw new PhysException($"users db '{dbName}' not found");

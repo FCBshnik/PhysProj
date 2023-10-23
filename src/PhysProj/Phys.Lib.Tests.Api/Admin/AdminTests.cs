@@ -63,7 +63,7 @@ namespace Phys.Lib.Tests.Api.Admin
         }
 
         [Fact]
-        public void TestAll()
+        public void Tests()
         {
             Log("testing");
 
@@ -307,11 +307,13 @@ namespace Phys.Lib.Tests.Api.Admin
         {
             var files = new FilesTests(api);
 
-            files.ListStorages("local");
+            files.ListStorages("local", "pcloud");
             // list local storage files files
             files.ListStorageFiles("local");
             using (var stream = files.GetMockStream())
                 fileStorage.Upload(stream, "works/work-1.txt");
+            files.RefreshStorage("local");
+
             files.ListStorageFiles("local", "works/work-1.txt");
             // list empty files links
             files.ListFiles();

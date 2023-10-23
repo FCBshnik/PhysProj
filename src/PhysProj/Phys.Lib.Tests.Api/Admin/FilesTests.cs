@@ -13,6 +13,11 @@ namespace Phys.Lib.Tests.Api.Admin
                 this.api = api;
             }
 
+            public void RefreshStorage(string storageCode)
+            {
+                api.RefreshStorageAsync(storageCode).Wait();
+            }
+
             public void ListStorages(params string[] expectedCodes)
             {
                 var result = api.ListStoragesAsync().Result;

@@ -15,6 +15,10 @@
     selectedStorage = storages[0];
   });
 
+	async function refreshStorage() {
+		await api.service.refreshStorage(selectedStorage.code);
+	}
+
 	async function refreshFiles() {
 		files = await api.service.listFiles(filesSearch);
 	}
@@ -58,6 +62,9 @@
 		</div>
     <button class="w-auto" on:click={linkStorageFile} disabled={selectedStorageFile == undefined}>Link</button>
 	</section>
+  <section class="flex flex-row items-center p-4 gap-4">
+    <button class="w-auto" on:click={refreshStorage}>Refresh</button>
+  </section>
 
   <section class="p-2">Files</section>
 	<section class="flex flex-row items-center p-4 gap-4">

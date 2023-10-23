@@ -12,6 +12,7 @@ using Refit;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Files.Storage;
 using Phys.Shared;
+using Phys.Lib.Core;
 
 namespace Phys.Lib.Autofac
 {
@@ -28,10 +29,12 @@ namespace Phys.Lib.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            var mongoUrl = configuration.GetConnectionString("mongo") ?? throw new PhysException($"connection string 'mongo' is missed");
+            var mongoUrl = configuration.GetConnectionStringOrThrow("mongo");
+            var postgresUrl = configuration.GetConnectionStringOrThrow("postgres");
+            var rabbitUrl = configuration.GetConnectionStringOrThrow("rabbitmq");
 
             builder.RegisterModule(new MongoDbModule(mongoUrl, loggerFactory));
-            builder.RegisterModule(new PostgresDbModule(configuration.GetConnectionString("postgres"), loggerFactory));
+            builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
 
             // files
             var worksFilesPath = configuration.GetConnectionString("works-files");
@@ -57,7 +60,7 @@ namespace Phys.Lib.Autofac
                 .SingleInstance().AsImplementedInterfaces();
 
             // rabbit
-            builder.Register(c => new ConnectionFactory { HostName = configuration.GetConnectionString("rabbitmq") })
+            builder.Register(c => new ConnectionFactory { HostName = rabbitUrl })
                 .As<IConnectionFactory>().SingleInstance();
             builder.RegisterType<RabbitQueue>()
                 .As<IMessageQueue>().SingleInstance();

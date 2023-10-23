@@ -40,6 +40,13 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 var file = storages.CreateFileFromStorage(storageCode, model.FileId);
                 return TypedResults.Ok(FilesMapper.Map(file));
             }).ProducesResponse<FileModel>("LinkStorageFile");
+
+            builder.MapPost("storages/{storageCode}/refresh", (string storageCode, [FromServices] IFileStoragesService storages) =>
+            {
+                var storage = storages.Get(storageCode);
+                storage.Refresh();
+                return TypedResults.Ok(OkModel.Ok);
+            }).ProducesResponse<OkModel>("RefreshStorage");
         }
     }
 }

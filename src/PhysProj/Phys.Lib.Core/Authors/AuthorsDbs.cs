@@ -43,10 +43,7 @@ namespace Phys.Lib.Core.Authors
 
         private IAuthorsDb GetDb(IEnumerable<IAuthorsDb> dbs)
         {
-            var dbName = configuration.GetConnectionString("db");
-            if (dbName == null)
-                throw new PhysException($"connection string 'db' is missed");
-
+            var dbName = configuration.GetConnectionStringOrThrow("db");
             log.LogInformation($"use db '{dbName}' as {typeof(IAuthorsDb)}");
             return dbs.FirstOrDefault(db => db.Name == dbName && dbName != Name)
                 ?? throw new PhysException($"authors db '{dbName}' not found");

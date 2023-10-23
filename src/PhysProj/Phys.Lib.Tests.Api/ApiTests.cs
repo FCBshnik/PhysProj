@@ -1,7 +1,6 @@
 ﻿using CliWrap;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Phys.NLog;
 using Phys.Utils;
 using Testcontainers.MongoDb;
@@ -80,15 +79,19 @@ namespace Phys.Lib.Tests.Api
             appTestDir.Create();
             DotNetBuild(projectPath, appTestDir);
 
-            // modify appsettings.json for test env
-            var appSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, "appsettings.json"));
-            if (!appSettingsFile.Exists)
-                throw new InvalidOperationException($"Project '{projectPath}' settings file '{appSettingsFile}' not found");
-            var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appSettingsFile.FullName));
-            appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl();
-            appSettings!["ConnectionStrings"]!["postgres"] = GetPostgresUrl();
-            appSettings!["ConnectionStrings"]!["urls"] = url;
-            File.WriteAllText(appSettingsFile.FullName, JsonConvert.SerializeObject(appSettings));
+            // create appsettings.test.json to override connection strings
+            var testSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, "appsettings.tests.json"));
+            var testSettings = new
+            {
+                ConnectionStrings = new Dictionary<string, string>
+                {
+                    ["urls"] = url,
+                    ["mongo"] = GetMongoUrl(),
+                    ["postgres"] = GetPostgresUrl(),
+                    ["works-files"] = "data/files",
+                }
+            };
+            File.WriteAllText(testSettingsFile.FullName, JsonConvert.SerializeObject(testSettings));
 
             // run
             var appFile = new FileInfo(Path.Combine(appTestDir.FullName, appTestDir.Name) + ".dll");

@@ -19,6 +19,7 @@ using Phys.Lib.Admin.Api.Filters;
 using Phys.Shared;
 using Phys.Lib.Admin.Api.Api.Migrations;
 using Phys.NLog;
+using Phys.Lib.Core;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -36,11 +37,10 @@ namespace Phys.Lib.Admin.Api
             ProgramUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
-            var envSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"appsettings.lib-{builder.Environment.EnvironmentName.ToLowerInvariant()}.json");
-            builder.Configuration.AddJsonFile(envSettingsPath, optional: true);
+            builder.Configuration.AddJsonFiles();
 
             var config = builder.Configuration;
-            var urls = config.GetConnectionString("urls") ?? throw new PhysException("connection 'urls' not found in configuration");
+            var urls = config.GetConnectionStringOrThrow("urls");
 
             builder.WebHost.UseUrls(urls);
             builder.Logging.ClearProviders();

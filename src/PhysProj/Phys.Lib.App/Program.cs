@@ -3,8 +3,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Phys.NLog;
 using Phys.Utils;
+using Phys.Lib.Core;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 
 namespace Phys.Lib.App
 {
@@ -19,11 +19,7 @@ namespace Phys.Lib.App
             ProgramUtils.OnRun(loggerFactory);
 
             var builder = Host.CreateDefaultBuilder(args);
-            builder.ConfigureAppConfiguration((ctx, c) =>
-            {
-                var envSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"appsettings.lib-{ctx.HostingEnvironment.EnvironmentName.ToLowerInvariant()}.json");
-                c.AddJsonFile(envSettingsPath, optional: true);
-            });
+            builder.ConfigureAppConfiguration(c => c.AddJsonFiles());
 
             builder.UseServiceProviderFactory(ctx => new AutofacServiceProviderFactory(c => c.RegisterModule(new AppModule(loggerFactory, ctx.Configuration))));
             using var host = builder.Build();

@@ -13,5 +13,7 @@
         StorageFileInfo Upload(Stream data, string name);
 
         void Delete(string fileId);
+
+        void Refresh();
     }
 }

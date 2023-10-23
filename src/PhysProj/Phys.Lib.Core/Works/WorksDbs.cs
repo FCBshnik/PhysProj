@@ -43,10 +43,7 @@ namespace Phys.Lib.Core.Works
 
         private IWorksDb GetDb(IEnumerable<IWorksDb> dbs)
         {
-            var dbName = configuration.GetConnectionString("db");
-            if (dbName == null)
-                throw new PhysException($"connection string 'db' is missed");
-
+            var dbName = configuration.GetConnectionStringOrThrow("db");
             log.LogInformation($"use db '{dbName}' as {typeof(IWorksDb)}");
             return dbs.FirstOrDefault(db => db.Name == dbName && dbName != Name)
                 ?? throw new PhysException($"works db '{dbName}' not found");

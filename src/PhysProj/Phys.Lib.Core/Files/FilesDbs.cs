@@ -55,10 +55,7 @@ namespace Phys.Lib.Core.Files
 
         private IFilesDb GetDb(IEnumerable<IFilesDb> dbs)
         {
-            var dbName = configuration.GetConnectionString("db");
-            if (dbName == null)
-                throw new PhysException($"connection string 'db' is missed");
-
+            var dbName = configuration.GetConnectionStringOrThrow("db");
             log.LogInformation($"use db '{dbName}' as {typeof(IFilesDb)}");
             return dbs.FirstOrDefault(db => db.Name == dbName && dbName != Name)
                 ?? throw new PhysException($"files db '{dbName}' not found");
