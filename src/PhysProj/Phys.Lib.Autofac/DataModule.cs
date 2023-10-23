@@ -11,8 +11,8 @@ using Phys.Files.PCloud;
 using Refit;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Files.Storage;
-using Phys.Shared;
 using Phys.Lib.Core;
+using Phys.Mongo.Settings;
 
 namespace Phys.Lib.Autofac
 {
@@ -35,6 +35,7 @@ namespace Phys.Lib.Autofac
 
             builder.RegisterModule(new MongoDbModule(mongoUrl, loggerFactory));
             builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
+            builder.RegisterModule<SettingsModule>();
 
             // files
             var worksFilesPath = configuration.GetConnectionString("works-files");
@@ -44,12 +45,6 @@ namespace Phys.Lib.Autofac
             builder.Register(c => RestService.For<IPCloudApiClient>("https://eapi.pcloud.com/"))
                 .As<IPCloudApiClient>().SingleInstance();
             builder.RegisterType<PCloudFileStorage>()
-                .WithParameter(TypedParameter.From(new PCloudStorageSettings
-                {
-                    Username = "fcbshnik@gmail.com",
-                    Password = "e331380e840b72810ec0fe230553da22",
-                    BaseFolderId = 7289236945,
-                }))
                 .As<IFileStorage>().SingleInstance();
             builder.RegisterType<FilesContentMigrator>()
                 .As<IMigrator>()
@@ -57,6 +52,10 @@ namespace Phys.Lib.Autofac
 
             // history
             builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "phys-lib", "history-", loggerFactory))
+                .SingleInstance().AsImplementedInterfaces();
+
+            // settings
+            builder.Register(c => new MongoSettings(mongoUrl, "phys-lib", "settings", loggerFactory.CreateLogger<MongoSettings>()))
                 .SingleInstance().AsImplementedInterfaces();
 
             // rabbit

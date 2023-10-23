@@ -12,12 +12,12 @@ namespace Phys.Files.PCloud
 
         private readonly IPCloudApiClient api;
         private readonly ILogger<PCloudFileStorage> log;
-        private readonly PCloudStorageSettings settings;
+        private readonly Func<PCloudStorageSettings> settings;
 
         private string? accessToken;
         private List<MetadataResponse>? list;
 
-        public PCloudFileStorage(IPCloudApiClient api, PCloudStorageSettings settings, ILogger<PCloudFileStorage> log)
+        public PCloudFileStorage(IPCloudApiClient api, Func<PCloudStorageSettings> settings, ILogger<PCloudFileStorage> log)
         {
             this.api = api;
             this.settings = settings;
@@ -79,7 +79,7 @@ namespace Phys.Files.PCloud
             var pathParts = path.Split('/');
             var segments = pathParts.SkipLast(1).ToList();
             var fileName = pathParts.Last();
-            var targetFolderId = settings.BaseFolderId;
+            var targetFolderId = settings().BaseFolderId;
             var level = 0;
 
             // build tree if not exists
@@ -124,7 +124,7 @@ namespace Phys.Files.PCloud
         {
             if (accessToken == null)
             {
-                var response = api.GetUserInfo(settings.Username, settings.Password).Result;
+                var response = api.GetUserInfo(settings().Username, settings().Password).Result;
                 if (response.Result != 0)
                     throw new PhysException($"pcloud returned {response.Result} {response.Error} for login");
 
@@ -139,9 +139,9 @@ namespace Phys.Files.PCloud
 
             if (list == null)
             {
-                var response = api.ListFolder(settings.BaseFolderId, accessToken!).Result;
+                var response = api.ListFolder(settings().BaseFolderId, accessToken!).Result;
                 if (response.Result != 0)
-                    throw new PhysException($"pcloud returned {response.Result} {response.Error} for list folder {settings.BaseFolderId}");
+                    throw new PhysException($"pcloud returned {response.Result} {response.Error} for list folder {settings().BaseFolderId}");
 
                 list = Flatten(response.Metadata);
                 log.LogInformation($"updated list");
@@ -162,7 +162,7 @@ namespace Phys.Files.PCloud
         private string GetPath(MetadataResponse metadata, string? path = null)
         {
             path = NormilizePath(path == null ? metadata.Name : Path.Combine(metadata.Name, path));
-            if (metadata.Parentfolderid == settings.BaseFolderId)
+            if (metadata.Parentfolderid == settings().BaseFolderId)
                 return path;
 
             var parent = list?.First(m => m.Folderid == metadata.Parentfolderid);
