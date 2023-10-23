@@ -29,7 +29,7 @@ namespace Phys.Lib.Core.Files.Storage
 
         public string Name => "files-content";
 
-        public void Migrate(MigrationDto migration)
+        public void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {
             var src = storages[migration.Source];
             var dst = storages[migration.Destination];
@@ -62,6 +62,7 @@ namespace Phys.Lib.Core.Files.Storage
                         log.LogInformation($"copied file '{srcFileInfo.Name}' size {srcFileInfo.Size} bytes");
                         filesDb.Update(file.Code, new FileDbUpdate { AddLink = new FileDbo.LinkDbo { StorageCode = dst.Code, FileId = dstFileInfo.Id } });
                         migration.MigratedCount++;
+                        progress.Report(migration);
                     }
                 }
             } while (!result.IsCompleted);

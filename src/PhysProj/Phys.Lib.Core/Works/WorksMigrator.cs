@@ -22,7 +22,7 @@ namespace Phys.Lib.Core.Works
 
         public IEnumerable<string> Destinations => dbs.Select(x => x.Name);
 
-        public void Migrate(MigrationDto migration)
+        public void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {
             var reader = readers.Find(r => string.Equals(r.Name, migration.Source, StringComparison.OrdinalIgnoreCase));
             if (reader == null)
@@ -35,11 +35,11 @@ namespace Phys.Lib.Core.Works
             var baseWriter = new WorksBaseWriter(db);
             var linksWriter = new WorksLinksWriter(db);
 
-            // migrate work in two passess for support relational DBMS with db constrains
+            // migrate work in two passess for support relational DBMS with db constrains because of works is self referenced
             // in first pass links to works excluded
-            Migrator<WorkDbo>.Migrate(reader, baseWriter, migration);
+            Migrator<WorkDbo>.Migrate(reader, baseWriter, migration, progress);
             // in second pass copy all links to works
-            Migrator<WorkDbo>.Migrate(reader, linksWriter, migration);
+            Migrator<WorkDbo>.Migrate(reader, linksWriter, migration, progress);
         }
     }
 }

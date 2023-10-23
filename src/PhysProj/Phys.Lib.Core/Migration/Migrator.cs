@@ -21,7 +21,7 @@ namespace Phys.Lib.Core.Migration
 
         public IEnumerable<string> Destinations => writers.Select(x => x.Name);
 
-        public static void Migrate(IDbReader<T> source, IDbWriter<T> destination, MigrationDto migration)
+        public static void Migrate(IDbReader<T> source, IDbWriter<T> destination, MigrationDto migration, IProgress<MigrationDto> progress)
         {
             IDbReaderResult<T> result = null!;
 
@@ -30,10 +30,11 @@ namespace Phys.Lib.Core.Migration
                 result = source.Read(new DbReaderQuery(100, result?.Cursor));
                 destination.Write(result.Values);
                 migration.MigratedCount += result.Values.Count;
+                progress.Report(migration);
             } while (!result.IsCompleted);
         }
 
-        public virtual void Migrate(MigrationDto migration)
+        public virtual void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {
             var reader = readers.Find(r => string.Equals(r.Name, migration.Source, StringComparison.OrdinalIgnoreCase));
             if (reader == null)
@@ -43,7 +44,7 @@ namespace Phys.Lib.Core.Migration
             if (writer == null)
                 throw new PhysException($"writer '{migration.Destination}' not found for '{typeof(T)}' values");
 
-            Migrator<T>.Migrate(reader, writer, migration);
+            Migrator<T>.Migrate(reader, writer, migration, progress);
         }
     }
 }

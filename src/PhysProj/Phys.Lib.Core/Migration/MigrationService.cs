@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Phys.Shared;
 using Phys.HistoryDb;
+using Phys.Shared.Utils;
 
 namespace Phys.Lib.Core.Migration
 {
@@ -58,7 +59,8 @@ namespace Phys.Lib.Core.Migration
                 if (migrator == null)
                     throw new PhysException($"migrator '{migration.Migrator}' not found");
 
-                migrator.Migrate(migration);
+                var progress = new ProgressWithInterval<MigrationDto>(migrationsHistory.Save, TimeSpan.FromSeconds(1));
+                migrator.Migrate(migration, progress);
 
                 migration.CompletedAt = DateTime.UtcNow;
                 migration.Status = "completed";

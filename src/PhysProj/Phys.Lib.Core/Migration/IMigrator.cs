@@ -11,6 +11,6 @@ namespace Phys.Lib.Core.Migration
 
         IEnumerable<string> Destinations { get; }
 
-        void Migrate(MigrationDto migration);
+        void Migrate(MigrationDto migration, IProgress<MigrationDto> progress);
     }
 }
