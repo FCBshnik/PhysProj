@@ -72,7 +72,7 @@ namespace Phys.Lib.Tests.Db
             var migration = migrations.Create(new MigrationTask { Migrator = "files-content", Source = storageSrc.Code, Destination = storageDst.Code });
             migrations.Execute(migration);
             migration.Error.ShouldBeNull(migration.Error);
-            migration.MigratedCount.ShouldBe(3);
+            migration.Stats.Created.ShouldBe(3);
 
             var files = fileService.Find();
             files.Count.ShouldBe(3);

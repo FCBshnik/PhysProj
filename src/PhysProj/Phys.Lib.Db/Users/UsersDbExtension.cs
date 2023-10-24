@@ -4,7 +4,7 @@
     {
         public static UserDbo GetByName(this IUsersDb db, string name)
         {
-            return FindByName(db, name) ?? throw new PhysDbException($"failed get user with name '{name}' from '{db.GetType().FullName}' due user not found");
+            return FindByName(db, name) ?? throw new PhysDbException($"failed get user with name '{name}' from '{db.GetType().FullName}': user not found");
         }
 
         public static UserDbo? FindByName(this IUsersDb db, string name)

@@ -8,7 +8,6 @@ using Phys.Lib.Core.Validation;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Db.Users;
 using Phys.HistoryDb;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
@@ -47,13 +46,13 @@ namespace Phys.Lib.Autofac
                 .As<IHistoryDb<MigrationDto>>()
                 .SingleInstance();
             builder.Register(c => c.Resolve<IEnumerable<IUsersDb>>().Select(db => new UsersWriter(db)))
-                .As<IEnumerable<IDbWriter<UserDbo>>>()
+                .As<IEnumerable<IMigrationWriter<UserDbo>>>()
                 .SingleInstance();
             builder.Register(c => c.Resolve<IEnumerable<IAuthorsDb>>().Select(db => new AuthorsWriter(db)))
-                .As<IEnumerable<IDbWriter<AuthorDbo>>>()
+                .As<IEnumerable<IMigrationWriter<AuthorDbo>>>()
                 .SingleInstance();
             builder.Register(c => c.Resolve<IEnumerable<IFilesDb>>().Select(db => new FilesWriter(db)))
-                .As<IEnumerable<IDbWriter<FileDbo>>>()
+                .As<IEnumerable<IMigrationWriter<FileDbo>>>()
                 .SingleInstance();
             builder.RegisterType<Migrator<UserDbo>>().WithParameter(TypedParameter.From("users"))
                 .As<IMigrator>()

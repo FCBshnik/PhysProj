@@ -8,6 +8,9 @@
 
         public WorkDbo.InfoDbo? AddInfo { get; set; }
 
+        /// <summary>
+        /// Deletes info for specified language
+        /// </summary>
         public string? DeleteInfo { get; set; }
 
         public string? AddAuthor { get; set; }

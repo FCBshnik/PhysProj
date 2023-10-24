@@ -2687,7 +2687,7 @@ export class MigrationModel implements IMigrationModel {
     completedAt?: Date | undefined;
     result?: string | undefined;
     error?: string | undefined;
-    migratedCount?: number;
+    stats?: StatsModel;
 
     constructor(data?: IMigrationModel) {
         if (data) {
@@ -2710,7 +2710,7 @@ export class MigrationModel implements IMigrationModel {
             this.completedAt = _data["completedAt"] ? new Date(_data["completedAt"].toString()) : <any>undefined;
             this.result = _data["result"];
             this.error = _data["error"];
-            this.migratedCount = _data["migratedCount"];
+            this.stats = _data["stats"] ? StatsModel.fromJS(_data["stats"]) : <any>undefined;
         }
     }
 
@@ -2733,7 +2733,7 @@ export class MigrationModel implements IMigrationModel {
         data["completedAt"] = this.completedAt ? this.completedAt.toISOString() : <any>undefined;
         data["result"] = this.result;
         data["error"] = this.error;
-        data["migratedCount"] = this.migratedCount;
+        data["stats"] = this.stats ? this.stats.toJSON() : <any>undefined;
         return data;
     }
 }
@@ -2749,7 +2749,7 @@ export interface IMigrationModel {
     completedAt?: Date | undefined;
     result?: string | undefined;
     error?: string | undefined;
-    migratedCount?: number;
+    stats?: StatsModel;
 }
 
 export class MigrationTaskModel implements IMigrationTaskModel {
@@ -2894,6 +2894,54 @@ export class OkModel implements IOkModel {
 export interface IOkModel {
     time?: Date;
     version?: string | undefined;
+}
+
+export class StatsModel implements IStatsModel {
+    created?: number;
+    updated?: number;
+    skipped?: number;
+    failed?: number;
+
+    constructor(data?: IStatsModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.created = _data["created"];
+            this.updated = _data["updated"];
+            this.skipped = _data["skipped"];
+            this.failed = _data["failed"];
+        }
+    }
+
+    static fromJS(data: any): StatsModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatsModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["created"] = this.created;
+        data["updated"] = this.updated;
+        data["skipped"] = this.skipped;
+        data["failed"] = this.failed;
+        return data;
+    }
+}
+
+export interface IStatsModel {
+    created?: number;
+    updated?: number;
+    skipped?: number;
+    failed?: number;
 }
 
 export class UserModel implements IUserModel {

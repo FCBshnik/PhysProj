@@ -6,9 +6,9 @@ namespace Phys.Lib.Core.Migration
     internal class Migrator<T> : IMigrator
     {
         protected readonly List<IDbReader<T>> readers;
-        protected readonly List<IDbWriter<T>> writers;
+        protected readonly List<IMigrationWriter<T>> writers;
 
-        public Migrator(string name, IEnumerable<IDbReader<T>> readers, IEnumerable<IDbWriter<T>> writers)
+        public Migrator(string name, IEnumerable<IDbReader<T>> readers, IEnumerable<IMigrationWriter<T>> writers)
         {
             Name = name;
             this.readers = readers.ToList();
@@ -21,15 +21,14 @@ namespace Phys.Lib.Core.Migration
 
         public IEnumerable<string> Destinations => writers.Select(x => x.Name);
 
-        public static void Migrate(IDbReader<T> source, IDbWriter<T> destination, MigrationDto migration, IProgress<MigrationDto> progress)
+        public static void Migrate(IDbReader<T> source, IMigrationWriter<T> destination, MigrationDto migration, IProgress<MigrationDto> progress)
         {
             IDbReaderResult<T> result = null!;
 
             do
             {
                 result = source.Read(new DbReaderQuery(100, result?.Cursor));
-                destination.Write(result.Values);
-                migration.MigratedCount += result.Values.Count;
+                destination.Write(result.Values, migration.Stats);
                 progress.Report(migration);
             } while (!result.IsCompleted);
         }

@@ -24,6 +24,17 @@ namespace Phys.Lib.Core.Migration
 
         public string? Error { get; set; }
 
-        public int MigratedCount { get; set; }
+        public StatsDto Stats { get; set; } = new StatsDto();
+
+        public class StatsDto
+        {
+            public int Created { get; set; }
+
+            public int Updated { get; set; }
+
+            public int Skipped { get; set; }
+
+            public int Failed { get; set; }
+        }
     }
 }

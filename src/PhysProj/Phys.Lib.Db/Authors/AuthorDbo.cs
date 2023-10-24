@@ -1,6 +1,9 @@
-﻿namespace Phys.Lib.Db.Authors
+﻿using Generator.Equals;
+
+namespace Phys.Lib.Db.Authors
 {
-    public class AuthorDbo
+    [Equatable]
+    public sealed partial class AuthorDbo
     {
         public required string Code { get; set; }
 
@@ -8,9 +11,11 @@
 
         public string? Died { get; set; }
 
+        [UnorderedEquality]
         public List<InfoDbo> Infos { get; set; } = new List<InfoDbo>();
 
-        public class InfoDbo
+        [Equatable]
+        public sealed partial class InfoDbo
         {
             public required string Language { get; set; }
 

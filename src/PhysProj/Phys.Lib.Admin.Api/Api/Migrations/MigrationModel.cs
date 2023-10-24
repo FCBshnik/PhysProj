@@ -24,7 +24,29 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
 
         public string? Error { get; set; }
 
-        public int MigratedCount { get; set; }
+        public StatsModel Stats { get; set; }
+
+        public class StatsModel
+        {
+            public int Created { get; set; }
+
+            public int Updated { get; set; }
+
+            public int Skipped { get; set; }
+
+            public int Failed { get; set; }
+
+            public static StatsModel Map(MigrationDto.StatsDto migration)
+            {
+                return new StatsModel
+                {
+                    Created = migration.Created,
+                    Updated = migration.Updated,
+                    Skipped = migration.Skipped,
+                    Failed = migration.Failed,
+                };
+            }
+        }
 
         public static MigrationModel Map(MigrationDto migration)
         {
@@ -40,7 +62,7 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
                 StartedAt = migration.StartedAt,
                 CompletedAt = migration.CompletedAt,
                 Error = migration.Error,
-                MigratedCount = migration.MigratedCount,
+                Stats = StatsModel.Map(migration.Stats),
             };
         }
     }

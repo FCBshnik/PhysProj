@@ -59,7 +59,7 @@ import * as api from '$lib/services/ApiService';
           <th>Status</th>
           <th>Start</th>
           <th>End</th>
-          <th>Count</th>
+          <th>Stats</th>
           <th>Result</th>
         </tr>
       </thead>
@@ -73,7 +73,7 @@ import * as api from '$lib/services/ApiService';
           <td>{migration.status}</td>
           <td><DateTime dateTime={migration.createdAt}/></td>
           <td><DateTime dateTime={migration.completedAt}/></td>
-          <td>{migration.migratedCount}</td>
+          <td>{JSON.stringify(migration.stats)}</td>
           <td>{migration.result}</td>
         </tr>
         {#if migration.error}

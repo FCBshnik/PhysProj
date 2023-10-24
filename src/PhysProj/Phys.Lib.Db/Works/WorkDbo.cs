@@ -1,6 +1,9 @@
-﻿namespace Phys.Lib.Db.Works
+﻿using Generator.Equals;
+
+namespace Phys.Lib.Db.Works
 {
-    public class WorkDbo
+    [Equatable]
+    public sealed partial class WorkDbo
     {
         /// <summary>
         /// Unique code of work
@@ -20,16 +23,19 @@
         /// <summary>
         /// Translatable information about work
         /// </summary>
+        [UnorderedEquality]
         public List<InfoDbo> Infos { get; set; } = new List<InfoDbo>();
 
         /// <summary>
         /// Collection of sub works in collected work
         /// </summary>
+        [UnorderedEquality]
         public List<string> SubWorksCodes { get; set; } = new List<string>();
 
         /// <summary>
         /// Collection of authors of work
         /// </summary>
+        [UnorderedEquality]
         public List<string> AuthorsCodes { get; set; } = new List<string>();
 
         /// <summary>
@@ -37,9 +43,11 @@
         /// </summary>
         public string? OriginalCode { get; set; }
 
+        [UnorderedEquality]
         public List<string> FilesCodes { get; set; } = new List<string>();
 
-        public class InfoDbo
+        [Equatable]
+        public sealed partial class InfoDbo
         {
             public required string Language { get; set; }
 

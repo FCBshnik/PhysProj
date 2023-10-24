@@ -1,9 +1,9 @@
-﻿using Phys.Lib.Db.Authors;
-using Phys.Lib.Db.Migrations;
+﻿using Phys.Lib.Core.Migration;
+using Phys.Lib.Db.Authors;
 
 namespace Phys.Lib.Core.Authors
 {
-    internal class AuthorsWriter : IDbWriter<AuthorDbo>
+    internal class AuthorsWriter : IMigrationWriter<AuthorDbo>
     {
         private readonly IAuthorsDb db;
 
@@ -14,14 +14,28 @@ namespace Phys.Lib.Core.Authors
 
         public string Name => db.Name;
 
-        public void Write(IEnumerable<AuthorDbo> values)
+        public void Write(IEnumerable<AuthorDbo> values, MigrationDto.StatsDto stats)
         {
             foreach (var author in values)
             {
-                db.Create(author.Code);
+                var prev = db.FindByCode(author.Code);
+                if (author.Equals(prev))
+                {
+                    stats.Skipped++;
+                    continue;
+                }
+
+                if (prev != null)
+                    foreach (var info in prev.Infos)
+                        db.Update(author.Code, new AuthorDbUpdate { DeleteInfo = info.Language });
+                else
+                    db.Create(author.Code);
+
                 db.Update(author.Code, new AuthorDbUpdate { Born = author.Born, Died = author.Died, });
                 foreach (var info in author.Infos)
                     db.Update(author.Code, new AuthorDbUpdate { AddInfo = info });
+
+                _ = prev == null ? stats.Created++ : stats.Updated++;
             }
         }
     }

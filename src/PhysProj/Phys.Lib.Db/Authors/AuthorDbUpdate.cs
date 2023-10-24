@@ -8,6 +8,9 @@
 
         public AuthorDbo.InfoDbo? AddInfo { get; set; }
 
+        /// <summary>
+        /// Delete info for specified language
+        /// </summary>
         public string? DeleteInfo { get; set; }
     }
 }

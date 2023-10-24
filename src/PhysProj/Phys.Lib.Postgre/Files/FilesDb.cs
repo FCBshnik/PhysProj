@@ -67,7 +67,7 @@ namespace Phys.Lib.Postgres.Files
             {
                 if (update.DeleteLink != null)
                     filesLinks.Delete(cnx, q => q.Where(FileModel.LinkModel.FileCodeColumn, code)
-                        .Where(FileModel.LinkModel.PathColumn, update.DeleteLink.FileId)
+                        .Where(FileModel.LinkModel.TypeColumn, update.DeleteLink.StorageCode)
                         .Where(FileModel.LinkModel.PathColumn, update.DeleteLink.FileId));
 
                 if (update.AddLink != null)

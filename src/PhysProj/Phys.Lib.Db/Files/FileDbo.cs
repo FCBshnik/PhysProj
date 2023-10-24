@@ -1,6 +1,9 @@
-﻿namespace Phys.Lib.Db.Files
+﻿using Generator.Equals;
+
+namespace Phys.Lib.Db.Files
 {
-    public class FileDbo
+    [Equatable]
+    public sealed partial class FileDbo
     {
         public required string Code { get; set; }
 
@@ -8,9 +11,11 @@
 
         public long Size { get; set; }
 
+        [UnorderedEquality]
         public List<LinkDbo> Links { get; set; } = new List<LinkDbo>();
 
-        public class LinkDbo
+        [Equatable]
+        public sealed partial class LinkDbo
         {
             public required string StorageCode { get; set; }
 

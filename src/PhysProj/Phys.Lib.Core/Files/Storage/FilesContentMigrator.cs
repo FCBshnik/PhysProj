@@ -43,13 +43,20 @@ namespace Phys.Lib.Core.Files.Storage
                 {
                     var srcLink = file.Links.Find(l => l.StorageCode == src.Code);
                     var dstLink = file.Links.Find(l => l.StorageCode == dst.Code);
-                    if (srcLink == null || dstLink != null)
+                    if (srcLink == null)
                         continue;
+
+                    if (dstLink != null)
+                    {
+                        migration.Stats.Skipped++;
+                        continue;
+                    }
 
                     var srcFileInfo = src.Get(srcLink.FileId);
                     if (srcFileInfo == null)
                     {
                         log.LogError($"file '{srcLink.FileId}' not found in '{src.Code}' storage");
+                        migration.Stats.Failed++;
                         continue;
                     }
 
@@ -59,7 +66,7 @@ namespace Phys.Lib.Core.Files.Storage
                         var dstFileInfo = dst.Upload(data, srcFileInfo.Name);
                         log.LogInformation($"copied file '{srcFileInfo.Name}' size {srcFileInfo.Size} bytes");
                         filesDb.Update(file.Code, new FileDbUpdate { AddLink = new FileDbo.LinkDbo { StorageCode = dst.Code, FileId = dstFileInfo.Id } });
-                        migration.MigratedCount++;
+                        migration.Stats.Created++;
                         progress.Report(migration);
                     }
                 }

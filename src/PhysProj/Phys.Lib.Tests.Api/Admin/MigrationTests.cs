@@ -37,7 +37,7 @@ namespace Phys.Lib.Tests.Api.Admin
                     if (migration.Status == "completed")
                     {
                         migration.Result.Should().Be(expectedResult);
-                        migration.MigratedCount.Should().Be(expectedMigratedCount);
+                        migration.Stats.Created.Should().Be(expectedMigratedCount);
                         return migration;
                     }
 

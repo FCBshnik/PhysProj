@@ -87,8 +87,8 @@ namespace Phys.Lib.Tests.Db
                 new WorkDbo { Code = "work-6", OriginalCode = "work-7" },
                 new WorkDbo { Code = "work-7" },
             }.OrderBy(u => u.Code).ToList();
-            new WorksBaseWriter(srcDb).Write(works);
-            new WorksLinksWriter(srcDb).Write(works);
+            new WorksBaseWriter(srcDb).Write(works, new MigrationDto.StatsDto());
+            new WorksLinksWriter(srcDb).Write(works, new MigrationDto.StatsDto());
 
             var migration = migrations.Create(new MigrationTask { Migrator = "works", Source = source, Destination = destination });
             migrations.Execute(migration);
@@ -109,7 +109,7 @@ namespace Phys.Lib.Tests.Db
                 new FileDbo { Code = "file-1", Format = "pdf", Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { StorageCode = "type-1", FileId = "path-1" } } },
                 new FileDbo { Code = "file-2", Size = 1024, Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { StorageCode = "type-2", FileId = "path-2" } } },
             }.OrderBy(u => u.Code).ToList();
-            new FilesWriter(srcDb).Write(files);
+            new FilesWriter(srcDb).Write(files, new MigrationDto.StatsDto());
 
             var migration = migrations.Create(new MigrationTask { Migrator = "files", Source = source, Destination = destination });
             migrations.Execute(migration);
@@ -130,7 +130,7 @@ namespace Phys.Lib.Tests.Db
                 new AuthorDbo { Code = "author-1", Born = "1234", Infos = new List<AuthorDbo.InfoDbo> { new AuthorDbo.InfoDbo { Language = "en", FullName = "FN" } } },
                 new AuthorDbo { Code = "author-2", Died = "2345" },
             }.OrderBy(u => u.Code).ToList();
-            new AuthorsWriter(srcDb).Write(authors);
+            new AuthorsWriter(srcDb).Write(authors, new MigrationDto.StatsDto());
 
             var migration = migrations.Create(new MigrationTask { Migrator = "authors", Source = source, Destination = destination });
             migrations.Execute(migration);
@@ -151,7 +151,7 @@ namespace Phys.Lib.Tests.Db
                 new UserDbo { Name = "user-1", NameLowerCase = "user-1", PasswordHash = "1", Roles = new List<string> { "role1", "role2" } },
                 new UserDbo { Name = "user-2", NameLowerCase = "user-2", PasswordHash = "1", Roles = new List<string> { "role3" } }
             }.OrderBy(u => u.Name).ToList();
-            new UsersWriter(srcDb).Write(users);
+            new UsersWriter(srcDb).Write(users, new MigrationDto.StatsDto());
 
             var migration = migrations.Create(new MigrationTask { Migrator = "users", Source = source, Destination = destination });
             migrations.Execute(migration);
