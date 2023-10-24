@@ -10,11 +10,10 @@ namespace Phys.Lib.Core.Files.Storage
     {
         private readonly ILogger<FilesContentMigrator> log;
         private readonly Dictionary<string, IFileStorage> storages;
-        private readonly IFilesDbs filesDb;
+        private readonly IFilesDb filesDb;
 
-        public FilesContentMigrator(IDbReader<FileDbo> fileDbReader, IEnumerable<IFileStorage> storages, ILogger<FilesContentMigrator> log, IFilesDbs filesDb)
+        public FilesContentMigrator(IEnumerable<IFileStorage> storages, ILogger<FilesContentMigrator> log, IFilesDb filesDb)
         {
-            ArgumentNullException.ThrowIfNull(fileDbReader);
             ArgumentNullException.ThrowIfNull(storages);
             ArgumentNullException.ThrowIfNull(log);
 
@@ -38,8 +37,7 @@ namespace Phys.Lib.Core.Files.Storage
 
             do
             {
-                var reader = filesDb.GetReader();
-                result = reader.Read(new DbReaderQuery(100, result?.Cursor));
+                result = filesDb.Read(new DbReaderQuery(100, result?.Cursor));
 
                 foreach (var file in result.Values)
                 {

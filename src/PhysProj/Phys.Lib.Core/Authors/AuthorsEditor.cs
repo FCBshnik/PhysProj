@@ -9,11 +9,11 @@ namespace Phys.Lib.Core.Authors
     internal class AuthorsEditor : IAuthorsEditor
     {
         private readonly ILogger<AuthorsEditor> log;
-        private readonly IAuthorsDbs db;
+        private readonly IAuthorsDb db;
         private readonly IAuthorsSearch authorsSearch;
         private readonly IWorksSearch worksSearch;
 
-        public AuthorsEditor(IAuthorsDbs db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, ILogger<AuthorsEditor> log)
+        public AuthorsEditor(IAuthorsDb db, IWorksSearch worksSearch, IAuthorsSearch authorsSearch, ILogger<AuthorsEditor> log)
         {
             this.db = db ?? throw new ArgumentNullException(nameof(db));
             this.worksSearch = worksSearch ?? throw new ArgumentNullException(nameof(worksSearch));

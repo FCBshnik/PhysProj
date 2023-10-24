@@ -1,9 +1,9 @@
-﻿namespace Phys.Lib.Db.Authors
-{
-    public interface IAuthorsDb
-    {
-        string Name { get; }
+﻿using Phys.Shared;
 
+namespace Phys.Lib.Db.Authors
+{
+    public interface IAuthorsDb : INamed
+    {
         List<AuthorDbo> Find(AuthorsDbQuery query);
 
         void Create(string code);

@@ -1,9 +1,9 @@
-﻿namespace Phys.Lib.Db.Works
-{
-    public interface IWorksDb
-    {
-        string Name { get; }
+﻿using Phys.Shared;
 
+namespace Phys.Lib.Db.Works
+{
+    public interface IWorksDb : INamed
+    {
         List<WorkDbo> Find(WorksDbQuery query);
 
         void Create(string code);

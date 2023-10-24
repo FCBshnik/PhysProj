@@ -12,7 +12,7 @@ namespace Phys.Tests.External.PCloud
     {
         protected static readonly LoggerFactory loggerFactory = new LoggerFactory();
 
-        private readonly PCloudFileStorage storage = new PCloudFileStorage(PCloudTestConsts.Api, PCloudTestConsts.Settings, loggerFactory.CreateLogger<PCloudFileStorage>());
+        private readonly PCloudFileStorage storage = new PCloudFileStorage(PCloudTestConsts.Api, () => PCloudTestConsts.Settings, loggerFactory.CreateLogger<PCloudFileStorage>());
 
         protected readonly ITestOutputHelper output;
 

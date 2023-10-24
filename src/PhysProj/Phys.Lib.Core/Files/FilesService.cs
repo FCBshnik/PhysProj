@@ -1,19 +1,21 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Phys.Lib.Db.Files;
+using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Core.Files
 {
     internal class FilesService : IFilesService
     {
         private readonly ILogger<FilesService> log;
-        private readonly IFilesDbs db;
+        private readonly IFilesDb db;
+        private readonly IWorksDb worksDb;
 
-        public FilesService(IFilesDbs db, ILogger<FilesService> log)
+        public FilesService(IFilesDb db, ILogger<FilesService> log, IWorksDb worksDb)
         {
-            ArgumentNullException.ThrowIfNull(db);
-
             this.db = db;
             this.log = log;
+            this.worksDb = worksDb;
         }
 
         public FileDbo Create(string code, long size, string? format)
@@ -62,9 +64,18 @@ namespace Phys.Lib.Core.Files
         {
             ArgumentNullException.ThrowIfNull(file);
 
+            var works = worksDb.Find(new WorksDbQuery { FileCode = file.Code });
+            if (works.Count != 0)
+                throw ValidationError($"can not delete file linked to work");
+
             db.Delete(file.Code);
 
-            log.Log(LogLevel.Information, $"deletd file '{file}'");
+            log.Log(LogLevel.Information, $"deleted file '{file}'");
+        }
+
+        private ValidationException ValidationError(string message)
+        {
+            return new ValidationException(message);
         }
     }
 }

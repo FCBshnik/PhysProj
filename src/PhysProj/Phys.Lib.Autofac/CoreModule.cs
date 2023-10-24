@@ -11,6 +11,7 @@ using Phys.HistoryDb;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
+using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Autofac
 {
@@ -22,8 +23,8 @@ namespace Phys.Lib.Autofac
             {
                 var childCtx = c.Resolve<Func<IComponentContext>>();
                 return new Validator(t => childCtx().Resolve(t));
-            })
-                .As<IValidator>().SingleInstance();
+            }).As<IValidator>().SingleInstance();
+
             builder.RegisterModule(new ValidationModule(System.Reflection.Assembly.GetEntryAssembly()!));
             builder.RegisterModule(new ValidationModule(ThisAssembly));
 
@@ -36,10 +37,11 @@ namespace Phys.Lib.Autofac
                 .RegisterService<FilesService, IFilesService>()
                 .RegisterService<MigrationService, IMigrationService>();
 
-            builder.RegisterType<UsersDbs>().As<IUsersDbs>().SingleInstance();
-            builder.RegisterType<AuthorsDbs>().As<IAuthorsDbs>().SingleInstance();
-            builder.RegisterType<WorksDbs>().As<IWorksDbs>().SingleInstance();
-            builder.RegisterType<FilesDbs>().As<IFilesDbs>().SingleInstance();
+            // override last db implementations by decorator which selects main db
+            builder.RegisterType<MainUsersDb>().As<IUsersDb>().SingleInstance();
+            builder.RegisterType<MainAuthorsDb>().As<IAuthorsDb>().SingleInstance();
+            builder.RegisterType<MainWorksDb>().As<IWorksDb>().SingleInstance();
+            builder.RegisterType<FilesDbs>().As<IFilesDb>().SingleInstance();
 
             builder.Register(c => c.Resolve<IHistoryDbFactory>().Create<MigrationDto>("migrations"))
                 .As<IHistoryDb<MigrationDto>>()
