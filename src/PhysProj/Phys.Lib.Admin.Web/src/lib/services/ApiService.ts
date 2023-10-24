@@ -8,8 +8,11 @@ function fetchAuth(url: RequestInfo, init?: RequestInit) {
     if (init && authToken)
         init.headers = { ...init?.headers, 'Authorization': `Bearer ${authToken}` };
     return fetch(url, init).then(r => {
-        if (r.status == 500)
+        console.info(r.url);
+        if (!r.url.endsWith('/api/health/check')) {
+          if (r.status == 500)
             notificationsService.push("Server error");
+        }
         if (r.status == 401) {
             notificationsService.push("Auth token expired");
             apiService.clearToken();
