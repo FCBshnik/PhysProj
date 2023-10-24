@@ -21,39 +21,34 @@ import * as api from '$lib/services/ApiService';
     }
 </script>
 
-<article>
-  <section class="p-2">Migrations</section>
-  <section class="flex flex-row items-center p-4 gap-4">
-    <div class="w-auto">
-      Migrator
-    </div>
-    <div class="w-auto">
+<article class="flex flex-col grow gap-2">
+  <section class="gap-2">Migrations</section>
+  <section class="flex flex-row items-center gap-2">
+    <div class="w-full">
       <select bind:value={selectedMigrator}>
         {#each migrators as m}
           <option value={m}>{m.name}</option>
         {/each}
       </select>
 		</div>
-    {#if selectedMigrator?.sources && selectedMigrator?.destinations}
-    <div class="w-auto">
-      <select bind:value={selectedSource}>
-        {#each selectedMigrator.sources as s}
+    <div class="w-1/4">
+      <select bind:value={selectedSource} disabled={!selectedMigrator}>
+        {#each selectedMigrator?.sources || [] as s}
           <option value={s}>{s}</option>
         {/each}
       </select>
 		</div>
-    <div class="w-auto">
-      <select bind:value={selectedDestination}>
-        {#each selectedMigrator.destinations as s}
+    <div class="w-1/4">
+      <select bind:value={selectedDestination} disabled={!selectedMigrator}>
+        {#each selectedMigrator?.destinations || [] as s}
           <option value={s}>{s}</option>
         {/each}
       </select>
 		</div>
-    {/if}
     <button class="w-auto" on:click={start} disabled={selectedMigrator == undefined}>Start</button>
     <button class="w-auto" on:click={refresh}>Refresh</button>
   </section>
-  <section class="flex flex-row items-center p-4 gap-4">
+  <section class="flex flex-row items-center gap-2">
     <table class="table-auto w-full">
       <thead class="">
         <tr class="border-b-2 border-b-gray-700">

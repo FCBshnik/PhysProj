@@ -28,6 +28,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"nanoevents": "^8.0.0"
+		"nanoevents": "^8.0.0",
+		"svelte-jsoneditor": "^0.18.10"
 	}
 }

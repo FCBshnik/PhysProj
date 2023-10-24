@@ -970,6 +970,157 @@ export class AdminApiClient {
     /**
      * @return OK
      */
+    listSettings(): Promise<string[]> {
+        let url_ = this.baseUrl + "/api/settings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processListSettings(_response));
+        });
+    }
+
+    protected processListSettings(response: Response): Promise<string[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getSettings(code: string): Promise<any> {
+        let url_ = this.baseUrl + "/api/settings/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetSettings(_response));
+        });
+    }
+
+    protected processGetSettings(response: Response): Promise<any> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<any>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateSettings(code: string, body: JsonValue): Promise<any> {
+        let url_ = this.baseUrl + "/api/settings/{code}";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateSettings(_response));
+        });
+    }
+
+    protected processUpdateSettings(response: Response): Promise<any> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<any>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     login(body: LoginModel): Promise<LoginSuccessModel> {
         let url_ = this.baseUrl + "/api/user/login";
         url_ = url_.replace(/[?&]$/, "");
@@ -2243,6 +2394,130 @@ export class FileStorageModel implements IFileStorageModel {
 export interface IFileStorageModel {
     code?: string | undefined;
     name?: string | undefined;
+}
+
+export class JsonNode implements IJsonNode {
+    options?: JsonNodeOptions;
+    parent?: JsonNode;
+    root?: JsonNode;
+
+    constructor(data?: IJsonNode) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.options = _data["options"] ? JsonNodeOptions.fromJS(_data["options"]) : <any>undefined;
+            this.parent = _data["parent"] ? JsonNode.fromJS(_data["parent"]) : <any>undefined;
+            this.root = _data["root"] ? JsonNode.fromJS(_data["root"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): JsonNode {
+        data = typeof data === 'object' ? data : {};
+        let result = new JsonNode();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["options"] = this.options ? this.options.toJSON() : <any>undefined;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        data["root"] = this.root ? this.root.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IJsonNode {
+    options?: JsonNodeOptions;
+    parent?: JsonNode;
+    root?: JsonNode;
+}
+
+export class JsonNodeOptions implements IJsonNodeOptions {
+    propertyNameCaseInsensitive?: boolean;
+
+    constructor(data?: IJsonNodeOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.propertyNameCaseInsensitive = _data["propertyNameCaseInsensitive"];
+        }
+    }
+
+    static fromJS(data: any): JsonNodeOptions {
+        data = typeof data === 'object' ? data : {};
+        let result = new JsonNodeOptions();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["propertyNameCaseInsensitive"] = this.propertyNameCaseInsensitive;
+        return data;
+    }
+}
+
+export interface IJsonNodeOptions {
+    propertyNameCaseInsensitive?: boolean;
+}
+
+export class JsonValue implements IJsonValue {
+    options?: JsonNodeOptions;
+    parent?: JsonNode;
+    root?: JsonNode;
+
+    constructor(data?: IJsonValue) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.options = _data["options"] ? JsonNodeOptions.fromJS(_data["options"]) : <any>undefined;
+            this.parent = _data["parent"] ? JsonNode.fromJS(_data["parent"]) : <any>undefined;
+            this.root = _data["root"] ? JsonNode.fromJS(_data["root"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): JsonValue {
+        data = typeof data === 'object' ? data : {};
+        let result = new JsonValue();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["options"] = this.options ? this.options.toJSON() : <any>undefined;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        data["root"] = this.root ? this.root.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IJsonValue {
+    options?: JsonNodeOptions;
+    parent?: JsonNode;
+    root?: JsonNode;
 }
 
 export class LanguageModel implements ILanguageModel {

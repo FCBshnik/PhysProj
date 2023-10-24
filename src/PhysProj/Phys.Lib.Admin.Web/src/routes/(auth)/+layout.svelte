@@ -15,6 +15,7 @@
   <nav>
     <a href="/home">PhysLibAdmin</a>
     <ul>
+      <a href="/settings">Settings</a>
       <a href="/migrations">Migrations</a>
       <a href="/authors">Authors</a>
       <a href="/works">Works</a>
@@ -24,7 +25,7 @@
       <button on:click={logout}>Logout</button>
     </ul>
   </nav>
-  <div class="flex-grow">
+  <div class="flex flex-col grow">
     <slot />
   </div>
 	<div>
