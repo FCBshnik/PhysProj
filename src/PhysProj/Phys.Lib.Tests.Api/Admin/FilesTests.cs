@@ -44,6 +44,11 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.Links.First().FileId.Should().Be(fileId);
             }
 
+            public void DeleteFailed(string code)
+            {
+                AdminAssert.ShouldFail(() => api.DeleteFileAsync(code), ErrorCode.InvalidArgument);
+            }
+
             public void Delete(string code)
             {
                 var result = api.DeleteFileAsync(code).Result;

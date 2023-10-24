@@ -51,6 +51,8 @@ namespace Phys.Lib.Mongo.Works
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
             if (query.AuthorCode != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.AuthorsCodes, query.AuthorCode));
+            if (query.FileCode != null)
+                filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.FilesCodes, query.FileCode));
             if (query.OriginalCode != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.OriginalCode, query.OriginalCode));
             if (query.SubWorkCode != null)

@@ -59,17 +59,18 @@ namespace Phys.Lib.Postgres.Works
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            var q = new Query(tableName)
-                .LeftJoin(worksInfos.TableName, TableName + "." + WorkModel.CodeColumn, worksInfos.TableName + "." + WorkModel.InfoModel.WorkCodeColumn)
-                .LeftJoin(worksAuthors.TableName, TableName + "." + WorkModel.CodeColumn, worksAuthors.TableName + "." + WorkModel.AuthorModel.WorkCodeColumn)
-                .LeftJoin(worksSubWorks.TableName, TableName + "." + WorkModel.CodeColumn, worksSubWorks.TableName + "." + WorkModel.SubWorkModel.WorkCodeColumn)
-                .LeftJoin(worksFiles.TableName, TableName + "." + WorkModel.CodeColumn, worksFiles.TableName + "." + WorkModel.FileModel.WorkCodeColumn)
-                .Limit(query.Limit);
-
             return Find(q =>
             {
                 if (query.Code != null)
                     q = q.Where(WorkModel.CodeColumn, query.Code);
+                if (query.AuthorCode != null)
+                    q = q.Where(worksAuthors.TableName + "." + WorkModel.AuthorModel.AuthorCodeColumn, query.AuthorCode);
+                if (query.OriginalCode != null)
+                    q = q.Where(WorkModel.OriginalCodeColumn, query.OriginalCode);
+                if (query.SubWorkCode != null)
+                    q = q.Where(worksSubWorks.TableName + "." + WorkModel.SubWorkModel.SubWorkCodeColumn, query.SubWorkCode);
+                if (query.FileCode != null)
+                    q = q.Where(worksFiles.TableName + "." + WorkModel.FileModel.FileCodeColumn, query.FileCode);
                 if (query.Search != null)
                     q = q.WhereRaw($"{WorkModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
                 return q;

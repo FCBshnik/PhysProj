@@ -29,46 +29,64 @@ namespace Phys.Lib.Tests.Db
 
             Should.Throw<Exception>(() => db.Create("work-3"));
 
-            var work = FindByCode("work-1");
+            FindByCode("work-1");
             FindByCode("work-3");
 
             Search("lalala");
             Search("3", "work-3");
             Search("or", "work-1", "work-2", "work-3");
 
-            AddInfo(work.Code, "ru");
-            AddInfo(work.Code, "es");
-            DeleteInfo(work.Code, "en");
-            DeleteInfo(work.Code, "ru");
-            DeleteInfo(work.Code, "ru");
+            AddInfo("work-1", "ru");
+            AddInfo("work-1", "es");
+            DeleteInfo("work-1", "en");
+            DeleteInfo("work-1", "ru");
+            DeleteInfo("work-1", "ru");
 
-            SetOriginal(work.Code, "work-3");
-            SetOriginal(work.Code, string.Empty);
+            FindByOriginal("work-3");
+            SetOriginal("work-1", "work-3");
+            FindByOriginal("work-3", "work-1");
+            SetOriginal("work-1", string.Empty);
+            FindByOriginal("work-3");
 
             authorsDb.Create("work-1-author-1");
             authorsDb.Create("work-1-author-2");
 
-            AddAuthor(work.Code, "work-1-author-1");
-            AddAuthor(work.Code, "work-1-author-2");
-            DeleteAuthor(work.Code, "work-1-author-2");
-            DeleteAuthor(work.Code, "work-1-author-2");
-            DeleteAuthor(work.Code, "author-3");
+            FindByAuthor("work-1-author-1");
+
+            AddAuthor("work-1", "work-1-author-1");
+            AddAuthor("work-1", "work-1-author-2");
+            AddAuthor("work-3", "work-1-author-1");
+            FindByAuthor("work-1-author-1", "work-1", "work-3");
+
+            DeleteAuthor("work-1", "work-1-author-2");
+            DeleteAuthor("work-1", "work-1-author-2");
+            DeleteAuthor("work-1", "author-3");
+            DeleteAuthor("work-3", "work-1-author-1");
+            FindByAuthor("work-1-author-1", "work-1");
 
             db.Create("sub-work-1");
             db.Create("sub-work-2");
-            AddSubWork(work.Code, "sub-work-1");
-            AddSubWork(work.Code, "sub-work-2");
-            DeleteSubWork(work.Code, "sub-work-2");
-            DeleteSubWork(work.Code, "sub-work-2");
-            DeleteSubWork(work.Code, "sub-work-3");
+            FindBySubWork("sub-work-1");
+            AddSubWork("work-1", "sub-work-1");
+            AddSubWork("work-1", "sub-work-2");
+            FindBySubWork("sub-work-1", "work-1");
+            FindBySubWork("sub-work-2", "work-1");
+            DeleteSubWork("work-1", "sub-work-2");
+            DeleteSubWork("work-1", "sub-work-2");
+            DeleteSubWork("work-1", "sub-work-3");
+            FindBySubWork("sub-work-2");
 
+            FindByFile("file-1");
             filesDb.Create(new FileDbo { Code = "file-1" });
             filesDb.Create(new FileDbo { Code = "file-2" });
-            AddFile(work.Code, "file-1");
-            AddFile(work.Code, "file-2");
-            DeleteFile(work.Code, "file-2");
-            DeleteFile(work.Code, "file-2");
-            DeleteFile(work.Code, "file-3");
+            AddFile("work-1", "file-1");
+            AddFile("work-1", "file-2");
+            FindByFile("file-1", "work-1");
+            FindByFile("file-2", "work-1");
+            DeleteFile("work-1", "file-2");
+            DeleteFile("work-1", "file-2");
+            DeleteFile("work-1", "file-3");
+            FindByFile("file-2");
 
             Delete("work-1");
             Delete("work-2");
@@ -98,6 +116,34 @@ namespace Phys.Lib.Tests.Db
             var work = works.First();
             work.Code.ShouldBe(code);
             return work;
+        }
+
+        private void FindByAuthor(string authrorCode, params string[] expectedCodes)
+        {
+            var works = db.Find(new WorksDbQuery { AuthorCode = authrorCode });
+            works.Count.ShouldBe(expectedCodes.Length);
+            works.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
+        }
+
+        private void FindByOriginal(string originalCode, params string[] expectedCodes)
+        {
+            var works = db.Find(new WorksDbQuery { OriginalCode = originalCode });
+            works.Count.ShouldBe(expectedCodes.Length);
+            works.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
+        }
+
+        private void FindBySubWork(string subWorkCode, params string[] expectedCodes)
+        {
+            var works = db.Find(new WorksDbQuery { SubWorkCode = subWorkCode });
+            works.Count.ShouldBe(expectedCodes.Length);
+            works.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
+        }
+
+        private void FindByFile(string fileCode, params string[] expectedCodes)
+        {
+            var works = db.Find(new WorksDbQuery { FileCode = fileCode });
+            works.Count.ShouldBe(expectedCodes.Length);
+            works.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
         }
 
         private void Search(string search, params string[] expectedCodes)

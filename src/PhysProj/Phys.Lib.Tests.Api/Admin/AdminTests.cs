@@ -298,6 +298,7 @@ namespace Phys.Lib.Tests.Api.Admin
             works.LinkFile("discourse-on-method", "discourse-on-method-pdf");
             fileStorage.Delete("discourse-on-method.pdf");
             // unlink file
+            files.DeleteFailed("discourse-on-method-pdf");
             works.UnlinkFile("discourse-on-method", nonExistentCode);
             works.UnlinkFile("discourse-on-method", "discourse-on-method-pdf");
             files.Delete("discourse-on-method-pdf");

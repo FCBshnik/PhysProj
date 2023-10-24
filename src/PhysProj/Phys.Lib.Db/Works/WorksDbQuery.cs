@@ -6,6 +6,8 @@
 
         public string? Search { get; set; }
 
+        public string? FileCode { get; set; }
+
         public string? AuthorCode { get; set; }
 
         public string? OriginalCode { get; set; }
