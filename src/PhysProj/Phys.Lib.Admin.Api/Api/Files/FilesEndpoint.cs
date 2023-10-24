@@ -35,9 +35,9 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 return TypedResults.Ok(storage.List(query.Search).Select(FilesMapper.Map).ToList());
             }).ProducesResponse<List<FileStorageFileModel>>("ListStorageFiles");
 
-            builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices] IFileStoragesService storages) =>
+            builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices] IFilesService service) =>
             {
-                var file = storages.CreateFileFromStorage(storageCode, model.FileId);
+                var file = service.CreateFileFromStorage(storageCode, model.FileId);
                 return TypedResults.Ok(FilesMapper.Map(file));
             }).ProducesResponse<FileModel>("LinkStorageFile");
 

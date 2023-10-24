@@ -67,6 +67,9 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<WorksMigrator>()
                 .As<IMigrator>()
                 .SingleInstance();
+            builder.RegisterType<FilesContentMigrator>()
+                .As<IMigrator>()
+                .SingleInstance();
         }
     }
 }

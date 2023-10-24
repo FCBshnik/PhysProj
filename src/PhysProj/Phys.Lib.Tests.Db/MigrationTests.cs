@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Autofac;
-using Phys.Lib.Core;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Migration;
@@ -12,8 +11,6 @@ using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
-using Phys.Lib.Mongo;
-using Phys.Lib.Postgres;
 using Phys.Mongo.HistoryDb;
 using Phys.NLog;
 using Phys.Utils;
@@ -170,9 +167,9 @@ namespace Phys.Lib.Tests.Db
             var builder = new ContainerBuilder();
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new LoggerModule(loggerFactory));
-            builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new PostgresDbModule(postgres.GetConnectionString(), loggerFactory));
             builder.RegisterModule(new MongoDbModule(mongo.GetConnectionString(), loggerFactory));
+            builder.RegisterModule(new CoreModule());
 
             builder.Register(c => new MongoHistoryDbFactory(mongo.GetConnectionString(), "physlib", "history-", loggerFactory))
                 .SingleInstance()

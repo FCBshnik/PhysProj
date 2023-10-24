@@ -1,5 +1,4 @@
-﻿using Phys.Lib.Db.Files;
-using Phys.Files;
+﻿using Phys.Files;
 
 namespace Phys.Lib.Core.Files.Storage
 {
@@ -8,7 +7,5 @@ namespace Phys.Lib.Core.Files.Storage
         List<FileStorageInfo> List();
 
         IFileStorage Get(string code);
-
-        FileDbo CreateFileFromStorage(string storageCode, string fileId);
     }
 }

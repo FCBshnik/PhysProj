@@ -46,9 +46,6 @@ namespace Phys.Lib.Autofac
                 .As<IPCloudApiClient>().SingleInstance();
             builder.RegisterType<PCloudFileStorage>()
                 .As<IFileStorage>().SingleInstance();
-            builder.RegisterType<FilesContentMigrator>()
-                .As<IMigrator>()
-                .SingleInstance();
 
             // history
             builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "phys-lib", "history-", loggerFactory))
