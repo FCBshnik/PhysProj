@@ -92,7 +92,7 @@
 						<td>{file.size ?? '-'}</td>
             <td>
               {#each file.links as link}
-                [{link.storageCode}] {link.fileId}
+                <div>[{link.storageCode}] {link.fileId}</div>
               {/each}
             </td>
 						<td class="flex justify-end">
