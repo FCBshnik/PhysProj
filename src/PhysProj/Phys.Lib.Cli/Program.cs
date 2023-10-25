@@ -5,7 +5,6 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Phys.Utils;
 using Phys.NLog;
-using Phys.Lib.Core;
 
 namespace Phys.Lib.Cli
 {
@@ -29,7 +28,6 @@ namespace Phys.Lib.Cli
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
-                .AddJsonFiles()
                 .Build();
 
             var builder = new ContainerBuilder();

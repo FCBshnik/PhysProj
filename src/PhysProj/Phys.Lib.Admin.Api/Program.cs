@@ -16,7 +16,6 @@ using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
 using Phys.Utils;
 using Phys.Lib.Admin.Api.Filters;
-using Phys.Shared;
 using Phys.Lib.Admin.Api.Api.Migrations;
 using Phys.NLog;
 using Phys.Lib.Core;
@@ -38,7 +37,6 @@ namespace Phys.Lib.Admin.Api
             ProgramUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
-            builder.Configuration.AddJsonFiles();
 
             var config = builder.Configuration;
             var urls = config.GetConnectionStringOrThrow("urls");

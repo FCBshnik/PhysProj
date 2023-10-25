@@ -1,6 +1,7 @@
 ﻿using CliWrap;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Phys.NLog;
 using Phys.Utils;
 using Testcontainers.MongoDb;
@@ -79,19 +80,14 @@ namespace Phys.Lib.Tests.Api
             appTestDir.Create();
             DotNetBuild(projectPath, appTestDir);
 
-            // create appsettings.test.json to override connection strings
-            var testSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, "appsettings.tests.json"));
-            var testSettings = new
-            {
-                ConnectionStrings = new Dictionary<string, string>
-                {
-                    ["urls"] = url,
-                    ["mongo"] = GetMongoUrl(),
-                    ["postgres"] = GetPostgresUrl(),
-                    ["works-files"] = "data/files",
-                }
-            };
-            File.WriteAllText(testSettingsFile.FullName, JsonConvert.SerializeObject(testSettings));
+            // override connection strings
+            var appSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, "appsettings.json"));
+            var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appSettingsFile.FullName));
+            appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl();
+            appSettings!["ConnectionStrings"]!["postgres"] = GetPostgresUrl();
+            appSettings!["ConnectionStrings"]!["urls"] = url;
+            appSettings!["ConnectionStrings"]!["works-files"] = "data/files";
+            File.WriteAllText(appSettingsFile.FullName, JsonConvert.SerializeObject(appSettings));
 
             // run
             var appFile = new FileInfo(Path.Combine(appTestDir.FullName, appTestDir.Name) + ".dll");
