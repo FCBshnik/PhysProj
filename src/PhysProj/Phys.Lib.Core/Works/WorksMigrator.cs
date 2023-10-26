@@ -1,4 +1,5 @@
-﻿using Phys.Lib.Core.Migration;
+﻿using Microsoft.Extensions.Logging;
+using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
 using Phys.Shared;
@@ -9,11 +10,13 @@ namespace Phys.Lib.Core.Works
     {
         protected readonly List<IDbReader<WorkDbo>> readers;
         protected readonly List<IWorksDb> dbs;
+        private readonly ILogger<WorksMigrator> log;
 
-        public WorksMigrator(IEnumerable<IDbReader<WorkDbo>> readers, IEnumerable<IWorksDb> dbs)
+        public WorksMigrator(IEnumerable<IDbReader<WorkDbo>> readers, IEnumerable<IWorksDb> dbs, ILogger<WorksMigrator> log)
         {
             this.readers = readers.ToList();
             this.dbs = dbs.ToList();
+            this.log = log;
         }
 
         public string Name => "works";
@@ -32,7 +35,7 @@ namespace Phys.Lib.Core.Works
             if (db == null)
                 throw new PhysException($"db '{migration.Destination}' not found for '{typeof(WorkDbo)}' values");
 
-            var baseWriter = new WorksBaseWriter(db);
+            var baseWriter = new WorksBaseWriter(db, log);
             var linksWriter = new WorksLinksWriter(db);
 
             // migrate work in two passess for support relational DBMS with db constrains because of works is self referenced

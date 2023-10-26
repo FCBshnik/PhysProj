@@ -1,4 +1,5 @@
-﻿using Phys.Lib.Core.Migration;
+﻿using Microsoft.Extensions.Logging;
+using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Core.Works
@@ -6,10 +7,12 @@ namespace Phys.Lib.Core.Works
     internal class WorksBaseWriter : IMigrationWriter<WorkDbo>
     {
         private readonly IWorksDb db;
+        private readonly ILogger<WorksMigrator> log;
 
-        public WorksBaseWriter(IWorksDb db)
+        public WorksBaseWriter(IWorksDb db, ILogger<WorksMigrator> log)
         {
             this.db = db;
+            this.log = log;
         }
 
         public string Name => db.Name + "-base";
@@ -39,6 +42,8 @@ namespace Phys.Lib.Core.Works
                 work.Infos.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddInfo = i }));
                 work.AuthorsCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddAuthor = i }));
                 work.FilesCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddFile = i }));
+
+                log.LogInformation($"migrated {work}");
 
                 _ = prev == null ? stats.Created++ : stats.Updated++;
             }

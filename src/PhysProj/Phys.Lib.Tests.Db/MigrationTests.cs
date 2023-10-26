@@ -72,7 +72,7 @@ namespace Phys.Lib.Tests.Db
             WorksTests(source, destination, lifetimeScope);
         }
 
-        private static void WorksTests(string source, string destination, ILifetimeScope lifetimeScope)
+        private void WorksTests(string source, string destination, ILifetimeScope lifetimeScope)
         {
             var srcDb = lifetimeScope.ResolveNamed<IWorksDb>(source);
             var migrations = lifetimeScope.Resolve<IMigrationService>();
@@ -87,7 +87,7 @@ namespace Phys.Lib.Tests.Db
                 new WorkDbo { Code = "work-6", OriginalCode = "work-7" },
                 new WorkDbo { Code = "work-7" },
             }.OrderBy(u => u.Code).ToList();
-            new WorksBaseWriter(srcDb).Write(works, new MigrationDto.StatsDto());
+            new WorksBaseWriter(srcDb, loggerFactory.CreateLogger<WorksMigrator>()).Write(works, new MigrationDto.StatsDto());
             new WorksLinksWriter(srcDb).Write(works, new MigrationDto.StatsDto());
 
             var migration = migrations.Create(new MigrationTask { Migrator = "works", Source = source, Destination = destination });
