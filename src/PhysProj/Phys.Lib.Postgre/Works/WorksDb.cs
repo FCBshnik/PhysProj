@@ -62,7 +62,7 @@ namespace Phys.Lib.Postgres.Works
             return Find(q =>
             {
                 if (query.Code != null)
-                    q = q.Where(WorkModel.CodeColumn, query.Code);
+                    q = q.Where(tableName + "." + WorkModel.CodeColumn, query.Code);
                 if (query.AuthorCode != null)
                     q = q.Where(worksAuthors.TableName + "." + WorkModel.AuthorModel.AuthorCodeColumn, query.AuthorCode);
                 if (query.OriginalCode != null)
@@ -180,13 +180,13 @@ namespace Phys.Lib.Postgres.Works
                 var work = works[w.Code];
 
                 if (i != null)
-                    work.Infos.Add(i);
+                    work.Infos.TryAdd(i.Language, i);
                 if (a != null)
-                    work.Authors.Add(a);
+                    work.Authors.TryAdd(a.AuthorCode, a);
                 if (s != null)
-                    work.SubWorks.Add(s);
+                    work.SubWorks.TryAdd(s.SubWorkCode, s);
                 if (f != null)
-                    work.Files.Add(f);
+                    work.Files.TryAdd(f.FileCode, f);
 
                 return work;
             }, sql.NamedBindings, splitOn: WorkModel.InfoModel.WorkCodeColumn).ToList();

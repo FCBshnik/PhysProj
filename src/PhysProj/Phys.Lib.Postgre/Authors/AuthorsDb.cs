@@ -119,7 +119,7 @@ namespace Phys.Lib.Postgres.Authors
                 var author = authors[a.Code];
 
                 if (i != null)
-                    author.Infos.Add(i);
+                    author.Infos.TryAdd(i.Language, i);
                 return author;
             }).ToList();
 

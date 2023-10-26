@@ -11,7 +11,7 @@ namespace Phys.Lib.Postgres.Authors
                 Code = author.Code,
                 Born = author.Born,
                 Died = author.Died,
-                Infos = author.Infos.Select(Map).ToList(),
+                Infos = author.Infos.Values.Select(Map).ToList(),
             };
         }
 

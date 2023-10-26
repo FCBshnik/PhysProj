@@ -15,7 +15,7 @@ namespace Phys.Lib.Postgres.Files
         public long Id { get; set; }
 
         [Ignore]
-        public List<LinkModel> Links { get; set; } = new List<LinkModel>();
+        public Dictionary<string, LinkModel> Links { get; set; } = new Dictionary<string, LinkModel>();
 
         public class LinkModel
         {

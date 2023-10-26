@@ -23,7 +23,7 @@ namespace Phys.Lib.Postgres.Authors
         public string Died { get; set; }
 
         [Ignore]
-        public List<InfoModel> Infos { get; set; } = new List<InfoModel>();
+        public Dictionary<string, InfoModel> Infos { get; set; } = new Dictionary<string, InfoModel>();
 
         public class InfoModel
         {

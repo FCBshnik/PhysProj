@@ -12,10 +12,10 @@ namespace Phys.Lib.Postgres.Works
                 Language = work.Language,
                 Publish = work.Publish,
                 OriginalCode = work.OriginalCode,
-                Infos = work.Infos.Select(Map).ToList(),
-                AuthorsCodes = work.Authors.Select(a => a.AuthorCode).ToList(),
-                SubWorksCodes = work.SubWorks.Select(w => w.SubWorkCode).ToList(),
-                FilesCodes = work.Files.Select(f => f.FileCode).ToList(),
+                Infos = work.Infos.Values.Select(Map).ToList(),
+                AuthorsCodes = work.Authors.Values.Select(a => a.AuthorCode).ToList(),
+                SubWorksCodes = work.SubWorks.Values.Select(w => w.SubWorkCode).ToList(),
+                FilesCodes = work.Files.Values.Select(f => f.FileCode).ToList(),
             };
         }
 

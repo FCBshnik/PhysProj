@@ -11,7 +11,7 @@ namespace Phys.Lib.Postgres.Files
                 Code = file.Code,
                 Format = file.Format,
                 Size = file.Size,
-                Links = file.Links.Select(Map).ToList(),
+                Links = file.Links.Values.Select(Map).ToList(),
             };
         }
 

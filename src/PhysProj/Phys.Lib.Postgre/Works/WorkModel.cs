@@ -27,16 +27,16 @@ namespace Phys.Lib.Postgres.Works
         public string? OriginalCode { get; set; }
 
         [Ignore]
-        public List<InfoModel> Infos { get; set; } = new List<InfoModel>();
+        public Dictionary<string, InfoModel> Infos { get; set; } = new Dictionary<string, InfoModel>();
 
         [Ignore]
-        public List<SubWorkModel> SubWorks { get; set; } = new List<SubWorkModel>();
+        public Dictionary<string, SubWorkModel> SubWorks { get; set; } = new Dictionary<string, SubWorkModel>();
 
         [Ignore]
-        public List<AuthorModel> Authors { get; set; } = new List<AuthorModel>();
+        public Dictionary<string, AuthorModel> Authors { get; set; } = new Dictionary<string, AuthorModel>();
 
         [Ignore]
-        public List<FileModel> Files { get; set; } = new List<FileModel>();
+        public Dictionary<string, FileModel> Files { get; set; } = new Dictionary<string, FileModel>();
 
         public class InfoModel
         {

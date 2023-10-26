@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Npgsql;
-using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Migrations;
-using Phys.Lib.Postgres.Authors;
 using SqlKata;
 using System.Text.RegularExpressions;
 
@@ -98,7 +96,7 @@ namespace Phys.Lib.Postgres.Files
                 var file = files[f.Code];
 
                 if (l != null)
-                    file.Links.Add(l);
+                    file.Links.TryAdd(l.Path, l);
                 return file;
             }).ToList();
 

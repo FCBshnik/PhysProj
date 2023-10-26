@@ -81,9 +81,9 @@ namespace Phys.Lib.Tests.Db
             {
                 new WorkDbo { Code = "work-1", Language = "ru", Publish = "1234" },
                 new WorkDbo { Code = "work-2", Infos = new List<WorkDbo.InfoDbo> { new WorkDbo.InfoDbo { Language = "en", Description = "desc" } } },
-                new WorkDbo { Code = "work-3", AuthorsCodes = new List<string> { "author-1" } },
-                new WorkDbo { Code = "work-4", FilesCodes = new List<string> { "file-1" } },
-                new WorkDbo { Code = "work-5", SubWorksCodes = new List<string> { "work-6" } },
+                new WorkDbo { Code = "work-3", AuthorsCodes = new List<string> { "author-1", "author-2" } },
+                new WorkDbo { Code = "work-4", FilesCodes = new List<string> { "file-1", "file-2" } },
+                new WorkDbo { Code = "work-5", SubWorksCodes = new List<string> { "work-6", "work-3" } },
                 new WorkDbo { Code = "work-6", OriginalCode = "work-7" },
                 new WorkDbo { Code = "work-7" },
             }.OrderBy(u => u.Code).ToList();
@@ -96,7 +96,7 @@ namespace Phys.Lib.Tests.Db
 
             var dstUsers = lifetimeScope.ResolveNamed<IWorksDb>(destination);
             var migrated = dstUsers.Find(new WorksDbQuery()).OrderBy(u => u.Code).ToList();
-            migrated.ShouldBeEquivalentTo(works);
+            Assert.Equivalent(works, migrated);
         }
 
         private static void FilesTests(string source, string destination, ILifetimeScope lifetimeScope)
@@ -107,7 +107,11 @@ namespace Phys.Lib.Tests.Db
             var files = new[]
             {
                 new FileDbo { Code = "file-1", Format = "pdf", Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { StorageCode = "type-1", FileId = "path-1" } } },
-                new FileDbo { Code = "file-2", Size = 1024, Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { StorageCode = "type-2", FileId = "path-2" } } },
+                new FileDbo { Code = "file-2", Size = 1024, Links = new List<FileDbo.LinkDbo>
+                {
+                    new FileDbo.LinkDbo { StorageCode = "type-2", FileId = "path-2" },
+                    new FileDbo.LinkDbo { StorageCode = "type-2", FileId = "path-3" }
+                } },
             }.OrderBy(u => u.Code).ToList();
             new FilesWriter(srcDb).Write(files, new MigrationDto.StatsDto());
 
@@ -117,7 +121,7 @@ namespace Phys.Lib.Tests.Db
 
             var dstUsers = lifetimeScope.ResolveNamed<IFilesDb>(destination);
             var migrated = dstUsers.Find(new FilesDbQuery()).OrderBy(u => u.Code).ToList();
-            migrated.ShouldBeEquivalentTo(files);
+            Assert.Equivalent(files, migrated);
         }
 
         private static void AuthorsTests(string source, string destination, ILifetimeScope lifetimeScope)
@@ -127,7 +131,11 @@ namespace Phys.Lib.Tests.Db
 
             var authors = new[]
             {
-                new AuthorDbo { Code = "author-1", Born = "1234", Infos = new List<AuthorDbo.InfoDbo> { new AuthorDbo.InfoDbo { Language = "en", FullName = "FN" } } },
+                new AuthorDbo { Code = "author-1", Born = "1234", Infos = new List<AuthorDbo.InfoDbo>
+                {
+                    new AuthorDbo.InfoDbo { Language = "en", FullName = "FN" },
+                    new AuthorDbo.InfoDbo { Language = "ru", FullName = "Имя" }
+                } },
                 new AuthorDbo { Code = "author-2", Died = "2345" },
             }.OrderBy(u => u.Code).ToList();
             new AuthorsWriter(srcDb).Write(authors, new MigrationDto.StatsDto());
@@ -138,7 +146,7 @@ namespace Phys.Lib.Tests.Db
 
             var dstAuthors = lifetimeScope.ResolveNamed<IAuthorsDb>(destination);
             var migrated = dstAuthors.Find(new AuthorsDbQuery()).OrderBy(u => u.Code).ToList();
-            migrated.ShouldBeEquivalentTo(authors);
+            Assert.Equivalent(authors, migrated);
         }
 
         private static void UsersTests(string source, string destination, ILifetimeScope lifetimeScope)
@@ -159,7 +167,7 @@ namespace Phys.Lib.Tests.Db
 
             var dstUsers = lifetimeScope.ResolveNamed<IUsersDb>(destination);
             var migrated = dstUsers.Find(new UsersDbQuery()).OrderBy(u => u.Name).ToList();
-            migrated.ShouldBeEquivalentTo(users);
+            Assert.Equivalent(users, migrated);
         }
 
         private IContainer BuildContainer()
