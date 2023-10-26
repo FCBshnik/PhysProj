@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Mongo", "Phys.Lib.Mongo\Phys.Lib.Mongo.csproj", "{BFAA9965-84CE-45A7-A24D-D38D4AAD0AD0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{36DA6B64-5719-46FE-99A5-6B38F464D8BB}"
-	ProjectSection(SolutionItems) = preProject
-		appsettings.lib-development.json = appsettings.lib-development.json
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Core", "Phys.Lib.Core\Phys.Lib.Core.csproj", "{BA3EEC26-D90E-45DD-BEEB-7F44D0202444}"
 EndProject
