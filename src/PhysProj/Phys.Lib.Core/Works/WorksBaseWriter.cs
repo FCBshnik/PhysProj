@@ -35,7 +35,7 @@ namespace Phys.Lib.Core.Works
                 else
                     db.Create(work.Code);
 
-                db.Update(work.Code, new WorkDbUpdate { Language = work.Language, Publish = work.Publish });
+                db.Update(work.Code, new WorkDbUpdate { Language = work.Language, Publish = work.Publish, Original = string.Empty });
                 work.Infos.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddInfo = i }));
                 work.AuthorsCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddAuthor = i }));
                 work.FilesCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddFile = i }));
