@@ -26,7 +26,7 @@ namespace Phys.Lib.Core.Files.Storage
 
         public IEnumerable<string> Destinations => storages.Keys;
 
-        public string Name => "files-content";
+        public string Name => MigratorName.FilesContent;
 
         public void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {

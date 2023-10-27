@@ -19,11 +19,11 @@ namespace Phys.Lib.Core.Works
             this.log = log;
         }
 
-        public string Name => "works";
+        public string Name => MigratorName.Works;
 
         public IEnumerable<string> Sources => readers.Select(x => x.Name);
 
-        public IEnumerable<string> Destinations => dbs.Select(x => x.Name);
+        public IEnumerable<string> Destinations => dbs.Where(d => d.Name != "main").Select(x => x.Name);
 
         public void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {

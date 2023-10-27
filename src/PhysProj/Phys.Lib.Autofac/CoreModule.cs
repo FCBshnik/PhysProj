@@ -27,14 +27,7 @@ namespace Phys.Lib.Autofac
             builder.RegisterModule(new ValidationModule(System.Reflection.Assembly.GetEntryAssembly()!));
             builder.RegisterModule(new ValidationModule(ThisAssembly));
 
-            builder.RegisterService<UsersService, IUsersService>()
-                .RegisterService<AuthorsSearch, IAuthorsSearch>()
-                .RegisterService<AuthorsEditor, IAuthorsEditor>()
-                .RegisterService<WorksSearch, IWorksSearch>()
-                .RegisterService<WorksEditor, IWorksEditor>()
-                .RegisterService<FileStoragesService, IFileStoragesService>()
-                .RegisterService<FilesService, IFilesService>()
-                .RegisterService<MigrationService, IMigrationService>();
+            RegisterServices(builder);
 
             // override last db implementations by decorator which selects main db
             builder.RegisterType<MainUsersDb>().As<IUsersDb>().SingleInstance();
@@ -42,25 +35,31 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<MainWorksDb>().As<IWorksDb>().SingleInstance();
             builder.RegisterType<FilesDbs>().As<IFilesDb>().SingleInstance();
 
+            RegisterMigrators(builder);
+        }
+
+        private static void RegisterMigrators(ContainerBuilder builder)
+        {
             builder.Register(c => c.Resolve<IHistoryDbFactory>().Create<MigrationDto>("migrations"))
                 .As<IHistoryDb<MigrationDto>>()
                 .SingleInstance();
-            builder.Register(c => c.Resolve<IEnumerable<IUsersDb>>().Select(db => new UsersWriter(db)))
+
+            builder.Register(c => c.Resolve<IEnumerable<IUsersDb>>().Where(d => d.Name != DbName.Main).Select(db => new UsersWriter(db)))
                 .As<IEnumerable<IMigrationWriter<UserDbo>>>()
                 .SingleInstance();
-            builder.Register(c => c.Resolve<IEnumerable<IAuthorsDb>>().Select(db => new AuthorsWriter(db)))
+            builder.Register(c => c.Resolve<IEnumerable<IAuthorsDb>>().Where(d => d.Name != DbName.Main).Select(db => new AuthorsWriter(db)))
                 .As<IEnumerable<IMigrationWriter<AuthorDbo>>>()
                 .SingleInstance();
-            builder.Register(c => c.Resolve<IEnumerable<IFilesDb>>().Select(db => new FilesWriter(db)))
+            builder.Register(c => c.Resolve<IEnumerable<IFilesDb>>().Where(d => d.Name != DbName.Main).Select(db => new FilesWriter(db)))
                 .As<IEnumerable<IMigrationWriter<FileDbo>>>()
                 .SingleInstance();
-            builder.RegisterType<Migrator<UserDbo>>().WithParameter(TypedParameter.From("users"))
+            builder.RegisterType<Migrator<UserDbo>>().WithParameter(TypedParameter.From(MigratorName.Users))
                 .As<IMigrator>()
                 .SingleInstance();
-            builder.RegisterType<Migrator<AuthorDbo>>().WithParameter(TypedParameter.From("authors"))
+            builder.RegisterType<Migrator<AuthorDbo>>().WithParameter(TypedParameter.From(MigratorName.Authors))
                 .As<IMigrator>()
                 .SingleInstance();
-            builder.RegisterType<Migrator<FileDbo>>().WithParameter(TypedParameter.From("files"))
+            builder.RegisterType<Migrator<FileDbo>>().WithParameter(TypedParameter.From(MigratorName.Files))
                 .As<IMigrator>()
                 .SingleInstance();
             builder.RegisterType<WorksMigrator>()
@@ -69,6 +68,21 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<FilesContentMigrator>()
                 .As<IMigrator>()
                 .SingleInstance();
+            builder.RegisterType<LibraryMigrator>()
+                .As<IMigrator>()
+                .SingleInstance();
+        }
+
+        private static void RegisterServices(ContainerBuilder builder)
+        {
+            builder.RegisterService<UsersService, IUsersService>()
+                .RegisterService<AuthorsSearch, IAuthorsSearch>()
+                .RegisterService<AuthorsEditor, IAuthorsEditor>()
+                .RegisterService<WorksSearch, IWorksSearch>()
+                .RegisterService<WorksEditor, IWorksEditor>()
+                .RegisterService<FileStoragesService, IFileStoragesService>()
+                .RegisterService<FilesService, IFilesService>()
+                .RegisterService<MigrationService, IMigrationService>();
         }
     }
 }
