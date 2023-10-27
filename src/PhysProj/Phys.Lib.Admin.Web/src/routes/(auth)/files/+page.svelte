@@ -41,9 +41,9 @@
 	refreshFiles();
 </script>
 
-<article>
-  <section class="p-2">Storage files</section>
-	<section class="flex flex-row items-center p-4 gap-4">
+<article class="flex flex-col grow gap-2">
+  <section class="">Storage files</section>
+	<section class="flex flex-row items-center gap-2">
 		<div class="w-1/6">
       <select bind:value={selectedStorage}>
         {#each storages as s}
@@ -51,8 +51,8 @@
         {/each}
       </select>
 		</div>
-    <input class="w-1/12" type="search" bind:value={storageFilesSearch} placeholder="Text to search file" />
-    <button class="w-auto" on:click={refreshStorageFiles}>Search</button>
+    <input class="w-1/6" type="search" bind:value={storageFilesSearch} placeholder="Text to search file" />
+    <button class="w-1/12" on:click={refreshStorageFiles}>Search</button>
     <div class="w-full">
       <select bind:value={selectedStorageFile}>
         {#each storageFiles as f}
@@ -60,20 +60,20 @@
         {/each}
       </select>
 		</div>
-    <button class="w-auto" on:click={linkStorageFile} disabled={selectedStorageFile == undefined}>Link</button>
+    <button class="w-1/12" on:click={linkStorageFile} disabled={selectedStorageFile == undefined}>Link</button>
 	</section>
-  <section class="flex flex-row items-center p-4 gap-4">
-    <button class="w-auto" on:click={refreshStorage}>Refresh</button>
+  <section class="flex flex-row items-center">
+    <button class="w-1/12" on:click={refreshStorage}>Refresh</button>
   </section>
 
-  <section class="p-2">Files</section>
-	<section class="flex flex-row items-center p-4 gap-4">
+  <section class="">Files</section>
+	<section class="flex flex-row items-center gap-2">
 		<input class="w-full" type="search" bind:value={filesSearch} placeholder="Text to search file" />
-		<button class="w-auto" on:click={refreshFiles}>Search</button>
-		<button class="w-auto" on:click={refreshFiles}>Refresh</button>
+		<button class="w-1/12" on:click={refreshFiles}>Search</button>
+		<button class="w-1/12" on:click={refreshFiles}>Refresh</button>
 	</section>
 
-	<section class="p-4">
+	<section class="flex flex-row items-center gap-2">
 		<table class="table-auto w-full">
 			<thead class="">
 				<tr class="border-b-2 border-b-gray-700">

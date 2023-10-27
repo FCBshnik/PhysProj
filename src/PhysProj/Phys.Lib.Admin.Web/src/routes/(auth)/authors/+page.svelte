@@ -24,15 +24,16 @@
     refresh();
 </script>
 
-<article>
-    <section class="flex flex-row items-center p-4 gap-4">
+<article class="flex flex-col grow gap-2">
+    <section class="gap-2">Authors</section>
+    <section class="flex flex-row items-center gap-2">
         <input class="w-full" type="search" bind:value={text} placeholder="Code to create new author or text to search"/>
         <button class="w-auto" on:click={refresh}>Search</button>
         <button class="w-auto" on:click={create}>Create</button>
         <button class="w-auto" on:click={refresh}>Refresh</button>
     </section>
 
-    <section class="p-4">
+    <section class="flex flex-row items-center gap-2">
         <table class="table-auto w-full">
             <thead class="">
               <tr class="border-b-2 border-b-gray-700">
