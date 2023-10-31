@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace Phys.Lib.Admin.Api.Filters
+﻿namespace Phys.Lib.Admin.Api.Filters
 {
     public class InternalErrorFilter : IEndpointFilter
     {

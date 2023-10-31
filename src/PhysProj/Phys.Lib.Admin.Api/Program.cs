@@ -63,7 +63,6 @@ namespace Phys.Lib.Admin.Api
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             builder.Host.ConfigureContainer<ContainerBuilder>(b => b.RegisterModule(new ApiModule(loggerFactory, config)));
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(SwaggerConfig.Configure);
 

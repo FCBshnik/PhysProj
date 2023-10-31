@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Files.PCloud", "Phys.F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Tests.External", "Phys.Tests.External\Phys.Tests.External.csproj", "{16A18127-A436-4514-8296-A7AF2DCB4FCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Lib.Site.Api", "Phys.Lib.Site.Api\Phys.Lib.Site.Api.csproj", "{DAE68F2F-587E-405E-B10D-B5ED0AC42A7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{16A18127-A436-4514-8296-A7AF2DCB4FCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16A18127-A436-4514-8296-A7AF2DCB4FCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16A18127-A436-4514-8296-A7AF2DCB4FCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAE68F2F-587E-405E-B10D-B5ED0AC42A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAE68F2F-587E-405E-B10D-B5ED0AC42A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAE68F2F-587E-405E-B10D-B5ED0AC42A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAE68F2F-587E-405E-B10D-B5ED0AC42A7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{548AB080-7A57-4344-BE8B-3F80D93212C3} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
 		{23615A18-B32C-4092-8AA6-34FB13BAEE79} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
 		{16A18127-A436-4514-8296-A7AF2DCB4FCE} = {CBC25E25-67EE-4BDD-B0D1-04B1CDA2B3BC}
+		{DAE68F2F-587E-405E-B10D-B5ED0AC42A7C} = {FDBFCE6B-A725-46B0-B060-8B633A16E7B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {616FF1DB-DD01-46E8-A34F-B45851EEE112}
