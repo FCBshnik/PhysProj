@@ -6,10 +6,7 @@ namespace Phys.Lib.Tests.Db
 {
     public class PostgresTests : DbTests
     {
-        private readonly PostgreSqlContainer postgres = new PostgreSqlBuilder()
-            .WithImage("postgres:15.3")
-            .WithName("physproj-tests-db-postgres")
-            .Build();
+        private readonly PostgreSqlContainer postgres = TestContainerFactory.CreatePostgres();
 
         public PostgresTests(ITestOutputHelper output) : base(output)
         {

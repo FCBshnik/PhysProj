@@ -30,9 +30,10 @@ namespace Phys.Lib.Tests.Api.Admin
             public MigrationModel WaitCompleted(string id, TimeSpan timeout, string expectedResult, int expectedMigratedCount)
             {
                 var sw = Stopwatch.StartNew();
-                while (sw.Elapsed < timeout)
+                MigrationModel migration;
+                do
                 {
-                    var migration = api.GetMigrationAsync(id).Result;
+                    migration = api.GetMigrationAsync(id).Result;
                     migration.Should().NotBeNull();
                     if (migration.Status == "completed")
                     {
@@ -43,8 +44,9 @@ namespace Phys.Lib.Tests.Api.Admin
 
                     Thread.Sleep(500);
                 }
+                while (sw.Elapsed < timeout);
 
-                throw new Exception("migration failed");
+                throw new Exception($"migration failed with status '{migration.Status}'");
             }
         }
     }

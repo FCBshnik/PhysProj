@@ -24,10 +24,7 @@ namespace Phys.Lib.Tests.Db
         private readonly IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
             new Dictionary<string, string?> { { "ConnectionStrings:db", "mongo" } }).Build();
 
-        private readonly MongoDbContainer mongo = new MongoDbBuilder()
-            .WithImage("mongo:4.4.18")
-            .WithName("physproj-tests-db-mongo")
-            .Build();
+        private readonly MongoDbContainer mongo = TestContainerFactory.CreateMongo();
 
         protected readonly LoggerFactory loggerFactory = new LoggerFactory();
 

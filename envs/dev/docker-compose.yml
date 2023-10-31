@@ -2,6 +2,7 @@ services:
   mongo:
     container_name: physproj-mongo
     image: mongo:4.4.18
+    restart: always
     ports:
       - "27017:27017"
     volumes:
@@ -9,6 +10,7 @@ services:
   postgres:
     container_name: physproj-postgres
     image: postgres:15.3
+    restart: always
     ports:
       - "5432:5432"
     volumes:
@@ -19,6 +21,7 @@ services:
   rabbitmq:
     container_name: physproj-rabbitmq
     image: rabbitmq:3.12-management
+    restart: always
     ports:
       - 5672:5672
       - 15672:15672

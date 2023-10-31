@@ -11,11 +11,7 @@ namespace Phys.Lib.Tests.Db
 {
     public class MongoTests : DbTests
     {
-        private readonly MongoDbContainer mongo = new MongoDbBuilder()
-            .WithImage("mongo:4.4.18")
-            .WithName("physproj-tests-db-mongo")
-            .WithPortBinding("57017", "27017")
-            .Build();
+        private readonly MongoDbContainer mongo = TestContainerFactory.CreateMongo();
 
         public MongoTests(ITestOutputHelper output) : base(output)
         {

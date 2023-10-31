@@ -36,5 +36,10 @@ namespace Phys.Lib.Core.Migration
 
             public int Failed { get; set; }
         }
+
+        public override string ToString()
+        {
+            return $"{Id} ({Source} -> {Destination}, {Status})";
+        }
     }
 }

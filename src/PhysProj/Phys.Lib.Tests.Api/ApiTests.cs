@@ -13,10 +13,8 @@ namespace Phys.Lib.Tests.Api
     {
         protected readonly LoggerFactory loggerFactory = new LoggerFactory();
         private readonly CancellationTokenSource cts = new();
-        private readonly MongoDbContainer mongo = new MongoDbBuilder()
-            .WithImage("mongo:4.4.18").WithName("physlib-tests-api-mongo").Build();
-        private readonly PostgreSqlContainer postgres = new PostgreSqlBuilder()
-            .WithImage("postgres:15.3").WithName("physlib-tests-api-postgres").Build();
+        private readonly MongoDbContainer mongo = TestContainerFactory.CreateMongo();
+        private readonly PostgreSqlContainer postgres = TestContainerFactory.CreatePostgres();
 
         protected readonly ITestOutputHelper output;
 

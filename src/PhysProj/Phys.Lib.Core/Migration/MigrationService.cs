@@ -40,6 +40,7 @@ namespace Phys.Lib.Core.Migration
                 Status = "created",
             };
             migrationsHistory.Save(migration);
+            log.LogInformation($"created {migration}");
 
             return migration;
         }
