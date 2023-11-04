@@ -51,7 +51,7 @@
         {/each}
       </select>
 		</div>
-    <input class="w-1/6" type="search" bind:value={storageFilesSearch} placeholder="Text to search file" />
+    <input class="w-1/6" type="search" bind:value={storageFilesSearch} on:keyup={} placeholder="Text to search file" />
     <button class="w-1/12" on:click={refreshStorageFiles}>Search</button>
     <div class="w-full">
       <select bind:value={selectedStorageFile}>
