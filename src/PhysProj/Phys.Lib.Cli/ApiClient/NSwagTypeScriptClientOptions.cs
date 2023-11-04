@@ -5,10 +5,13 @@ namespace Phys.Lib.Cli.ApiClient
     [Verb("nswag-typescript-client")]
     internal class NSwagTypeScriptClientOptions
     {
-        [Option("swagger-json-url")]
-        public string SwaggerJsonUrl { get; set; } = "http://localhost:7188/swagger/v1/swagger.json";
+        [Option("name", Required = true)]
+        public string Name { get; set; }
 
-        [Option("name")]
-        public string Name { get; set; } = "Admin";
+        [Option("swagger-json-url", Required = true)]
+        public string SwaggerJsonUrl { get; set; }
+
+        [Option("out-directory", Required = true)]
+        public string OutDerectory { get; set; }
     }
 }

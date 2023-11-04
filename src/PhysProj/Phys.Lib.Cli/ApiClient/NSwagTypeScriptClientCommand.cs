@@ -9,7 +9,6 @@ namespace Phys.Lib.Cli.ApiClient
         {
             var curDir = AppDomain.CurrentDomain.BaseDirectory;
             var outDir = new DirectoryInfo(Path.Combine(curDir, "../../../../Clients/TypeScript/"));
-            var outDirUi = new DirectoryInfo(Path.Combine(curDir, "../../../../Phys.Lib.Admin.Web/src/lib/api/"));
             outDir.Create();
 
             var clientName = options.Name;
@@ -29,7 +28,7 @@ namespace Phys.Lib.Cli.ApiClient
             };
 
             var outFile = new FileInfo(Path.Combine(outDir.FullName, $"{className}.ts"));
-            var outFile2 = new FileInfo(Path.Combine(outDirUi.FullName, $"{className}.ts"));
+            var outFile2 = new FileInfo(Path.Combine(new DirectoryInfo(options.OutDerectory).FullName, $"{className}.ts"));
             var generator = new NSwag.CodeGeneration.TypeScript.TypeScriptClientGenerator(document, settings);
             var clientCode = generator.GenerateFile(ClientGeneratorOutputType.Full);
             File.WriteAllText(outFile.FullName, clientCode);

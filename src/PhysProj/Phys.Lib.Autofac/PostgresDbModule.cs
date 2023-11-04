@@ -34,6 +34,8 @@ namespace Phys.Lib.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
+            log.LogInformation($"postgres connection: {connectionString}");
+
             DapperConfig.Configure();
 
             builder.Register(_ => CreateNpgsqlDataSource())
