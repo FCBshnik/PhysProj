@@ -56,10 +56,15 @@ export class SiteApiClient {
     }
 
     /**
+     * @param search (optional) 
      * @return Success
      */
-    listWorks(): Promise<WorkModel[]> {
-        let url_ = this.baseUrl + "/api/works";
+    listWorks(search: string | undefined): Promise<WorkModel[]> {
+        let url_ = this.baseUrl + "/api/works?";
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {

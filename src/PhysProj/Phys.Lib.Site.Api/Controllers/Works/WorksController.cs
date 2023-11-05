@@ -9,10 +9,10 @@ namespace Phys.Lib.Site.Api.Controllers.Works
     public class WorksController : ControllerBase
     {
         [ProducesResponseType(typeof(List<WorkModel>), 200)]
-        [HttpGet("", Name = "ListWorks")]
-        public object ListWorks([FromServices] IWorksSearch worksSearch, [FromServices]IAuthorsSearch authorsSearch)
+        [HttpGet(Name = "ListWorks")]
+        public object ListWorks([FromQuery]string? search, [FromServices] IWorksSearch worksSearch, [FromServices]IAuthorsSearch authorsSearch)
         {
-            var works = worksSearch.Find().Where(w => w.FilesCodes.Any()).ToList();
+            var works = worksSearch.Find(search).Where(w => w.FilesCodes.Any()).ToList();
             var authorsCodes = works.SelectMany(w => w.AuthorsCodes).Distinct().ToList();
             var authors = authorsSearch.FindByCodes(authorsCodes).ToDictionary(a => a.Code);
             return Ok(works.Select(w => WorkModel.Map(w, authors)).ToList());
