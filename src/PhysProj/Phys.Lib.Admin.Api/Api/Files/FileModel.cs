@@ -4,7 +4,7 @@
     {
         public string Code { get; set; }
 
-        public string? Format { get; set; }
+        public string Format { get; set; }
 
         public long Size { get; set; }
 

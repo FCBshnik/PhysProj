@@ -11,9 +11,9 @@ namespace Phys.Lib.Core.Files
         private readonly ILogger<FilesService> log;
         private readonly IFilesDb db;
         private readonly IWorksDb worksDb;
-        private readonly IFileStoragesService fileStorages;
+        private readonly IFileStorages fileStorages;
 
-        public FilesService(IFilesDb db, ILogger<FilesService> log, IWorksDb worksDb, IFileStoragesService fileStorages)
+        public FilesService(IFilesDb db, ILogger<FilesService> log, IWorksDb worksDb, IFileStorages fileStorages)
         {
             this.db = db;
             this.log = log;
@@ -54,6 +54,13 @@ namespace Phys.Lib.Core.Files
         public List<FileDbo> Find(string? search = null)
         {
             return db.Find(new FilesDbQuery { Search = search });
+        }
+
+        public List<FileDbo> FindByCodes(IEnumerable<string> codes)
+        {
+            ArgumentNullException.ThrowIfNull(codes);
+
+            return db.Find(new FilesDbQuery { Codes = codes.ToList() });
         }
 
         public FileDbo? FindByCode(string code)

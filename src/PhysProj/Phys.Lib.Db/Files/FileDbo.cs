@@ -7,7 +7,7 @@ namespace Phys.Lib.Db.Files
     {
         public required string Code { get; set; }
 
-        public string? Format { get; set; }
+        public string Format { get; set; }
 
         public long Size { get; set; }
 

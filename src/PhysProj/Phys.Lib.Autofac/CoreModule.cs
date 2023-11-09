@@ -11,6 +11,7 @@ using Phys.HistoryDb;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
+using Phys.Lib.Core.Library;
 
 namespace Phys.Lib.Autofac
 {
@@ -80,9 +81,10 @@ namespace Phys.Lib.Autofac
                 .RegisterService<AuthorsEditor, IAuthorsEditor>()
                 .RegisterService<WorksSearch, IWorksSearch>()
                 .RegisterService<WorksEditor, IWorksEditor>()
-                .RegisterService<FileStoragesService, IFileStoragesService>()
+                .RegisterService<FileStoragesService, IFileStorages>()
                 .RegisterService<FilesService, IFilesService>()
-                .RegisterService<MigrationService, IMigrationService>();
+                .RegisterService<MigrationService, IMigrationService>()
+                .RegisterService<LibraryService, ILibraryService>();
         }
     }
 }

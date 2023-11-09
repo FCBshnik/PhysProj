@@ -2,7 +2,10 @@
 
 namespace Phys.Lib.Core.Files.Storage
 {
-    public interface IFileStoragesService
+    /// <summary>
+    /// Aggregates all <see cref="IFileStorage"/>
+    /// </summary>
+    public interface IFileStorages
     {
         List<FileStorageInfo> List();
 

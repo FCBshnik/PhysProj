@@ -49,6 +49,8 @@ namespace Phys.Lib.Postgres.Files
             {
                 if (query.Code != null)
                     q = q.Where(FileModel.CodeColumn, query.Code);
+                if (query.Codes != null)
+                    q = q.WhereIn(FileModel.CodeColumn, query.Codes);
                 if (query.Search != null)
                     q = q.WhereRaw($"{FileModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
                 return q;

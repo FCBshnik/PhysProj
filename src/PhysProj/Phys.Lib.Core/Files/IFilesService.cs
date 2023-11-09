@@ -6,6 +6,8 @@ namespace Phys.Lib.Core.Files
     {
         List<FileDbo> Find(string? search = null);
 
+        List<FileDbo> FindByCodes(IEnumerable<string> codes);
+
         FileDbo? FindByCode(string code);
 
         FileDbo Create(string code, long size, string? format);

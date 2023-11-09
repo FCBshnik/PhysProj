@@ -22,6 +22,9 @@ namespace Phys.Lib.Tests.Db
             Create("file-2");
             Create("file-3");
 
+            FindByCodes("file-1");
+            FindByCodes("file-2", "file-3");
+
             Should.Throw<Exception>(() => Create("file-3"));
 
             var file = FindByCode("file-1");
@@ -58,6 +61,12 @@ namespace Phys.Lib.Tests.Db
             var file = files.First();
             file.Code.ShouldBe(code);
             return file;
+        }
+
+        private void FindByCodes(params string[] codes)
+        {
+            var files = db.Find(new FilesDbQuery { Codes = codes.ToList() });
+            Assert.Equivalent(codes, files.Select(f => f.Code), strict: true);
         }
 
         private void AddLink(string code, string type, string path)

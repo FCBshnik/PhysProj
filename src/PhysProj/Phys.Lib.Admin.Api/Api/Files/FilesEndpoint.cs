@@ -24,12 +24,12 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 return TypedResults.Ok(OkModel.Ok);
             }).ProducesResponse<OkModel>("DeleteFile");
 
-            builder.MapGet("storages", ([FromServices] IFileStoragesService storages) =>
+            builder.MapGet("storages", ([FromServices] IFileStorages storages) =>
             {
                 return TypedResults.Ok(storages.List().Select(FilesMapper.Map).ToList());
             }).ProducesResponse<List<FileStorageModel>>("ListStorages");
 
-            builder.MapGet("storages/{storageCode}/files", (string storageCode, [AsParameters]FilesQuery query, [FromServices]IFileStoragesService storages) =>
+            builder.MapGet("storages/{storageCode}/files", (string storageCode, [AsParameters]FilesQuery query, [FromServices]IFileStorages storages) =>
             {
                 var storage = storages.Get(storageCode);
                 return TypedResults.Ok(storage.List(query.Search).Select(FilesMapper.Map).ToList());
@@ -41,7 +41,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 return TypedResults.Ok(FilesMapper.Map(file));
             }).ProducesResponse<FileModel>("LinkStorageFile");
 
-            builder.MapPost("storages/{storageCode}/refresh", (string storageCode, [FromServices] IFileStoragesService storages) =>
+            builder.MapPost("storages/{storageCode}/refresh", (string storageCode, [FromServices] IFileStorages storages) =>
             {
                 var storage = storages.Get(storageCode);
                 storage.Refresh();

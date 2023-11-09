@@ -145,6 +145,50 @@ export interface IAuthorModel {
     name?: string | undefined;
 }
 
+export class FileModel implements IFileModel {
+    code?: string | undefined;
+    format?: string | undefined;
+    size?: number;
+
+    constructor(data?: IFileModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.format = _data["format"];
+            this.size = _data["size"];
+        }
+    }
+
+    static fromJS(data: any): FileModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["format"] = this.format;
+        data["size"] = this.size;
+        return data;
+    }
+}
+
+export interface IFileModel {
+    code?: string | undefined;
+    format?: string | undefined;
+    size?: number;
+}
+
 export class OkModel implements IOkModel {
     time?: Date;
     version?: string | undefined;
@@ -189,6 +233,7 @@ export class WorkModel implements IWorkModel {
     code?: string | undefined;
     name?: string | undefined;
     authors?: AuthorModel[] | undefined;
+    files?: FileModel[] | undefined;
 
     constructor(data?: IWorkModel) {
         if (data) {
@@ -207,6 +252,11 @@ export class WorkModel implements IWorkModel {
                 this.authors = [] as any;
                 for (let item of _data["authors"])
                     this.authors!.push(AuthorModel.fromJS(item));
+            }
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(FileModel.fromJS(item));
             }
         }
     }
@@ -227,6 +277,11 @@ export class WorkModel implements IWorkModel {
             for (let item of this.authors)
                 data["authors"].push(item.toJSON());
         }
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -235,6 +290,7 @@ export interface IWorkModel {
     code?: string | undefined;
     name?: string | undefined;
     authors?: AuthorModel[] | undefined;
+    files?: FileModel[] | undefined;
 }
 
 export class ApiException extends Error {

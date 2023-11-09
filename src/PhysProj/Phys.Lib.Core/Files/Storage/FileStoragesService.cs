@@ -3,7 +3,7 @@ using Phys.Files;
 
 namespace Phys.Lib.Core.Files.Storage
 {
-    internal class FileStoragesService : IFileStoragesService
+    internal class FileStoragesService : IFileStorages
     {
         private readonly ILogger<FileStoragesService> log;
         private readonly Dictionary<string, IFileStorage> storages;

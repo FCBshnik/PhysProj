@@ -19,15 +19,26 @@
     return parts[parts.length - 1] + ' ' + initials.join(' ');
   }
 
+  function formatBytes(bytes, decimals = 0) {
+    if (!+bytes) return '0 Bytes'
+
+    const k = 1000
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+  }
 
   onMount(() => refresh());
 
 </script>
 
 <article class="dark:bg-gray-800 dark:text-gray-400">
-  <div class="p-4 flex flex-col h-screen">
+  <div class="p-4 flex flex-col h-full min-h-screen">
     <div class="p-2 flex flex-row items-center justify-between">
-      <div>PhysLib</div>
+      <div><a href="/">PhysLib</a></div>
       <form on:submit={search}>
         <div class="flex flex-row">
           <input bind:value={searchText} class="rounded-l-md p-2 dark:bg-gray-400 dark:text-gray-800 dark:placeholder-gray-500" type="search" placeholder="Search"/>
@@ -40,7 +51,7 @@
           </button>
         </div>
       </form>
-      <div class="">Login</div>
+      <div class=""></div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {#each works as work}
@@ -56,9 +67,11 @@
             {/each}
           </div>
           <div class="text-end text-ellipsis overflow-hidden text-xs">
-            <div class="inline px-1">zip</div>
-            <div class="inline px-1">pdf</div>
-            <div class="inline px-1">djvu</div>
+            {#each work.files as file}
+              <div class="inline px-1">
+                <a rel="external" href="/api/works/files/{file.code}/download">{file.format} {formatBytes(file.size)}</a>
+              </div>
+            {/each}
           </div>
         </div>
       {/each}

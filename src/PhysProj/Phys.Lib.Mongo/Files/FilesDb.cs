@@ -50,6 +50,8 @@ namespace Phys.Lib.Mongo.Files
 
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
+            if (query.Codes != null)
+                filter = FilterBuilder.And(filter, FilterBuilder.In(u => u.Code, query.Codes));
             if (query.Search != null)
             {
                 var regex = Regex.Escape(query.Search);
