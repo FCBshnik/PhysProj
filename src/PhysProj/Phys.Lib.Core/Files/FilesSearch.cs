@@ -1,0 +1,33 @@
+﻿using Phys.Lib.Db.Files;
+
+namespace Phys.Lib.Core.Files
+{
+    internal class FilesSearch : IFilesSearch
+    {
+        private readonly IFilesDb db;
+
+        public FilesSearch(IFilesDb db)
+        {
+            this.db = db;
+        }
+
+        public List<FileDbo> Find(string? search = null)
+        {
+            return db.Find(new FilesDbQuery { Search = search });
+        }
+
+        public List<FileDbo> FindByCodes(IEnumerable<string> codes)
+        {
+            ArgumentNullException.ThrowIfNull(codes);
+
+            return db.Find(new FilesDbQuery { Codes = codes.ToList() });
+        }
+
+        public FileDbo? FindByCode(string code)
+        {
+            ArgumentNullException.ThrowIfNull(code);
+
+            return db.Find(new FilesDbQuery { Code = code }).FirstOrDefault();
+        }
+    }
+}

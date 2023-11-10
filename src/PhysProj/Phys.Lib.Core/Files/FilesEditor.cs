@@ -6,14 +6,14 @@ using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Core.Files
 {
-    internal class FilesService : IFilesService
+    internal class FilesEditor : IFilesEditor
     {
-        private readonly ILogger<FilesService> log;
+        private readonly ILogger<FilesEditor> log;
         private readonly IFilesDb db;
         private readonly IWorksDb worksDb;
         private readonly IFileStorages fileStorages;
 
-        public FilesService(IFilesDb db, ILogger<FilesService> log, IWorksDb worksDb, IFileStorages fileStorages)
+        public FilesEditor(IFilesDb db, ILogger<FilesEditor> log, IWorksDb worksDb, IFileStorages fileStorages)
         {
             this.db = db;
             this.log = log;
@@ -51,25 +51,6 @@ namespace Phys.Lib.Core.Files
             return file;
         }
 
-        public List<FileDbo> Find(string? search = null)
-        {
-            return db.Find(new FilesDbQuery { Search = search });
-        }
-
-        public List<FileDbo> FindByCodes(IEnumerable<string> codes)
-        {
-            ArgumentNullException.ThrowIfNull(codes);
-
-            return db.Find(new FilesDbQuery { Codes = codes.ToList() });
-        }
-
-        public FileDbo? FindByCode(string code)
-        {
-            ArgumentNullException.ThrowIfNull(code);
-
-            return db.Find(new FilesDbQuery { Code = code }).FirstOrDefault();
-        }
-
         public void Delete(FileDbo file)
         {
             ArgumentNullException.ThrowIfNull(file);
@@ -96,7 +77,7 @@ namespace Phys.Lib.Core.Files
             log.Log(LogLevel.Information, $"creating file from storage '{storageCode}' file {storageFile}");
             var fileName = Path.GetFileName(storageFile.Name);
             var code = Code.NormalizeAndValidate(fileName);
-            var file = FindByCode(code);
+            var file = db.Find(new FilesDbQuery { Code = code }).FirstOrDefault();
             if (file != null)
                 throw ValidationError($"file with code '{code}' already exists");
 

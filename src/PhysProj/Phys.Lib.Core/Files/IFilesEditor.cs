@@ -2,14 +2,8 @@
 
 namespace Phys.Lib.Core.Files
 {
-    public interface IFilesService
+    public interface IFilesEditor
     {
-        List<FileDbo> Find(string? search = null);
-
-        List<FileDbo> FindByCodes(IEnumerable<string> codes);
-
-        FileDbo? FindByCode(string code);
-
         FileDbo Create(string code, long size, string? format);
 
         FileDbo CreateFileFromStorage(string storageCode, string fileId);

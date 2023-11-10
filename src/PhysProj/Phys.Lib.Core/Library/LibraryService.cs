@@ -2,11 +2,6 @@
 using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Library.Models;
 using Phys.Lib.Core.Works;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Phys.Lib.Core.Library
 {
@@ -14,13 +9,13 @@ namespace Phys.Lib.Core.Library
     {
         private readonly IWorksSearch worksSearch;
         private readonly IAuthorsSearch authorsSearch;
-        private readonly IFilesService filesService;
+        private readonly IFilesSearch filesSearch;
 
-        public LibraryService(IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesService filesService)
+        public LibraryService(IWorksSearch worksSearch, IAuthorsSearch authorsSearch, IFilesSearch filesSearch)
         {
             this.worksSearch = worksSearch;
             this.authorsSearch = authorsSearch;
-            this.filesService = filesService;
+            this.filesSearch = filesSearch;
         }
 
         public List<WorkModel> SearchWorks(string? search)
@@ -29,7 +24,7 @@ namespace Phys.Lib.Core.Library
             var authorsCodes = works.SelectMany(w => w.AuthorsCodes).Distinct().ToList();
             var authors = authorsSearch.FindByCodes(authorsCodes).ToDictionary(a => a.Code);
             var filesCodes = works.SelectMany(w => w.FilesCodes).Distinct().ToList();
-            var files = filesService.FindByCodes(filesCodes).ToDictionary(a => a.Code);
+            var files = filesSearch.FindByCodes(filesCodes).ToDictionary(a => a.Code);
             return works.Select(w => WorkModel.Map(w, authors, files)).ToList();
         }
     }

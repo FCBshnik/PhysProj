@@ -81,8 +81,10 @@ namespace Phys.Lib.Autofac
                 .RegisterService<AuthorsEditor, IAuthorsEditor>()
                 .RegisterService<WorksSearch, IWorksSearch>()
                 .RegisterService<WorksEditor, IWorksEditor>()
+                .RegisterService<FilesSearch, IFilesSearch>()
+                .RegisterService<FilesEditor, IFilesEditor>()
                 .RegisterService<FileStoragesService, IFileStorages>()
-                .RegisterService<FilesService, IFilesService>()
+                .RegisterService<FileDownloadService, IFileDownloadService>()
                 .RegisterService<MigrationService, IMigrationService>()
                 .RegisterService<LibraryService, ILibraryService>();
         }

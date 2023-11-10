@@ -9,17 +9,17 @@ namespace Phys.Lib.Admin.Api.Api.Files
     {
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapGet("/", ([AsParameters] FilesQuery query, [FromServices] IFilesService service) =>
+            builder.MapGet("/", ([AsParameters] FilesQuery query, [FromServices] IFilesSearch service) =>
             {
                 var filesLinks = service.Find(query.Search);
                 return TypedResults.Ok(filesLinks.Select(FilesMapper.Map).ToList());
             }).ProducesResponse<List<FileModel>>("ListFiles");
 
-            builder.MapDelete("/{code}", (string code, [FromServices] IFilesService service) =>
+            builder.MapDelete("/{code}", (string code, [FromServices] IFilesSearch search, [FromServices] IFilesEditor editor) =>
             {
-                var file = service.FindByCode(code);
+                var file = search.FindByCode(code);
                 if (file != null)
-                    service.Delete(file);
+                    editor.Delete(file);
 
                 return TypedResults.Ok(OkModel.Ok);
             }).ProducesResponse<OkModel>("DeleteFile");
@@ -35,7 +35,7 @@ namespace Phys.Lib.Admin.Api.Api.Files
                 return TypedResults.Ok(storage.List(query.Search).Select(FilesMapper.Map).ToList());
             }).ProducesResponse<List<FileStorageFileModel>>("ListStorageFiles");
 
-            builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices] IFilesService service) =>
+            builder.MapPost("storages/{storageCode}/files/link", (string storageCode, [FromBody]FileStorageLinkModel model, [FromServices] IFilesEditor service) =>
             {
                 var file = service.CreateFileFromStorage(storageCode, model.FileId);
                 return TypedResults.Ok(FilesMapper.Map(file));
