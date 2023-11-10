@@ -54,7 +54,8 @@ namespace Phys.Lib.Tests.Db
         {
             using var container = BuildContainer();
             using var lifetimeScope = container.BeginLifetimeScope();
-            var fileService = lifetimeScope.Resolve<IFilesService>();
+            var filesEditor = lifetimeScope.Resolve<IFilesEditor>();
+            var filesSearch = lifetimeScope.Resolve<IFilesSearch>();
             var migrations = lifetimeScope.Resolve<IMigrationService>();
             var storages = lifetimeScope.Resolve<IEnumerable<IFileStorage>>();
             var storageSrc = storages.First();
@@ -62,16 +63,16 @@ namespace Phys.Lib.Tests.Db
             var file1 = storageSrc.Upload(GetMockStream("file-1"), "dir-1/file-1.txt");
             var file2 = storageSrc.Upload(GetMockStream("file-2"), "dir-1/file-2.txt");
             var file3 = storageSrc.Upload(GetMockStream("file-3"), "dir-2/file-3.txt");
-            fileService.CreateFileFromStorage(storageSrc.Code, file1.Id);
-            fileService.CreateFileFromStorage(storageSrc.Code, file2.Id);
-            fileService.CreateFileFromStorage(storageSrc.Code, file3.Id);
+            filesEditor.CreateFileFromStorage(storageSrc.Code, file1.Id);
+            filesEditor.CreateFileFromStorage(storageSrc.Code, file2.Id);
+            filesEditor.CreateFileFromStorage(storageSrc.Code, file3.Id);
 
             var migration = migrations.Create(new MigrationTask { Migrator = "files-content", Source = storageSrc.Code, Destination = storageDst.Code });
             migrations.Execute(migration);
             migration.Error.ShouldBeNull(migration.Error);
             migration.Stats.Created.ShouldBe(3);
 
-            var files = fileService.Find();
+            var files = filesSearch.Find();
             files.Count.ShouldBe(3);
             var dstLinks = files.SelectMany(f => f.Links.Where(l => l.StorageCode == storageDst.Code)).ToList();
             dstLinks.Count.ShouldBe(3);
