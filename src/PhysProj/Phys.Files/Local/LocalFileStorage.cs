@@ -96,6 +96,11 @@ namespace Phys.Files.Local
             return MapFileInfo(GetFileInfo(name));
         }
 
+        public Uri GetDownloadLink(string fileId)
+        {
+            throw new NotSupportedException();
+        }
+
         private List<FileInfo> ListFiles()
         {
             var files = baseDir.EnumerateFiles("*", SearchOption.AllDirectories)

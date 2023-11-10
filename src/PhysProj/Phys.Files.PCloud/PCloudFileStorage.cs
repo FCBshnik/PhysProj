@@ -115,6 +115,17 @@ namespace Phys.Files.PCloud
             return Map(metadata);
         }
 
+        public Uri GetDownloadLink(string fileId)
+        {
+            EnsureLoggedIn();
+
+            var response = api.GetFilePubLink(long.Parse(fileId), accessToken!).Result;
+            if (response.Result != 0)
+                throw new PhysException($"pcloud returned {response.Result} {response.Error} for GetFilePubLink");
+
+            return new Uri(response.Link.Replace("\\", string.Empty));
+        }
+
         private string NormilizePath(string path)
         {
             return Regex.Replace(path.Replace("\\", "/").Trim('/'), "/+", "/");

@@ -1,5 +1,8 @@
 ﻿namespace Phys.Files
 {
+    /// <summary>
+    /// Stores files content by id
+    /// </summary>
     public interface IFileStorage
     {
         string Code { get; }
@@ -15,5 +18,7 @@
         void Delete(string fileId);
 
         void Refresh();
+
+        Uri GetDownloadLink(string fileId);
     }
 }
