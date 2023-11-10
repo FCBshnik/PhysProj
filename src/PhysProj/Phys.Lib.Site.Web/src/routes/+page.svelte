@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as api from "$lib/services/ApiService";
   import { onMount } from "svelte";
-  import { notificationsService } from "$lib/services/NotificationsService";
+  import DownloadFile from "$lib/components/DownloadFile.svelte";
 
   let works:api.WorkModel[] = [];
   let searchText:string = "";
@@ -14,26 +14,10 @@
     refresh();
   }
 
-  async function getDownloadLink(file:api.FileModel) {
-    return await api.service.getFileDownloadLink(file.code).catch(e => notificationsService.push(e));
-  }
-
   function getAuthorShort(author:api.AuthorModel){
     var parts = author.name?.split(' ');
     var initials = parts.slice(0, parts.length - 1).map(v => v[0] + '.');
     return parts[parts.length - 1] + ' ' + initials.join(' ');
-  }
-
-  function formatBytes(bytes, decimals = 0) {
-    if (!+bytes) return '0 Bytes'
-
-    const k = 1000
-    const dm = decimals < 0 ? 0 : decimals
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
   }
 
   onMount(() => refresh());
@@ -67,19 +51,14 @@
             </div>
           </div>
           <div class="text-center text-ellipsis overflow-hidden italic">
-            {#each work.authors as author}
+            {#each work.authors || [] as author}
               <div class="inline px-1">{getAuthorShort(author)}</div>
             {/each}
           </div>
           <div class="text-end text-ellipsis overflow-hidden text-xs">
-            {#each work.files as file}
+            {#each work.files || [] as file}
               <div class="inline px-1">
-                {#if file._downloadLink}
-                  <a class="dark:text-green-700" rel="external" href="{file._downloadLink.url}" target="_blank">{file.format} {formatBytes(file.size)}</a>
-                {:else}
-                  <!-- <a class="dark:text-green-700" rel="external" href="/" target="_blank">{file.format} {formatBytes(file.size)}</a> -->
-	                <button on:click={async () => file._downloadLink = await getDownloadLink(file)}>{file.format} {formatBytes(file.size)}</button>
-                {/if}
+                <DownloadFile file={file}></DownloadFile>
               </div>
             {/each}
           </div>
