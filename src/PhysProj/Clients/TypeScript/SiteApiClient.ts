@@ -21,6 +21,53 @@ export class SiteApiClient {
     /**
      * @return Success
      */
+    getFileDownloadLink(code: string): Promise<FileLinkModel> {
+        let url_ = this.baseUrl + "/api/files/{code}/download/link";
+        if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined.");
+        url_ = url_.replace("{code}", encodeURIComponent("" + code));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetFileDownloadLink(_response));
+        });
+    }
+
+    protected processGetFileDownloadLink(response: Response): Promise<FileLinkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileLinkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileLinkModel>(null as any);
+    }
+
+    /**
+     * @return Success
+     */
     check(): Promise<OkModel> {
         let url_ = this.baseUrl + "/api/health/check";
         url_ = url_.replace(/[?&]$/, "");
@@ -143,6 +190,82 @@ export class AuthorModel implements IAuthorModel {
 export interface IAuthorModel {
     code?: string | undefined;
     name?: string | undefined;
+}
+
+export class ErrorModel implements IErrorModel {
+    code?: string | undefined;
+    message?: string | undefined;
+
+    constructor(data?: IErrorModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): ErrorModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["message"] = this.message;
+        return data;
+    }
+}
+
+export interface IErrorModel {
+    code?: string | undefined;
+    message?: string | undefined;
+}
+
+export class FileLinkModel implements IFileLinkModel {
+    url?: string | undefined;
+
+    constructor(data?: IFileLinkModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): FileLinkModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new FileLinkModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["url"] = this.url;
+        return data;
+    }
+}
+
+export interface IFileLinkModel {
+    url?: string | undefined;
 }
 
 export class FileModel implements IFileModel {
