@@ -2,13 +2,25 @@
 
 namespace Phys.Lib.Db.Files
 {
+    /// <summary>
+    /// File metadata with collection of links where content of file is stored
+    /// </summary>
     [Equatable]
     public sealed partial class FileDbo
     {
+        /// <summary>
+        /// Semantic and url-compatible id of file
+        /// </summary>
         public required string Code { get; set; }
 
+        /// <summary>
+        /// Format of file
+        /// </summary>
         public string Format { get; set; }
 
+        /// <summary>
+        /// Size of file in bytes
+        /// </summary>
         public long Size { get; set; }
 
         [UnorderedEquality]

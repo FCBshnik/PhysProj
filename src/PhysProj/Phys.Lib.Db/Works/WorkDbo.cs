@@ -6,12 +6,12 @@ namespace Phys.Lib.Db.Works
     public sealed partial class WorkDbo
     {
         /// <summary>
-        /// Unique code of work
+        /// Semantic and url-compatible id of work
         /// </summary>
         public required string Code { get; set; }
 
         /// <summary>
-        /// Published date
+        /// Published year in internal format
         /// </summary>
         public string? Publish { get; set; }
 
