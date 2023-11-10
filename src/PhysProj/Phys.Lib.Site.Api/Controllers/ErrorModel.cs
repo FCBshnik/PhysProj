@@ -2,11 +2,11 @@
 {
     public record ErrorModel
     {
-        public ErrorCode Code { get; set; }
+        public string Code { get; set; }
 
         public string Message { get; set; }
 
-        public ErrorModel(ErrorCode code, string message)
+        public ErrorModel(string code, string message)
         {
             Code = code;
             Message = message;
@@ -20,11 +20,6 @@
         public static ErrorModel NotFound(string message)
         {
             return new ErrorModel(ErrorCode.NotFound, message);
-        }
-
-        public static ErrorModel InvalidArgument(string message)
-        {
-            return new ErrorModel(ErrorCode.InvalidArgument, message);
         }
     }
 }

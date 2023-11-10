@@ -41,6 +41,7 @@ namespace Phys.Lib.Site.Api
             builder.Services.AddControllers(c =>
             {
                 c.Filters.Add(new InternalErrorFilter(loggerFactory.CreateLogger("api-internal-err")));
+                c.Filters.Add(new ExternalErrorFilter(loggerFactory.CreateLogger("api-external-err")));
             });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

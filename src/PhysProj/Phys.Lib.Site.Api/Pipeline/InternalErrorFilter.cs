@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Phys.Lib.Site.Api.Controllers;
 
 namespace Phys.Lib.Site.Api.Pipeline
 {
@@ -15,7 +16,8 @@ namespace Phys.Lib.Site.Api.Pipeline
         public void OnException(ExceptionContext context)
         {
             log.LogError(context.Exception, $"internal error");
-            context.Result = new StatusCodeResult(500);
+            context.Result = new ObjectResult(new ErrorModel(ErrorCode.InternalError, "something go wrong...")) { StatusCode = 500 };
+            context.ExceptionHandled = true;
         }
     }
 }

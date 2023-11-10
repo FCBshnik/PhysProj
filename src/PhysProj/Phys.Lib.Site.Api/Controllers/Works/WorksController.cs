@@ -17,21 +17,5 @@ namespace Phys.Lib.Site.Api.Controllers.Works
             var works = libraryService.SearchWorks(search);
             return Ok(works);
         }
-
-        [HttpGet("files/{code}/download", Name = "GetFileLink")]
-        public object GetFileLink(string code, [FromServices]IFilesService filesService, [FromServices]IFileStorages fileStorages)
-        {
-            var file = filesService.FindByCode(code);
-            if (file == null)
-                return BadRequest(new ErrorModel(ErrorCode.NotFound, "file not found"));
-
-            var link = file.Links.FirstOrDefault();
-            if (link == null)
-                return BadRequest(new ErrorModel(ErrorCode.NotFound, "file is not available"));
-
-            var storage = fileStorages.Get(link.StorageCode);
-            var data = storage.Download(link.FileId);
-            return File(data, "application/octet-stream", $"{file.Code}.{file.Format}");
-        }
     }
 }
