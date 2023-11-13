@@ -16,7 +16,7 @@
 </script>
 
 <article class="dark:bg-gray-800 dark:text-gray-400">
-  <div class="p-4 flex flex-col h-full min-h-screen">
+<div class="p-4 flex flex-col h-full min-h-screen">
     <div class="p-2 flex flex-row items-center justify-between">
       <div><a href="/">PhysLib</a></div>
       <div class="w-2/3 flex flex-row">
