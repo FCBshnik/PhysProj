@@ -11,7 +11,7 @@
   }
 </script>
 
-<div class="border-2 rounded-md m-2 p-2 flex flex-col dark:border-gray-500">
+<div class="border-2 rounded-md m-2 p-2 flex flex-col dark:border-gray-500 border-gray-400">
   <div class="grow flex justify-center items-center">
     <div class="text-center text-ellipsis overflow-hidden text-lg">
       {work.name}
@@ -19,7 +19,7 @@
   </div>
   <div class="text-center text-ellipsis overflow-hidden italic">
     {#each work.authors || [] as author}
-      <div class="p-1">{getAuthorShort(author)}</div>
+      <div class="inline-block p-1">{getAuthorShort(author)}</div>
     {/each}
   </div>
   <div class="text-end text-ellipsis overflow-hidden text-xs">
