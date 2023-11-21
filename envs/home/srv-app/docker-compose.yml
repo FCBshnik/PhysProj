@@ -26,3 +26,21 @@ services:
       - "7189:80"
     volumes:
       - /opt/physproj/admin-web/nginx:/var/log/nginx
+  site-api:
+    container_name: site-api
+    build: site-api
+    image: physproj-home-site-api
+    restart: always
+    ports:
+      - "7288:7288"
+    volumes:
+      - /opt/physproj/site-api/data:/app/data
+  site-web:
+    container_name: site-web
+    build: site-web
+    image: physproj-home-site-web
+    restart: always
+    ports:
+      - "7289:80"
+    volumes:
+      - /opt/physproj/site-web/nginx:/var/log/nginx
