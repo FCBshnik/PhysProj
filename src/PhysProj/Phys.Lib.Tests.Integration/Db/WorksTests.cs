@@ -3,7 +3,7 @@ using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
 using Shouldly;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Db
 {
     internal class WorksTests
     {

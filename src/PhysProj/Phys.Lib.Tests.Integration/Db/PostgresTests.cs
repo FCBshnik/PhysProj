@@ -1,8 +1,9 @@
 ﻿using Autofac;
 using Phys.Lib.Autofac;
+using Phys.Lib.Tests.Db;
 using Testcontainers.PostgreSql;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Db
 {
     public class PostgresTests : DbTests
     {

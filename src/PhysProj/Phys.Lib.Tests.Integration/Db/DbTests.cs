@@ -9,7 +9,7 @@ using Phys.Utils;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Autofac;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Db
 {
     public abstract class DbTests : IDisposable
     {

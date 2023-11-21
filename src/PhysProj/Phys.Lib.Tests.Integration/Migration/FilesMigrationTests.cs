@@ -16,8 +16,9 @@ using Testcontainers.MongoDb;
 using Phys.Lib.Core.Migration;
 using Shouldly;
 using Phys.Lib.Core.Files;
+using Phys.Lib.Tests.Db;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Migration
 {
     public class FilesMigrationTests : IDisposable
     {

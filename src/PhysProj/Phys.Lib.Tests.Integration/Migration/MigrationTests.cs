@@ -11,6 +11,7 @@ using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
+using Phys.Lib.Tests.Db;
 using Phys.Mongo.HistoryDb;
 using Phys.NLog;
 using Phys.Utils;
@@ -18,7 +19,7 @@ using Shouldly;
 using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Migration
 {
     public class MigrationTests : IDisposable
     {

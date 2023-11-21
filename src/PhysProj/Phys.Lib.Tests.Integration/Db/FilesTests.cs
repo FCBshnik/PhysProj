@@ -2,7 +2,7 @@
 using Phys.Lib.Db.Files;
 using Shouldly;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Db
 {
     internal class FilesTests
     {

@@ -2,7 +2,7 @@
 using Shouldly;
 using Phys.Lib.Db.Migrations;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Db
 {
     internal class UsersTests
     {

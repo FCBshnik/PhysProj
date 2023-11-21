@@ -6,8 +6,9 @@ using Phys.Mongo.HistoryDb;
 using Shouldly;
 using Testcontainers.MongoDb;
 using Phys.Lib.Autofac;
+using Phys.Lib.Tests.Db;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Db
 {
     public class MongoTests : DbTests
     {

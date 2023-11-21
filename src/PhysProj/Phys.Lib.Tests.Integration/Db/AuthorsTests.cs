@@ -1,7 +1,7 @@
 ﻿using Phys.Lib.Db.Authors;
 using Shouldly;
 
-namespace Phys.Lib.Tests.Db
+namespace Phys.Lib.Tests.Integration.Db
 {
     internal class AuthorsTests
     {
