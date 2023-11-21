@@ -4,6 +4,8 @@
     {
         public string? Code { get; set; }
 
+        public ICollection<string> Codes { get; set; }
+
         public string? Search { get; set; }
 
         public string? FileCode { get; set; }

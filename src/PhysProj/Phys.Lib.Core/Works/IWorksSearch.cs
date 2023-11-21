@@ -13,5 +13,7 @@ namespace Phys.Lib.Core.Works
         List<WorkDbo> FindCollected(string subWorkCode);
 
         WorkDbo? FindByCode(string code);
+
+        List<WorkDbo> FindByCodes(ICollection<string> codes);
     }
 }

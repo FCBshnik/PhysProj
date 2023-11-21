@@ -63,6 +63,8 @@ namespace Phys.Lib.Postgres.Works
             {
                 if (query.Code != null)
                     q = q.Where(tableName + "." + WorkModel.CodeColumn, query.Code);
+                if (query.Codes != null)
+                    q = q.WhereIn(WorkModel.CodeColumn, query.Codes);
                 if (query.AuthorCode != null)
                     q = q.Where(worksAuthors.TableName + "." + WorkModel.AuthorModel.AuthorCodeColumn, query.AuthorCode);
                 if (query.OriginalCode != null)

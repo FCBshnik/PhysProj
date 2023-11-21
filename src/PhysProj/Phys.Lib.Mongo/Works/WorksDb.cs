@@ -49,6 +49,8 @@ namespace Phys.Lib.Mongo.Works
             var filter = FilterBuilder.Empty;
             if (query.Code != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.Code, query.Code));
+            if (query.Codes != null)
+                filter = FilterBuilder.And(filter, FilterBuilder.In(u => u.Code, query.Codes));
             if (query.AuthorCode != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.AuthorsCodes, query.AuthorCode));
             if (query.FileCode != null)

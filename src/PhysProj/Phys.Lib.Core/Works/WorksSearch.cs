@@ -18,6 +18,14 @@ namespace Phys.Lib.Core.Works
             return db.Find(new WorksDbQuery { Code = code }).FirstOrDefault();
         }
 
+        public List<WorkDbo> FindByCodes(ICollection<string> codes)
+        {
+            ArgumentNullException.ThrowIfNull(codes);
+            ArgumentOutOfRangeException.ThrowIfLessThan(codes.Count, 1);
+
+            return db.Find(new WorksDbQuery { Codes = codes });
+        }
+
         public List<WorkDbo> Find(string? search = null)
         {
             return db.Find(new WorksDbQuery { Search = search });

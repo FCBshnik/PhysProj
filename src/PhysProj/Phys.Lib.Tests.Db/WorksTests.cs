@@ -31,6 +31,9 @@ namespace Phys.Lib.Tests.Db
 
             FindByCode("work-1");
             FindByCode("work-3");
+            FindByCodes();
+            FindByCodes("work-1");
+            FindByCodes("work-1", "work-3");
 
             Search("lalala");
             Search("3", "work-3");
@@ -116,6 +119,13 @@ namespace Phys.Lib.Tests.Db
             var work = works.First();
             work.Code.ShouldBe(code);
             return work;
+        }
+
+        private void FindByCodes(params string[] codes)
+        {
+            var works = db.Find(new WorksDbQuery { Codes = codes.ToList() });
+            works.Count.ShouldBe(codes.Length);
+            works.ForEach(a => a.Code.ShouldBeOneOf(codes));
         }
 
         private void FindByAuthor(string authrorCode, params string[] expectedCodes)
