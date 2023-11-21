@@ -11,6 +11,11 @@ namespace Phys.Lib.Core.Search
         {
         }
 
+        protected override bool Use(WorkDbo value)
+        {
+            return value.Infos.Count > 0;
+        }
+
         protected override WorkTso Map(WorkDbo value)
         {
             return new WorkTso

@@ -4,12 +4,12 @@ using Phys.Shared.Search;
 
 namespace Phys.Lib.Core.Search
 {
-    internal abstract class BaseTextSearchMigrator<TDbo, TTso> : IMigrator
+    internal abstract class BaseTextSearchMigrator<TDbObject, TSearchObject> : IMigrator
     {
-        protected readonly List<IDbReader<TDbo>> readers;
-        private readonly ITextSearch<TTso> textSearch;
+        protected readonly List<IDbReader<TDbObject>> readers;
+        private readonly ITextSearch<TSearchObject> textSearch;
 
-        public BaseTextSearchMigrator(string name, IEnumerable<IDbReader<TDbo>> readers, ITextSearch<TTso> textSearch)
+        public BaseTextSearchMigrator(string name, IEnumerable<IDbReader<TDbObject>> readers, ITextSearch<TSearchObject> textSearch)
         {
             Name = name;
             this.readers = readers.ToList();
@@ -24,7 +24,7 @@ namespace Phys.Lib.Core.Search
 
         public void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {
-            IDbReaderResult<TDbo> result = null!;
+            IDbReaderResult<TDbObject> result = null!;
 
             var source = readers.First(r => r.Name == migration.Source);
             textSearch.Reset();
@@ -32,12 +32,14 @@ namespace Phys.Lib.Core.Search
             do
             {
                 result = source.Read(new DbReaderQuery(100, result?.Cursor));
-                textSearch.Add(result.Values.Select(Map).ToList());
+                textSearch.Add(result.Values.Where(Use).Select(Map).ToList());
                 migration.Stats.Updated += result.Values.Count;
                 progress.Report(migration);
             } while (!result.IsCompleted);
         }
 
-        protected abstract TTso Map(TDbo value);
+        protected abstract bool Use(TDbObject value);
+
+        protected abstract TSearchObject Map(TDbObject value);
     }
 }
