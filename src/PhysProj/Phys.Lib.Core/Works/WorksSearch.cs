@@ -21,7 +21,6 @@ namespace Phys.Lib.Core.Works
         public List<WorkDbo> FindByCodes(ICollection<string> codes)
         {
             ArgumentNullException.ThrowIfNull(codes);
-            ArgumentOutOfRangeException.ThrowIfLessThan(codes.Count, 1);
 
             return db.Find(new WorksDbQuery { Codes = codes });
         }
