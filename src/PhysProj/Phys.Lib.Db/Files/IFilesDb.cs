@@ -3,7 +3,7 @@ using Phys.Shared;
 
 namespace Phys.Lib.Db.Files
 {
-    public interface IFilesDb : INamed, IDbReader<FileDbo>
+    public interface IFilesDb : IDbReader<FileDbo>
     {
         List<FileDbo> Find(FilesDbQuery query);
 

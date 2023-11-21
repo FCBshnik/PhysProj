@@ -13,5 +13,7 @@
         public static readonly string Library = "library";
 
         public static readonly string FilesContent = "files-content";
+
+        public static readonly string WorksSearch = "works-search";
     }
 }

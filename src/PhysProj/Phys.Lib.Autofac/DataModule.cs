@@ -30,9 +30,11 @@ namespace Phys.Lib.Autofac
             var mongoUrl = configuration.GetConnectionStringOrThrow("mongo");
             var postgresUrl = configuration.GetConnectionStringOrThrow("postgres");
             var rabbitUrl = configuration.GetConnectionStringOrThrow("rabbitmq");
+            var meilisearchUrl = configuration.GetConnectionStringOrThrow("meilisearch");
 
             builder.RegisterModule(new MongoDbModule(mongoUrl, loggerFactory));
             builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
+            builder.RegisterModule(new MeiliSearchModule(meilisearchUrl, "phys-lib", loggerFactory));
             builder.RegisterModule<SettingsModule>();
 
             // files
