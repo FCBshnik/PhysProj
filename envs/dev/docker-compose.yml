@@ -27,7 +27,19 @@ services:
       - 15672:15672
     volumes:
       - rabbitmq:/var/lib/rabbitmq/
+  meilisearch:
+    container_name: physproj-meilisearch
+    image: getmeili/meilisearch:v1.4
+    restart: always
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch:/meili_data
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: 123456
 volumes:
   mongo:
   postgres:
   rabbitmq:
+  meilisearch:
