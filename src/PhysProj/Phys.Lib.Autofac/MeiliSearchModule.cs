@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Meilisearch;
 using Microsoft.Extensions.Logging;
+using Phys.Lib.Core.Migration;
+using Phys.Lib.Core.Search;
 using Phys.Lib.Db.Search;
 using Phys.Lib.Search;
 using Phys.Shared.Search;
@@ -36,6 +38,10 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<WorksTextSearch>()
                 .WithParameter(TypedParameter.From(client.Index($"{indexPrefix}-works")))
                 .As<ITextSearch<WorkTso>>()
+                .SingleInstance();
+
+            builder.RegisterType<WorksTextSearchMigrator>().WithParameter(TypedParameter.From(MigratorName.WorksSearch))
+                .As<IMigrator>()
                 .SingleInstance();
         }
     }

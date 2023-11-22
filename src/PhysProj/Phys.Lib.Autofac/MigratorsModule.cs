@@ -48,9 +48,6 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<LibraryMigrator>()
                 .As<IMigrator>()
                 .SingleInstance();
-            builder.RegisterType<WorksTextSearchMigrator>().WithParameter(TypedParameter.From(MigratorName.WorksSearch))
-                .As<IMigrator>()
-                .SingleInstance();
         }
     }
 }

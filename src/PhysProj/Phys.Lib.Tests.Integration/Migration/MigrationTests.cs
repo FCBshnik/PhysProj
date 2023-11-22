@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Phys.Lib.Autofac;
 using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Files;
