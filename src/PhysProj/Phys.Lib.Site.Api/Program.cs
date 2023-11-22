@@ -1,10 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.Configuration;
 using NLog.Web;
 using Phys.Lib.Core;
 using Phys.Lib.Site.Api.Pipeline;
 using Phys.NLog;
+using Phys.Shared.Utils;
 using Phys.Utils;
 using System.Reflection;
 
@@ -21,11 +23,13 @@ namespace Phys.Lib.Site.Api
         public static void Main(string[] args)
         {
             NLogConfig.Configure(loggerFactory, "lib-site");
-            ProgramUtils.OnRun(loggerFactory);
+            AppUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
 
-            var config = builder.Configuration;
+            AppUtils.AddJsonConfigFromArgs(builder.Configuration);
+
+            IConfiguration config = builder.Configuration;
             var urls = config.GetConnectionStringOrThrow("urls");
 
             builder.WebHost.UseUrls(urls);

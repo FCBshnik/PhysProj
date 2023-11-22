@@ -28,7 +28,7 @@ namespace Phys.Lib.Tests.Api
             try
             {
                 NLogConfig.Configure(loggerFactory, "tests-api");
-                ProgramUtils.OnRun(loggerFactory);
+                AppUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

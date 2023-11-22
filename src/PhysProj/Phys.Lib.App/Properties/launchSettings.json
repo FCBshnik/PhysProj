@@ -2,7 +2,7 @@
   "profiles": {
     "Phys.Lib.App": {
       "commandName": "Project",
-      "commandLineArgs": "--environment Development"
+      "commandLineArgs": "--appsettings $(SolutionDir)appsettings.lib.dev.json --environment Development"
     }
   }
 }

@@ -22,7 +22,7 @@ namespace Phys.Lib.Tests.Db.Search
             try
             {
                 NLogConfig.Configure(loggerFactory, "tests-search");
-                ProgramUtils.OnRun(loggerFactory);
+                AppUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

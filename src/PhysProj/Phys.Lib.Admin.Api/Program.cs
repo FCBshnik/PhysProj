@@ -34,9 +34,11 @@ namespace Phys.Lib.Admin.Api
         public static void Main(string[] args)
         {
             NLogConfig.Configure(loggerFactory, "lib-admin");
-            ProgramUtils.OnRun(loggerFactory);
+            AppUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
+
+            AppUtils.AddJsonConfigFromArgs(builder.Configuration);
 
             var config = builder.Configuration;
             var urls = config.GetConnectionStringOrThrow("urls");

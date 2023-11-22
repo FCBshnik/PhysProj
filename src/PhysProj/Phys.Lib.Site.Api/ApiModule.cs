@@ -7,9 +7,9 @@ namespace Phys.Lib.Site.Api
     public class ApiModule : Module
     {
         private LoggerFactory loggerFactory;
-        private ConfigurationManager config;
+        private IConfiguration config;
 
-        public ApiModule(LoggerFactory loggerFactory, ConfigurationManager config)
+        public ApiModule(LoggerFactory loggerFactory, IConfiguration config)
         {
             this.loggerFactory = loggerFactory;
             this.config = config;

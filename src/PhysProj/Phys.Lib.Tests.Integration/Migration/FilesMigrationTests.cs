@@ -38,7 +38,7 @@ namespace Phys.Lib.Tests.Integration.Migration
             try
             {
                 NLogConfig.Configure(loggerFactory, "tests-db");
-                ProgramUtils.OnRun(loggerFactory);
+                AppUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

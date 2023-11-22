@@ -2,3 +2,4 @@
 bin/
 obj/
 **/nlog.internal.txt
+src/PhysProj/appsettings.lib.dev.json

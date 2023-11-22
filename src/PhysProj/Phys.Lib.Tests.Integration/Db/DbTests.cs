@@ -24,7 +24,7 @@ namespace Phys.Lib.Tests.Integration.Db
             try
             {
                 NLogConfig.Configure(loggerFactory, "tests-db");
-                ProgramUtils.OnRun(loggerFactory);
+                AppUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

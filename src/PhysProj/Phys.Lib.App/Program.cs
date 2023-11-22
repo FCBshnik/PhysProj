@@ -15,9 +15,11 @@ namespace Phys.Lib.App
         static void Main(string[] args)
         {
             NLogConfig.Configure(loggerFactory, "lib-app");
-            ProgramUtils.OnRun(loggerFactory);
+            AppUtils.OnRun(loggerFactory);
 
             var builder = Host.CreateDefaultBuilder(args);
+
+            builder.ConfigureAppConfiguration(c => AppUtils.AddJsonConfigFromArgs(c));
 
             builder.UseServiceProviderFactory(ctx => new AutofacServiceProviderFactory(c => c.RegisterModule(new AppModule(loggerFactory, ctx.Configuration))));
             using var host = builder.Build();

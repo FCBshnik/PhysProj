@@ -16,9 +16,9 @@ namespace Phys.Lib.Cli
         private static void Main(string[] args)
         {
             NLogConfig.Configure(loggerFactory, "lib-cli");
-            ProgramUtils.OnRun(loggerFactory);
+            AppUtils.OnRun(loggerFactory);
 
-            var parser = new Parser();
+            var parser = new Parser(s => s.IgnoreUnknownArguments = true);
             var result = parser.ParseArguments(args, LoadVerbs());
             result.WithNotParsed(e => log.LogError("parse failed: {errors}", e));
             result.WithParsed(RunCommand);
@@ -28,6 +28,8 @@ namespace Phys.Lib.Cli
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
+                // skip first argument which is name of executable file and command name
+                .AddJsonConfigFromArgs(args: Environment.GetCommandLineArgs().Skip(2).ToArray())
                 .Build();
 
             var builder = new ContainerBuilder();
