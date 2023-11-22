@@ -79,17 +79,20 @@ namespace Phys.Lib.Tests.Api
             DotNetBuild(projectPath, appTestDir);
 
             // override connection strings
-            var appSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, "appsettings.json"));
-            var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appSettingsFile.FullName));
+            var srcSettingsFile = new FileInfo(Path.Combine(solutionDir.FullName, "appsettings.lib.dev.json"));
+            var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(srcSettingsFile.FullName));
             appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl();
             appSettings!["ConnectionStrings"]!["postgres"] = GetPostgresUrl();
+            appSettings!["ConnectionStrings"]!["db"] = "mongo";
             appSettings!["ConnectionStrings"]!["urls"] = url;
             appSettings!["ConnectionStrings"]!["works-files"] = "data/files";
-            File.WriteAllText(appSettingsFile.FullName, JsonConvert.SerializeObject(appSettings));
+
+            var testSettingsFile = new FileInfo(Path.Combine(appTestDir.FullName, "appsettings.tests.json"));
+            File.WriteAllText(testSettingsFile.FullName, JsonConvert.SerializeObject(appSettings));
 
             // run
             var appFile = new FileInfo(Path.Combine(appTestDir.FullName, appTestDir.Name) + ".dll");
-            DotNetRun(appFile);
+            DotNetRun(appFile, testSettingsFile.FullName);
 
             // todo: wait app started
             Thread.Sleep(2000);
@@ -115,7 +118,7 @@ namespace Phys.Lib.Tests.Api
             Log($"built '{projectPath.FullName}'");
         }
 
-        private void DotNetRun(FileInfo appFile)
+        private void DotNetRun(FileInfo appFile, string appsettingsPath)
         {
             if (!appFile.Exists)
                 throw new InvalidOperationException($"App file '{appFile.FullName}' not found");
@@ -124,6 +127,8 @@ namespace Phys.Lib.Tests.Api
             .WithArguments(a =>
             {
                 a.Add(appFile.FullName);
+                a.Add("--appsettings");
+                a.Add(appsettingsPath);
             })
             .WithWorkingDirectory(appFile.Directory!.FullName)
             .ExecuteAsync(cts.Token);
