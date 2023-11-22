@@ -20,7 +20,7 @@ namespace Phys.RabbitMQ
         {
             var channel = EnsureChannel(queueName);
             var rabbitConsumer = new RabbitConsumer(channel, consumer, log);
-            channel.BasicConsume(queueName, autoAck: true, rabbitConsumer);
+            channel.BasicConsume(queueName, autoAck: false, rabbitConsumer);
             log.LogInformation($"BasicConsume '{queueName}'");
             return rabbitConsumer;
         }
@@ -64,10 +64,13 @@ namespace Phys.RabbitMQ
                 try
                 {
                     consumer.Consume(msg);
+                    channel.BasicAck(deliveryTag, false);
                 }
                 catch (Exception e)
                 {
-                    log.LogError(e.Message, "consume failed");
+                    log.LogError(e, "consume failed");
+                    channel.BasicNack(deliveryTag, false, false);
+                    throw;
                 }
             }
 

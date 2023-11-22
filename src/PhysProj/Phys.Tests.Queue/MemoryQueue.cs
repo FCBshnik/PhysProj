@@ -53,7 +53,10 @@ namespace Phys.Tests.Queue
             if (!msgs.TryDequeue(out var msg))
                 return;
 
+            // do not redeliver
             sub.Consume(msg);
+            //if (!sub.Consume(msg))
+            ///    msgs.Enqueue(msg);
 
             if (!msgs.IsEmpty)
                 Consume(queue);

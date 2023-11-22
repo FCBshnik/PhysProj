@@ -70,6 +70,25 @@ namespace Phys.Tests.Queue
         }
 
         [Fact]
+        public void Publish_ConsumeFailed_NotRedelivered()
+        {
+            var badConsumer = new BadConsumer();
+            var consumer = new Consumer();
+
+            queue.Publish("test-1", "message");
+            Thread.Sleep(1000);
+            var unsubBad = queue.Consume("test-1", badConsumer);
+
+            Thread.Sleep(100);
+            badConsumer.Failed.Count.Should().BeGreaterThan(0);
+            unsubBad.Dispose();
+
+            queue.Consume("test-1", consumer);
+            Thread.Sleep(1000);
+            consumer.Consumed.Should().BeEquivalentTo(new List<object> { });
+        }
+
+        [Fact]
         public void PublishMany_Consume_Consumed()
         {
             var consumer = new Consumer();
@@ -89,6 +108,18 @@ namespace Phys.Tests.Queue
             {
                 Thread.Sleep(10);
                 Consumed.Add(message);
+            }
+        }
+
+        private class BadConsumer : IMessageConsumer
+        {
+            public List<string> Failed { get; } = new List<string>();
+
+            public void Consume(string message)
+            {
+                Thread.Sleep(10);
+                Failed.Add(message);
+                throw new Exception($"failed to consume {message}");
             }
         }
     }
