@@ -22,7 +22,7 @@ using Testcontainers.PostgreSql;
 
 namespace Phys.Lib.Tests.Integration.Migration
 {
-    public class MigrationTests : IDisposable
+    public class MigrationTests : BaseTests
     {
         private readonly IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
             new Dictionary<string, string?> { { "ConnectionStrings:db", "mongo" } }).Build();
@@ -31,27 +31,8 @@ namespace Phys.Lib.Tests.Integration.Migration
 
         private readonly MongoDbContainer mongo = TestContainerFactory.CreateMongo();
 
-        protected readonly LoggerFactory loggerFactory = new LoggerFactory();
-
-        protected readonly ITestOutputHelper output;
-
-        public MigrationTests(ITestOutputHelper output)
+        public MigrationTests(ITestOutputHelper output) : base(output)
         {
-            this.output = output;
-
-            try
-            {
-                NLogConfig.Configure(loggerFactory, "tests-db");
-                AppUtils.OnRun(loggerFactory);
-                Log("initializing");
-                Init().Wait();
-                Log("initialized");
-            }
-            catch
-            {
-                Dispose();
-                throw;
-            }
         }
 
         [Theory]
@@ -59,7 +40,6 @@ namespace Phys.Lib.Tests.Integration.Migration
         [InlineData("postgres", "mongo")]
         public void Tests(string source, string destination)
         {
-            using var container = BuildContainer();
             using var lifetimeScope = container.BeginLifetimeScope();
 
             UsersTests(source, destination, lifetimeScope);
@@ -166,11 +146,11 @@ namespace Phys.Lib.Tests.Integration.Migration
             Assert.Equivalent(users, migrated);
         }
 
-        private IContainer BuildContainer()
+        protected override void BuildContainer(ContainerBuilder builder)
         {
-            var builder = new ContainerBuilder();
+            base.BuildContainer(builder);
+
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
-            builder.RegisterModule(new LoggerModule(loggerFactory));
             builder.RegisterModule(new PostgresDbModule(postgres.GetConnectionString(), loggerFactory));
             builder.RegisterModule(new MongoDbModule(mongo.GetConnectionString(), loggerFactory));
             builder.RegisterModule(new CoreModule());
@@ -178,32 +158,22 @@ namespace Phys.Lib.Tests.Integration.Migration
             builder.Register(c => new MongoHistoryDbFactory(mongo.GetConnectionString(), "physlib", "history-", loggerFactory))
                 .SingleInstance()
                 .AsImplementedInterfaces();
-
-            return builder.Build();
         }
 
-        public void Dispose()
-        {
-            Log("releasing");
-            Release().Wait();
-            Log("released");
-        }
-
-        protected virtual async Task Init()
+        protected override async Task Init()
         {
             await mongo.StartAsync();
             await postgres.StartAsync();
+
+            await base.Init();
         }
 
-        protected virtual async Task Release()
+        protected override async Task Release()
         {
             await mongo.StopAsync();
             await postgres.StopAsync();
-        }
 
-        protected void Log(string message)
-        {
-            output.WriteLine($"{DateTime.UtcNow}: {message}");
+            await base.Release();
         }
     }
 }
