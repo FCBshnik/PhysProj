@@ -11,6 +11,8 @@ using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Core.Library;
+using Phys.Lib.Db;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Autofac
 {
@@ -30,11 +32,11 @@ namespace Phys.Lib.Autofac
 
             RegisterServices(builder);
 
-            // override last db implementations by decorator which selects main db
+            // override existing db implementations by decorators which selects main db
             builder.RegisterType<MainUsersDb>().As<IUsersDb>().SingleInstance();
             builder.RegisterType<MainAuthorsDb>().As<IAuthorsDb>().SingleInstance();
             builder.RegisterType<MainWorksDb>().As<IWorksDb>().SingleInstance();
-            builder.RegisterType<FilesDbs>().As<IFilesDb>().SingleInstance();
+            builder.RegisterType<MainFilesDb>().As<IFilesDb>().SingleInstance();
         }
 
         private static void RegisterServices(ContainerBuilder builder)

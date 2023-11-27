@@ -1,8 +1,8 @@
-﻿using Phys.Shared;
+﻿using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Db.Users
 {
-    public interface IUsersDb : INamed
+    public interface IUsersDb : IDbReader<UserDbo>
     {
         void Create(UserDbo user);
 

@@ -6,9 +6,9 @@ using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Core.Files
 {
-    internal class FilesDbs : MainDb<IFilesDb>, IFilesDb
+    internal class MainFilesDb : MainDb<IFilesDb>, IFilesDb
     {
-        public FilesDbs(Lazy<IEnumerable<IFilesDb>> dbs, IConfiguration configuration, ILogger<FilesDbs> log)
+        public MainFilesDb(Lazy<IEnumerable<IFilesDb>> dbs, IConfiguration configuration, ILogger<MainFilesDb> log)
             :base(dbs, configuration, log)
         {
         }

@@ -1,8 +1,8 @@
-﻿using Phys.Shared;
+﻿using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Db.Authors
 {
-    public interface IAuthorsDb : INamed
+    public interface IAuthorsDb : IDbReader<AuthorDbo>
     {
         List<AuthorDbo> Find(AuthorsDbQuery query);
 

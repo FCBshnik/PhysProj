@@ -1,8 +1,8 @@
-﻿using Phys.Shared;
+﻿using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Db.Works
 {
-    public interface IWorksDb : INamed
+    public interface IWorksDb : IDbReader<WorkDbo>
     {
         List<WorkDbo> Find(WorksDbQuery query);
 

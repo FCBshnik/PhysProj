@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
 using Phys.Lib.Db.Authors;
+using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Core.Authors
 {
@@ -10,6 +11,11 @@ namespace Phys.Lib.Core.Authors
         public MainAuthorsDb(Lazy<IEnumerable<IAuthorsDb>> dbs, IConfiguration configuration, ILogger<MainAuthorsDb> log)
             :base(dbs, configuration, log)
         {
+        }
+
+        public IDbReaderResult<AuthorDbo> Read(DbReaderQuery query)
+        {
+            return db.Value.Read(query);
         }
 
         public void Create(string code)

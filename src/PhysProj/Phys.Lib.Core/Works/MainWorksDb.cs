@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
+using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
-using Phys.Shared;
 
 namespace Phys.Lib.Core.Works
 {
@@ -11,6 +11,11 @@ namespace Phys.Lib.Core.Works
         public MainWorksDb(Lazy<IEnumerable<IWorksDb>> dbs, IConfiguration configuration, ILogger<MainWorksDb> log)
             :base(dbs, configuration, log)
         {
+        }
+
+        public IDbReaderResult<WorkDbo> Read(DbReaderQuery query)
+        {
+            return db.Value.Read(query);
         }
 
         public void Create(string code)
