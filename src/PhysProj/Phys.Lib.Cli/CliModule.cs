@@ -18,9 +18,12 @@ namespace Phys.Lib.Cli
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule(new LoggerModule(loggerFactory));
-            builder.RegisterModule(new DataModule(config, loggerFactory));
-            builder.RegisterModule(new CoreModule());
+            if (Environment.GetCommandLineArgs().Contains("--appsettings"))
+            {
+                builder.RegisterModule(new LoggerModule(loggerFactory));
+                builder.RegisterModule(new DataModule(config, loggerFactory));
+                builder.RegisterModule(new CoreModule());
+            }
 
             builder.RegisterAssemblyTypes(ThisAssembly)
                 .AsClosedTypesOf(typeof(ICommand<>))
