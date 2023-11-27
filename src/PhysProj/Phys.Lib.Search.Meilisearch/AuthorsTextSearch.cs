@@ -1,22 +1,22 @@
 ﻿using Meilisearch;
 using Microsoft.Extensions.Logging;
-using Phys.Lib.Db.Search;
-using Phys.Shared.Search;
+using Phys.Lib.Search.Meilisearch;
+using Meili = Meilisearch;
 
 namespace Phys.Lib.Search
 {
     public class AuthorsTextSearch : ITextSearch<AuthorTso>
     {
         private readonly ILogger<AuthorsTextSearch> logger;
-        private readonly Meilisearch.Index index;
+        private readonly Meili.Index index;
 
-        public AuthorsTextSearch(Meilisearch.Index index, ILogger<AuthorsTextSearch> logger)
+        public AuthorsTextSearch(Meili.Index index, ILogger<AuthorsTextSearch> logger)
         {
             this.index = index;
             this.logger = logger;
         }
 
-        public void Add(ICollection<AuthorTso> values)
+        public void Index(ICollection<AuthorTso> values)
         {
             var task = index.AddDocumentsAsync(values, "code").Result;
             TaskUtils.WaitToCompleteAsync(index, task).Wait();

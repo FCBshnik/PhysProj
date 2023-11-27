@@ -6,12 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MeiliSearch" Version="0.14.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Phys.Lib.Db\Phys.Lib.Db.csproj" />
-  </ItemGroup>
-
 </Project>

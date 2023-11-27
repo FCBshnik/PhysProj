@@ -3,7 +3,7 @@ using Phys.Shared;
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace Phys.Lib.Search
+namespace Phys.Lib.Search.Meilisearch
 {
     internal static class TaskUtils
     {
@@ -19,7 +19,7 @@ namespace Phys.Lib.Search
                 throw new PhysException(JsonSerializer.Serialize(taskResource.Error));
         }
 
-        public async static Task WaitToCompleteAsync(Meilisearch.Index index, TaskInfo taskInfo)
+        public async static Task WaitToCompleteAsync(global::Meilisearch.Index index, TaskInfo taskInfo)
         {
             ThrowIfError(taskInfo);
 

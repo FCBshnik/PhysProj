@@ -3,20 +3,18 @@ using Meilisearch;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Search;
-using Phys.Lib.Db.Search;
 using Phys.Lib.Search;
-using Phys.Shared.Search;
 
 namespace Phys.Lib.Autofac
 {
-    public class MeiliSearchModule : Module
+    public class MeilisearchModule : Module
     {
         private readonly ILoggerFactory loggerFactory;
         private readonly ILogger log;
         private readonly string connectionString;
         private readonly string indexPrefix;
 
-        public MeiliSearchModule(string connectionString, string indexPrefix, ILoggerFactory loggerFactory)
+        public MeilisearchModule(string connectionString, string indexPrefix, ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(connectionString);
             ArgumentNullException.ThrowIfNull(indexPrefix);
@@ -26,7 +24,7 @@ namespace Phys.Lib.Autofac
             this.connectionString = connectionString;
             this.indexPrefix = indexPrefix;
 
-            log = loggerFactory.CreateLogger<MeiliSearchModule>();
+            log = loggerFactory.CreateLogger<MeilisearchModule>();
         }
 
         protected override void Load(ContainerBuilder builder)

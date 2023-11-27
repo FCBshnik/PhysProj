@@ -1,7 +1,6 @@
 ﻿using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Migrations;
-using Phys.Lib.Db.Search;
-using Phys.Shared.Search;
+using Phys.Lib.Search;
 
 namespace Phys.Lib.Core.Search
 {

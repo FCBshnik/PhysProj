@@ -1,6 +1,6 @@
 ﻿using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Migrations;
-using Phys.Shared.Search;
+using Phys.Lib.Search;
 
 namespace Phys.Lib.Core.Search
 {
@@ -32,7 +32,7 @@ namespace Phys.Lib.Core.Search
             do
             {
                 result = source.Read(new DbReaderQuery(100, result?.Cursor));
-                textSearch.Add(result.Values.Where(Use).Select(Map).ToList());
+                textSearch.Index(result.Values.Where(Use).Select(Map).ToList());
                 migration.Stats.Updated += result.Values.Count;
                 progress.Report(migration);
             } while (!result.IsCompleted);

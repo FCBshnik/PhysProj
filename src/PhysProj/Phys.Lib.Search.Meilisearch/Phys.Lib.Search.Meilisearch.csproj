@@ -7,13 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.5.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageReference Include="MeiliSearch" Version="0.14.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Phys.Lib.Db\Phys.Lib.Db.csproj" />
-    <ProjectReference Include="..\Phys.Files\Phys.Files.csproj" />
     <ProjectReference Include="..\Phys.Lib.Search\Phys.Lib.Search.csproj" />
     <ProjectReference Include="..\Phys.Shared\Phys.Shared.csproj" />
   </ItemGroup>

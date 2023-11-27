@@ -34,7 +34,7 @@ namespace Phys.Lib.Autofac
 
             builder.RegisterModule(new MongoDbModule(mongoUrl, loggerFactory));
             builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
-            builder.RegisterModule(new MeiliSearchModule(meilisearchUrl, "phys-lib", loggerFactory));
+            builder.RegisterModule(new MeilisearchModule(meilisearchUrl, "phys-lib", loggerFactory));
             builder.RegisterModule<SettingsModule>();
 
             // files

@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Phys.Lib.Autofac;
-using Phys.Lib.Db.Search;
-using Phys.Shared.Search;
+using Phys.Lib.Search;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace Phys.Lib.Tests.Integration.Search
         protected override void BuildContainer(ContainerBuilder builder)
         {
             base.BuildContainer(builder);
-            builder.RegisterModule(new MeiliSearchModule("http://192.168.2.67:7700/", "phys-lib-tests", loggerFactory));
+            builder.RegisterModule(new MeilisearchModule("http://192.168.2.67:7700/", "phys-lib-tests", loggerFactory));
         }
 
         [Fact]
@@ -29,7 +28,7 @@ namespace Phys.Lib.Tests.Integration.Search
             var search = container.Resolve<ITextSearch<AuthorTso>>();
 
             search.Reset();
-            search.Add(new[]
+            search.Index(new[]
             {
                 new AuthorTso { Code = "1", Names = new Dictionary<string, string?> { ["en"] = "On the Nature of Things", ["ru"] = "О природе вещей" } },
                 new AuthorTso { Code = "2", Names = new Dictionary<string, string?> { ["en"] = "On The Heavens" } },

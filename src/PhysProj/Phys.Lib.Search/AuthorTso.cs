@@ -1,4 +1,4 @@
-﻿namespace Phys.Lib.Db.Search
+﻿namespace Phys.Lib.Search
 {
     public class AuthorTso
     {

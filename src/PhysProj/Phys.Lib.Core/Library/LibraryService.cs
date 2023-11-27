@@ -2,8 +2,7 @@
 using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Library.Models;
 using Phys.Lib.Core.Works;
-using Phys.Lib.Db.Search;
-using Phys.Shared.Search;
+using Phys.Lib.Search;
 
 namespace Phys.Lib.Core.Library
 {
