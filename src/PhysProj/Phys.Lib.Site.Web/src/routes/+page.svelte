@@ -14,8 +14,8 @@
 		works = [];
 		loading = true;
 		api.service
-			.listWorks(searchText)
-			.then((r) => (works = r))
+			.search(searchText)
+			.then((r) => (works = r.works))
 			.finally(() => (loading = false));
 	}
 
