@@ -5,18 +5,18 @@ using Phys.Shared.Search;
 
 namespace Phys.Lib.Search
 {
-    public class WorksTextSearch : ITextSearch<WorkTso>
+    public class AuthorsTextSearch : ITextSearch<AuthorTso>
     {
-        private readonly ILogger<WorksTextSearch> logger;
+        private readonly ILogger<AuthorsTextSearch> logger;
         private readonly Meilisearch.Index index;
 
-        public WorksTextSearch(Meilisearch.Index index, ILogger<WorksTextSearch> logger)
+        public AuthorsTextSearch(Meilisearch.Index index, ILogger<AuthorsTextSearch> logger)
         {
             this.index = index;
             this.logger = logger;
         }
 
-        public void Add(ICollection<WorkTso> values)
+        public void Add(ICollection<AuthorTso> values)
         {
             var task = index.AddDocumentsAsync(values, "code").Result;
             TaskUtils.WaitToCompleteAsync(index, task).Wait();
@@ -35,14 +35,14 @@ namespace Phys.Lib.Search
                 logger.LogInformation($"deleted index");
             }
 
-            var attrs = new List<string> { "names.ru", "names.en", "authors.ru", "authors.en" };
+            var attrs = new List<string> { "names.ru", "names.en" };
             task = index.UpdateSearchableAttributesAsync(attrs).Result;
             TaskUtils.WaitToCompleteAsync(index, task).Wait();
         }
 
-        public ICollection<WorkTso> Search(string search)
+        public ICollection<AuthorTso> Search(string search)
         {
-            return index.SearchAsync<WorkTso>(search).Result.Hits.ToList();
+            return index.SearchAsync<AuthorTso>(search).Result.Hits.ToList();
         }
     }
 }

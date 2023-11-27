@@ -40,7 +40,15 @@ namespace Phys.Lib.Autofac
                 .As<ITextSearch<WorkTso>>()
                 .SingleInstance();
 
+            builder.RegisterType<AuthorsTextSearch>()
+                .WithParameter(TypedParameter.From(client.Index($"{indexPrefix}-authors")))
+                .As<ITextSearch<AuthorTso>>()
+                .SingleInstance();
+
             builder.RegisterType<WorksTextSearchMigrator>().WithParameter(TypedParameter.From(MigratorName.WorksSearch))
+                .As<IMigrator>()
+                .SingleInstance();
+            builder.RegisterType<AuthorsTextSearchMigrator>().WithParameter(TypedParameter.From(MigratorName.AuthorsSearch))
                 .As<IMigrator>()
                 .SingleInstance();
         }

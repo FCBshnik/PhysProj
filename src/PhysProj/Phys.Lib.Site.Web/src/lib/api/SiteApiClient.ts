@@ -106,7 +106,50 @@ export class SiteApiClient {
      * @param search (optional) 
      * @return Success
      */
-    listWorks(search: string | undefined): Promise<WorkModel[]> {
+    search(search: string | undefined): Promise<SearchResultPao> {
+        let url_ = this.baseUrl + "/api/search?";
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processSearch(_response));
+        });
+    }
+
+    protected processSearch(response: Response): Promise<SearchResultPao> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SearchResultPao.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SearchResultPao>(null as any);
+    }
+
+    /**
+     * @param search (optional) 
+     * @return Success
+     * @deprecated
+     */
+    listWorks(search: string | undefined): Promise<WorkPao[]> {
         let url_ = this.baseUrl + "/api/works?";
         if (search === null)
             throw new Error("The parameter 'search' cannot be null.");
@@ -126,7 +169,7 @@ export class SiteApiClient {
         });
     }
 
-    protected processListWorks(response: Response): Promise<WorkModel[]> {
+    protected processListWorks(response: Response): Promise<WorkPao[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -136,7 +179,7 @@ export class SiteApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(WorkModel.fromJS(item));
+                    result200!.push(WorkPao.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -148,15 +191,15 @@ export class SiteApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<WorkModel[]>(null as any);
+        return Promise.resolve<WorkPao[]>(null as any);
     }
 }
 
-export class AuthorModel implements IAuthorModel {
+export class AuthorPao implements IAuthorPao {
     code?: string | undefined;
     name?: string | undefined;
 
-    constructor(data?: IAuthorModel) {
+    constructor(data?: IAuthorPao) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -172,9 +215,9 @@ export class AuthorModel implements IAuthorModel {
         }
     }
 
-    static fromJS(data: any): AuthorModel {
+    static fromJS(data: any): AuthorPao {
         data = typeof data === 'object' ? data : {};
-        let result = new AuthorModel();
+        let result = new AuthorPao();
         result.init(data);
         return result;
     }
@@ -187,7 +230,7 @@ export class AuthorModel implements IAuthorModel {
     }
 }
 
-export interface IAuthorModel {
+export interface IAuthorPao {
     code?: string | undefined;
     name?: string | undefined;
 }
@@ -268,12 +311,12 @@ export interface IFileLinkModel {
     url?: string | undefined;
 }
 
-export class FileModel implements IFileModel {
+export class FilePao implements IFilePao {
     code?: string | undefined;
     format?: string | undefined;
     size?: number;
 
-    constructor(data?: IFileModel) {
+    constructor(data?: IFilePao) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -290,9 +333,9 @@ export class FileModel implements IFileModel {
         }
     }
 
-    static fromJS(data: any): FileModel {
+    static fromJS(data: any): FilePao {
         data = typeof data === 'object' ? data : {};
-        let result = new FileModel();
+        let result = new FilePao();
         result.init(data);
         return result;
     }
@@ -306,7 +349,7 @@ export class FileModel implements IFileModel {
     }
 }
 
-export interface IFileModel {
+export interface IFilePao {
     code?: string | undefined;
     format?: string | undefined;
     size?: number;
@@ -352,13 +395,73 @@ export interface IOkModel {
     version?: string | undefined;
 }
 
-export class WorkModel implements IWorkModel {
+export class SearchResultPao implements ISearchResultPao {
+    search?: string | undefined;
+    authors?: AuthorPao[] | undefined;
+    works?: WorkPao[] | undefined;
+
+    constructor(data?: ISearchResultPao) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.search = _data["search"];
+            if (Array.isArray(_data["authors"])) {
+                this.authors = [] as any;
+                for (let item of _data["authors"])
+                    this.authors!.push(AuthorPao.fromJS(item));
+            }
+            if (Array.isArray(_data["works"])) {
+                this.works = [] as any;
+                for (let item of _data["works"])
+                    this.works!.push(WorkPao.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SearchResultPao {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchResultPao();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["search"] = this.search;
+        if (Array.isArray(this.authors)) {
+            data["authors"] = [];
+            for (let item of this.authors)
+                data["authors"].push(item.toJSON());
+        }
+        if (Array.isArray(this.works)) {
+            data["works"] = [];
+            for (let item of this.works)
+                data["works"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ISearchResultPao {
+    search?: string | undefined;
+    authors?: AuthorPao[] | undefined;
+    works?: WorkPao[] | undefined;
+}
+
+export class WorkPao implements IWorkPao {
     code?: string | undefined;
     name?: string | undefined;
-    authors?: AuthorModel[] | undefined;
-    files?: FileModel[] | undefined;
+    authors?: AuthorPao[] | undefined;
+    files?: FilePao[] | undefined;
 
-    constructor(data?: IWorkModel) {
+    constructor(data?: IWorkPao) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -374,19 +477,19 @@ export class WorkModel implements IWorkModel {
             if (Array.isArray(_data["authors"])) {
                 this.authors = [] as any;
                 for (let item of _data["authors"])
-                    this.authors!.push(AuthorModel.fromJS(item));
+                    this.authors!.push(AuthorPao.fromJS(item));
             }
             if (Array.isArray(_data["files"])) {
                 this.files = [] as any;
                 for (let item of _data["files"])
-                    this.files!.push(FileModel.fromJS(item));
+                    this.files!.push(FilePao.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): WorkModel {
+    static fromJS(data: any): WorkPao {
         data = typeof data === 'object' ? data : {};
-        let result = new WorkModel();
+        let result = new WorkPao();
         result.init(data);
         return result;
     }
@@ -409,11 +512,11 @@ export class WorkModel implements IWorkModel {
     }
 }
 
-export interface IWorkModel {
+export interface IWorkPao {
     code?: string | undefined;
     name?: string | undefined;
-    authors?: AuthorModel[] | undefined;
-    files?: FileModel[] | undefined;
+    authors?: AuthorPao[] | undefined;
+    files?: FilePao[] | undefined;
 }
 
 export class ApiException extends Error {

@@ -15,5 +15,7 @@
         public static readonly string FilesContent = "files-content";
 
         public static readonly string WorksSearch = "works-search";
+
+        public static readonly string AuthorsSearch = "authors-search";
     }
 }

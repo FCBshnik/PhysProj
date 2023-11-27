@@ -7,7 +7,7 @@ namespace Phys.Lib.Core.Search
     internal abstract class BaseTextSearchMigrator<TDbObject, TSearchObject> : IMigrator
     {
         protected readonly List<IDbReader<TDbObject>> readers;
-        private readonly ITextSearch<TSearchObject> textSearch;
+        protected readonly ITextSearch<TSearchObject> textSearch;
 
         public BaseTextSearchMigrator(string name, IEnumerable<IDbReader<TDbObject>> readers, ITextSearch<TSearchObject> textSearch)
         {
@@ -22,7 +22,7 @@ namespace Phys.Lib.Core.Search
 
         public string Name { get; }
 
-        public void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
+        public virtual void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {
             IDbReaderResult<TDbObject> result = null!;
 

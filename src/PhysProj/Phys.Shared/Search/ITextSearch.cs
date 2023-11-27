@@ -6,6 +6,6 @@
 
         void Add(ICollection<T> values);
 
-        List<T> Search(string search);
+        ICollection<T> Search(string search);
     }
 }
