@@ -26,11 +26,15 @@
 
 <article class="flex flex-col grow gap-2">
     <section class="gap-2">Authors</section>
-    <section class="flex flex-row items-center gap-2">
-        <input class="w-full" type="search" bind:value={text} placeholder="Code to create new author or text to search"/>
-        <button class="w-auto" on:click={refresh}>Search</button>
-        <button class="w-auto" on:click={create}>Create</button>
-        <button class="w-auto" on:click={refresh}>Refresh</button>
+    <section class="">
+      <form class="max-w-full bg-inherit p-0" autofocus>
+        <div class="flex flex-row gap-2 items-center">
+          <input class="w-full" type="search" bind:value={text} placeholder="Code to create new author or text to search"/>
+          <button class="w-1/6" on:click={refresh}>Search</button>
+          <button class="w-1/6" on:click={create}>Create</button>
+          <button class="w-1/6" on:click={refresh}>Refresh</button>
+        </div>
+      </form>
     </section>
 
     <section class="flex flex-row items-center gap-2">
