@@ -16,6 +16,7 @@
     <a href="/home">PhysLibAdmin</a>
     <ul>
       <a href="/settings">Settings</a>
+      <a href="/stats">Stats</a>
       <a href="/migrations">Migrations</a>
       <a href="/authors">Authors</a>
       <a href="/works">Works</a>

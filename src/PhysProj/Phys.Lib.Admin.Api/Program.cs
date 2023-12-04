@@ -20,6 +20,7 @@ using Phys.Lib.Admin.Api.Api.Migrations;
 using Phys.NLog;
 using Phys.Lib.Core;
 using Phys.Lib.Admin.Api.Api.Settings;
+using Phys.Lib.Admin.Api.Api.Stats;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -91,7 +92,8 @@ namespace Phys.Lib.Admin.Api
             app.MapEndpoint("works", WorksEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("files", FilesEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("migrations", MigrationsEndpont.Map).RequireAuthorization();
-            app.MapEndpoint("settings", SettingsEndpoint.Map);//.RequireAuthorization();
+            app.MapEndpoint("settings", SettingsEndpoint.Map).RequireAuthorization();
+            app.MapEndpoint("stats", StatsEndpoint.Map).RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(() => log.LogInformation("{event} at {urls}", "start", string.Join(";", app.Urls)));
             app.Lifetime.ApplicationStopped.Register(() => log.LogInformation("{event}", "stop"));

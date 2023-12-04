@@ -13,6 +13,7 @@ using Phys.Lib.Db.Works;
 using Phys.Lib.Core.Library;
 using Phys.Lib.Db;
 using Phys.Lib.Db.Migrations;
+using Phys.Lib.Core.Stats;
 
 namespace Phys.Lib.Autofac
 {
@@ -51,7 +52,8 @@ namespace Phys.Lib.Autofac
                 .RegisterService<FileStoragesService, IFileStorages>()
                 .RegisterService<FileDownloadService, IFileDownloadService>()
                 .RegisterService<MigrationService, IMigrationService>()
-                .RegisterService<LibraryService, ILibraryService>();
+                .RegisterService<LibraryService, ILibraryService>()
+                .RegisterService<StatService, IStatService>();
         }
     }
 }
