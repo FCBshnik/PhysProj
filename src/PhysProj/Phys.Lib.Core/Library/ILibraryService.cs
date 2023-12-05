@@ -4,8 +4,6 @@ namespace Phys.Lib.Core.Library
 {
     public interface ILibraryService
     {
-        List<WorkPao> SearchWorks(string? search);
-
-        SearchResultPao Search(string? search);
+        Task<SearchResultPao> Search(string? search);
     }
 }

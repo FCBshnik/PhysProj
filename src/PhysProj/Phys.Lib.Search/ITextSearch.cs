@@ -5,16 +5,16 @@
         /// <summary>
         /// Clears index
         /// </summary>
-        void Reset();
+        Task Reset();
 
         /// <summary>
         /// Adds/updates values to search engine
         /// </summary>
-        void Index(ICollection<T> values);
+        Task Index(ICollection<T> values);
 
         /// <summary>
         /// Search
         /// </summary>
-        ICollection<T> Search(string search);
+        Task<ICollection<T>> Search(string search);
     }
 }

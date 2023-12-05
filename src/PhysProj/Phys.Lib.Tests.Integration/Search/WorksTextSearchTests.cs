@@ -5,9 +5,9 @@ using Shouldly;
 
 namespace Phys.Lib.Tests.Integration.Search
 {
-    public class WorksSearchTests : BaseTests
+    public class WorksTextSearchTests : BaseTests
     {
-        public WorksSearchTests(ITestOutputHelper output) : base(output)
+        public WorksTextSearchTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -18,18 +18,18 @@ namespace Phys.Lib.Tests.Integration.Search
         }
 
         [Fact]
-        public void Tests()
+        public async Task Tests()
         {
             var search = container.Resolve<ITextSearch<WorkTso>>();
 
-            search.Reset();
-            search.Index(new[]
+            await search.Reset();
+            await search.Index(new[]
             {
                 new WorkTso
                 {
                     Code = "1",
                     Names = new Dictionary<string, string?> { ["en"] = "On the Nature of Things", ["ru"] = "О природе вещей" },
-                    Authors = new Dictionary<string, List<string>> { ["ru"] = new List<string> { "Лукреций" } }
+                    Authors = new Dictionary<string, List<string?>> { ["ru"] = new List<string?> { "Лукреций" } }
                 },
                 new WorkTso { Code = "2", Names = new Dictionary<string, string?> { ["en"] = "On The Heavens" } },
                 new WorkTso { Code = "3", Names = new Dictionary<string, string?> { ["ru"] = "Клеомед - Учение о круговращении небесных тел" } },
@@ -37,15 +37,15 @@ namespace Phys.Lib.Tests.Integration.Search
                 {
                     Code = "4",
                     Names = new Dictionary<string, string?> { ["en"] = "introduction-to-the-phenomena", ["ru"] = "Гемин - Введение в явления" },
-                    Authors = new Dictionary<string, List<string>> { ["ru"] = new List<string> { "Щетников" } }
+                    Authors = new Dictionary<string, List<string?>> { ["ru"] = new List<string?> { "Щетников" } }
                 },
             });
 
-            search.Search("учение").Count.ShouldBe(1);
-            search.Search("the").Count.ShouldBe(3);
-            search.Search("4he").Count.ShouldBe(0);
-            search.Search("Лукреций").Count.ShouldBe(1);
-            search.Search("Щетников").Count.ShouldBe(1);
+            search.Search("учение").Result.Count.ShouldBe(1);
+            search.Search("the").Result.Count.ShouldBe(3);
+            search.Search("4he").Result.Count.ShouldBe(0);
+            search.Search("Лукреций").Result.Count.ShouldBe(1);
+            search.Search("Щетников").Result.Count.ShouldBe(1);
         }
     }
 }

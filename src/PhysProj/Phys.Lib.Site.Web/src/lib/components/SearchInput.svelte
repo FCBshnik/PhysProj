@@ -15,7 +15,7 @@
   <div class="flex flex-row">
     <!-- svelte-ignore a11y-autofocus -->
     <input bind:value={searchText} autofocus type="search" placeholder="Search" class="w-full rounded-l-md p-2 dark:bg-gray-400 dark:text-gray-800 dark:placeholder-gray-500"/>
-    <button class="rounded-r p-2 dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-400 hover:bg-gray-500" on:click={search}>
+    <button class="rounded-r p-2 dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-400 hover:bg-gray-500" type="submit">
       <svg viewBox="0 0 20 20"
         fill="currentColor"
         class="h-6 w-10">

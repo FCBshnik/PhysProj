@@ -11,9 +11,9 @@ namespace Phys.Lib.Site.Api.Controllers.Search
     {
         [ProducesResponseType(typeof(SearchResultPao), 200)]
         [HttpGet]
-        public IPublicApiObject ListWorks([FromQuery] string? search, [FromServices] ILibraryService libraryService)
+        public async Task<IPublicApiObject> ListWorks([FromQuery] string? search, [FromServices] ILibraryService libraryService)
         {
-            return libraryService.Search(search);
+            return await libraryService.Search(search);
         }
     }
 }

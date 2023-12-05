@@ -16,33 +16,30 @@ namespace Phys.Lib.Search
             this.logger = logger;
         }
 
-        public void Index(ICollection<AuthorTso> values)
+        public async Task Index(ICollection<AuthorTso> values)
         {
-            var task = index.AddDocumentsAsync(values, "code").Result;
-            TaskUtils.WaitToCompleteAsync(index, task).Wait();
+            var task = await index.AddDocumentsAsync(values, "code");
+            await TaskUtils.WaitToCompleteAsync(index, task);
             logger.LogInformation($"indexed {values.Count}");
         }
 
-        public void Reset()
+        public async Task Reset()
         {
             TaskInfo task;
 
-            if (index.CreatedAt.HasValue)
-            {
-                logger.LogInformation($"deleting index");
-                task = index.DeleteAsync().Result;
-                TaskUtils.WaitToCompleteAsync(index, task).Wait();
-                logger.LogInformation($"deleted index");
-            }
+            logger.LogInformation($"deleting index");
+            task = await index.DeleteAsync();
+            await TaskUtils.WaitToCompleteAsync(index, task);
+            logger.LogInformation($"deleted index");
 
             var attrs = new List<string> { "names.ru", "names.en" };
-            task = index.UpdateSearchableAttributesAsync(attrs).Result;
-            TaskUtils.WaitToCompleteAsync(index, task).Wait();
+            task = await index.UpdateSearchableAttributesAsync(attrs);
+            await TaskUtils.WaitToCompleteAsync(index, task);
         }
 
-        public ICollection<AuthorTso> Search(string search)
+        public async Task<ICollection<AuthorTso>> Search(string search)
         {
-            return index.SearchAsync<AuthorTso>(search).Result.Hits.ToList();
+            return (await index.SearchAsync<AuthorTso>(search)).Hits.ToList();
         }
     }
 }

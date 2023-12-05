@@ -2,17 +2,12 @@
 using Phys.Lib.Autofac;
 using Phys.Lib.Search;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Phys.Lib.Tests.Integration.Search
 {
-    public class AuthorsSearchTests : BaseTests
+    public class AuthorsTextSearchTests : BaseTests
     {
-        public AuthorsSearchTests(ITestOutputHelper output) : base(output)
+        public AuthorsTextSearchTests(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -23,12 +18,12 @@ namespace Phys.Lib.Tests.Integration.Search
         }
 
         [Fact]
-        public void Tests()
+        public async Task Tests()
         {
             var search = container.Resolve<ITextSearch<AuthorTso>>();
 
-            search.Reset();
-            search.Index(new[]
+            await search.Reset();
+            await search.Index(new[]
             {
                 new AuthorTso { Code = "1", Names = new Dictionary<string, string?> { ["en"] = "On the Nature of Things", ["ru"] = "О природе вещей" } },
                 new AuthorTso { Code = "2", Names = new Dictionary<string, string?> { ["en"] = "On The Heavens" } },
@@ -36,9 +31,9 @@ namespace Phys.Lib.Tests.Integration.Search
                 new AuthorTso { Code = "4", Names = new Dictionary<string, string?> { ["en"] = "introduction-to-the-phenomena", ["ru"] = "Гемин - Введение в явления" } },
             });
 
-            search.Search("учение").Count.ShouldBe(1);
-            search.Search("the").Count.ShouldBe(3);
-            search.Search("4he").Count.ShouldBe(0);
+            search.Search("учение").Result.Count.ShouldBe(1);
+            search.Search("the").Result.Count.ShouldBe(3);
+            search.Search("4he").Result.Count.ShouldBe(0);
         }
     }
 }
