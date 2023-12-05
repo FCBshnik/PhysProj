@@ -27,13 +27,10 @@ namespace Phys.Lib.Search
         {
             TaskInfo task;
 
-            if (index.CreatedAt.HasValue)
-            {
-                logger.LogInformation($"deleting index");
-                task = index.DeleteAsync().Result;
-                TaskUtils.WaitToCompleteAsync(index, task).Wait();
-                logger.LogInformation($"deleted index");
-            }
+            logger.LogInformation($"deleting index");
+            task = index.DeleteAsync().Result;
+            TaskUtils.WaitToCompleteAsync(index, task).Wait();
+            logger.LogInformation($"deleted index");
 
             var attrs = new List<string> { "names.ru", "names.en", "authors.ru", "authors.en" };
             task = index.UpdateSearchableAttributesAsync(attrs).Result;
