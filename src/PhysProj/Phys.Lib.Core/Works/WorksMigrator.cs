@@ -38,7 +38,7 @@ namespace Phys.Lib.Core.Works
             var baseWriter = new WorksBaseWriter(db, log);
             var linksWriter = new WorksLinksWriter(db);
 
-            // migrate work in two passess for support relational DBMS with db constrains because of works is self referenced
+            // migrate work in two passess for support relational DBMS with db constrains because of works are self referenced
             // in first pass links to works excluded
             Migrator<WorkDbo>.Migrate(reader, baseWriter, migration, progress);
             // in second pass copy all links to works

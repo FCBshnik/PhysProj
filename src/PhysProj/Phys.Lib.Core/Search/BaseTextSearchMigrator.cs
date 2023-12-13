@@ -18,7 +18,7 @@ namespace Phys.Lib.Core.Search
 
         public IEnumerable<string> Sources => readers.Select(r => r.Name);
 
-        public IEnumerable<string> Destinations => new[] { Name };
+        public IEnumerable<string> Destinations => new[] { "search" };
 
         public string Name { get; }
 
