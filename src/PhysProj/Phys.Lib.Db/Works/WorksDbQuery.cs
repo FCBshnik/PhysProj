@@ -4,7 +4,7 @@
     {
         public string? Code { get; set; }
 
-        public ICollection<string> Codes { get; set; }
+        public ICollection<string>? Codes { get; set; }
 
         public string? Search { get; set; }
 
@@ -16,6 +16,6 @@
 
         public string? SubWorkCode { get; set; }
 
-        public int Limit { get; set; } = 20;
+        public int Limit { get; set; } = 1000;
     }
 }

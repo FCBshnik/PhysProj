@@ -4,6 +4,6 @@
     {
         public string? NameLowerCase { get; set; }
 
-        public int Limit { get; set; } = 20;
+        public int Limit { get; set; } = 1000;
     }
 }

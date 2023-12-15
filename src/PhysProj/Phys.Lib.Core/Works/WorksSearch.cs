@@ -27,7 +27,7 @@ namespace Phys.Lib.Core.Works
 
         public List<WorkDbo> Find(string? search = null)
         {
-            return db.Find(new WorksDbQuery { Search = search });
+            return db.Find(new WorksDbQuery { Search = search, Limit = 20 });
         }
 
         public List<WorkDbo> FindByAuthor(string authorCode)

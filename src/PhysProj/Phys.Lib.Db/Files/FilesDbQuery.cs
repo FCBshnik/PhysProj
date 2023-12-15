@@ -6,8 +6,8 @@
 
         public string? Search { get; set; }
 
-        public List<string> Codes { get; set; }
+        public List<string>? Codes { get; set; }
 
-        public int Limit { get; set; } = 20;
+        public int Limit { get; set; } = 1000;
     }
 }

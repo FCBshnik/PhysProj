@@ -1,4 +1,5 @@
 ﻿using Phys.Lib.Db.Files;
+using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Core.Files
 {
@@ -13,7 +14,7 @@ namespace Phys.Lib.Core.Files
 
         public List<FileDbo> Find(string? search = null)
         {
-            return db.Find(new FilesDbQuery { Search = search });
+            return db.Find(new FilesDbQuery { Search = search, Limit = 20 });
         }
 
         public List<FileDbo> FindByCodes(IEnumerable<string> codes)

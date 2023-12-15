@@ -20,7 +20,7 @@ namespace Phys.Lib.Core.Authors
 
         public List<AuthorDbo> Find(string? search = null)
         {
-            return db.Find(new AuthorsDbQuery { Search = search });
+            return db.Find(new AuthorsDbQuery { Search = search, Limit = 20 });
         }
 
         public List<AuthorDbo> FindByCodes(List<string> codes)
