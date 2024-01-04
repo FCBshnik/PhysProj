@@ -5,6 +5,7 @@
       "commandName": "Project",
       "commandLineArgs": "--appsettings $(SolutionDir)appsettings.lib.dev.json",
       "dotnetRunMessages": true,
+      "hotReloadEnabled": false,
       "launchBrowser": false,
       "launchUrl": "swagger",
       "environmentVariables": {
