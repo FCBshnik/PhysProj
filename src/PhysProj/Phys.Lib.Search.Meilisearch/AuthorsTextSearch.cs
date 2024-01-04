@@ -16,14 +16,14 @@ namespace Phys.Lib.Search
             this.logger = logger;
         }
 
-        public async Task Index(ICollection<AuthorTso> values)
+        public async Task Index(IEnumerable<AuthorTso> values)
         {
             var task = await index.AddDocumentsAsync(values, "code");
             await TaskUtils.WaitToCompleteAsync(index, task);
-            logger.LogInformation($"indexed {values.Count}");
+            logger.LogInformation($"indexed {values.Count()}");
         }
 
-        public async Task Reset()
+        public async Task Reset(IEnumerable<string> languages)
         {
             TaskInfo task;
 

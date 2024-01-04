@@ -5,12 +5,12 @@
         /// <summary>
         /// Clears index
         /// </summary>
-        Task Reset();
+        Task Reset(IEnumerable<string> languages);
 
         /// <summary>
         /// Adds/updates values to search engine
         /// </summary>
-        Task Index(ICollection<T> values);
+        Task Index(IEnumerable<T> values);
 
         /// <summary>
         /// Search

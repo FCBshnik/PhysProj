@@ -41,6 +41,8 @@ namespace Phys.Lib.Core
 
         public static readonly IReadOnlyCollection<Language> All = languages.Values.ToList();
 
+        public static readonly IReadOnlyCollection<string> AllAsStrings = languages.Values.Select(l => l.Code).ToList();
+
         /// <summary>
         /// ISO 639-X code of language
         /// </summary>

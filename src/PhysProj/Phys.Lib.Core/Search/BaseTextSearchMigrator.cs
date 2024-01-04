@@ -27,7 +27,7 @@ namespace Phys.Lib.Core.Search
             IDbReaderResult<TDbObject> result = null!;
 
             var source = readers.First(r => r.Name == migration.Source);
-            textSearch.Reset();
+            textSearch.Reset(Language.AllAsStrings);
 
             do
             {

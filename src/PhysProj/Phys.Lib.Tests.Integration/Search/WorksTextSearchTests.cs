@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Phys.Lib.Autofac;
+using Phys.Lib.Core;
 using Phys.Lib.Search;
 using Shouldly;
 
@@ -22,22 +23,24 @@ namespace Phys.Lib.Tests.Integration.Search
         {
             var search = container.Resolve<ITextSearch<WorkTso>>();
 
-            await search.Reset();
+            await search.Reset(Language.AllAsStrings);
             await search.Index(new[]
             {
                 new WorkTso
                 {
                     Code = "1",
                     Names = new Dictionary<string, string?> { ["en"] = "On the Nature of Things", ["ru"] = "О природе вещей" },
-                    Authors = new Dictionary<string, List<string?>> { ["ru"] = new List<string?> { "Лукреций" } }
+                    Authors = new Dictionary<string, List<string?>> { ["ru"] = new List<string?> { "Лукреций" } },
+                    Info = new WorkInfoTso { Code = "1" },
                 },
-                new WorkTso { Code = "2", Names = new Dictionary<string, string?> { ["en"] = "On The Heavens" } },
-                new WorkTso { Code = "3", Names = new Dictionary<string, string?> { ["ru"] = "Клеомед - Учение о круговращении небесных тел" } },
+                new WorkTso { Code = "2", Names = new Dictionary<string, string?> { ["en"] = "On The Heavens" }, Info = new WorkInfoTso { Code = "2" }, },
+                new WorkTso { Code = "3", Names = new Dictionary<string, string?> { ["ru"] = "Клеомед - Учение о круговращении небесных тел" }, Info = new WorkInfoTso { Code = "3" }, },
                 new WorkTso
                 {
                     Code = "4",
                     Names = new Dictionary<string, string?> { ["en"] = "introduction-to-the-phenomena", ["ru"] = "Гемин - Введение в явления" },
-                    Authors = new Dictionary<string, List<string?>> { ["ru"] = new List<string?> { "Щетников" } }
+                    Authors = new Dictionary<string, List<string?>> { ["ru"] = new List<string?> { "Щетников" } },
+                    Info = new WorkInfoTso { Code = "4" },
                 },
             });
 

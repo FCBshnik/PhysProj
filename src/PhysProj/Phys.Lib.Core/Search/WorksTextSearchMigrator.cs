@@ -6,63 +6,115 @@ using Phys.Lib.Search;
 
 namespace Phys.Lib.Core.Search
 {
-    internal class WorksTextSearchMigrator : BaseTextSearchMigrator<WorkDbo, WorkTso>
+    internal class WorksTextSearchMigrator : IMigrator
     {
+        private readonly IEnumerable<IWorksDb> worksDbs;
+        private readonly ITextSearch<WorkTso> textSearch;
         private readonly Lazy<IEnumerable<IAuthorsDb>> authorsDbs;
 
-        public WorksTextSearchMigrator(string name,
-            IEnumerable<IDbReader<WorkDbo>> readers, ITextSearch<WorkTso> textSearch, Lazy<IEnumerable<IAuthorsDb>> authorsDbs)
-            : base(name, readers, textSearch)
+        public WorksTextSearchMigrator(string name, IEnumerable<IWorksDb> worksDbs, ITextSearch<WorkTso> textSearch, Lazy<IEnumerable<IAuthorsDb>> authorsDbs)
         {
+            Name = name;
+            this.worksDbs = worksDbs;
+            this.textSearch = textSearch;
             this.authorsDbs = authorsDbs;
         }
 
-        public override void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
+        public string Name { get; }
+
+        public IEnumerable<string> Sources => worksDbs.Select(r => r.Name);
+
+        public IEnumerable<string> Destinations => new[] { "search" };
+
+        public void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
+        {
+            MigrateAsync(migration, progress).Wait();
+        }
+
+        private async Task MigrateAsync(MigrationDto migration, IProgress<MigrationDto> progress)
         {
             IDbReaderResult<WorkDbo> result = null!;
 
-            var source = readers.First(r => r.Name == migration.Source);
+            var workDb = worksDbs.First(r => r.Name == migration.Source);
             var authorsDb = authorsDbs.Value.First(r => r.Name == migration.Source);
-            textSearch.Reset();
+            await textSearch.Reset(Language.AllAsStrings);
 
             do
             {
-                result = source.Read(new DbReaderQuery(100, result?.Cursor));
-                textSearch.Index(result.Values.Where(Use).Select(w => Map(w, authorsDb)).ToList());
+                result = workDb.Read(new DbReaderQuery(100, result?.Cursor));
+                var values = result.Values.Where(Use).Select(w => Map(w, workDb, authorsDb)).ToList();
+                await textSearch.Index(values);
                 migration.Stats.Updated += result.Values.Count;
                 progress.Report(migration);
             } while (!result.IsCompleted);
         }
 
-        protected override bool Use(WorkDbo value)
+        protected bool Use(WorkDbo value)
         {
             return value.Infos.Count > 0;
         }
 
-        protected override WorkTso Map(WorkDbo value)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected WorkTso Map(WorkDbo work, IAuthorsDb authorsDb)
+        protected WorkTso Map(WorkDbo work, IWorksDb worksDb, IAuthorsDb authorsDb)
         {
             var workTso = new WorkTso
             {
                 Code = work.Code,
+                Info = new WorkInfoTso { Code = work.Code },
                 Names = work.Infos.ToDictionary(i => i.Language, i => i.Name),
             };
 
-            foreach (var author in authorsDb.Find(new AuthorsDbQuery { Codes = work.AuthorsCodes }))
+            if (work.AuthorsCodes.Count > 0)
             {
-                foreach (var info in author.Infos)
+                foreach (var author in authorsDb.Find(new AuthorsDbQuery { Codes = work.AuthorsCodes }))
                 {
-                    if (!workTso.Authors.TryGetValue(info.Language, out var names))
-                        workTso.Authors.Add(info.Language, names = new List<string?>());
-                    names.Add(info.FullName);
+                    foreach (var info in author.Infos)
+                    {
+                        if (!workTso.Authors.TryGetValue(info.Language, out var names))
+                            workTso.Authors.Add(info.Language, names = new List<string?>());
+                        names.Add(info.FullName);
+                    }
                 }
             }
 
+            PopulateInfo(workTso.Info, work, new Dictionary<string, WorkInfoTso>(), worksDb);
+
             return workTso;
+        }
+
+        private void PopulateInfo(WorkInfoTso info, WorkDbo work, Dictionary<string, WorkInfoTso> visited, IWorksDb db)
+        {
+            if (visited.ContainsKey(work.Code))
+                return;
+
+            info.HasFiles = work.FilesCodes.Count > 0;
+            visited[work.Code] = info;
+
+            if (work.OriginalCode != null)
+            {
+                info.Original = new WorkInfoTso { Code = work.OriginalCode };
+                PopulateInfo(info.Original, db.GetByCode(work.OriginalCode), visited, db);
+            }
+
+            foreach (var subWorkCode in work.SubWorksCodes)
+            {
+                var subWorkInfo = new WorkInfoTso { Code = subWorkCode };
+                info.SubWorks.Add(subWorkInfo);
+                PopulateInfo(subWorkInfo, db.GetByCode(subWorkCode), visited, db);
+            }
+
+            foreach (var translation in  db.Find(new WorksDbQuery { OriginalCode = work.Code }))
+            {
+                var translationInfo = new WorkInfoTso { Code = translation.Code };
+                info.Translations.Add(translationInfo);
+                PopulateInfo(translationInfo, db.GetByCode(translation.Code), visited, db);
+            }
+
+            foreach (var collected in db.Find(new WorksDbQuery { SubWorkCode = work.Code }))
+            {
+                var collectedInfo = new WorkInfoTso { Code = collected.Code };
+                info.Collected.Add(collectedInfo);
+                PopulateInfo(collectedInfo, db.GetByCode(collected.Code), visited, db);
+            }
         }
     }
 }

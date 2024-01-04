@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Phys.Lib.Autofac;
+using Phys.Lib.Core;
 using Phys.Lib.Search;
 using Shouldly;
 
@@ -22,7 +23,7 @@ namespace Phys.Lib.Tests.Integration.Search
         {
             var search = container.Resolve<ITextSearch<AuthorTso>>();
 
-            await search.Reset();
+            await search.Reset(Language.AllAsStrings);
             await search.Index(new[]
             {
                 new AuthorTso { Code = "1", Names = new Dictionary<string, string?> { ["en"] = "On the Nature of Things", ["ru"] = "О природе вещей" } },

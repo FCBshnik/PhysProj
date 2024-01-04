@@ -16,23 +16,26 @@ namespace Phys.Lib.Search
             this.logger = logger;
         }
 
-        public async Task Index(ICollection<WorkTso> values)
+        public async Task Index(IEnumerable<WorkTso> values)
         {
-            var task = await index.AddDocumentsAsync(values, "code");
+            var task = await index.AddDocumentsAsync(values, nameof(WorkTso.Code).ToLowerInvariant());
             await TaskUtils.WaitToCompleteAsync(index, task);
-            logger.LogInformation($"indexed {values.Count}");
+            logger.LogInformation($"indexed {values.Count()}");
         }
 
-        public async Task Reset()
+        public async Task Reset(IEnumerable<string> languages)
         {
             TaskInfo task;
 
             logger.LogInformation($"deleting index");
-            task = (await index.DeleteAsync());
+            task = await index.DeleteAsync();
             await TaskUtils.WaitToCompleteAsync(index, task);
             logger.LogInformation($"deleted index");
 
-            var attrs = new List<string> { "names.ru", "names.en", "authors.ru", "authors.en" };
+            var namesAttr = nameof(WorkTso.Names).ToLowerInvariant();
+            var authorsAttr = nameof(WorkTso.Authors).ToLowerInvariant();
+            // names goes first as order has impact
+            var attrs = languages.Select(l => $"{namesAttr}.{l}").Concat(languages.Select(l => $"{authorsAttr}.{l}")).ToList();
             task = await index.UpdateSearchableAttributesAsync(attrs);
             await TaskUtils.WaitToCompleteAsync(index, task);
         }

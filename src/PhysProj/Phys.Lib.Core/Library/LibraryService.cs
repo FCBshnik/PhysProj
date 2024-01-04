@@ -3,6 +3,8 @@ using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Library.Models;
 using Phys.Lib.Core.Works;
 using Phys.Lib.Search;
+using Phys.Shared;
+using Phys.Shared.Utils;
 
 namespace Phys.Lib.Core.Library
 {
@@ -36,13 +38,48 @@ namespace Phys.Lib.Core.Library
 
         public async Task<List<WorkPao>> SearchWorks(string? search)
         {
-            var worksCodes = (await worksTextSearch.Search(search ?? string.Empty)).Select(w => w.Code).ToList();
-            var works = worksSearch.FindByCodes(worksCodes).Where(w => w.FilesCodes.Any()).ToList();
-            var authorsCodes = works.SelectMany(w => w.AuthorsCodes).Distinct().ToList();
-            var authors = authorsSearch.FindByCodes(authorsCodes).ToDictionary(a => a.Code);
-            var filesCodes = works.SelectMany(w => w.FilesCodes).Distinct().ToList();
-            var files = filesSearch.FindByCodes(filesCodes).ToDictionary(a => a.Code);
+            var foundWorks = await worksTextSearch.Search(search ?? string.Empty);
+
+            // first add works found by search with files
+            var codes = new List<string>();
+            foreach (var found in foundWorks.Where(w => w.Info.HasFiles))
+            {
+                codes.Add(found.Code);
+            }
+
+            // than add all linked works with files
+            foreach (var found in foundWorks)
+            {
+                AddCodesWithFiles(codes, found.Info, root: true);
+            }
+
+            var worksMap = worksSearch.FindByCodes(codes).ToDictionary(w => w.Code);
+            if (worksMap.Count != codes.Count)
+                throw new PhysException($"works {codes.Except(worksMap.Keys).Join()} found by search but missed in db");
+
+            var works = codes.Select(w => worksMap[w]).ToList();
+            var authors = authorsSearch.GetByWorksAsMap(works);
+            var files = filesSearch.GetByWorksAsMap(works);
+
             return works.Select(w => WorkPao.Map(w, authors, files)).ToList();
+        }
+
+        private void AddCodesWithFiles(ICollection<string> codes, WorkInfoTso info, bool root)
+        {
+            if (!root && codes.Contains(info.Code))
+                return;
+
+            if (!root && info.HasFiles)
+                codes.Add(info.Code);
+
+            if (info.Original != null)
+                AddCodesWithFiles(codes, info.Original, false);
+            foreach (var subWork in info.SubWorks)
+                AddCodesWithFiles(codes, subWork, false);
+            foreach (var translation in info.Translations)
+                AddCodesWithFiles(codes, translation, false);
+            foreach (var collected in info.Collected)
+                AddCodesWithFiles(codes, collected, false);
         }
 
         public async Task<List<AuthorPao>> SearchAuthors(string? search)
