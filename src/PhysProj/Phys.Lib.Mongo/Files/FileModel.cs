@@ -6,10 +6,10 @@ namespace Phys.Lib.Mongo.Files
     internal class FileModel : MongoModel
     {
         [BsonElement("code")]
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         [BsonElement("format")]
-        public string? Format { get; set; }
+        public required string Format { get; set; }
 
         [BsonElement("size")]
         public long Size { get; set; }
@@ -20,10 +20,10 @@ namespace Phys.Lib.Mongo.Files
         public class LinkModel
         {
             [BsonElement("type")]
-            public string Type { get; set; }
+            public required string Type { get; set; }
 
             [BsonElement("path")]
-            public string Path { get; set; }
+            public required string Path { get; set; }
         }
     }
 }

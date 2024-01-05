@@ -81,7 +81,7 @@ namespace Phys.Lib.Tests.Integration.Migration
             var files = new[]
             {
                 new FileDbo { Code = "file-1", Format = "pdf", Links = new List<FileDbo.LinkDbo> { new FileDbo.LinkDbo { StorageCode = "type-1", FileId = "path-1" } } },
-                new FileDbo { Code = "file-2", Size = 1024, Links = new List<FileDbo.LinkDbo>
+                new FileDbo { Code = "file-2", Format = "pdf", Size = 1024, Links = new List<FileDbo.LinkDbo>
                 {
                     new FileDbo.LinkDbo { StorageCode = "type-2", FileId = "path-2" },
                     new FileDbo.LinkDbo { StorageCode = "type-2", FileId = "path-3" }

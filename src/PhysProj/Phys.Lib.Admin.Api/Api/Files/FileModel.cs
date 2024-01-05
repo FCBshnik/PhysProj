@@ -2,19 +2,19 @@
 {
     public class FileModel
     {
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
-        public string Format { get; set; }
+        public required string Format { get; set; }
 
         public long Size { get; set; }
 
-        public List<LinkModel> Links { get; set; }
+        public List<LinkModel> Links { get; set; } = new List<LinkModel>();
 
         public class LinkModel
         {
-            public string StorageCode { get; set; }
+            public required string StorageCode { get; set; }
 
-            public string FileId { get; set; }
+            public required string FileId { get; set; }
         }
     }
 }

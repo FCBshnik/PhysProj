@@ -80,8 +80,8 @@ namespace Phys.Lib.Tests.Integration.Db
             FindBySubWork("sub-work-2");
 
             FindByFile("file-1");
-            filesDb.Create(new FileDbo { Code = "file-1" });
-            filesDb.Create(new FileDbo { Code = "file-2" });
+            filesDb.Create(new FileDbo { Code = "file-1", Format = "txt" });
+            filesDb.Create(new FileDbo { Code = "file-2", Format = "txt" });
             AddFile("work-1", "file-1");
             AddFile("work-1", "file-2");
             FindByFile("file-1", "work-1");

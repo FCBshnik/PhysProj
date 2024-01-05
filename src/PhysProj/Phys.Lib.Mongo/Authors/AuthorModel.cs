@@ -6,7 +6,7 @@ namespace Phys.Lib.Mongo.Authors
     internal class AuthorModel : MongoModel
     {
         [BsonElement("code")]
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         [BsonElement("born")]
         public string? Born { get; set; }
@@ -20,7 +20,7 @@ namespace Phys.Lib.Mongo.Authors
         public class InfoModel
         {
             [BsonElement("lang")]
-            public string Language { get; set; }
+            public required string Language { get; set; }
 
             [BsonElement("name")]
             public string? FullName { get; set; }

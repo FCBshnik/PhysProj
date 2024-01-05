@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Cli
 {
-    public interface ICommand<T>
+    public interface ICommand<in T>
     {
         void Run(T options);
     }

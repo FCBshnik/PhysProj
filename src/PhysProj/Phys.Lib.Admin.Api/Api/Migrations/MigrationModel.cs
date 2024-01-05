@@ -4,7 +4,7 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
 {
     public class MigrationModel
     {
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         public required string Migrator { get; set; }
 
@@ -24,7 +24,7 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
 
         public string? Error { get; set; }
 
-        public StatsModel Stats { get; set; }
+        public required StatsModel Stats { get; set; }
 
         public class StatsModel
         {

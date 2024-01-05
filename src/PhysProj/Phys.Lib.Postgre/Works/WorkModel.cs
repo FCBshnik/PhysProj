@@ -44,10 +44,10 @@ namespace Phys.Lib.Postgres.Works
             public static readonly string InfoLanguageColumn = SchemaUtils.GetColumn<InfoModel, string>(i => i.Language);
 
             [Column("work_code")]
-            public string WorkCode { get; set; }
+            public required string WorkCode { get; set; }
 
             [Column("language")]
-            public string Language { get; set; }
+            public required string Language { get; set; }
 
             [Column("name")]
             public string? Name { get; set; }
@@ -62,10 +62,10 @@ namespace Phys.Lib.Postgres.Works
             public static readonly string SubWorkCodeColumn = SchemaUtils.GetColumn<SubWorkModel, string>(i => i.SubWorkCode);
 
             [Column("work_code")]
-            public string WorkCode { get; set; }
+            public required string WorkCode { get; set; }
 
             [Column("sub_work_code")]
-            public string SubWorkCode { get; set; }
+            public required string SubWorkCode { get; set; }
         }
 
         public class AuthorModel
@@ -74,10 +74,10 @@ namespace Phys.Lib.Postgres.Works
             public static readonly string AuthorCodeColumn = SchemaUtils.GetColumn<AuthorModel, string>(i => i.AuthorCode);
 
             [Column("work_code")]
-            public string WorkCode { get; set; }
+            public required string WorkCode { get; set; }
 
             [Column("author_code")]
-            public string AuthorCode { get; set; }
+            public required string AuthorCode { get; set; }
         }
 
         public class FileModel
@@ -86,10 +86,10 @@ namespace Phys.Lib.Postgres.Works
             public static readonly string FileCodeColumn = SchemaUtils.GetColumn<FileModel, string>(i => i.FileCode);
 
             [Column("work_code")]
-            public string WorkCode { get; set; }
+            public required string WorkCode { get; set; }
 
             [Column("file_code")]
-            public string FileCode { get; set; }
+            public required string FileCode { get; set; }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Phys.Shared;
 using Phys.Shared.Settings;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -23,7 +24,7 @@ namespace Phys.Lib.Admin.Api.Api.Settings
             {
                 var type = settings.GetType(code);
                 var obj = value.Deserialize(type);
-                settings.Set(code, obj);
+                settings.Set(code, obj ?? throw new PhysException());
                 return obj;
             }).ProducesResponse<object>("UpdateSettings");
         }

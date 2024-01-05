@@ -2,8 +2,8 @@
 {
     public class AuthorLifetimeUpdateModel
     {
-        public string Born { get; set; }
+        public string? Born { get; set; }
 
-        public string Died { get; set; }
+        public string? Died { get; set; }
     }
 }

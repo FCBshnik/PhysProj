@@ -27,7 +27,7 @@ namespace Phys.Lib.Core.Files
             db.Create(new FileDbo
             {
                 Code = code,
-                Format = format,
+                Format = format ?? string.Empty,
                 Size = size,
             });
 

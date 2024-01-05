@@ -2,6 +2,6 @@
 {
     public class FileLinkModel
     {
-        public string Url { get; set; }
+        public required string Url { get; set; }
     }
 }

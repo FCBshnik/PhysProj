@@ -6,13 +6,13 @@ namespace Phys.Lib.Mongo.Users
     internal class UserModel : MongoModel
     {
         [BsonElement("name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [BsonElement("nameLc")]
-        public string NameLowerCase { get; set; }
+        public required string NameLowerCase { get; set; }
 
         [BsonElement("pwdHash")]
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         [BsonElement("roles")]
         public List<string> Roles { get; set; } = new List<string>();

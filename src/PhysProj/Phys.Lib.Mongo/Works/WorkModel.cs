@@ -6,7 +6,7 @@ namespace Phys.Lib.Mongo.Works
     internal class WorkModel : MongoModel
     {
         [BsonElement("code")]
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         [BsonElement("pubd")]
         public string? Publish { get; set; }
@@ -32,7 +32,7 @@ namespace Phys.Lib.Mongo.Works
         public class InfoModel
         {
             [BsonElement("lang")]
-            public string Language { get; set; }
+            public required string Language { get; set; }
 
             [BsonElement("name")]
             public string? Name { get; set; }

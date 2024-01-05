@@ -16,7 +16,7 @@ namespace Phys.Lib.Db.Files
         /// <summary>
         /// Format of file
         /// </summary>
-        public string Format { get; set; }
+        public required string Format { get; set; }
 
         /// <summary>
         /// Size of file in bytes

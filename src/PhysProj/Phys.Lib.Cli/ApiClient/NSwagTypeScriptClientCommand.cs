@@ -28,7 +28,7 @@ namespace Phys.Lib.Cli.ApiClient
             };
 
             var outFile = new FileInfo(Path.Combine(outDir.FullName, $"{className}.ts"));
-            var outFile2 = new FileInfo(Path.Combine(new DirectoryInfo(options.OutDerectory).FullName, $"{className}.ts"));
+            var outFile2 = new FileInfo(Path.Combine(new DirectoryInfo(options.OutDirectory).FullName, $"{className}.ts"));
             var generator = new NSwag.CodeGeneration.TypeScript.TypeScriptClientGenerator(document, settings);
             var clientCode = generator.GenerateFile(ClientGeneratorOutputType.Full);
             File.WriteAllText(outFile.FullName, clientCode);

@@ -17,10 +17,10 @@ namespace Phys.Lib.Postgres.Authors
         public long Id { get; set; }
 
         [Column("born")]
-        public string Born { get; set; }
+        public string? Born { get; set; }
 
         [Column("died")]
-        public string Died { get; set; }
+        public string? Died { get; set; }
 
         [Ignore]
         public Dictionary<string, InfoModel> Infos { get; set; } = new Dictionary<string, InfoModel>();
@@ -31,16 +31,16 @@ namespace Phys.Lib.Postgres.Authors
             public static readonly string LanguageColumn = SchemaUtils.GetColumn<InfoModel, string>(i => i.Language);
 
             [Column("author_code")]
-            public string AuthorCode { get; set; }
+            public required string AuthorCode { get; set; }
 
             [Column("language")]
-            public string Language { get; set; }
+            public required string Language { get; set; }
 
             [Column("full_name")]
-            public string FullName { get; set; }
+            public string? FullName { get; set; }
 
             [Column("description")]
-            public string Description { get; set; }
+            public string? Description { get; set; }
         }
     }
 }

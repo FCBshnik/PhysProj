@@ -9,7 +9,7 @@ namespace Phys.Lib.Db.Users
 
         public required string NameLowerCase { get; set; }
 
-        public required string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         [UnorderedEquality]
         public List<string> Roles { get; set; } = new List<string>();

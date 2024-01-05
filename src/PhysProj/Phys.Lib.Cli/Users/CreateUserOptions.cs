@@ -6,12 +6,12 @@ namespace Phys.Lib.Cli.Users
     public class CreateUserOptions
     {
         [Option("name", Required = true)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Option("password", Required = true)]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         [Option("role", Required = true)]
-        public string Role { get; set; }
+        public required string Role { get; set; }
     }
 }

@@ -33,6 +33,7 @@ namespace Phys.Lib.Core.Migration
 
             var migration = new MigrationDto
             {
+                Id = migrationsHistory.GetNewId(),
                 Migrator = task.Migrator,
                 Source = task.Source,
                 Destination = task.Destination,

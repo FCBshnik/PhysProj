@@ -4,7 +4,7 @@ namespace Phys.Lib.Core.Migration
 {
     public class MigrationDto : IHistoryDbo
     {
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         public required string Migrator { get; set; }
 

@@ -7,7 +7,7 @@ namespace Phys.Lib.Mongo
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [BsonElement("_u")]
         public DateTime UpdatedAt { get; set; }

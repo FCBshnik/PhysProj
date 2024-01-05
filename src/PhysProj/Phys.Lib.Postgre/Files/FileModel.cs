@@ -26,13 +26,13 @@ namespace Phys.Lib.Postgres.Files
             public static string GetColumn<T>(Expression<Func<LinkModel, T>> property) => SchemaUtils.GetColumn(property);
 
             [Column("file_code")]
-            public string FileCode { get; set; }
+            public required string FileCode { get; set; }
 
             [Column("type")]
-            public string Type { get; set; }
+            public required string Type { get; set; }
 
             [Column("path")]
-            public string Path { get; set; }
+            public required string Path { get; set; }
         }
     }
 }

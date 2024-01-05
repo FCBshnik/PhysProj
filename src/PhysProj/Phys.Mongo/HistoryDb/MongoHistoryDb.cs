@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using Phys.HistoryDb;
 
 namespace Phys.Mongo.HistoryDb
@@ -12,14 +13,16 @@ namespace Phys.Mongo.HistoryDb
             this.collection = collection;
         }
 
+        public string GetNewId()
+        {
+            return ObjectId.GenerateNewId(DateTime.UtcNow).ToString();
+        }
+
         public void Save(T obj)
         {
             ArgumentNullException.ThrowIfNull(obj);
 
-            if (obj.Id == null)
-                collection.InsertOne(obj);
-            else
-                collection.ReplaceOne(Builders<T>.Filter.Eq(i => i.Id, obj.Id), obj);
+            collection.ReplaceOne(Builders<T>.Filter.Eq(i => i.Id, obj.Id), obj, new ReplaceOptions { IsUpsert = true });
         }
 
         public T Get(string id)

@@ -25,8 +25,8 @@ namespace Phys.Lib.Tests.Integration.Db
             using var lifetimeScope = container.BeginLifetimeScope();
             var factory = lifetimeScope.Resolve<IHistoryDbFactory>();
             var db = factory.Create<HistoryTestDbo>("tests");
-            var item1 = new HistoryTestDbo() { Data = "item1" };
-            var item2 = new HistoryTestDbo() { Data = "item2" };
+            var item1 = new HistoryTestDbo() { Id = db.GetNewId(), Data = "item1" };
+            var item2 = new HistoryTestDbo() { Id = db.GetNewId(), Data = "item2" };
             db.Save(item1);
             db.Save(item2);
             item1.Id.ShouldNotBeNull();
@@ -74,7 +74,7 @@ namespace Phys.Lib.Tests.Integration.Db
 
         public class HistoryTestDbo : IHistoryDbo
         {
-            public string Id { get; set; }
+            public required string Id { get; set; }
 
             public string Data { get; set; }
         }

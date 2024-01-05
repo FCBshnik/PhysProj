@@ -42,7 +42,7 @@ namespace Phys.Lib.Tests.Integration.Db
 
         private void Create(string code)
         {
-            db.Create(new FileDbo { Code = code });
+            db.Create(new FileDbo { Code = code, Format = "txt" });
             var files = db.Find(new FilesDbQuery { Code = code });
             files.Count.ShouldBe(1);
         }

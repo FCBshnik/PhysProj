@@ -2,6 +2,6 @@
 {
     public class AuthorCreateModel
     {
-        public string Code { get; set; }
+        public required string Code { get; set; }
     }
 }

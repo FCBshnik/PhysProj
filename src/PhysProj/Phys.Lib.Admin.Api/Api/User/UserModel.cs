@@ -2,8 +2,8 @@
 {
     public class UserModel
     {
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public List<string> Roles { get; set; }
+        public required List<string> Roles { get; set; }
     }
 }
