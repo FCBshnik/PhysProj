@@ -9,7 +9,7 @@ using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Works
 {
-    internal class WorksDb : Collection<WorkModel>, IWorksDb, IDbReader<WorkDbo>
+    internal class WorksDb : Collection<WorkModel>, IWorksDb
     {
         public string Name => "mongo";
 
@@ -91,6 +91,9 @@ namespace Phys.Lib.Mongo.Works
                 update = update.Unset(i => i.Language);
             else if (work.Language.HasValue())
                 update = update.Set(i => i.Language, work.Language);
+
+            if (work.IsPublic != null)
+                update = update.Set(i => i.IsPublic, work.IsPublic.Value);
 
             if (work.AddInfo != null)
                 update = update.Push(i => i.Infos, WorkMapper.Map(work.AddInfo));

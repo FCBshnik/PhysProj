@@ -43,16 +43,33 @@ namespace Phys.Lib.Db.Works
         /// </summary>
         public string? OriginalCode { get; set; }
 
+        /// <summary>
+        /// Files attachments containing text of book in various formats
+        /// </summary>
         [UnorderedEquality]
         public List<string> FilesCodes { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Indicates that work is publicly available (present in catalog and searchable) for users
+        /// </summary>
+        public bool IsPublic { get; set; }
 
         [Equatable]
         public sealed partial class InfoDbo
         {
+            /// <summary>
+            /// The language of information text
+            /// </summary>
             public required string Language { get; set; }
 
+            /// <summary>
+            /// Work's title in specified language
+            /// </summary>
             public string? Name { get; set; }
 
+            /// <summary>
+            /// Work's description in specified language
+            /// </summary>
             public string? Description { get; set; }
 
             public override string? ToString()

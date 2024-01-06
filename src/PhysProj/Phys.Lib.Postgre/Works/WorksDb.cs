@@ -2,10 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
-using Phys.Lib.Postgres.Authors;
 using Phys.Lib.Postgres.Utils;
 using SqlKata;
 using System.Text.RegularExpressions;
@@ -103,6 +101,9 @@ namespace Phys.Lib.Postgres.Works
                     updateDic[WorkModel.OriginalCodeColumn] = update.Original;
                 else if (update.Original.IsEmpty())
                     updateDic[WorkModel.OriginalCodeColumn] = null;
+
+                if (update.IsPublic.HasValue)
+                    updateDic[WorkModel.IsPublicColumn] = update.IsPublic.Value;
 
                 if (updateDic.Any())
                 {

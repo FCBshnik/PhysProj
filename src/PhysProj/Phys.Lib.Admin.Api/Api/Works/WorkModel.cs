@@ -18,6 +18,8 @@
 
         public string? OriginalCode { get; set; }
 
+        public bool IsPublic { get; set; }
+
         public class WorkInfoModel
         {
             public required string Language { get; set; }

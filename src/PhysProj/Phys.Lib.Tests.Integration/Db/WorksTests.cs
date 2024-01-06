@@ -45,6 +45,10 @@ namespace Phys.Lib.Tests.Integration.Db
             DeleteInfo("work-1", "ru");
             DeleteInfo("work-1", "ru");
 
+            SetPublic("work-1", true);
+            SetPublic("work-1", false);
+            SetPublic("work-1", true);
+
             FindByOriginal("work-3");
             SetOriginal("work-1", "work-3");
             FindByOriginal("work-3", "work-1");
@@ -227,6 +231,13 @@ namespace Phys.Lib.Tests.Integration.Db
             db.Update(code, new WorkDbUpdate { DeleteFile = fileCode });
             var work = db.GetByCode(code);
             work.FilesCodes.ShouldNotContain(fileCode);
+        }
+
+        private void SetPublic(string code, bool isPublic)
+        {
+            db.Update(code, new WorkDbUpdate { IsPublic = isPublic });
+            var work = db.GetByCode(code);
+            work.IsPublic.ShouldBe(isPublic);
         }
     }
 }

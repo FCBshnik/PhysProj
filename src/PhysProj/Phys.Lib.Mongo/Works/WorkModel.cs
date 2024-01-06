@@ -29,6 +29,9 @@ namespace Phys.Lib.Mongo.Works
         [BsonElement("files")]
         public List<string> FilesCodes { get; set; } = new List<string>();
 
+        [BsonElement("isPublic")]
+        public bool IsPublic { get; set; }
+
         public class InfoModel
         {
             [BsonElement("lang")]

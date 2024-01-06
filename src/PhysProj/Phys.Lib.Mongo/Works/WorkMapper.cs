@@ -16,6 +16,7 @@ namespace Phys.Lib.Mongo.Works
                 OriginalCode = work.OriginalCode,
                 SubWorksCodes = work.SubWorksCodes,
                 Infos = work.Infos.Select(Map).ToList(),
+                IsPublic = work.IsPublic,
             };
         }
 

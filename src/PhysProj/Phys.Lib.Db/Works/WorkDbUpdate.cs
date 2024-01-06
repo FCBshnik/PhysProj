@@ -26,5 +26,7 @@
         public string? AddFile { get; set; }
 
         public string? DeleteFile { get; set; }
+
+        public bool? IsPublic { get; set; }
     }
 }
