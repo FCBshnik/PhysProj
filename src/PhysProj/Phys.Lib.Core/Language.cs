@@ -20,6 +20,16 @@ namespace Phys.Lib.Core
         public static readonly Language Fr = new Language("fr", "French");
 
         /// <summary>
+        /// Italian
+        /// </summary>
+        public static readonly Language It = new Language("it", "Italian");
+
+        /// <summary>
+        /// Dutch
+        /// </summary>
+        public static readonly Language Nl = new Language("nl", "Dutch");
+
+        /// <summary>
         /// Latin
         /// </summary>
         public static readonly Language La = new Language("la", "Latin");
@@ -36,7 +46,7 @@ namespace Phys.Lib.Core
 
         private static readonly Dictionary<string, Language> languages = new List<Language>
         {
-            Ru, En, Fr, La, Gr, Grc
+            Ru, En, Fr, It, Nl, La, Gr, Grc
         }.ToDictionary(l => l.Code, StringComparer.InvariantCultureIgnoreCase);
 
         public static readonly IReadOnlyCollection<Language> All = languages.Values.ToList();
