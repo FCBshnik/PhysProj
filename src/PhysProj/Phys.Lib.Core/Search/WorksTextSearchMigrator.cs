@@ -49,9 +49,9 @@ namespace Phys.Lib.Core.Search
             } while (!result.IsCompleted);
         }
 
-        protected bool Use(WorkDbo value)
+        protected bool Use(WorkDbo work)
         {
-            return value.Infos.Count > 0;
+            return work.IsPublic && work.Infos.Count > 0;
         }
 
         protected WorkTso Map(WorkDbo work, IWorksDb worksDb, IAuthorsDb authorsDb)

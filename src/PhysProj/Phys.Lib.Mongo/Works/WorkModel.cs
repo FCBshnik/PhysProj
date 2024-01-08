@@ -30,7 +30,7 @@ namespace Phys.Lib.Mongo.Works
         public List<string> FilesCodes { get; set; } = new List<string>();
 
         [BsonElement("isPublic")]
-        public bool IsPublic { get; set; }
+        public bool IsPublic { get; set; } = true;
 
         public class InfoModel
         {
