@@ -4,6 +4,7 @@ using Phys.Lib.Db;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Postgres.Utils;
+using Phys.Lib.Postgres.Works;
 using SqlKata;
 using System.Text.RegularExpressions;
 
@@ -107,6 +108,7 @@ namespace Phys.Lib.Postgres.Authors
         {
             var cmd = new Query(tableName)
                 .LeftJoin(authorsInfos.TableName, AuthorModel.CodeColumn, AuthorModel.InfoModel.AuthorCodeColumn)
+                .OrderByDesc(tableName + "." + AuthorModel.IdColumn)
                 .Limit(limit);
 
             enrichQuery(cmd);

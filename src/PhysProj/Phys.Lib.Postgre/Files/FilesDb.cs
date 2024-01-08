@@ -86,6 +86,7 @@ namespace Phys.Lib.Postgres.Files
         {
             var cmd = new Query(tableName)
                 .LeftJoin(filesLinks.TableName, FileModel.CodeColumn, FileModel.LinkModel.FileCodeColumn)
+                .OrderByDesc(tableName + "." + FileModel.IdColumn)
                 .Limit(limit);
 
             enrichQuery(cmd);
