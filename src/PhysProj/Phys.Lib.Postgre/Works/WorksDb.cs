@@ -169,6 +169,7 @@ namespace Phys.Lib.Postgres.Works
                 .LeftJoin(worksAuthors.TableName, TableName + "." + WorkModel.CodeColumn, worksAuthors.TableName + "." + WorkModel.AuthorModel.WorkCodeColumn)
                 .LeftJoin(worksSubWorks.TableName, TableName + "." + WorkModel.CodeColumn, worksSubWorks.TableName + "." + WorkModel.SubWorkModel.WorkCodeColumn)
                 .LeftJoin(worksFiles.TableName, TableName + "." + WorkModel.CodeColumn, worksFiles.TableName + "." + WorkModel.FileModel.WorkCodeColumn)
+                .OrderByDesc(tableName + "." + WorkModel.IdColumn)
                 .Limit(limit);
 
             enrichQuery(cmd);

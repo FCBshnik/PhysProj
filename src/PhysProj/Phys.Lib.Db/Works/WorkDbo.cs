@@ -11,7 +11,7 @@ namespace Phys.Lib.Db.Works
         public required string Code { get; set; }
 
         /// <summary>
-        /// Published year in internal format
+        /// Published date in internal format
         /// </summary>
         public string? Publish { get; set; }
 

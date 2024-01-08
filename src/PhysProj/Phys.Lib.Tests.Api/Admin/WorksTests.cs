@@ -71,6 +71,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
                 result.Language.ShouldBeUpdatedWith(update.Language?.ToLowerInvariant());
                 result.Publish.ShouldBeUpdatedWith(update.Date);
+                result.IsPublic.ShouldBeUpdatedWith(update.IsPublic);
             }
 
             public void UpdateInfoFailed(string code, string language, WorkInfoUpdateModel update, ErrorCode errorCode = ErrorCode.InvalidArgument)

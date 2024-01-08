@@ -45,6 +45,9 @@ namespace Phys.Lib.Admin.Api.Api.Works
                     work = editor.UpdateDate(work, model.Date);
                 if (model.Language != null)
                     work = editor.UpdateLanguage(work, model.Language);
+                if (model.IsPublic != null)
+                    work = editor.UpdateIsPublic(work, model.IsPublic.Value);
+
                 return Results.Ok(mapper.Map(work));
             })
             .ProducesResponse<WorkModel>("UpdateWork");

@@ -169,6 +169,18 @@ namespace Phys.Lib.Core.Works
             return db.GetByCode(work.Code);
         }
 
+        public WorkDbo UpdateIsPublic(WorkDbo work, bool isPublic)
+        {
+            ArgumentNullException.ThrowIfNull(work);
+
+            if (work.IsPublic == isPublic)
+                return work;
+
+            var update = new WorkDbUpdate { IsPublic = isPublic };
+            db.Update(work.Code, update);
+            return db.GetByCode(work.Code);
+        }
+
         public WorkDbo LinkOriginal(WorkDbo work, string originalCode)
         {
             ArgumentNullException.ThrowIfNull(work);

@@ -95,7 +95,7 @@ namespace Phys.Lib.Tests.Api
             DotNetRun(appFile, testSettingsFile.FullName);
 
             // todo: wait app started
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
 
             return appTestDir;
         }

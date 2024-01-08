@@ -42,6 +42,15 @@
 			.finally(refresh);
 	}
 
+  function updateIsPublic(isPublic: boolean) {
+    api.service
+      .updateWork(
+        work.code,
+        new api.WorkUpdateModel({ isPublic: isPublic })
+      )
+      .finally(refresh);
+  }
+
 	function updateInfo(info: api.WorkInfoModel) {
 		api.service
 			.updateWorkInfo(
@@ -119,6 +128,18 @@
 				<div class="flex flex-row gap-2 p-2">
 					<div class="basis-10/12"><LanguageSelector bind:language={work.language}/></div>
 					<button class="basis-2/12" on:click={updateLanguage}>Update</button>
+				</div>
+			</div>
+			<div>
+				<div class="p-2">Is Public</div>
+				<div class="flex flex-row gap-2 p-2">
+					<button on:click={() => updateIsPublic(work.isPublic !== true)}>
+            {#if work.isPublic}
+              Hide
+            {:else}
+              Show
+            {/if}
+          </button>
 				</div>
 			</div>
 		</section>

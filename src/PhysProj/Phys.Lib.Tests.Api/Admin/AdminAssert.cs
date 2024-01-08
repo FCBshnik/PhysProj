@@ -20,5 +20,13 @@ namespace Phys.Lib.Tests.Api.Admin
                     resultValue.Should().Be(updateValue);
             }
         }
+
+        public static void ShouldBeUpdatedWith(this bool resultValue, bool? updateValue)
+        {
+            if (updateValue != null)
+            {
+                resultValue.Should().Be(updateValue.Value);
+            }
+        }
     }
 }

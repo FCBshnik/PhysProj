@@ -3241,6 +3241,7 @@ export class WorkModel implements IWorkModel {
     subWorksCodes?: string[] | undefined;
     filesCodes?: string[] | undefined;
     originalCode?: string | undefined;
+    isPublic?: boolean;
 
     constructor(data?: IWorkModel) {
         if (data) {
@@ -3277,6 +3278,7 @@ export class WorkModel implements IWorkModel {
                     this.filesCodes!.push(item);
             }
             this.originalCode = _data["originalCode"];
+            this.isPublic = _data["isPublic"];
         }
     }
 
@@ -3313,6 +3315,7 @@ export class WorkModel implements IWorkModel {
                 data["filesCodes"].push(item);
         }
         data["originalCode"] = this.originalCode;
+        data["isPublic"] = this.isPublic;
         return data;
     }
 }
@@ -3326,11 +3329,13 @@ export interface IWorkModel {
     subWorksCodes?: string[] | undefined;
     filesCodes?: string[] | undefined;
     originalCode?: string | undefined;
+    isPublic?: boolean;
 }
 
 export class WorkUpdateModel implements IWorkUpdateModel {
     date?: string | undefined;
     language?: string | undefined;
+    isPublic?: boolean | undefined;
 
     constructor(data?: IWorkUpdateModel) {
         if (data) {
@@ -3345,6 +3350,7 @@ export class WorkUpdateModel implements IWorkUpdateModel {
         if (_data) {
             this.date = _data["date"];
             this.language = _data["language"];
+            this.isPublic = _data["isPublic"];
         }
     }
 
@@ -3359,6 +3365,7 @@ export class WorkUpdateModel implements IWorkUpdateModel {
         data = typeof data === 'object' ? data : {};
         data["date"] = this.date;
         data["language"] = this.language;
+        data["isPublic"] = this.isPublic;
         return data;
     }
 }
@@ -3366,6 +3373,7 @@ export class WorkUpdateModel implements IWorkUpdateModel {
 export interface IWorkUpdateModel {
     date?: string | undefined;
     language?: string | undefined;
+    isPublic?: boolean | undefined;
 }
 
 export class WorksStatModel implements IWorksStatModel {

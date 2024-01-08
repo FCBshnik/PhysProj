@@ -210,7 +210,8 @@ namespace Phys.Lib.Tests.Api.Admin
             works.Update("discourse-on-method", new WorkUpdateModel { Date = "1737" });
             works.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "FR" });
             works.Update("discourse-on-method", new WorkUpdateModel { Date = string.Empty, Language = string.Empty });
-            works.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr" });
+            works.Update("discourse-on-method", new WorkUpdateModel { Date = "1637", Language = "fr", IsPublic = true });
+            works.Update("discourse-on-method", new WorkUpdateModel { IsPublic = false });
             // update non existing failed
             works.UpdateInfoFailed(nonExistentCode, "ru", new WorkInfoUpdateModel(), ErrorCode.NotFound);
             // update with invalid language failed

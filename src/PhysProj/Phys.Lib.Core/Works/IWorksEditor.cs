@@ -10,6 +10,8 @@ namespace Phys.Lib.Core.Works
 
         WorkDbo UpdateLanguage(WorkDbo work, string language);
 
+        WorkDbo UpdateIsPublic(WorkDbo work, bool isPublic);
+
         WorkDbo AddInfo(WorkDbo work, WorkDbo.InfoDbo info);
 
         WorkDbo DeleteInfo(WorkDbo work, string language);

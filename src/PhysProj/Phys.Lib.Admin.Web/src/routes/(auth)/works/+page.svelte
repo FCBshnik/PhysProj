@@ -21,6 +21,15 @@
         });
     }
 
+    function updateIsPublic(work:api.WorkModel, isPublic: boolean) {
+      api.service
+        .updateWork(
+          work.code,
+          new api.WorkUpdateModel({ isPublic: isPublic })
+        )
+        .finally(refresh);
+    }
+
     refresh();
 </script>
 
@@ -48,6 +57,7 @@
                 <th>Authors</th>
                 <th>Original</th>
                 <th>Files</th>
+                <th>Public</th>
                 <th></th>
               </tr>
             </thead>
@@ -69,6 +79,9 @@
                     </td>
                     <td>
                       {work.filesCodes?.join(', ')}
+                    </td>
+                    <td>
+                      <button class="w-min text-xs" on:click={() => updateIsPublic(work, work.isPublic !== true)}>{work.isPublic}</button>
                     </td>
                     <td class="flex justify-end">
                         <button class="w-min text-xs" on:click={() => deleteWork(work)}>X</button>
