@@ -10,6 +10,10 @@ jobs:
       matrix:
         node-version: [18.x]
 
+    defaults:
+      run:
+        working-directory: ./src/PhysProj/Phys.Lib.Admin.Web/
+
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
@@ -19,8 +23,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: NPM install
-      working-directory: ./src/PhysProj/Phys.Lib.Admin.Web/
       run: npm install
     - name: NPM Build
-      working-directory: ./src/PhysProj/Phys.Lib.Admin.Web/
       run: npm run build
