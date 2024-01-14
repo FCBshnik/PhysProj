@@ -5,15 +5,12 @@ on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./src/PhysProj/Phys.Lib.Admin.Web
     strategy:
       matrix:
         node-version: [18.x]
-
-    defaults:
-      run:
-        working-directory: ./src/PhysProj/Phys.Lib.Admin.Web/
-
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
@@ -22,6 +19,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: "./src/PhysProj/Phys.Lib.Admin.Web/package-lock.json"
     - name: NPM install
       run: npm install
     - name: NPM Build
