@@ -1,0 +1,26 @@
+name: admin-web-ci-cd
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: NPM install
+      working-directory: ./src/PhysProj/Phys.Lib.Admin.Web/
+      run: npm install
+    - name: NPM Build
+      working-directory: ./src/PhysProj/Phys.Lib.Admin.Web/
+      run: npm run build
