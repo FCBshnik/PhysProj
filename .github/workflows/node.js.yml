@@ -1,4 +1,4 @@
-name: admin-web-ci-cd
+name: deploy-admin-web
 
 on: workflow_dispatch
 
