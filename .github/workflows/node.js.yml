@@ -28,4 +28,4 @@ jobs:
       run: cp -r ./build $GITHUB_WORKSPACE/envs/home/srv-app/admin-web
     - name: Build docker image
       run: admin-web-deploy.sh
-      working-directory: $GITHUB_WORKSPACE/envs/home/srv-app/
+      working-directory: ${{ github.workspace }}/envs/home/srv-app/
