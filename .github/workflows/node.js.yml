@@ -24,3 +24,8 @@ jobs:
       run: npm install
     - name: NPM Build
       run: npm run build
+    - name: Copy build to docker build directory
+      run: cp -r ./build/ $GITHUB_WORKSPACE/envs/home/srv-app/admin-web
+    - name: Build docker image
+      run: admin-web-deploy.sh
+      working-directory: $GITHUB_WORKSPACE/envs/home/srv-app/
