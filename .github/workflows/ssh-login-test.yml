@@ -12,6 +12,7 @@ jobs:
       run: |
         echo $SSH_KEY >> ssh_key
         chmod 0400 ssh_key
+        cat ssh_key
         eval `ssh-agent`
         ssh-add ssh_key
         ssh $SRV_USER@SRV_HOST
