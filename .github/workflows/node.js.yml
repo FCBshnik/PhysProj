@@ -1,0 +1,31 @@
+name: deploy-admin-web
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/PhysProj/Phys.Lib.Admin.Web
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: "./src/PhysProj/Phys.Lib.Admin.Web/package-lock.json"
+    - name: NPM install
+      run: npm install
+    - name: NPM Build
+      run: npm run build
+    - name: Copy build to docker build directory
+      run: cp -r ./build $GITHUB_WORKSPACE/envs/home/srv-app/admin-web
+    - name: Build docker image
+      run: bash admin-web-deploy.sh
+      working-directory: ${{ github.workspace }}/envs/home/srv-app/
