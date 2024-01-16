@@ -1,7 +1,7 @@
 services:
   app:
     container_name: app
-    build: app
+    build: worker-app
     image: physproj-home-app
     restart: always
     volumes:
