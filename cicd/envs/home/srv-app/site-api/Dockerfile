@@ -2,5 +2,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview as runtime
 WORKDIR /app
 COPY bin .
 ADD settings .
-EXPOSE 7188
-ENTRYPOINT ["dotnet", "Phys.Lib.Admin.Api.dll"]
+ENTRYPOINT ["dotnet", "Phys.Lib.Site.Api.dll"]
