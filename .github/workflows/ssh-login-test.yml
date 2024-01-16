@@ -10,17 +10,8 @@ jobs:
         SRV_HOST : ${{vars.SRV_GATEWAY_HOST}}
         SRV_USER : ${{vars.SRV_GATEWAY_USER}}
       run: |
-        echo 'start'
-        echo $SSH_KEY >> ssh_key
-        chmod 0400 ssh_key
-        echo $(cat ssh_key)
-        echo 'end'
-        echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > ssh_key_1
-        echo $(cat ssh_key_1)
-        chmod 600 ssh_key_1
+        echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > ssh_key
+        chmod 600 ssh_key
         eval `ssh-agent`
-        ssh-add ssh_key_1
+        ssh-add ssh_key
         ssh -o StrictHostKeyChecking=no $SRV_USER@$SRV_HOST
-#        eval `ssh-agent`
-#        ssh-add ssh_key
-#        ssh $SRV_USER@SRV_HOST
