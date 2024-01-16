@@ -4,12 +4,13 @@ jobs:
   ssh-login:
     runs-on: ubuntu-latest
     steps:
-    - run: echo $SSH_KEY >> ssh_key
+    - name: test
       env:
         SSH_KEY : ${{secrets.SRV_GATEWAY_SSH_PRIVATE_KEY}}
-    - run: ssh-agent
-    - run: ssh-add ssh_key
-    - run: ssh $SRV_USER@SRV_HOST
-      env:
         SRV_HOST : ${{vars.SRV_GATEWAY_HOST}}
         SRV_USER : ${{vars.SRV_GATEWAY_USER}}
+      run: |
+        echo $SSH_KEY >> ssh_key
+        ssh-agent
+        ssh-add ssh_key
+        ssh $SRV_USER@SRV_HOST
