@@ -10,7 +10,7 @@ jobs:
         SRV_HOST : ${{vars.SRV_GATEWAY_HOST}}
         SRV_USER : ${{vars.SRV_GATEWAY_USER}}
       run: |
+        eval `ssh-agent`
         echo $SSH_KEY >> ssh_key
-        ssh-agent
         ssh-add ssh_key
         ssh $SRV_USER@SRV_HOST
