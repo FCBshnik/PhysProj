@@ -11,10 +11,17 @@ jobs:
         SRV_USER : ${{vars.SRV_GATEWAY_USER}}
       run: |
         echo 'start'
+        echo $SSH_KEY
         echo $SSH_KEY >> ssh_key
         chmod 0400 ssh_key
         echo $(cat ssh_key)
         echo 'end'
+        echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}"
+        echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > ssh_key_1
+        echo $(cat ssh_key_1)
+        chmod 600 ssh_key_1
+        ssh-agent -a > /dev/null	
+        ssh-add ssh_key_1
 #        eval `ssh-agent`
 #        ssh-add ssh_key
 #        ssh $SRV_USER@SRV_HOST
