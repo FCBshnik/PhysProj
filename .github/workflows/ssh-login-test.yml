@@ -20,7 +20,7 @@ jobs:
         echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > ssh_key_1
         echo $(cat ssh_key_1)
         chmod 600 ssh_key_1
-        ssh-agent -a > /dev/null	
+        eval `ssh-agent`
         ssh-add ssh_key_1
 #        eval `ssh-agent`
 #        ssh-add ssh_key
