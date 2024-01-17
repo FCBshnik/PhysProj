@@ -2,14 +2,14 @@ services:
   app:
     container_name: worker-app
     build: worker-app
-    image: physproj-home-worker-app
+    image: physproj-worker-app
     restart: always
     volumes:
       - /opt/physproj/worker-app/data:/app/data
   admin-api:
     container_name: admin-api
     build: admin-api
-    image: physproj-home-admin-api
+    image: physproj-admin-api
     restart: always
     ports:
       - "7188:7188"
@@ -18,7 +18,7 @@ services:
   admin-web:
     container_name: admin-web
     build: admin-web
-    image: physproj-home-admin-web
+    image: physproj-admin-web
     restart: always
     ports:
       - "7189:7189"
@@ -27,7 +27,7 @@ services:
   site-api:
     container_name: site-api
     build: site-api
-    image: physproj-home-site-api
+    image: physproj-site-api
     restart: always
     ports:
       - "7288:7288"
@@ -36,7 +36,7 @@ services:
   site-web:
     container_name: site-web
     build: site-web
-    image: physproj-home-site-web
+    image: physproj-site-web
     restart: always
     ports:
       - "7289:7289"
