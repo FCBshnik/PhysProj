@@ -35,6 +35,7 @@ jobs:
             chmod 600 ssh_key
             eval `ssh-agent`
             ssh-add ssh_key
+            ssh-keyscan $SRV_HOST >> /root/.ssh/known_hosts
 #            ssh -o StrictHostKeyChecking=no $SRV_USER@$SRV_HOST
         - name: Create docker context
           run: docker context create srv-gateway --docker "host=ssh://$SRV_USER@$SRV_HOST"
