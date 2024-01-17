@@ -5,9 +5,9 @@ on: workflow_dispatch
 jobs:
     deploy:
         runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: ./src/PhysProj/Phys.Lib.Admin.Web
+#        defaults:
+#            run:
+#                working-directory: ./src/PhysProj/Phys.Lib.Admin.Web
         env:
             SRV_HOST : ${{vars.SRV_GATEWAY_HOST}}
             SRV_USER : ${{vars.SRV_GATEWAY_USER}}
