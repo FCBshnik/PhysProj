@@ -8,6 +8,7 @@ jobs:
         env:
             SRV_HOST : ${{vars.SRV_GATEWAY_HOST}}
             SRV_USER : ${{vars.SRV_GATEWAY_USER}}
+            SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         strategy:
             matrix:
                 node-version: [18.x]
@@ -30,14 +31,15 @@ jobs:
           run: cp -r ./build $GITHUB_WORKSPACE/cicd/envs/public/srv-app/admin-web
           working-directory: ./src/PhysProj/Phys.Lib.Admin.Web
         - name: Init SSH agent
+#           eval `ssh-agent`
           run: |
             mkdir -p /home/runner/.ssh
             ssh-keyscan $SRV_HOST >> /home/runner/.ssh/known_hosts
             echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > /home/runner/.ssh/ssh_key
             chmod 600 /home/runner/.ssh/ssh_key
-            eval `ssh-agent`
+            ssh-agent -a $SSH_AUTH_SOCK > /dev/null
             ssh-add /home/runner/.ssh/ssh_key
-#            ssh -o StrictHostKeyChecking=no $SRV_USER@$SRV_HOST
+#           ssh -o StrictHostKeyChecking=no $SRV_USER@$SRV_HOST
         - name: Create docker context
           run: docker context create srv-gateway --docker "host=ssh://$SRV_USER@$SRV_HOST"
         - name: Build and deploy docker image
