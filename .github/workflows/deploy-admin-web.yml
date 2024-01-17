@@ -37,7 +37,7 @@ jobs:
             ssh-add ssh_key
 #            ssh -o StrictHostKeyChecking=no $SRV_USER@$SRV_HOST
         - name: Create docker context
-          run: docker context create $SRV_USER --docker "host=ssh://$SRV_USER@$SRV_HOST"
+          run: docker context create srv-gateway --docker "host=ssh://$SRV_USER@$SRV_HOST"
         - name: Build and deploy docker image
           run: bash ./admin-web/deploy.sh
           working-directory: ${{ github.workspace }}/cicd/envs/public/srv-app/
