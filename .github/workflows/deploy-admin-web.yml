@@ -31,11 +31,12 @@ jobs:
           working-directory: ./src/PhysProj/Phys.Lib.Admin.Web
         - name: Init SSH agent
           run: |
-            echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > ssh_key
-            chmod 600 ssh_key
+            mkdir -p /home/runner/.ssh
+            ssh-keyscan $SRV_HOST >> /home/runner/.ssh/known_hosts
+            echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > /home/runner/.ssh/ssh_key
+            chmod 600 /home/runner/.ssh/ssh_key
             eval `ssh-agent`
-            ssh-add ssh_key
-            ssh-keyscan $SRV_HOST >> /root/.ssh/known_hosts
+            ssh-add /home/runner/.ssh/ssh_key
 #            ssh -o StrictHostKeyChecking=no $SRV_USER@$SRV_HOST
         - name: Create docker context
           run: docker context create srv-gateway --docker "host=ssh://$SRV_USER@$SRV_HOST"
