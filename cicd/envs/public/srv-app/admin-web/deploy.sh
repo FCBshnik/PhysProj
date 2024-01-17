@@ -1,0 +1,1 @@
+docker --context srv-gateway compose --file docker-compose.yml --project-name physproj up --detach --build --force-recreate admin-web
