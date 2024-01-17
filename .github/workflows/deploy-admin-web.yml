@@ -39,5 +39,5 @@ jobs:
         - name: Create docker context
           run: docker context create $SRV_USER --docker "host=ssh://$SRV_USER@$SRV_HOST"
         - name: Build and deploy docker image
-          run: bash admin-web-deploy.sh
+          run: bash ./admin-web/deploy.sh
           working-directory: ${{ github.workspace }}/cicd/envs/public/srv-app/
