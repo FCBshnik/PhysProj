@@ -73,7 +73,7 @@ namespace Phys.Lib.Postgres.Works
                     q = q.Where(worksFiles.TableName + "." + WorkModel.FileModel.FileCodeColumn, query.FileCode);
                 if (query.Search != null)
                     q = q.WhereRaw($"{WorkModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
-                return q;
+                return q.OrderByDesc(tableName + "." + WorkModel.IdColumn);
             }, query.Limit).Select(WorksMapper.Map).ToList();
         }
 
@@ -169,7 +169,6 @@ namespace Phys.Lib.Postgres.Works
                 .LeftJoin(worksAuthors.TableName, TableName + "." + WorkModel.CodeColumn, worksAuthors.TableName + "." + WorkModel.AuthorModel.WorkCodeColumn)
                 .LeftJoin(worksSubWorks.TableName, TableName + "." + WorkModel.CodeColumn, worksSubWorks.TableName + "." + WorkModel.SubWorkModel.WorkCodeColumn)
                 .LeftJoin(worksFiles.TableName, TableName + "." + WorkModel.CodeColumn, worksFiles.TableName + "." + WorkModel.FileModel.WorkCodeColumn)
-                .OrderByDesc(tableName + "." + WorkModel.IdColumn)
                 .Limit(limit);
 
             enrichQuery(cmd);
@@ -204,10 +203,9 @@ namespace Phys.Lib.Postgres.Works
 
             var works = Find(q =>
             {
-                q = q.OrderBy(WorkModel.IdColumn);
                 if (query.Cursor != null)
                     q = q.Where(WorkModel.IdColumn, ">", int.Parse(query.Cursor));
-                return q;
+                return q.OrderBy(WorkModel.IdColumn);
             }, query.Limit);
             return new DbReaderResult<WorkDbo>(works.Select(WorksMapper.Map).ToList(), works.LastOrDefault()?.Id.ToString());
         }

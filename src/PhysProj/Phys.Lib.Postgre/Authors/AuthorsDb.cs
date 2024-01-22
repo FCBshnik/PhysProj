@@ -54,7 +54,7 @@ namespace Phys.Lib.Postgres.Authors
                     q = q.WhereIn(AuthorModel.CodeColumn, query.Codes);
                 if (query.Search != null)
                     q = q.WhereRaw($"{AuthorModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
-                return q;
+                return q.OrderByDesc(tableName + "." + AuthorModel.IdColumn);
             }, query.Limit).Select(AuthorMapper.Map).ToList();
         }
 
@@ -108,7 +108,6 @@ namespace Phys.Lib.Postgres.Authors
         {
             var cmd = new Query(tableName)
                 .LeftJoin(authorsInfos.TableName, AuthorModel.CodeColumn, AuthorModel.InfoModel.AuthorCodeColumn)
-                .OrderByDesc(tableName + "." + AuthorModel.IdColumn)
                 .Limit(limit);
 
             enrichQuery(cmd);
@@ -134,10 +133,9 @@ namespace Phys.Lib.Postgres.Authors
 
             var authors = Find(q =>
             {
-                q = q.OrderBy(AuthorModel.IdColumn);
                 if (query.Cursor != null)
                     q = q.Where(AuthorModel.IdColumn, ">", int.Parse(query.Cursor));
-                return q;
+                return q.OrderBy(AuthorModel.IdColumn);
             }, query.Limit);
             return new DbReaderResult<AuthorDbo>(authors.Select(AuthorMapper.Map).ToList(), authors.LastOrDefault()?.Id.ToString());
         }

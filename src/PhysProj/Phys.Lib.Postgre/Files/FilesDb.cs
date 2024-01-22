@@ -53,7 +53,7 @@ namespace Phys.Lib.Postgres.Files
                     q = q.WhereIn(FileModel.CodeColumn, query.Codes);
                 if (query.Search != null)
                     q = q.WhereRaw($"{FileModel.CodeColumn} ~* \'{Regex.Escape(query.Search)}\'");
-                return q;
+                return q.OrderByDesc(tableName + "." + FileModel.IdColumn);
             }, query.Limit).Select(FileMapper.Map).ToList();
         }
 
@@ -86,7 +86,6 @@ namespace Phys.Lib.Postgres.Files
         {
             var cmd = new Query(tableName)
                 .LeftJoin(filesLinks.TableName, FileModel.CodeColumn, FileModel.LinkModel.FileCodeColumn)
-                .OrderByDesc(tableName + "." + FileModel.IdColumn)
                 .Limit(limit);
 
             enrichQuery(cmd);
@@ -112,10 +111,9 @@ namespace Phys.Lib.Postgres.Files
 
             var files = Find(q =>
             {
-                q = q.OrderBy(FileModel.IdColumn);
                 if (query.Cursor != null)
                     q = q.Where(FileModel.IdColumn, ">", int.Parse(query.Cursor));
-                return q;
+                return q.OrderBy(FileModel.IdColumn);
             }, query.Limit);
             return new DbReaderResult<FileDbo>(files.Select(FileMapper.Map).ToList(), files.LastOrDefault()?.Id.ToString());
         }

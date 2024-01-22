@@ -7,7 +7,7 @@ using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Postgres.Users
 {
-    internal class UsersDb : PostgresTable, IUsersDb, IDbReader<UserDbo>
+    internal class UsersDb : PostgresTable, IUsersDb
     {
         private readonly Lazy<NpgsqlDataSource> dataSource;
 
@@ -32,7 +32,8 @@ namespace Phys.Lib.Postgres.Users
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            var cmd = new Query(tableName).Limit(query.Limit);
+            var cmd = new Query(tableName)
+                .Limit(query.Limit);
 
             if (query.NameLowerCase != null)
                 cmd = cmd.Where(UserModel.NameLowerCaseColumn, query.NameLowerCase);
