@@ -28,16 +28,21 @@ namespace Phys.Lib.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             var mongoUrl = configuration.GetConnectionStringOrThrow("mongo");
-            var postgresUrl = configuration.GetConnectionStringOrThrow("postgres");
+            var postgresUrl = configuration.GetConnectionString("postgres");
             var rabbitUrl = configuration.GetConnectionStringOrThrow("rabbitmq");
             var meilisearchUrl = configuration.GetConnectionStringOrThrow("meilisearch");
 
             builder.RegisterModule(new MongoDbModule(mongoUrl, loggerFactory));
-            builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
+            // postgres is optional
+            if (postgresUrl != null)
+                builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
+
             builder.RegisterModule(new MeilisearchModule(meilisearchUrl, "phys-lib", loggerFactory));
+
             builder.RegisterModule<SettingsModule>();
 
             // files
+            // local file provider is optional
             var worksFilesPath = configuration.GetConnectionString("works-files");
             if (worksFilesPath != null)
                 builder.Register(c => new LocalFileStorage("local", new DirectoryInfo(worksFilesPath), c.Resolve<ILogger<LocalFileStorage>>()))
