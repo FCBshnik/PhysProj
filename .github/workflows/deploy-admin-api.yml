@@ -35,7 +35,7 @@ jobs:
             ssh-agent -a $SSH_AUTH_SOCK > /dev/null
             ssh-add $SSH_PATH/ssh_key
         - name: Create docker context
-          run: docker context create srv-gateway --docker "host=ssh://$SRV_USER@$SRV_HOST"
+          run: docker context create physproj --docker "host=ssh://$SRV_USER@$SRV_HOST"
         - name: Build and deploy docker image
           run: bash ./admin-api/deploy.sh
           working-directory: ${{ github.workspace }}/cicd/envs/public/srv-app/
