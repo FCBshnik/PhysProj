@@ -15,7 +15,7 @@ namespace Phys.Lib.Cli
 
         private static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory, "lib-cli");
+            NLogConfig.Configure(loggerFactory);
             AppUtils.OnRun(loggerFactory);
 
             var parser = new Parser(s => s.IgnoreUnknownArguments = true);

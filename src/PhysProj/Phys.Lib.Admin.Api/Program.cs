@@ -34,7 +34,7 @@ namespace Phys.Lib.Admin.Api
 
         public static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory, "lib-admin");
+            NLogConfig.Configure(loggerFactory);
             AppUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +43,9 @@ namespace Phys.Lib.Admin.Api
 
             var config = builder.Configuration;
             var urls = config.GetConnectionStringOrThrow("urls");
+            var elasticUrl = config.GetConnectionString("logs_elastic");
+            if (elasticUrl != null)
+                NLogConfig.AddElastic(loggerFactory, "lib-admin", elasticUrl);
 
             builder.WebHost.UseUrls(urls);
             builder.Logging.ClearProviders();

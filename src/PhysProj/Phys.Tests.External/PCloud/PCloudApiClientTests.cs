@@ -22,7 +22,7 @@ namespace Phys.Tests.External.PCloud
         public PCloudApiClientTests(ITestOutputHelper output)
         {
             this.output = output;
-            NLogConfig.Configure(loggerFactory, "tests-external");
+            NLogConfig.Configure(loggerFactory);
             DiagnosticListener.AllListeners.Subscribe(new HttpRequestsObserver(loggerFactory));
         }
 

@@ -21,7 +21,7 @@ namespace Phys.Lib.Tests.Integration
 
             try
             {
-                NLogConfig.Configure(loggerFactory, "tests-search");
+                NLogConfig.Configure(loggerFactory);
                 AppUtils.OnRun(loggerFactory);
                 Log("initializing");
                 Init().Wait();

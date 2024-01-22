@@ -15,7 +15,7 @@ namespace Phys.Tests.Queue
 
         public QueueTests()
         {
-            NLogConfig.Configure(loggerFactory, "tests-queues");
+            NLogConfig.Configure(loggerFactory);
             queue = CreateQueue();
         }
 

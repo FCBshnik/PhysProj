@@ -22,7 +22,7 @@ namespace Phys.Lib.Site.Api
 
         public static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory, "lib-site");
+            NLogConfig.Configure(loggerFactory);
             AppUtils.OnRun(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +31,9 @@ namespace Phys.Lib.Site.Api
 
             IConfiguration config = builder.Configuration;
             var urls = config.GetConnectionStringOrThrow("urls");
+            var elasticUrl = config.GetConnectionString("logs_elastic");
+            if (elasticUrl != null)
+                NLogConfig.AddElastic(loggerFactory, "lib-site", elasticUrl);
 
             builder.WebHost.UseUrls(urls);
 
