@@ -18,6 +18,7 @@ namespace Phys.Mongo.Settings
 
         private readonly Lazy<IMongoCollection<SettingsModel>> collection;
         private readonly ConcurrentDictionary<string, Type> settingsTypes = new ConcurrentDictionary<string, Type>();
+        private readonly ConcurrentDictionary<string, object> defaultValues = new ConcurrentDictionary<string, object>();
 
         public MongoSettings(string connectionString, string databaseName, string collectionName, ILogger<MongoSettings> log)
         {
@@ -51,13 +52,17 @@ namespace Phys.Mongo.Settings
 
         public object Get(string code)
         {
-            ArgumentNullException.ThrowIfNullOrEmpty(code);
+            ArgumentException.ThrowIfNullOrEmpty(code);
 
             var filter = Builders<SettingsModel>.Filter.Eq(s => s.Code, code);
 
             var settings = collection.Value.Find(filter).FirstOrDefault();
             if (settings == null)
-                throw new PhysException($"settings '{code}' not found");
+            {
+                settings = new SettingsModel { Code = code, Value = defaultValues[code].ToBsonDocument() };
+                collection.Value.InsertOne(settings);
+                log.LogInformation($"saved default settings '{code}'");
+            }
 
             return BsonSerializer.Deserialize(settings.Value, settingsTypes[code]);
         }
@@ -69,16 +74,12 @@ namespace Phys.Mongo.Settings
 
         public void Register<T>(string code, T defaultValue)
         {
-            ArgumentNullException.ThrowIfNullOrEmpty(code);
+            ArgumentException.ThrowIfNullOrEmpty(code);
             ArgumentNullException.ThrowIfNull(defaultValue);
 
             BsonClassMap.TryRegisterClassMap<T>(m => m.AutoMap());
 
-            var filter = Builders<SettingsModel>.Filter.Eq(s => s.Code, code);
-            var settings = collection.Value.Find(filter).FirstOrDefault();
-            if (settings == null)
-                collection.Value.InsertOne(new SettingsModel { Code = code, Value = defaultValue.ToBsonDocument() });
-
+            defaultValues.TryAdd(code, defaultValue);
             settingsTypes.TryAdd(code, typeof(T));
 
             log.LogInformation($"registered settings '{code}' of type {typeof(T)}");
@@ -86,7 +87,7 @@ namespace Phys.Mongo.Settings
 
         public void Set(string code, object value)
         {
-            ArgumentNullException.ThrowIfNullOrEmpty(code);
+            ArgumentException.ThrowIfNullOrEmpty(code);
             ArgumentNullException.ThrowIfNull(value);
 
             var type = settingsTypes[code];
