@@ -7,12 +7,38 @@ using NLog.Common;
 using NLog.Targets.ElasticSearch;
 using NLog.Targets.Wrappers;
 using NLog.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using LogLevel = NLog.LogLevel;
 
 namespace Phys.NLog
 {
     public static class NLogConfig
     {
-        public static void Configure(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory, string appName, string elasticUrl = "http://192.168.1.107:9200/")
+        public static void AddElastic(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory, string appName, string elasticUrl)
+        {
+            loggerFactory.CreateLogger(typeof(NLogConfig).Name).LogInformation($"add elastic target '{elasticUrl}'");
+
+            var layout = CreateLayout();
+            var elasticTarget = new ElasticSearchTarget
+            {
+                Uri = elasticUrl,
+                Index = $"phys-{appName}-" + "${date:universalTime=true:format=yyyy-MM-dd}",
+                DocumentType = null, // deprecated since 8 version of elasticsearch, if not set to null than elasticsearch respond with error
+                IncludeAllProperties = true,
+                IncludeDefaultFields = true,
+                EnableJsonLayout = true,
+                Layout = layout,
+                DisableCertificateValidation = true,
+            };
+            AddTarget(LogManager.Configuration, new BufferingTargetWrapper(new AsyncTargetWrapper(elasticTarget))
+            {
+                BufferSize = 10,
+                OverflowAction = BufferingTargetWrapperOverflowAction.Flush,
+                FlushTimeout = 5 * 60 * 1000,
+            });
+        }
+
+        public static void Configure(ILoggerFactory loggerFactory)
         {
             loggerFactory.AddNLog(new NLogProviderOptions
             {
@@ -26,7 +52,27 @@ namespace Phys.NLog
             );
 
             var config = new LoggingConfiguration();
+            var layout = CreateLayout();
 
+            AddTarget(config, new ColoredConsoleTarget("console")
+            {
+                Layout = layout,
+            });
+            AddTarget(config, new FileTarget
+            {
+                FileName = "./data/logs/${shortdate}.txt",
+                Layout = layout,
+                KeepFileOpen = true,
+                ConcurrentWrites = false,
+            });
+
+            InternalLogger.LogLevel = LogLevel.Info;
+            InternalLogger.LogFile = "nlog.internal.txt";
+            LogManager.Configuration = config;
+        }
+
+        private static JsonLayout CreateLayout()
+        {
             var layout = new JsonLayout { IncludeEventProperties = true };
             layout.Attributes.Add(new JsonAttribute { Name = "src", Layout = "${logger}" });
             layout.Attributes.Add(new JsonAttribute { Name = "time", Layout = "${longdate_utc}" });
@@ -47,40 +93,7 @@ namespace Phys.NLog
                     }
                 }
             });
-
-            AddTarget(config, new ColoredConsoleTarget("console")
-            {
-                Layout = layout,
-            });
-            AddTarget(config, new FileTarget
-            {
-                FileName = "./data/logs/${shortdate}.txt",
-                Layout = layout,
-                KeepFileOpen = true,
-                ConcurrentWrites = false,
-            });
-
-            var elasticTarget = new ElasticSearchTarget
-            {
-                Uri = elasticUrl,
-                Index = $"phys-{appName}-" + "${date:universalTime=true:format=yyyy-MM-dd}",
-                DocumentType = null, // deprecated since 8 version of elasticsearch, if not set to null than elasticsearch respond with error
-                IncludeAllProperties = true,
-                IncludeDefaultFields = true,
-                EnableJsonLayout = true,
-                Layout = layout,
-                DisableCertificateValidation = true,
-            };
-            AddTarget(config, new BufferingTargetWrapper(new AsyncTargetWrapper(elasticTarget))
-            {
-                BufferSize = 10,
-                OverflowAction = BufferingTargetWrapperOverflowAction.Flush,
-                FlushTimeout = 5 * 60 * 1000,
-            });
-
-            InternalLogger.LogLevel = LogLevel.Info;
-            InternalLogger.LogFile = "nlog.internal.txt";
-            LogManager.Configuration = config;
+            return layout;
         }
 
         private static void AddTarget(LoggingConfiguration config, Target target)
