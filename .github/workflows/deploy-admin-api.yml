@@ -20,7 +20,7 @@ jobs:
         - name: Update appsettings.json
           uses: cschleiden/replace-tokens@v1
           with:
-            files: '$GITHUB_WORKSPACE/cicd/envs/public/srv-app/admin-api/settings/appsettings.json'
+            files: '${{ github.workspace }}/cicd/envs/public/srv-app/admin-api/settings/appsettings.json'
           env:
             MONGO: ${{ env.SRV_HOST }}
         - name: Show appsettings.json
