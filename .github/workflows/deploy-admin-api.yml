@@ -18,9 +18,15 @@ jobs:
         - name: Check out repository
           uses: actions/checkout@v3
         - name: Update appsettings.json
+          uses: cschleiden/replace-tokens@v1
+          with:
+            files: '$GITHUB_WORKSPACE/cicd/envs/public/srv-app/admin-api/settings/appsettings.json'
+          env:
+            MONGO: ${{ env.SRV_HOST }}
+        - name: Show appsettings.json
           run: |
-            appsettings="$(cat $GITHUB_WORKSPACE/cicd/envs/public/srv-app/admin-api/settings/appsettings.json)"
-            echo $appsettings
+            appsettingsJson="$(cat $GITHUB_WORKSPACE/cicd/envs/public/srv-app/admin-api/settings/appsettings.json)"
+            echo $appsettingsJson
         # - name: Setup dotnet ${{ matrix.dotnet-version }}
         #   uses: actions/setup-dotnet@v3
         #   with:
