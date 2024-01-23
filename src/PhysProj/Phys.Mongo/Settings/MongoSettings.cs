@@ -3,7 +3,6 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
-using Phys.Shared;
 using Phys.Shared.Settings;
 using System.Collections.Concurrent;
 
@@ -11,7 +10,7 @@ namespace Phys.Mongo.Settings
 {
     public class MongoSettings : ISettings
     {
-        private readonly string connectionString;
+        private readonly MongoUrl url;
         private readonly string databaseName;
         private readonly string collectionName;
         private readonly ILogger<MongoSettings> log;
@@ -20,9 +19,9 @@ namespace Phys.Mongo.Settings
         private readonly ConcurrentDictionary<string, Type> settingsTypes = new ConcurrentDictionary<string, Type>();
         private readonly ConcurrentDictionary<string, object> defaultValues = new ConcurrentDictionary<string, object>();
 
-        public MongoSettings(string connectionString, string databaseName, string collectionName, ILogger<MongoSettings> log)
+        public MongoSettings(MongoUrl url, string databaseName, string collectionName, ILogger<MongoSettings> log)
         {
-            this.connectionString = connectionString;
+            this.url = url;
             this.databaseName = databaseName;
             this.collectionName = collectionName;
             this.log = log;
@@ -32,11 +31,11 @@ namespace Phys.Mongo.Settings
 
         private IMongoCollection<SettingsModel> Create()
         {
-            log.LogInformation($"creating settings: server '{connectionString}', database '{databaseName}'");
+            log.LogInformation($"creating settings: server '{url.Server}', database '{databaseName}'");
 
             BsonClassMap.TryRegisterClassMap<SettingsModel>(m => m.AutoMap());
 
-            var client = new MongoClient(new MongoUrl(connectionString));
+            var client = new MongoClient(url);
             var db = client.GetDatabase(databaseName);
             var collection = db.GetCollection<SettingsModel>(collectionName);
             log.LogInformation($"created settings: collection '{collection.CollectionNamespace.CollectionName}'");

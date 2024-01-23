@@ -18,14 +18,14 @@ namespace Phys.Lib.Autofac
     {
         private const string dbTypeName = "mongo";
 
-        private readonly string connectionString;
+        private readonly MongoUrl url;
         private readonly ILogger log;
 
-        public MongoDbModule(string connectionString, ILoggerFactory loggerFactory)
+        public MongoDbModule(MongoUrl url, ILoggerFactory loggerFactory)
         {
-            ArgumentNullException.ThrowIfNull(connectionString);
+            ArgumentNullException.ThrowIfNull(url);
 
-            this.connectionString = connectionString;
+            this.url = url;
             log = loggerFactory.CreateLogger<MongoDbModule>();
         }
 
@@ -33,10 +33,10 @@ namespace Phys.Lib.Autofac
         {
             MongoConfig.ConfigureConventions();
 
-            log.LogInformation($"mongo connection: {connectionString}");
-            var client = new MongoClient(new MongoUrl(connectionString));
+            log.LogInformation($"mongo connection: {url.Server}");
+            var client = new MongoClient(url);
 
-            builder.Register(_ => client.GetDatabase("phys-lib"))
+            builder.Register(_ => client.GetDatabase(url.DatabaseName ?? "phys-lib"))
                 .AsImplementedInterfaces()
                 .SingleInstance();
 

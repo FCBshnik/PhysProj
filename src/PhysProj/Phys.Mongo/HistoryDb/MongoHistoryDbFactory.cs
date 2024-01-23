@@ -10,20 +10,20 @@ namespace Phys.Mongo.HistoryDb
 {
     public class MongoHistoryDbFactory : IHistoryDbFactory
     {
-        private readonly string connectionString;
+        private readonly MongoUrl url;
         private readonly string databaseName;
         private readonly string collectionNamePrefix;
         private readonly ILoggerFactory loggerFactory;
         private readonly ILogger<MongoHistoryDbFactory> log;
 
-        public MongoHistoryDbFactory(string connectionString, string databaseName, string collectionNamePrefix, ILoggerFactory loggerFactory)
+        public MongoHistoryDbFactory(MongoUrl url, string databaseName, string collectionNamePrefix, ILoggerFactory loggerFactory)
         {
-            ArgumentNullException.ThrowIfNull(nameof(connectionString));
+            ArgumentNullException.ThrowIfNull(nameof(url));
             ArgumentNullException.ThrowIfNull(nameof(databaseName));
             ArgumentNullException.ThrowIfNull(nameof(collectionNamePrefix));
             ArgumentNullException.ThrowIfNull(nameof(loggerFactory));
 
-            this.connectionString = connectionString;
+            this.url = url;
             this.databaseName = databaseName;
             this.collectionNamePrefix = collectionNamePrefix;
             this.loggerFactory = loggerFactory;
@@ -33,7 +33,7 @@ namespace Phys.Mongo.HistoryDb
 
         public IHistoryDb<T> Create<T>(string name) where T : IHistoryDbo
         {
-            log.LogInformation($"creating objects log '{name}': server '{connectionString}', database '{databaseName}'");
+            log.LogInformation($"creating objects log '{name}': server '{url.Server}', database '{databaseName}'");
 
             BsonClassMap.TryRegisterClassMap<T>(m =>
             {
@@ -43,7 +43,7 @@ namespace Phys.Mongo.HistoryDb
                     .SetSerializer(new StringSerializer(BsonType.ObjectId));
             });
 
-            var client = new MongoClient(new MongoUrl(connectionString));
+            var client = new MongoClient(url);
             var db = client.GetDatabase(databaseName);
             var collection = db.GetCollection<T>($"{collectionNamePrefix}{name}");
             var objectLog = new MongoHistoryDb<T>(collection);

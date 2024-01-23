@@ -11,6 +11,8 @@ using Phys.Files.PCloud;
 using Refit;
 using Phys.Lib.Core;
 using Phys.Mongo.Settings;
+using MongoDB.Driver.Core.Configuration;
+using MongoDB.Driver;
 
 namespace Phys.Lib.Autofac
 {
@@ -27,7 +29,7 @@ namespace Phys.Lib.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            var mongoUrl = configuration.GetConnectionStringOrThrow("mongo");
+            var mongoUrl = new MongoUrl(configuration.GetConnectionStringOrThrow("mongo"));
             var postgresUrl = configuration.GetConnectionString("postgres");
             var rabbitUrl = configuration.GetConnectionStringOrThrow("rabbitmq");
             var meilisearchUrl = configuration.GetConnectionStringOrThrow("meilisearch");
@@ -53,11 +55,11 @@ namespace Phys.Lib.Autofac
                 .As<IFileStorage>().SingleInstance();
 
             // history
-            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "phys-lib", "history-", loggerFactory))
+            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, mongoUrl.DatabaseName ?? "phys-lib", "history-", loggerFactory))
                 .SingleInstance().AsImplementedInterfaces();
 
             // settings
-            builder.Register(c => new MongoSettings(mongoUrl, "phys-lib", "settings", loggerFactory.CreateLogger<MongoSettings>()))
+            builder.Register(c => new MongoSettings(mongoUrl, mongoUrl.DatabaseName ?? "phys-lib", "settings", loggerFactory.CreateLogger<MongoSettings>()))
                 .SingleInstance().AsImplementedInterfaces();
 
             // rabbit
