@@ -58,7 +58,8 @@ namespace Phys.Mongo.Settings
             var settings = collection.Value.Find(filter).FirstOrDefault();
             if (settings == null)
             {
-                settings = new SettingsModel { Code = code, Value = defaultValues[code].ToBsonDocument() };
+                var defaultValue = defaultValues[code];
+                settings = new SettingsModel { Code = code, Value = defaultValue.ToBsonDocument(defaultValue.GetType()) };
                 collection.Value.InsertOne(settings);
                 log.LogInformation($"saved default settings '{code}'");
             }
