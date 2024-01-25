@@ -11,10 +11,11 @@ namespace Phys.Lib.Mongo.Works
 {
     internal class WorksDb : Collection<WorkModel>, IWorksDb
     {
-        public string Name => "mongo";
+        public string Name { get; }
 
-        public WorksDb(Lazy<IMongoCollection<WorkModel>> collection, ILogger<WorksDb> logger) : base(collection, logger)
+        public WorksDb(Lazy<IMongoCollection<WorkModel>> collection, string name, ILogger<WorksDb> logger) : base(collection, logger)
         {
+            Name = name;
         }
 
         protected override void Init(IMongoCollection<WorkModel> collection)
@@ -39,7 +40,7 @@ namespace Phys.Lib.Mongo.Works
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            collection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
+            MongoCollection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
         }
 
         public List<WorkDbo> Find(WorksDbQuery query)
@@ -71,7 +72,7 @@ namespace Phys.Lib.Mongo.Works
 
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(WorkMapper.Map).ToList();
+            return MongoCollection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(WorkMapper.Map).ToList();
         }
 
         public void Update(string code, WorkDbUpdate work)
@@ -120,7 +121,7 @@ namespace Phys.Lib.Mongo.Works
             if (work.DeleteFile.HasValue())
                 update = update.Pull(i => i.FilesCodes, work.DeleteFile);
 
-            if (collection.UpdateOne(filter, update).MatchedCount == 0)
+            if (MongoCollection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"work '{code}' update failed");
         }
 

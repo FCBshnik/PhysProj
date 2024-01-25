@@ -57,7 +57,7 @@ namespace Phys.Lib.Tests.Api.Admin
             var builder = new ContainerBuilder();
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new LoggerModule(loggerFactory));
-            builder.RegisterModule(new MongoDbModule(GetMongoUrl(), loggerFactory));
+            builder.RegisterModule(new MongoDbModule(GetMongoUrl(), "test", loggerFactory));
             builder.RegisterModule(new CoreModule());
             return builder.Build();
         }

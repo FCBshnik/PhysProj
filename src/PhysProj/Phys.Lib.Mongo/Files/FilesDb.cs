@@ -10,10 +10,11 @@ namespace Phys.Lib.Mongo.Files
 {
     internal class FilesDb : Collection<FileModel>, IFilesDb, IDbReader<FileDbo>
     {
-        public string Name => "mongo";
+        public string Name { get; }
 
-        public FilesDb(Lazy<IMongoCollection<FileModel>> collection, ILogger<FilesDb> logger) : base(collection, logger)
+        public FilesDb(Lazy<IMongoCollection<FileModel>> collection, string name, ILogger<FilesDb> logger) : base(collection, logger)
         {
+            Name = name;
         }
 
         protected override void Init(IMongoCollection<FileModel> collection)
@@ -39,7 +40,7 @@ namespace Phys.Lib.Mongo.Files
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            collection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
+            MongoCollection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
         }
 
         public List<FileDbo> Find(FilesDbQuery query)
@@ -63,7 +64,7 @@ namespace Phys.Lib.Mongo.Files
 
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(FileMapper.Map).ToList();
+            return MongoCollection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(FileMapper.Map).ToList();
         }
 
         public void Update(string code, FileDbUpdate file)
@@ -79,7 +80,7 @@ namespace Phys.Lib.Mongo.Files
             if (file.DeleteLink != null)
                 update = update.PullFilter(i => i.Links, l => l.Type == file.DeleteLink.StorageCode && l.Path == file.DeleteLink.FileId);
 
-            if (collection.UpdateOne(filter, update).MatchedCount == 0)
+            if (MongoCollection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"file '{code}' update failed");
         }
 

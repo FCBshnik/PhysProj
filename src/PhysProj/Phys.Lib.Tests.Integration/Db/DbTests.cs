@@ -42,11 +42,10 @@ namespace Phys.Lib.Tests.Integration.Db
             using var container = BuildContainer();
             using var lifetimeScope = container.BeginLifetimeScope();
             var users = lifetimeScope.Resolve<IUsersDb>();
-            var usersReader = lifetimeScope.Resolve<IDbReader<UserDbo>>();
             var authors = lifetimeScope.Resolve<IAuthorsDb>();
             var works = lifetimeScope.Resolve<IWorksDb>();
             var files = lifetimeScope.Resolve<IFilesDb>();
-            new UsersTests(users, usersReader).Run();
+            new UsersTests(users).Run();
             new AuthorsTests(authors).Run();
             new FilesTests(files).Run();
             new WorksTests(works, authors, files).Run();

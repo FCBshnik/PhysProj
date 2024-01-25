@@ -17,7 +17,7 @@ namespace Phys.Lib.Mongo
         private readonly Lazy<IMongoCollection<TModel>> lazyCollection;
         private bool initialized;
 
-        protected IMongoCollection<TModel> collection
+        protected IMongoCollection<TModel> MongoCollection
         {
             get
             {
@@ -51,13 +51,13 @@ namespace Phys.Lib.Mongo
                 filter = FilterBuilder.And(filter, FilterBuilder.Gt(u => u.Id, query.Cursor));
             var sort = SortBuilder.Ascending(i => i.Id);
 
-            var models = collection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
+            var models = MongoCollection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
             return new DbReaderResult<TDbo>(models.Select(map).ToList(), models.LastOrDefault()?.Id);
         }
 
         protected TModel Insert(TModel item)
         {
-            collection.InsertOne(item);
+            MongoCollection.InsertOne(item);
             return item;
         }
 

@@ -10,6 +10,7 @@ using Phys.Lib.Core.Migration;
 using Shouldly;
 using Phys.Lib.Core.Files;
 using Phys.Lib.Tests.Db;
+using MongoDB.Driver;
 
 namespace Phys.Lib.Tests.Integration.Migration
 {
@@ -59,9 +60,11 @@ namespace Phys.Lib.Tests.Integration.Migration
         {
             base.BuildContainer(builder);
 
+            var mongoUrl = new MongoUrl(mongo.GetConnectionString());
+
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
 
-            builder.RegisterModule(new MongoDbModule(mongo.GetConnectionString(), loggerFactory));
+            builder.RegisterModule(new MongoDbModule(mongoUrl, "test", loggerFactory));
             builder.RegisterModule(new CoreModule());
 
             builder.Register(c => new LocalFileStorage("local-1", new DirectoryInfo("data/files-1"), c.Resolve<ILogger<LocalFileStorage>>()))
@@ -69,7 +72,7 @@ namespace Phys.Lib.Tests.Integration.Migration
             builder.Register(c => new LocalFileStorage("local-2", new DirectoryInfo("data/files-2"), c.Resolve<ILogger<LocalFileStorage>>()))
                     .As<IFileStorage>().SingleInstance();
 
-            builder.Register(c => new MongoHistoryDbFactory(mongo.GetConnectionString(), "physlib", "history-", loggerFactory))
+            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "physlib", "history-", loggerFactory))
                 .SingleInstance()
                 .AsImplementedInterfaces();
         }

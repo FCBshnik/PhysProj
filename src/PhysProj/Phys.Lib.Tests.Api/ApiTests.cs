@@ -1,5 +1,6 @@
 ﻿using CliWrap;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Phys.NLog;
@@ -61,7 +62,7 @@ namespace Phys.Lib.Tests.Api
             http.Dispose();
         }
 
-        protected string GetMongoUrl() => mongo.GetConnectionString();
+        protected MongoUrl GetMongoUrl() => new MongoUrl(mongo.GetConnectionString());
         protected string GetPostgresUrl() => postgres.GetConnectionString();
 
         protected DirectoryInfo StartApp(string url, FileInfo projectPath)
@@ -81,7 +82,7 @@ namespace Phys.Lib.Tests.Api
             // override connection strings
             var srcSettingsFile = new FileInfo(Path.Combine(solutionDir.FullName, "appsettings.lib.dev.json"));
             var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(srcSettingsFile.FullName));
-            appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl();
+            appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl().ToString();
             appSettings!["ConnectionStrings"]!["postgres"] = GetPostgresUrl();
             appSettings!["ConnectionStrings"]!["db"] = "mongo";
             appSettings!["ConnectionStrings"]!["urls"] = url;

@@ -11,8 +11,9 @@ using Phys.Files.PCloud;
 using Refit;
 using Phys.Lib.Core;
 using Phys.Mongo.Settings;
-using MongoDB.Driver.Core.Configuration;
 using MongoDB.Driver;
+using Phys.Shared;
+using System.Xml.Linq;
 
 namespace Phys.Lib.Autofac
 {
@@ -29,12 +30,17 @@ namespace Phys.Lib.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            var mongoUrl = new MongoUrl(configuration.GetConnectionStringOrThrow("mongo"));
+            var mongoNames = configuration.GetConnectionStringOrThrow("mongo").Split(",");
+            if (mongoNames.Length < 1)
+                throw new PhysException($"connection string 'mongo' must contain at least one mongo endpoint name");
+
+            var mongoUrl = new MongoUrl(configuration.GetConnectionStringOrThrow(mongoNames[0]));
             var postgresUrl = configuration.GetConnectionString("postgres");
             var rabbitUrl = configuration.GetConnectionStringOrThrow("rabbitmq");
             var meilisearchUrl = configuration.GetConnectionStringOrThrow("meilisearch");
 
-            builder.RegisterModule(new MongoDbModule(mongoUrl, loggerFactory));
+            foreach (var mongoName in mongoNames)
+                builder.RegisterModule(new MongoDbModule(new MongoUrl(configuration.GetConnectionStringOrThrow(mongoName)), mongoName, loggerFactory));
             // postgres is optional
             if (postgresUrl != null)
                 builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));

@@ -11,8 +11,9 @@ namespace Phys.Lib.Mongo.Authors
 {
     internal class AuthorsDb : Collection<AuthorModel>, IAuthorsDb, IDbReader<AuthorDbo>
     {
-        public AuthorsDb(Lazy<IMongoCollection<AuthorModel>> collection, ILogger<AuthorsDb> logger) : base(collection, logger)
+        public AuthorsDb(Lazy<IMongoCollection<AuthorModel>> collection, string name, ILogger<AuthorsDb> logger) : base(collection, logger)
         {
+            Name = name;
         }
 
         protected override void Init(IMongoCollection<AuthorModel> collection)
@@ -20,7 +21,7 @@ namespace Phys.Lib.Mongo.Authors
             collection.Indexes.CreateOne(new CreateIndexModel<AuthorModel>(IndexBuilder.Ascending(i => i.Code), new CreateIndexOptions { Unique = true }));
         }
 
-        public string Name => "mongo";
+        public string Name { get; }
 
         public void Create(string code)
         {
@@ -56,7 +57,7 @@ namespace Phys.Lib.Mongo.Authors
 
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(AuthorMapper.Map).ToList();
+            return MongoCollection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(AuthorMapper.Map).ToList();
         }
 
         public void Update(string code, AuthorDbUpdate author)
@@ -82,7 +83,7 @@ namespace Phys.Lib.Mongo.Authors
             if (author.DeleteInfo != null)
                 update = update.PullFilter(i => i.Infos, i => i.Language == author.DeleteInfo);
 
-            if (collection.UpdateOne(filter, update).MatchedCount == 0)
+            if (MongoCollection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"author '{code}' update failed");
         }
 
@@ -90,7 +91,7 @@ namespace Phys.Lib.Mongo.Authors
         {
             ArgumentNullException.ThrowIfNull(code);
 
-            collection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
+            MongoCollection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
         }
 
         IDbReaderResult<AuthorDbo> IDbReader<AuthorDbo>.Read(DbReaderQuery query)

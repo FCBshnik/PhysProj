@@ -8,13 +8,14 @@ using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Users
 {
-    internal class UsersDb : Collection<UserModel>, IUsersDb, IDbReader<UserDbo>
+    internal class UsersDb : Collection<UserModel>, IUsersDb
     {
-        public UsersDb(Lazy<IMongoCollection<UserModel>> collection, ILogger<UsersDb> logger) : base(collection, logger)
+        public UsersDb(Lazy<IMongoCollection<UserModel>> collection, string name, ILogger<UsersDb> logger) : base(collection, logger)
         {
+            Name = name;
         }
 
-        public string Name => "mongo";
+        public string Name { get; }
 
         protected override void Init(IMongoCollection<UserModel> collection)
         {
@@ -50,7 +51,7 @@ namespace Phys.Lib.Mongo.Users
             if (user.PasswordHash.HasValue())
                 update = update.Set(i => i.PasswordHash, user.PasswordHash);
 
-            if (collection.UpdateOne(filter, update).MatchedCount == 0)
+            if (MongoCollection.UpdateOne(filter, update).MatchedCount == 0)
                 throw new PhysDbException($"user '{name}' update failed");
         }
 
@@ -63,7 +64,7 @@ namespace Phys.Lib.Mongo.Users
                 filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.NameLowerCase, query.NameLowerCase));
             var sort = SortBuilder.Descending(i => i.Id);
 
-            return collection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(UserMapper.Map).ToList();
+            return MongoCollection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(UserMapper.Map).ToList();
         }
 
         IDbReaderResult<UserDbo> IDbReader<UserDbo>.Read(DbReaderQuery query)

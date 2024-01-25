@@ -7,6 +7,7 @@ using Shouldly;
 using Testcontainers.MongoDb;
 using Phys.Lib.Autofac;
 using Phys.Lib.Tests.Db;
+using MongoDB.Driver;
 
 namespace Phys.Lib.Tests.Integration.Db
 {
@@ -65,9 +66,10 @@ namespace Phys.Lib.Tests.Integration.Db
         protected override void Register(ContainerBuilder builder)
         {
             base.Register(builder);
-            builder.RegisterModule(new MongoDbModule(mongo.GetConnectionString(), loggerFactory));
 
-            builder.Register(c => new MongoHistoryDbFactory(mongo.GetConnectionString(), "physlib", "history-", loggerFactory))
+            var mongoUrl = new MongoUrl(mongo.GetConnectionString());
+            builder.RegisterModule(new MongoDbModule(mongoUrl, "test", loggerFactory));
+            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "physlib", "history-", loggerFactory))
                 .SingleInstance()
                 .AsImplementedInterfaces();
         }

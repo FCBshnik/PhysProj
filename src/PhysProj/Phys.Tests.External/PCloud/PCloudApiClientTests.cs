@@ -59,7 +59,7 @@ namespace Phys.Tests.External.PCloud
             var folder = response.Metadata;
             folder.Should().NotBeNull();
             folder.Folderid.Should().BeGreaterThan(0);
-            var file = folder!.Contents.FirstOrDefault(c => !c.Isfolder);
+            var file = folder!.Contents.First(c => !c.Isfolder);
             file.Name.Should().NotBeEmpty();
             file.Fileid.Should().BeGreaterThan(0);
             file.Size.Should().BeGreaterThan(0);

@@ -34,8 +34,8 @@ namespace Phys.Lib.Tests.Integration.Migration
         }
 
         [Theory]
-        [InlineData("mongo", "postgres")]
-        [InlineData("postgres", "mongo")]
+        [InlineData("mongo-test", "postgres")]
+        [InlineData("postgres", "mongo-test")]
         public void Tests(string source, string destination)
         {
             using var lifetimeScope = container.BeginLifetimeScope();
@@ -148,12 +148,13 @@ namespace Phys.Lib.Tests.Integration.Migration
         {
             base.BuildContainer(builder);
 
+            var mongoUrl = new MongoUrl(mongo.GetConnectionString());
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new PostgresDbModule(postgres.GetConnectionString(), loggerFactory));
-            builder.RegisterModule(new MongoDbModule(mongo.GetConnectionString(), loggerFactory));
+            builder.RegisterModule(new MongoDbModule(mongoUrl, "test", loggerFactory));
             builder.RegisterModule(new CoreModule());
 
-            builder.Register(c => new MongoHistoryDbFactory(mongo.GetConnectionString(), "physlib", "history-", loggerFactory))
+            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "physlib", "history-", loggerFactory))
                 .SingleInstance()
                 .AsImplementedInterfaces();
         }

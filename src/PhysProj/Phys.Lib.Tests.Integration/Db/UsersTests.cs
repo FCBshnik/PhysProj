@@ -7,12 +7,10 @@ namespace Phys.Lib.Tests.Integration.Db
     internal class UsersTests
     {
         private readonly IUsersDb db;
-        private readonly IDbReader<UserDbo> usersReader;
 
-        public UsersTests(IUsersDb db, IDbReader<UserDbo> usersReader)
+        public UsersTests(IUsersDb db)
         {
             this.db = db;
-            this.usersReader = usersReader;
         }
 
         public void Run()
@@ -77,7 +75,7 @@ namespace Phys.Lib.Tests.Integration.Db
 
             do
             {
-                res = usersReader.Read(new DbReaderQuery(limit, res?.Cursor));
+                res = db.Read(new DbReaderQuery(limit, res?.Cursor));
                 actualNames.AddRange(res.Values.Select(u => u.Name));
             } while (!res.IsCompleted);
 

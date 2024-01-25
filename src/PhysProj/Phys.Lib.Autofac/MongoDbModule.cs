@@ -1,8 +1,10 @@
 ﻿using Autofac;
+using Autofac.Core;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
+using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Mongo;
@@ -16,16 +18,18 @@ namespace Phys.Lib.Autofac
 {
     public class MongoDbModule : Module
     {
-        private const string dbTypeName = "mongo";
-
         private readonly MongoUrl url;
+        private readonly string name;
         private readonly ILogger log;
 
-        public MongoDbModule(MongoUrl url, ILoggerFactory loggerFactory)
+        public MongoDbModule(MongoUrl url, string name, ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(url);
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(loggerFactory);
 
             this.url = url;
+            this.name = name;
             log = loggerFactory.CreateLogger<MongoDbModule>();
         }
 
@@ -33,29 +37,32 @@ namespace Phys.Lib.Autofac
         {
             MongoConfig.ConfigureConventions();
 
-            log.LogInformation($"mongo connection: {url.Server}");
+            log.LogInformation($"mongo '{name}' server: {url.Server}");
             var client = new MongoClient(url);
 
             builder.Register(_ => client.GetDatabase(url.DatabaseName ?? "phys-lib"))
-                .AsImplementedInterfaces()
+                .Named<IMongoDatabase>(name)
                 .SingleInstance();
 
-            RegisterCollection<UserModel, UsersDb, IUsersDb>(builder, "users");
-            RegisterCollection<AuthorModel, AuthorsDb, IAuthorsDb>(builder, "authors");
-            RegisterCollection<WorkModel, WorksDb, IWorksDb>(builder, "works");
-            RegisterCollection<FileModel, FilesDb, IFilesDb>(builder, "files");
+            RegisterCollection<UserModel, UserDbo, UsersDb, IUsersDb>(builder, "users");
+            RegisterCollection<AuthorModel, AuthorDbo, AuthorsDb, IAuthorsDb>(builder, "authors");
+            RegisterCollection<WorkModel, WorkDbo, WorksDb, IWorksDb>(builder, "works");
+            RegisterCollection<FileModel, FileDbo, FilesDb, IFilesDb>(builder, "files");
         }
 
-        private void RegisterCollection<TModel, ImplDb, IDb>(ContainerBuilder builder, string collectionName) where ImplDb : Collection<TModel>, IDb
+        private void RegisterCollection<TModel, TDbo, ImplDb, IDb>(ContainerBuilder builder, string collectionName) where ImplDb : Collection<TModel>, IDb
             where IDb : class
             where TModel : MongoModel
         {
-            builder.Register(c => c.Resolve<IMongoDatabase>().GetCollection<TModel>(collectionName))
-                .AsImplementedInterfaces()
+            builder.Register(c => c.ResolveNamed<IMongoDatabase>(name).GetCollection<TModel>(collectionName))
+                .Named<IMongoCollection<TModel>>(name)
                 .SingleInstance();
 
             builder.RegisterType<ImplDb>()
-                .As<IDb>().Named<IDb>(dbTypeName).AsImplementedInterfaces()
+                .As<IDb>().Named<IDb>(name)
+                .As<IDbReader<TDbo>>().Named<IDbReader<TDbo>>(name)
+                .WithParameter(ResolvedParameter.ForNamed<Lazy<IMongoCollection<TModel>>>(name))
+                .WithParameter(TypedParameter.From(name))
                 .SingleInstance();
         }
     }
