@@ -8,46 +8,51 @@ namespace Phys.Lib.Core.Stats
 {
     internal class StatService : IStatService
     {
-        private readonly IWorksDb worksDb;
+        private readonly IEnumerable<IWorksDb> worksDbs;
         private readonly ILogger<StatService> log;
 
-        public StatService(IWorksDb worksDb, ILogger<StatService> log)
+        public StatService(IEnumerable<IWorksDb> worksDbs, ILogger<StatService> log)
         {
-            this.worksDb = worksDb;
+            this.worksDbs = worksDbs;
             this.log = log;
         }
 
-        public LibraryStatsModel GetLibraryStats()
+        public SystemStatsModel GetLibraryStats()
         {
-            var stats = new LibraryStatsModel();
+            var stats = new SystemStatsModel();
 
-            IDbReaderResult<WorkDbo> result = null!;
-
-            do
+            foreach (var worksDb in worksDbs)
             {
-                result = worksDb.Read(new DbReaderQuery(100, result?.Cursor));
-                foreach (var work in result.Values)
+                var dbStats = new DbStatsModel { Name = worksDb.Name, Library = new LibraryStatsModel() };
+                stats.Dbs.Add(dbStats);
+                IDbReaderResult<WorkDbo> result = null!;
+
+                do
                 {
-                    var total = stats.Works.Total;
-                    var lang = stats.Works.PerLanguage.GetOrAdd(work.Language ?? "none", _ => new WorksStatModel.StatModel());
-
-                    total.Count++;
-                    lang.Count++;
-                    if (work.FilesCodes.Count > 0)
+                    result = worksDb.Read(new DbReaderQuery(100, result?.Cursor));
+                    foreach (var work in result.Values)
                     {
-                        total.CountWithFiles++;
-                        lang.CountWithFiles++;
-                    }
+                        var total = dbStats.Library.Works.Total;
+                        var lang = dbStats.Library.Works.PerLanguage.GetOrAdd(work.Language ?? "none", _ => new WorksStatModel.StatModel());
 
-                    if (!HasFileRefInHierarchy(work, new HashSet<string>()))
-                        stats.Works.Unreachable.Add(work.Code);
-                }
-            } while (!result.IsCompleted);
+                        total.Count++;
+                        lang.Count++;
+                        if (work.FilesCodes.Count > 0)
+                        {
+                            total.CountWithFiles++;
+                            lang.CountWithFiles++;
+                        }
+
+                        if (!HasFileRefInHierarchy(worksDb, work, new HashSet<string>()))
+                            dbStats.Library.Works.Unreachable.Add(work.Code);
+                    }
+                } while (!result.IsCompleted);
+            }
 
             return stats;
         }
 
-        private bool HasFileRefInHierarchy(WorkDbo work, HashSet<string> visited)
+        private bool HasFileRefInHierarchy(IWorksDb db, WorkDbo work, HashSet<string> visited)
         {
             if (visited.Contains(work.Code))
                 return false;
@@ -62,24 +67,24 @@ namespace Phys.Lib.Core.Stats
 
             if (work.OriginalCode != null)
             {
-                var originalWork = worksDb.Find(new WorksDbQuery { Code = work.OriginalCode }).Single();
-                if (HasFileRefInHierarchy(originalWork, visited))
+                var originalWork = db.Find(new WorksDbQuery { Code = work.OriginalCode }).Single();
+                if (HasFileRefInHierarchy(db, originalWork, visited))
                     return true;
             }
 
             foreach (var subWorkCode in work.SubWorksCodes)
             {
-                var subWork = worksDb.Find(new WorksDbQuery { Code = subWorkCode }).Single();
-                if (HasFileRefInHierarchy(subWork, visited))
+                var subWork = db.Find(new WorksDbQuery { Code = subWorkCode }).Single();
+                if (HasFileRefInHierarchy(db, subWork, visited))
                     return true;
             }
 
-            var translationWorks = worksDb.Find(new WorksDbQuery { OriginalCode = work.Code });
-            if (translationWorks.Any(i => HasFileRefInHierarchy(i, visited)))
+            var translationWorks = db.Find(new WorksDbQuery { OriginalCode = work.Code });
+            if (translationWorks.Any(i => HasFileRefInHierarchy(db, i, visited)))
                 return true;
 
-            var collectedWorks = worksDb.Find(new WorksDbQuery { SubWorkCode = work.Code });
-            if (collectedWorks.Any(i => HasFileRefInHierarchy(i, visited)))
+            var collectedWorks = db.Find(new WorksDbQuery { SubWorkCode = work.Code });
+            if (collectedWorks.Any(i => HasFileRefInHierarchy(db, i, visited)))
                 return true;
 
             return false;

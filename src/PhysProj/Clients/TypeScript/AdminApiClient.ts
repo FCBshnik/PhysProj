@@ -1121,7 +1121,7 @@ export class AdminApiClient {
     /**
      * @return OK
      */
-    getLibraryStats(): Promise<LibraryStatsModel> {
+    getLibraryStats(): Promise<SystemStatsModel> {
         let url_ = this.baseUrl + "/api/stats/library";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1137,14 +1137,14 @@ export class AdminApiClient {
         });
     }
 
-    protected processGetLibraryStats(response: Response): Promise<LibraryStatsModel> {
+    protected processGetLibraryStats(response: Response): Promise<SystemStatsModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = LibraryStatsModel.fromJS(resultData200);
+            result200 = SystemStatsModel.fromJS(resultData200);
             return result200;
             });
         } else if (status === 400) {
@@ -1159,7 +1159,7 @@ export class AdminApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<LibraryStatsModel>(null as any);
+        return Promise.resolve<SystemStatsModel>(null as any);
     }
 
     /**
@@ -2214,6 +2214,46 @@ export interface IAuthorModel {
     infos?: AuthorInfoModel[] | undefined;
 }
 
+export class DbStatsModel implements IDbStatsModel {
+    name?: string | undefined;
+    library?: LibraryStatsModel;
+
+    constructor(data?: IDbStatsModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.library = _data["library"] ? LibraryStatsModel.fromJS(_data["library"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): DbStatsModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DbStatsModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["library"] = this.library ? this.library.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IDbStatsModel {
+    name?: string | undefined;
+    library?: LibraryStatsModel;
+}
+
 export enum ErrorCode {
     LoginFailed = "login-failed",
     InvalidArgument = "invalid-argument",
@@ -3062,6 +3102,50 @@ export interface IStatsModel {
     updated?: number;
     skipped?: number;
     failed?: number;
+}
+
+export class SystemStatsModel implements ISystemStatsModel {
+    dbs?: DbStatsModel[] | undefined;
+
+    constructor(data?: ISystemStatsModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["dbs"])) {
+                this.dbs = [] as any;
+                for (let item of _data["dbs"])
+                    this.dbs!.push(DbStatsModel.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SystemStatsModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SystemStatsModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.dbs)) {
+            data["dbs"] = [];
+            for (let item of this.dbs)
+                data["dbs"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ISystemStatsModel {
+    dbs?: DbStatsModel[] | undefined;
 }
 
 export class UserModel implements IUserModel {

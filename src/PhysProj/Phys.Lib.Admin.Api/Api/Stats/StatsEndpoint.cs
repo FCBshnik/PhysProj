@@ -11,7 +11,7 @@ namespace Phys.Lib.Admin.Api.Api.Stats
             {
                 return statsService.GetLibraryStats();
             })
-            .ProducesResponse<LibraryStatsModel>("GetLibraryStats");
+            .ProducesResponse<SystemStatsModel>("GetLibraryStats");
         }
     }
 }

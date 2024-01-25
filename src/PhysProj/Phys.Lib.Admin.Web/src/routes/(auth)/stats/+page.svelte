@@ -2,7 +2,7 @@
     import { JSONEditor, Mode } from 'svelte-jsoneditor'
     import * as api from '$lib/services/ApiService';
 
-    let libStats:api.LibraryStatsModel | undefined;
+    let libStats:api.SystemStatsModel | undefined;
     let content = { json: {} };
 
     async function refresh() {

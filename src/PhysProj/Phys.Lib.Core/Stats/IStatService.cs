@@ -2,6 +2,6 @@
 {
     public interface IStatService
     {
-        LibraryStatsModel GetLibraryStats();
+        SystemStatsModel GetLibraryStats();
     }
 }
