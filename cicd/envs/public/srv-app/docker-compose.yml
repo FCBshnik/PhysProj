@@ -1,5 +1,5 @@
 services:
-  app:
+  worker-app:
     container_name: worker-app
     build: worker-app
     image: physproj-worker-app
