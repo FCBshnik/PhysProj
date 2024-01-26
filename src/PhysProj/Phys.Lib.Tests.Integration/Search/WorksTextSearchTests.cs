@@ -15,7 +15,7 @@ namespace Phys.Lib.Tests.Integration.Search
         protected override void BuildContainer(ContainerBuilder builder)
         {
             base.BuildContainer(builder);
-            builder.RegisterModule(new MeilisearchModule("http://192.168.2.67:7700/", "phys-lib-tests", loggerFactory));
+            builder.RegisterModule(new MeilisearchModule("http://192.168.2.67:7700/", "123456", "phys-lib-tests", loggerFactory));
         }
 
         [Fact]

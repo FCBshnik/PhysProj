@@ -38,6 +38,7 @@ namespace Phys.Lib.Autofac
             var postgresUrl = configuration.GetConnectionString("postgres");
             var rabbitUrl = configuration.GetConnectionStringOrThrow("rabbitmq");
             var meilisearchUrl = configuration.GetConnectionStringOrThrow("meilisearch");
+            var meilisearchMasterKey = configuration.GetConnectionStringOrThrow("meilisearch-master-key");
 
             foreach (var mongoName in mongoNames)
                 builder.RegisterModule(new MongoDbModule(new MongoUrl(configuration.GetConnectionStringOrThrow(mongoName)), mongoName, loggerFactory));
@@ -45,7 +46,7 @@ namespace Phys.Lib.Autofac
             if (postgresUrl != null)
                 builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
 
-            builder.RegisterModule(new MeilisearchModule(meilisearchUrl, "phys-lib", loggerFactory));
+            builder.RegisterModule(new MeilisearchModule(meilisearchUrl, meilisearchMasterKey, "phys-lib", loggerFactory));
 
             builder.RegisterModule<SettingsModule>();
 

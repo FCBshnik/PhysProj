@@ -12,9 +12,10 @@ namespace Phys.Lib.Autofac
         private readonly ILoggerFactory loggerFactory;
         private readonly ILogger log;
         private readonly string connectionString;
+        private readonly string masterKey;
         private readonly string indexPrefix;
 
-        public MeilisearchModule(string connectionString, string indexPrefix, ILoggerFactory loggerFactory)
+        public MeilisearchModule(string connectionString, string masterKey, string indexPrefix, ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(connectionString);
             ArgumentNullException.ThrowIfNull(indexPrefix);
@@ -22,6 +23,7 @@ namespace Phys.Lib.Autofac
 
             this.loggerFactory = loggerFactory;
             this.connectionString = connectionString;
+            this.masterKey = masterKey;
             this.indexPrefix = indexPrefix;
 
             log = loggerFactory.CreateLogger<MeilisearchModule>();
@@ -31,7 +33,7 @@ namespace Phys.Lib.Autofac
         {
             log.LogInformation($"meilisearch connection: {connectionString}");
 
-            var client = new MeilisearchClient(connectionString, "123456");
+            var client = new MeilisearchClient(connectionString, masterKey);
 
             builder.RegisterType<WorksTextSearch>()
                 .WithParameter(TypedParameter.From(client.Index($"{indexPrefix}-works")))
