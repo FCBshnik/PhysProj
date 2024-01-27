@@ -1,4 +1,4 @@
-name: deploy-admin-api
+name: deploy-worker-app
 
 on: workflow_dispatch
 
