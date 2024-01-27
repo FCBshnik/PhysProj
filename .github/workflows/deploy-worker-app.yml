@@ -1,0 +1,11 @@
+name: deploy-admin-api
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-app-dotnet.yml
+    with:
+      project-src-name: Phys.Lib.App
+      project-ci-name: worker-app
+    secrets: inherit
