@@ -24,7 +24,8 @@ jobs:
           env:
             MONGO: ${{ secrets.SRV_MONGO_URL }}
             RABBIT: ${{ secrets.SRV_RABBIT_URL }}
-            MEILI: ${{ secrets.SRV_MEILI_URL }}
+            MEILI_URL: ${{ secrets.SRV_MEILI_URL }}
+            MEILI_KEY: ${{ secrets.SRV_MEILI_KEY }}
         - name: Show appsettings.json
           run: |
             appsettingsJson="$(cat $GITHUB_WORKSPACE/cicd/envs/public/srv-app/admin-api/settings/appsettings.json)"
