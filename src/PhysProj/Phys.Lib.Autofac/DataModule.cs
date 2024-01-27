@@ -47,6 +47,7 @@ namespace Phys.Lib.Autofac
                 builder.RegisterModule(new PostgresDbModule(postgresUrl, loggerFactory));
 
             builder.RegisterModule(new MeilisearchModule(meilisearchUrl, meilisearchMasterKey, "phys-lib", loggerFactory));
+            builder.RegisterModule(new RabbitMqModule(loggerFactory, rabbitUrl));
 
             builder.RegisterModule<SettingsModule>();
 
@@ -68,14 +69,6 @@ namespace Phys.Lib.Autofac
             // settings
             builder.Register(c => new MongoSettings(mongoUrl, mongoUrl.DatabaseName ?? "phys-lib", "settings", loggerFactory.CreateLogger<MongoSettings>()))
                 .SingleInstance().AsImplementedInterfaces();
-
-            // rabbit
-            builder.Register(c => new ConnectionFactory { HostName = rabbitUrl })
-                .As<IConnectionFactory>().SingleInstance();
-            builder.RegisterType<RabbitQueue>()
-                .As<IMessageQueue>().SingleInstance();
-            builder.RegisterType<JsonQueue>()
-                .As<IObjectQueue>().SingleInstance();
         }
     }
 }

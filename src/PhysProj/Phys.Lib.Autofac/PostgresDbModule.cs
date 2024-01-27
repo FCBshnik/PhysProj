@@ -34,7 +34,7 @@ namespace Phys.Lib.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            log.LogInformation($"postgres connection: {connectionString}");
+            log.LogInformation($"postgres server: {connectionString}");
 
             DapperConfig.Configure();
 
