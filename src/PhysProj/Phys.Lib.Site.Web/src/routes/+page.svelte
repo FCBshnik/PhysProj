@@ -52,7 +52,7 @@
     </div>
 		<div class="">
       {#if result?.works}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
           {#each result.works as work}
             <WorkCard {work} {result} />
           {/each}
