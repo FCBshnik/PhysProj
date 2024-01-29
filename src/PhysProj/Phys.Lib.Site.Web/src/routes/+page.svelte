@@ -34,7 +34,7 @@
           </span>
         </a>
       </div>
-			<div class="w-2/3 flex flex-row">
+			<div class="w-2/3 flex flex-row min-[0px]:max-sm:hidden">
 				<div class="w-full">
 					<SearchInput bind:searchText on:onSearch={refresh} />
 				</div>
@@ -43,6 +43,13 @@
         <ThemeToggle/>
       </div>
 		</div>
+    <div class="p-2 sm:hidden">
+      <div class="flex flex-row">
+        <div class="w-full">
+          <SearchInput bind:searchText on:onSearch={refresh} />
+        </div>
+      </div>
+    </div>
 		<div class="">
       {#if result?.works}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
