@@ -1,0 +1,11 @@
+name: deploy-site-api
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-app-dotnet.yml
+    with:
+      project-src-name: Phys.Lib.Site.Api
+      project-ci-name: site-api
+    secrets: inherit
