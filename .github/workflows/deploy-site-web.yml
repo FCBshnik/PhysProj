@@ -1,0 +1,11 @@
+name: deploy-site-web
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-app-web.yml
+    with:
+      project-src-name: Phys.Lib.Site.Web
+      project-ci-name: site-web
+    secrets: inherit
