@@ -3,45 +3,9 @@ name: deploy-admin-web
 on: workflow_dispatch
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        env:
-            SRV_HOST : ${{vars.SRV_GATEWAY_HOST}}
-            SRV_USER : ${{vars.SRV_GATEWAY_USER}}
-            SSH_PATH: /home/runner/.ssh
-            SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-            SRC_PATH: ./src/PhysProj/Phys.Lib.Admin.Web
-        strategy:
-            matrix:
-                node-version: [18.x]
-        steps:
-        - name: Check out repository
-          uses: actions/checkout@v3
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node-version }}
-            cache: 'npm'
-            cache-dependency-path: "${{ env.SRC_PATH }}/package-lock.json"
-        - name: NPM install
-          run: npm install
-          working-directory: ${{ env.SRC_PATH }}
-        - name: NPM Build
-          run: npm run build
-          working-directory: ${{ env.SRC_PATH }}
-        - name: Copy build to docker build directory
-          run: cp -r ./build $GITHUB_WORKSPACE/cicd/envs/public/srv-app/admin-web
-          working-directory: ${{ env.SRC_PATH }}
-        - name: Init SSH agent
-          run: |
-            mkdir -p $SSH_PATH
-            ssh-keyscan $SRV_HOST >> $SSH_PATH/known_hosts
-            echo "${{ secrets.SRV_GATEWAY_SSH_PRIVATE_KEY }}" > $SSH_PATH/ssh_key
-            chmod 600 $SSH_PATH/ssh_key
-            ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-            ssh-add $SSH_PATH/ssh_key
-        - name: Create docker context
-          run: docker context create srv-gateway --docker "host=ssh://$SRV_USER@$SRV_HOST"
-        - name: Build and deploy docker image
-          run: bash ./admin-web/deploy.sh
-          working-directory: ${{ github.workspace }}/cicd/envs/public/srv-app/
+  deploy:
+    uses: ./.github/workflows/deploy-app-web.yml
+    with:
+      project-src-name: Phys.Lib.Admin.Web
+      project-ci-name: admin-web
+    secrets: inherit
