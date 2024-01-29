@@ -29,9 +29,9 @@
 
 <div class="">
   {#if downloadLink}
-    <a class="underline italic" rel="external" href="{downloadLink.url}" target="_blank">{file.format} {formatBytes(file.size)}</a>
+    <a class="underline italic text-gray-100" rel="external" href="{downloadLink.url}" target="_blank">{file.format} {formatBytes(file.size)}</a>
   {:else}
-    <button on:click={getDownloadLink} class="rounded-md disabled:text-gray-600" disabled={loading}>
+    <button on:click={getDownloadLink} class="underline italic rounded-md disabled:text-gray-600" disabled={loading}>
       {#if loading}
         <div class="absolute translate-x-3/4">
           <div class="animate-spin w-5 h-5 border-[2px] border-current border-t-transparent rounded-full dark:text-gray-300" role="status" aria-label="loading">
