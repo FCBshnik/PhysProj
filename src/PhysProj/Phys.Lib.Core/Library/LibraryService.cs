@@ -26,9 +26,9 @@ namespace Phys.Lib.Core.Library
             this.authorsTextSearch = authorsTextSearch;
         }
 
-        public async Task<SearchResultPao> Search(string? search)
+        public async Task<SearchResultPao> Search(string? search, int limit = 16)
         {
-            var works = await SearchWorks(search);
+            var works = await SearchWorks(search, limit: limit);
             var authorsCodes = works.SelectMany(w => w.Authors).ToList();
 
             return new SearchResultPao
@@ -39,7 +39,7 @@ namespace Phys.Lib.Core.Library
             };
         }
 
-        public async Task<List<SearchResultWorkPao>> SearchWorks(string? search)
+        public async Task<List<SearchResultWorkPao>> SearchWorks(string? search, int limit = 16)
         {
             var foundWorks = await worksTextSearch.Search(search ?? string.Empty);
 
@@ -55,6 +55,8 @@ namespace Phys.Lib.Core.Library
             {
                 AddCodesWithFiles(codes, found.Info, root: true);
             }
+
+            codes = codes.Take(limit).ToList();
 
             var worksMap = worksSearch.FindByCodes(codes).ToDictionary(w => w.Code);
             if (worksMap.Count != codes.Count)
