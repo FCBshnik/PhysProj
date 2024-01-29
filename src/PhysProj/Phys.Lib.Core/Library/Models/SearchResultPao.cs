@@ -4,8 +4,8 @@
     {
         public required string Search { get; set; }
 
-        public List<AuthorPao> Authors { get; set; } = new List<AuthorPao>();
+        public List<SearchResultAuthorPao> Authors { get; set; } = new List<SearchResultAuthorPao>();
 
-        public List<WorkPao> Works { get; set; } = new List<WorkPao>();
+        public List<SearchResultWorkPao> Works { get; set; } = new List<SearchResultWorkPao>();
     }
 }

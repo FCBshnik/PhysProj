@@ -2,9 +2,13 @@
   import type * as api from "$lib/services/ApiService";
   import DownloadFileButton from "$lib/components/DownloadFileButton.svelte";
 
-  export let work:api.WorkModel;
+  export let work:api.SearchResultWorkPao;
+  export let result:api.SearchResultPao;
 
-  function getAuthorShort(author:api.AuthorModel){
+  function getAuthorShort(authorCode:string) {
+    var author = result.authors?.find(a => a.code == authorCode);
+    if (!author)
+      return "";
     var parts = author.name?.split(' ') || [];
     var initials = parts.slice(0, parts.length - 1).map(v => v[0] + '.');
     return parts[parts.length - 1] + ' ' + initials.join(' ');

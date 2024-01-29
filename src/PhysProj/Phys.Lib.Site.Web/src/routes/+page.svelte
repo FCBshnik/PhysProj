@@ -6,16 +6,16 @@
 	import SearchInput from '$lib/components/SearchInput.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
-	let works: api.WorkModel[] = [];
+	let result: api.SearchResultPao | undefined;
 	let searchText: string = '';
 	let loading: boolean = false;
   
 	function refresh() {
-		works = [];
+		result = undefined;
 		loading = true;
 		api.service
 			.search(searchText)
-			.then((r) => (works = r.works))
+			.then((r) => (result = r))
 			.finally(() => (loading = false));
 	}
 
@@ -44,12 +44,14 @@
       </div>
 		</div>
 		<div class="">
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{#each works as work}
-					<WorkCard {work} />
-				{/each}
-			</div>
-			{#if !loading && !works.length}
+      {#if result?.works}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {#each result.works as work}
+            <WorkCard {work} {result} />
+          {/each}
+        </div>
+      {/if}
+			{#if !loading && result?.works?.length == 0}
 				<div class="text-center">Nothing found</div>
 			{/if}
 			{#if loading}

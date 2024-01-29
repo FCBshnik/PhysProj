@@ -28,15 +28,18 @@ namespace Phys.Lib.Core.Library
 
         public async Task<SearchResultPao> Search(string? search)
         {
+            var works = await SearchWorks(search);
+            var authorsCodes = works.SelectMany(w => w.Authors).ToList();
+
             return new SearchResultPao
             {
                 Search = search ?? string.Empty,
-                Works = await SearchWorks(search),
-                Authors = await SearchAuthors(search),
+                Works = works,
+                Authors = authorsSearch.FindByCodes(authorsCodes).Select(SearchResultAuthorPao.Map).ToList(),
             };
         }
 
-        public async Task<List<WorkPao>> SearchWorks(string? search)
+        public async Task<List<SearchResultWorkPao>> SearchWorks(string? search)
         {
             var foundWorks = await worksTextSearch.Search(search ?? string.Empty);
 
@@ -61,7 +64,7 @@ namespace Phys.Lib.Core.Library
             var authors = authorsSearch.GetByWorksAsMap(works);
             var files = filesSearch.GetByWorksAsMap(works);
 
-            return works.Select(w => WorkPao.Map(w, authors, files)).ToList();
+            return works.Select(w => SearchResultWorkPao.Map(w, files)).ToList();
         }
 
         private void AddCodesWithFiles(ICollection<string> codes, WorkInfoTso info, bool root)
@@ -82,11 +85,11 @@ namespace Phys.Lib.Core.Library
                 AddCodesWithFiles(codes, collected, false);
         }
 
-        public async Task<List<AuthorPao>> SearchAuthors(string? search)
+        public async Task<List<SearchResultAuthorPao>> SearchAuthors(string? search)
         {
             var authorsCodes = (await authorsTextSearch.Search(search ?? string.Empty)).Select(w => w.Code).ToList();
             var authors = authorsSearch.FindByCodes(authorsCodes).ToList();
-            return authors.Select(AuthorPao.Map).ToList();
+            return authors.Select(SearchResultAuthorPao.Map).ToList();
         }
     }
 }
