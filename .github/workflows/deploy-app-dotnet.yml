@@ -56,8 +56,8 @@ jobs:
             chmod 600 $SSH_PATH/ssh_key
             ssh-agent -a $SSH_AUTH_SOCK > /dev/null
             ssh-add $SSH_PATH/ssh_key
-        - name: Create docker context
-          run: docker context create physproj --docker "host=ssh://$SRV_USER@$SRV_HOST"
         - name: Build and deploy docker image
-          run: bash ./$CI_APP_NAME/deploy.sh
+          run: | 
+            docker context create remote --docker "host=ssh://$SRV_USER@$SRV_HOST"
+            docker --context remote compose --file docker-compose.yml --project-name physproj up --detach --build --force-recreate $CI_APP_NAME
           working-directory: ${{ github.workspace }}/cicd/envs/public/srv-app/
