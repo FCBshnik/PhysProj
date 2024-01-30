@@ -14,7 +14,7 @@ namespace Phys.NLog
 {
     public static class NLogConfig
     {
-        public static void AddElastic(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory, string appName, string elasticUrl)
+        public static void AddElastic(ILoggerFactory loggerFactory, string appName, string elasticUrl)
         {
             loggerFactory.CreateLogger(typeof(NLogConfig).Name).LogInformation($"add elastic target '{elasticUrl}'");
 
@@ -36,6 +36,8 @@ namespace Phys.NLog
                 OverflowAction = BufferingTargetWrapperOverflowAction.Flush,
                 FlushTimeout = 5 * 60 * 1000,
             });
+
+            LogManager.ReconfigExistingLoggers();
         }
 
         public static void Configure(ILoggerFactory loggerFactory)
@@ -67,7 +69,7 @@ namespace Phys.NLog
             });
 
             InternalLogger.LogLevel = LogLevel.Info;
-            InternalLogger.LogFile = "./data/logs/nlog/internal.txt";
+            InternalLogger.LogFile = "./data/logs/nlog/nlog.internal.txt";
             LogManager.Configuration = config;
         }
 
