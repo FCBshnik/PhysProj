@@ -67,7 +67,7 @@ namespace Phys.NLog
             });
 
             InternalLogger.LogLevel = LogLevel.Info;
-            InternalLogger.LogFile = "nlog.internal.txt";
+            InternalLogger.LogFile = "./data/logs/nlog/internal.txt";
             LogManager.Configuration = config;
         }
 
