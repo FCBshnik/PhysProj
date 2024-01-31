@@ -8,12 +8,12 @@ namespace Phys.Lib.Core.Stats
 {
     internal class StatService : IStatService
     {
-        private readonly IEnumerable<IWorksDb> worksDbs;
+        private readonly List<IWorksDb> worksDbs;
         private readonly ILogger<StatService> log;
 
         public StatService(IEnumerable<IWorksDb> worksDbs, ILogger<StatService> log)
         {
-            this.worksDbs = worksDbs;
+            this.worksDbs = worksDbs.Where(db => db.Name != "main").ToList();
             this.log = log;
         }
 
