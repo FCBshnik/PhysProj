@@ -28,7 +28,7 @@
 		api.service
 			.updateWork(
 				work.code,
-				new api.WorkUpdateModel({ date: work.publish })
+				new api.WorkUpdateModel({ date: work.publish?.trim() })
 			)
 			.finally(refresh);
 	}
@@ -56,7 +56,7 @@
 			.updateWorkInfo(
 				work.code,
 				info.language,
-				new api.WorkInfoUpdateModel({ name: info.name, description: info.description })
+				new api.WorkInfoUpdateModel({ name: info.name?.trim(), description: info.description?.trim() })
 			)
 			.finally(refresh);
 	}
@@ -68,10 +68,6 @@
 
 	function deleteInfo(info: api.WorkInfoModel) {
 		api.service.deleteWorkInfo(work.code, info.language).finally(refresh);
-	}
-
-	function searchAuthor() {
-		api.service.listAuthors(authorSearchText).then(a => author = a.find(_ => true));
 	}
 
 	function linkAuthor() {
@@ -89,10 +85,6 @@
 
 	function unlinkSubWork(subWorkCode:string) {
 		api.service.unlinkWorkFromCollectedWork(work.code, subWorkCode).finally(refresh);
-	}
-
-	function searchOriginalWork() {
-		api.service.listWorks(originalSearchText).then(a => originalWork = a.find(_ => true));
 	}
 
 	function linkOriginalWork() {

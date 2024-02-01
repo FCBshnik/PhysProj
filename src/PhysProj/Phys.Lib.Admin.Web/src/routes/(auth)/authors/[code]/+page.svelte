@@ -19,7 +19,7 @@
 		api.service
 			.updateAuthorLifetime(
 				author.code,
-				new api.AuthorLifetimeUpdateModel({ born: author?.born, died: author?.died })
+				new api.AuthorLifetimeUpdateModel({ born: author?.born?.trim(), died: author?.died.trim() })
 			)
 			.finally(refresh);
 	}
@@ -29,7 +29,7 @@
 			.updateAuthorInfo(
 				author.code,
 				info.language,
-				new api.AuthorInfoUpdateModel({ fullName: info.fullName, description: info.description })
+				new api.AuthorInfoUpdateModel({ fullName: info.fullName?.trim(), description: info.description?.trim() })
 			)
 			.finally(refresh);
 	}
