@@ -2,7 +2,7 @@
 
 namespace Phys.Lib.Core.Library.Models
 {
-    public class SearchResultFilePao : IPublicApiObject
+    public class SearchResultFileModel
     {
         public required string Code { get; set; }
 
@@ -10,9 +10,9 @@ namespace Phys.Lib.Core.Library.Models
 
         public required long Size { get; set; }
 
-        public static SearchResultFilePao Map(FileDbo file)
+        public static SearchResultFileModel Map(FileDbo file)
         {
-            return new SearchResultFilePao
+            return new SearchResultFileModel
             {
                 Code = file.Code,
                 Format = file.Format,

@@ -2,7 +2,7 @@
     import * as api from "$lib/services/ApiService";
     import { notificationsService } from "$lib/services/NotificationsService";
 
-    export let file:api.FileModel
+    export let file:api.SearchResultFileModel
 
     let downloadLink:api.FileLinkModel
     let loading:boolean = false

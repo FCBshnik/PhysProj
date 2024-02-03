@@ -2,15 +2,15 @@
 
 namespace Phys.Lib.Core.Library.Models
 {
-    public class SearchResultAuthorPao : IPublicApiObject
+    public class SearchResultAuthorModel
     {
         public required string Code { get; set; }
 
         public required string Name { get; set; }
 
-        public static SearchResultAuthorPao Map(AuthorDbo author)
+        public static SearchResultAuthorModel Map(AuthorDbo author)
         {
-            return new SearchResultAuthorPao
+            return new SearchResultAuthorModel
             {
                 Code = author.Code,
                 Name = author.Infos.FirstOrDefault()?.FullName ?? author.Code,

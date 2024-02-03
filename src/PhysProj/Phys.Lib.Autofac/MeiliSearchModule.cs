@@ -2,7 +2,7 @@
 using Meilisearch;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Migration;
-using Phys.Lib.Core.Search;
+using Phys.Lib.Core.Search.Migration;
 using Phys.Lib.Search;
 
 namespace Phys.Lib.Autofac

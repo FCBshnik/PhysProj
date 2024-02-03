@@ -2,8 +2,8 @@
   import type * as api from "$lib/services/ApiService";
   import DownloadFileButton from "$lib/components/DownloadFileButton.svelte";
 
-  export let work:api.SearchResultWorkPao;
-  export let result:api.SearchResultPao;
+  export let work:api.SearchResultWorkModel;
+  export let result:api.SearchResultModel;
 
   function getAuthorShort(authorCode:string) {
     var author = result.authors?.find(a => a.code == authorCode);

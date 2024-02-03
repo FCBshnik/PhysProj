@@ -3,7 +3,7 @@ using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Search;
 
-namespace Phys.Lib.Core.Search
+namespace Phys.Lib.Core.Search.Migration
 {
     internal class AuthorsTextSearchMigrator : IMigrator
     {

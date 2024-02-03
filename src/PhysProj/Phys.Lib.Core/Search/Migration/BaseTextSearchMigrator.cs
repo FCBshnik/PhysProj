@@ -2,7 +2,7 @@
 using Phys.Lib.Db.Migrations;
 using Phys.Lib.Search;
 
-namespace Phys.Lib.Core.Search
+namespace Phys.Lib.Core.Search.Migration
 {
     internal abstract class BaseTextSearchMigrator<TDbObject, TSearchObject> : IMigrator
     {

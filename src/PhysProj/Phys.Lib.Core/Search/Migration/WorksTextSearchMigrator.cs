@@ -4,7 +4,7 @@ using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Search;
 
-namespace Phys.Lib.Core.Search
+namespace Phys.Lib.Core.Search.Migration
 {
     internal class WorksTextSearchMigrator : IMigrator
     {
@@ -102,7 +102,7 @@ namespace Phys.Lib.Core.Search
                 PopulateInfo(subWorkInfo, db.GetByCode(subWorkCode), visited, db);
             }
 
-            foreach (var translation in  db.Find(new WorksDbQuery { OriginalCode = work.Code }))
+            foreach (var translation in db.Find(new WorksDbQuery { OriginalCode = work.Code }))
             {
                 var translationInfo = new WorkInfoTso { Code = translation.Code };
                 info.Translations.Add(translationInfo);

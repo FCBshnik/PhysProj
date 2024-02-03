@@ -106,7 +106,7 @@ export class SiteApiClient {
      * @param search (optional) 
      * @return Success
      */
-    search(search: string | undefined): Promise<SearchResultPao> {
+    search(search: string | undefined): Promise<SearchResultModel> {
         let url_ = this.baseUrl + "/api/search?";
         if (search === null)
             throw new Error("The parameter 'search' cannot be null.");
@@ -126,14 +126,14 @@ export class SiteApiClient {
         });
     }
 
-    protected processSearch(response: Response): Promise<SearchResultPao> {
+    protected processSearch(response: Response): Promise<SearchResultModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SearchResultPao.fromJS(resultData200);
+            result200 = SearchResultModel.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -141,7 +141,7 @@ export class SiteApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<SearchResultPao>(null as any);
+        return Promise.resolve<SearchResultModel>(null as any);
     }
 }
 
@@ -261,11 +261,11 @@ export interface IOkModel {
     version?: string | undefined;
 }
 
-export class SearchResultAuthorPao implements ISearchResultAuthorPao {
+export class SearchResultAuthorModel implements ISearchResultAuthorModel {
     code?: string | undefined;
     name?: string | undefined;
 
-    constructor(data?: ISearchResultAuthorPao) {
+    constructor(data?: ISearchResultAuthorModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -281,9 +281,9 @@ export class SearchResultAuthorPao implements ISearchResultAuthorPao {
         }
     }
 
-    static fromJS(data: any): SearchResultAuthorPao {
+    static fromJS(data: any): SearchResultAuthorModel {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchResultAuthorPao();
+        let result = new SearchResultAuthorModel();
         result.init(data);
         return result;
     }
@@ -296,17 +296,17 @@ export class SearchResultAuthorPao implements ISearchResultAuthorPao {
     }
 }
 
-export interface ISearchResultAuthorPao {
+export interface ISearchResultAuthorModel {
     code?: string | undefined;
     name?: string | undefined;
 }
 
-export class SearchResultFilePao implements ISearchResultFilePao {
+export class SearchResultFileModel implements ISearchResultFileModel {
     code?: string | undefined;
     format?: string | undefined;
     size?: number;
 
-    constructor(data?: ISearchResultFilePao) {
+    constructor(data?: ISearchResultFileModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -323,9 +323,9 @@ export class SearchResultFilePao implements ISearchResultFilePao {
         }
     }
 
-    static fromJS(data: any): SearchResultFilePao {
+    static fromJS(data: any): SearchResultFileModel {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchResultFilePao();
+        let result = new SearchResultFileModel();
         result.init(data);
         return result;
     }
@@ -339,18 +339,18 @@ export class SearchResultFilePao implements ISearchResultFilePao {
     }
 }
 
-export interface ISearchResultFilePao {
+export interface ISearchResultFileModel {
     code?: string | undefined;
     format?: string | undefined;
     size?: number;
 }
 
-export class SearchResultPao implements ISearchResultPao {
+export class SearchResultModel implements ISearchResultModel {
     search?: string | undefined;
-    authors?: SearchResultAuthorPao[] | undefined;
-    works?: SearchResultWorkPao[] | undefined;
+    authors?: SearchResultAuthorModel[] | undefined;
+    works?: SearchResultWorkModel[] | undefined;
 
-    constructor(data?: ISearchResultPao) {
+    constructor(data?: ISearchResultModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -365,19 +365,19 @@ export class SearchResultPao implements ISearchResultPao {
             if (Array.isArray(_data["authors"])) {
                 this.authors = [] as any;
                 for (let item of _data["authors"])
-                    this.authors!.push(SearchResultAuthorPao.fromJS(item));
+                    this.authors!.push(SearchResultAuthorModel.fromJS(item));
             }
             if (Array.isArray(_data["works"])) {
                 this.works = [] as any;
                 for (let item of _data["works"])
-                    this.works!.push(SearchResultWorkPao.fromJS(item));
+                    this.works!.push(SearchResultWorkModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): SearchResultPao {
+    static fromJS(data: any): SearchResultModel {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchResultPao();
+        let result = new SearchResultModel();
         result.init(data);
         return result;
     }
@@ -399,19 +399,19 @@ export class SearchResultPao implements ISearchResultPao {
     }
 }
 
-export interface ISearchResultPao {
+export interface ISearchResultModel {
     search?: string | undefined;
-    authors?: SearchResultAuthorPao[] | undefined;
-    works?: SearchResultWorkPao[] | undefined;
+    authors?: SearchResultAuthorModel[] | undefined;
+    works?: SearchResultWorkModel[] | undefined;
 }
 
-export class SearchResultWorkPao implements ISearchResultWorkPao {
+export class SearchResultWorkModel implements ISearchResultWorkModel {
     code?: string | undefined;
     name?: string | undefined;
     authors?: string[] | undefined;
-    files?: SearchResultFilePao[] | undefined;
+    files?: SearchResultFileModel[] | undefined;
 
-    constructor(data?: ISearchResultWorkPao) {
+    constructor(data?: ISearchResultWorkModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -432,14 +432,14 @@ export class SearchResultWorkPao implements ISearchResultWorkPao {
             if (Array.isArray(_data["files"])) {
                 this.files = [] as any;
                 for (let item of _data["files"])
-                    this.files!.push(SearchResultFilePao.fromJS(item));
+                    this.files!.push(SearchResultFileModel.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): SearchResultWorkPao {
+    static fromJS(data: any): SearchResultWorkModel {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchResultWorkPao();
+        let result = new SearchResultWorkModel();
         result.init(data);
         return result;
     }
@@ -462,11 +462,11 @@ export class SearchResultWorkPao implements ISearchResultWorkPao {
     }
 }
 
-export interface ISearchResultWorkPao {
+export interface ISearchResultWorkModel {
     code?: string | undefined;
     name?: string | undefined;
     authors?: string[] | undefined;
-    files?: SearchResultFilePao[] | undefined;
+    files?: SearchResultFileModel[] | undefined;
 }
 
 export class ApiException extends Error {

@@ -6,7 +6,7 @@
 	import SearchInput from '$lib/components/SearchInput.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
-	let result: api.SearchResultPao | undefined;
+	let result: api.SearchResultModel | undefined;
 	let searchText: string = '';
 	let loading: boolean = false;
   
