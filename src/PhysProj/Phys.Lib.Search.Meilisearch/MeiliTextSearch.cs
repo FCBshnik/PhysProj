@@ -4,7 +4,7 @@ using Meili = Meilisearch;
 
 namespace Phys.Lib.Search.Meilisearch
 {
-    public class MeiliTextSearch<TTso> : ITextSearch<TTso>
+    public class MeiliTextSearch<TDocument> : ITextSearch<TDocument>
     {
         private readonly MeilisearchClient client;
         private readonly string name;
@@ -25,7 +25,7 @@ namespace Phys.Lib.Search.Meilisearch
             log.LogInformation($"primary key '{primaryKey}'");
         }
 
-        public async Task Index(IEnumerable<TTso> values)
+        public async Task Index(IEnumerable<TDocument> values)
         {
             var task = await index.AddDocumentsAsync(values, primaryKey);
             await TaskUtils.WaitToCompleteAsync(index, task);
@@ -55,9 +55,9 @@ namespace Phys.Lib.Search.Meilisearch
             log.LogInformation($"created index '{name}' with saerchable attrs {string.Join(",", attrs)}");
         }
 
-        public async Task<ICollection<TTso>> Search(string search)
+        public async Task<ICollection<TDocument>> Search(string search)
         {
-            var result = await index.SearchAsync<TTso>(search);
+            var result = await index.SearchAsync<TDocument>(search);
             return result.Hits.ToList();
         }
 

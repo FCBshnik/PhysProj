@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Search
 {
-    public interface ITextSearch<T>
+    public interface ITextSearch<TTextSearchObject>
     {
         /// <summary>
         /// Clears index
@@ -10,11 +10,11 @@
         /// <summary>
         /// Adds/updates values to search engine
         /// </summary>
-        Task Index(IEnumerable<T> values);
+        Task Index(IEnumerable<TTextSearchObject> values);
 
         /// <summary>
         /// Search
         /// </summary>
-        Task<ICollection<T>> Search(string search);
+        Task<ICollection<TTextSearchObject>> Search(string search);
     }
 }
