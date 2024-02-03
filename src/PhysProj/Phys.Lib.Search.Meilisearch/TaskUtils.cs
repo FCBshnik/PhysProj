@@ -29,7 +29,7 @@ namespace Phys.Lib.Search.Meilisearch
             {
                 taskResource = await index.GetTaskAsync(taskInfo.TaskUid);
                 ThrowIfError(taskResource);
-                if (sw.Elapsed > TimeSpan.FromMinutes(1))
+                if (sw.Elapsed > TimeSpan.FromMinutes(5))
                     throw new PhysException($"timed out waiting task {taskResource.Uid} to complete");
                 await Task.Delay(TimeSpan.FromSeconds(1));
             } while (!taskResource.FinishedAt.HasValue);
