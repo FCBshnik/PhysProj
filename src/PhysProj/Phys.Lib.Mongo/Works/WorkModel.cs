@@ -23,9 +23,6 @@ namespace Phys.Lib.Mongo.Works
         [BsonElement("auth")]
         public List<string> AuthorsCodes { get; set; } = new List<string>();
 
-        [BsonElement("orig")]
-        public string? OriginalCode { get; set; }
-
         [BsonElement("files")]
         public List<string> FilesCodes { get; set; } = new List<string>();
 

@@ -108,28 +108,6 @@ namespace Phys.Lib.Admin.Api.Api.Works
             })
             .ProducesResponse<WorkModel>("UnlinkAuthorFromWork");
 
-            builder.MapPost("/{code}/original/{originalCode}", (string code, string originalCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
-            {
-                var work = search.FindByCode(code);
-                if (work == null)
-                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
-
-                work = editor.LinkOriginal(work, originalCode);
-                return Results.Ok(mapper.Map(work));
-            })
-            .ProducesResponse<WorkModel>("LinkOriginalToWork");
-
-            builder.MapDelete("/{code}/original", (string code, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
-            {
-                var work = search.FindByCode(code);
-                if (work == null)
-                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
-
-                work = editor.UnlinkOriginal(work);
-                return Results.Ok(mapper.Map(work));
-            })
-            .ProducesResponse<WorkModel>("UnlinkOriginalFromWork");
-
             builder.MapPost("/{collectedWorkCode}/works/{linkWorkCode}", (string collectedWorkCode, string linkWorkCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
             {
                 var work = search.FindByCode(collectedWorkCode);

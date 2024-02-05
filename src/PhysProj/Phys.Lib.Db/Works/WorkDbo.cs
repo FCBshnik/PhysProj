@@ -27,7 +27,7 @@ namespace Phys.Lib.Db.Works
         public List<InfoDbo> Infos { get; set; } = new List<InfoDbo>();
 
         /// <summary>
-        /// Collection of sub works in collected work
+        /// Collection of sub works in collected work or translation[s] in collected work
         /// </summary>
         [UnorderedEquality]
         public List<string> SubWorksCodes { get; set; } = new List<string>();
@@ -37,11 +37,6 @@ namespace Phys.Lib.Db.Works
         /// </summary>
         [UnorderedEquality]
         public List<string> AuthorsCodes { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Original work translated in this work
-        /// </summary>
-        public string? OriginalCode { get; set; }
 
         /// <summary>
         /// Files attachments containing text of book in various formats

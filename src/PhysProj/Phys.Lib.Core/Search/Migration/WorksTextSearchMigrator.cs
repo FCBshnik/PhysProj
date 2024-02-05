@@ -89,24 +89,11 @@ namespace Phys.Lib.Core.Search.Migration
             info.HasFiles = work.FilesCodes.Count > 0;
             visited[work.Code] = info;
 
-            if (work.OriginalCode != null)
-            {
-                info.Original = new WorkInfoTso { Code = work.OriginalCode };
-                PopulateInfo(info.Original, db.GetByCode(work.OriginalCode), visited, db);
-            }
-
             foreach (var subWorkCode in work.SubWorksCodes)
             {
                 var subWorkInfo = new WorkInfoTso { Code = subWorkCode };
                 info.SubWorks.Add(subWorkInfo);
                 PopulateInfo(subWorkInfo, db.GetByCode(subWorkCode), visited, db);
-            }
-
-            foreach (var translation in db.Find(new WorksDbQuery { OriginalCode = work.Code }))
-            {
-                var translationInfo = new WorkInfoTso { Code = translation.Code };
-                info.Translations.Add(translationInfo);
-                PopulateInfo(translationInfo, db.GetByCode(translation.Code), visited, db);
             }
 
             foreach (var collected in db.Find(new WorksDbQuery { SubWorkCode = work.Code }))

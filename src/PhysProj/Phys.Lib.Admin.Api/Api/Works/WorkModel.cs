@@ -16,8 +16,6 @@
 
         public List<string> FilesCodes { get; set; } = new List<string>();
 
-        public string? OriginalCode { get; set; }
-
         public bool IsPublic { get; set; }
 
         public class WorkInfoModel

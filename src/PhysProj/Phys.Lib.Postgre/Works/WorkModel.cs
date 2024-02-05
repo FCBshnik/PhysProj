@@ -10,7 +10,6 @@ namespace Phys.Lib.Postgres.Works
         public static readonly string CodeColumn = GetColumn(i => i.Code);
         public static readonly string LanguageColumn = GetColumn(i => i.Language);
         public static readonly string PublishColumn = GetColumn(i => i.Publish);
-        public static readonly string OriginalCodeColumn = GetColumn(i => i.OriginalCode);
         public static readonly string IsPublicColumn = GetColumn(i => i.IsPublic);
 
         public static string GetColumn<T>(Expression<Func<WorkModel, T>> property) => SchemaUtils.GetColumn(property);
@@ -23,9 +22,6 @@ namespace Phys.Lib.Postgres.Works
 
         [Column("language")]
         public string? Language { get; set; }
-
-        [Column("original_code")]
-        public string? OriginalCode { get; set; }
 
         [Column("is_public")]
         public bool IsPublic { get; set; }

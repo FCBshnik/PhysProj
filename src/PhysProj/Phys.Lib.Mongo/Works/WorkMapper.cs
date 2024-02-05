@@ -13,7 +13,6 @@ namespace Phys.Lib.Mongo.Works
                 Publish = work.Publish,
                 AuthorsCodes = work.AuthorsCodes,
                 FilesCodes = work.FilesCodes,
-                OriginalCode = work.OriginalCode,
                 SubWorksCodes = work.SubWorksCodes,
                 Infos = work.Infos.Select(Map).ToList(),
                 IsPublic = work.IsPublic,

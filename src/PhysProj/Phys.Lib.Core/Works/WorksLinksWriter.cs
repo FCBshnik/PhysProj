@@ -22,9 +22,6 @@ namespace Phys.Lib.Core.Works
                 if (work.Equals(prev))
                     continue;
 
-                if (work.OriginalCode != null)
-                    db.Update(work.Code, new WorkDbUpdate { Original = work.OriginalCode });
-
                 work.SubWorksCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddSubWork = i }));
             }
         }

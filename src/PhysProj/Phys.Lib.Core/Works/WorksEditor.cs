@@ -54,8 +54,6 @@ namespace Phys.Lib.Core.Works
         {
             ArgumentNullException.ThrowIfNull(work);
 
-            if (worksSearch.FindTranslations(work.Code).Count != 0)
-                throw ValidationError("can not delete work linked as original to translated work");
             if (worksSearch.FindCollected(work.Code).Count != 0)
                 throw ValidationError("can not delete work linked as sub-work to collected work");
 
@@ -99,8 +97,6 @@ namespace Phys.Lib.Core.Works
             var subWork = worksSearch.FindByCode(subWorkCode) ?? throw ValidationError($"work '{subWorkCode}' not found");
             if (subWork.Code == work.Code)
                 throw ValidationError($"can not link sub work as self");
-            if (subWork.Code == work.OriginalCode)
-                throw ValidationError($"can not link sub work which is already linked as original");
 
             ValidateWorkIsNotLinked(work, subWork.Code, 0);
             ValidateWorkIsNotLinked(subWork, work.Code, 0);
@@ -181,44 +177,6 @@ namespace Phys.Lib.Core.Works
             return db.GetByCode(work.Code);
         }
 
-        public WorkDbo LinkOriginal(WorkDbo work, string originalCode)
-        {
-            ArgumentNullException.ThrowIfNull(work);
-            ArgumentNullException.ThrowIfNull(originalCode);
-
-            originalCode = Code.NormalizeAndValidate(originalCode);
-
-            if (work.OriginalCode == originalCode)
-                return work;
-
-            var original = worksSearch.FindByCode(originalCode) ?? throw ValidationError($"work '{originalCode}' not found");
-            if (original.Code == work.Code)
-                throw ValidationError($"can not link original as self");
-            if (work.SubWorksCodes.Contains(original.Code))
-                throw ValidationError($"can not link original which is already linked as sub work");
-
-            ValidateWorkIsNotLinked(work, original.Code, 0);
-            ValidateWorkIsNotLinked(original, work.Code, 0);
-
-            var update = new WorkDbUpdate { Original = original.Code };
-            db.Update(work.Code, update);
-            log.Log(LogLevel.Information, "{event} work {work} original {original}", LogEvent.Linked, work.Code, original.Code);
-            return db.GetByCode(work.Code);
-        }
-
-        public WorkDbo UnlinkOriginal(WorkDbo work)
-        {
-            ArgumentNullException.ThrowIfNull(work);
-
-            if (work.OriginalCode == null)
-                return work;
-
-            var update = new WorkDbUpdate { Original = string.Empty };
-            db.Update(work.Code, update);
-            log.Log(LogLevel.Information, "{event} work {work} original", LogEvent.Unlinked, work.Code);
-            return db.GetByCode(work.Code);
-        }
-
         public WorkDbo LinkFile(WorkDbo work, string fileCode)
         {
             ArgumentNullException.ThrowIfNull(work);
@@ -247,11 +205,8 @@ namespace Phys.Lib.Core.Works
             if (depth > 3)
                 throw ValidationError($"too long chain of works links detected");
 
-            if (work.OriginalCode == linkedCode || work.SubWorksCodes.Contains(linkedCode))
+            if (work.SubWorksCodes.Contains(linkedCode))
                 throw ValidationError($"circular chain of works links detected");
-
-            if (work.OriginalCode != null)
-                ValidateWorkIsNotLinked(worksSearch.FindByCode(work.OriginalCode) ?? throw new ApplicationException(), linkedCode, depth + 1);
 
             foreach (var subWorkCode in work.SubWorksCodes)
                 ValidateWorkIsNotLinked(worksSearch.FindByCode(subWorkCode) ?? throw new ApplicationException(), linkedCode, depth + 1);

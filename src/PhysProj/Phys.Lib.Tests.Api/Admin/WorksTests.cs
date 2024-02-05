@@ -102,18 +102,6 @@ namespace Phys.Lib.Tests.Api.Admin
                 AdminAssert.ShouldFail(() => api.LinkAuthorToWorkAsync(code, authorCode), errorCode);
             }
 
-            public void LinkOriginal(string code, string originalCode)
-            {
-                var result = api.LinkOriginalToWorkAsync(code, originalCode).Result;
-                result.Code.Should().Be(code);
-                result.OriginalCode.Should().Be(originalCode);
-            }
-
-            public void LinkOriginalFailed(string code, string originalCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
-            {
-                AdminAssert.ShouldFail(() => api.LinkOriginalToWorkAsync(code, originalCode), errorCode);
-            }
-
             public void LinkAuthor(string code, string authorCode)
             {
                 var result = api.LinkAuthorToWorkAsync(code, authorCode).Result;

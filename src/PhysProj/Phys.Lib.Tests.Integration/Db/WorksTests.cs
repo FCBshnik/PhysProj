@@ -49,12 +49,6 @@ namespace Phys.Lib.Tests.Integration.Db
             SetPublic("work-1", false);
             SetPublic("work-1", true);
 
-            FindByOriginal("work-3");
-            SetOriginal("work-1", "work-3");
-            FindByOriginal("work-3", "work-1");
-            SetOriginal("work-1", string.Empty);
-            FindByOriginal("work-3");
-
             authorsDb.Create("work-1-author-1");
             authorsDb.Create("work-1-author-2");
 
@@ -139,13 +133,6 @@ namespace Phys.Lib.Tests.Integration.Db
             works.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
         }
 
-        private void FindByOriginal(string originalCode, params string[] expectedCodes)
-        {
-            var works = db.Find(new WorksDbQuery { OriginalCode = originalCode });
-            works.Count.ShouldBe(expectedCodes.Length);
-            works.ForEach(a => a.Code.ShouldBeOneOf(expectedCodes));
-        }
-
         private void FindBySubWork(string subWorkCode, params string[] expectedCodes)
         {
             var works = db.Find(new WorksDbQuery { SubWorkCode = subWorkCode });
@@ -182,13 +169,6 @@ namespace Phys.Lib.Tests.Integration.Db
             db.Update(code, new WorkDbUpdate { DeleteInfo = language });
             var work = db.GetByCode(code);
             work.Infos.ShouldAllBe(i => i.Language != language);
-        }
-
-        private void SetOriginal(string code, string originalCode)
-        {
-            db.Update(code, new WorkDbUpdate { Original = originalCode });
-            var work = db.GetByCode(code);
-            work.OriginalCode.ShouldBe(originalCode == string.Empty ? null : originalCode);
         }
 
         private void AddAuthor(string code, string authorCode)

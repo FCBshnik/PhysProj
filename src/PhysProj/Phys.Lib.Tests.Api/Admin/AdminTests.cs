@@ -12,7 +12,7 @@ namespace Phys.Lib.Tests.Api.Admin
     public partial class AdminTests : ApiTests
     {
         private const string nonExistentCode = "non-existent";
-        private const string url = "https://localhost:17188/";
+        private const string url = "http://localhost:17188/";
 
         private readonly IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
             new Dictionary<string, string?> { {"ConnectionStrings:db", "mongo"} }).Build();
@@ -57,7 +57,7 @@ namespace Phys.Lib.Tests.Api.Admin
             var builder = new ContainerBuilder();
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new LoggerModule(loggerFactory));
-            builder.RegisterModule(new MongoDbModule(GetMongoUrl(), "test", loggerFactory));
+            builder.RegisterModule(new MongoDbModule(GetMongoUrl(), "mongo", loggerFactory));
             builder.RegisterModule(new CoreModule());
             return builder.Build();
         }
@@ -83,7 +83,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
             tests.List(0);
 
-            var usersMigration = tests.Start(new MigrationTaskModel { Migrator = "users", Source = "mongo", Destination = "postgres" });
+            var usersMigration = tests.Start(new MigrationTaskModel { Migrator = "users", Source = "mongo-test", Destination = "postgres" });
             tests.List(1);
             tests.WaitCompleted(usersMigration.Id, TimeSpan.FromSeconds(10), "success", 2);
         }
@@ -236,19 +236,10 @@ namespace Phys.Lib.Tests.Api.Admin
             // unlink author is idempotent
             works.UnlinkAuthor("discourse-on-method", "decartes");
             works.UnlinkAuthor("discourse-on-method", nonExistentCode);
-            // link work with invalid original failed
-            works.LinkOriginalFailed("discourse-on-method", nonExistentCode);
-            // link invalid work with original failed
-            works.LinkOriginalFailed(nonExistentCode, "discourse-on-method-original", ErrorCode.NotFound);
-            // link original to self failed
-            works.LinkOriginalFailed("discourse-on-method", "discourse-on-method");
             // link with valid original
             works.Create("discourse-on-method-original");
-            works.LinkOriginal("discourse-on-method", "discourse-on-method-original");
             // link original with circular dependency failed
             works.Create("discourse-on-method-proxy");
-            works.LinkOriginal("discourse-on-method-proxy", "discourse-on-method");
-            works.LinkOriginalFailed("discourse-on-method", "discourse-on-method-proxy");
             // link invalid work to collected work failed
             works.LinkSubWorkFailed("discourse-on-method", nonExistentCode);
             // link works to collected work
@@ -258,20 +249,11 @@ namespace Phys.Lib.Tests.Api.Admin
             works.LinkSubWork("discourse-on-method", "discourse-on-method-chapter-one");
             works.LinkSubWork("discourse-on-method", "discourse-on-method-chapter-two");
             works.LinkSubWork("discourse-on-method", "discourse-on-method-chapter-three");
-            // link original which is sub-work failed
-            works.LinkOriginalFailed("discourse-on-method", "discourse-on-method-chapter-one");
             // link collected work to self failed
             works.LinkSubWorkFailed("discourse-on-method", "discourse-on-method");
             // unlink works from collected work
             works.UnlinkSubWork("discourse-on-method", "discourse-on-method-chapter-one");
             works.UnlinkSubWork("discourse-on-method", "discourse-on-method-chapter-three");
-            // can not delete work linked as original
-            works.Create("original");
-            works.Create("work");
-            works.LinkOriginal("work", "original");
-            works.DeleteFailed("original");
-            works.Delete("work");
-            works.Delete("original");
             // can not delete work linked as sub-work
             works.Create("work");
             works.Create("sub-work");

@@ -65,8 +65,6 @@ namespace Phys.Lib.Postgres.Works
                     q = q.WhereIn(WorkModel.CodeColumn, query.Codes);
                 if (query.AuthorCode != null)
                     q = q.Where(worksAuthors.TableName + "." + WorkModel.AuthorModel.AuthorCodeColumn, query.AuthorCode);
-                if (query.OriginalCode != null)
-                    q = q.Where(WorkModel.OriginalCodeColumn, query.OriginalCode);
                 if (query.SubWorkCode != null)
                     q = q.Where(worksSubWorks.TableName + "." + WorkModel.SubWorkModel.SubWorkCodeColumn, query.SubWorkCode);
                 if (query.FileCode != null)
@@ -96,11 +94,6 @@ namespace Phys.Lib.Postgres.Works
                     updateDic[WorkModel.PublishColumn] = update.Publish;
                 else if (update.Publish.IsEmpty())
                     updateDic[WorkModel.PublishColumn] = null;
-
-                if (update.Original.HasValue())
-                    updateDic[WorkModel.OriginalCodeColumn] = update.Original;
-                else if (update.Original.IsEmpty())
-                    updateDic[WorkModel.OriginalCodeColumn] = null;
 
                 if (update.IsPublic.HasValue)
                     updateDic[WorkModel.IsPublicColumn] = update.IsPublic.Value;

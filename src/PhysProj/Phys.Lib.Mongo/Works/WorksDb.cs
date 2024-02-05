@@ -56,8 +56,6 @@ namespace Phys.Lib.Mongo.Works
                 filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.AuthorsCodes, query.AuthorCode));
             if (query.FileCode != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.FilesCodes, query.FileCode));
-            if (query.OriginalCode != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Eq(u => u.OriginalCode, query.OriginalCode));
             if (query.SubWorkCode != null)
                 filter = FilterBuilder.And(filter, FilterBuilder.AnyEq(u => u.SubWorksCodes, query.SubWorkCode));
             if (query.Search != null)
@@ -110,11 +108,6 @@ namespace Phys.Lib.Mongo.Works
                 update = update.AddToSet(i => i.SubWorksCodes, work.AddSubWork);
             if (work.DeleteSubWork.HasValue())
                 update = update.Pull(i => i.SubWorksCodes, work.DeleteSubWork);
-
-            if (work.Original.IsEmpty())
-                update = update.Unset(i => i.OriginalCode);
-            else if (work.Original.HasValue())
-                update = update.Set(i => i.OriginalCode, work.Original);
 
             if (work.AddFile.HasValue())
                 update = update.AddToSet(i => i.FilesCodes, work.AddFile);

@@ -11,7 +11,6 @@ namespace Phys.Lib.Postgres.Works
                 Code = work.Code,
                 Language = work.Language,
                 Publish = work.Publish,
-                OriginalCode = work.OriginalCode,
                 Infos = work.Infos.Values.Select(Map).ToList(),
                 AuthorsCodes = work.Authors.Values.Select(a => a.AuthorCode).ToList(),
                 SubWorksCodes = work.SubWorks.Values.Select(w => w.SubWorkCode).ToList(),

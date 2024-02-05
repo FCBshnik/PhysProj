@@ -65,23 +65,12 @@ namespace Phys.Lib.Core.Stats
             if (work.FilesCodes.Count > 0)
                 return true;
 
-            if (work.OriginalCode != null)
-            {
-                var originalWork = db.Find(new WorksDbQuery { Code = work.OriginalCode }).Single();
-                if (HasFileRefInHierarchy(db, originalWork, visited))
-                    return true;
-            }
-
             foreach (var subWorkCode in work.SubWorksCodes)
             {
                 var subWork = db.Find(new WorksDbQuery { Code = subWorkCode }).Single();
                 if (HasFileRefInHierarchy(db, subWork, visited))
                     return true;
             }
-
-            var translationWorks = db.Find(new WorksDbQuery { OriginalCode = work.Code });
-            if (translationWorks.Any(i => HasFileRefInHierarchy(db, i, visited)))
-                return true;
 
             var collectedWorks = db.Find(new WorksDbQuery { SubWorkCode = work.Code });
             if (collectedWorks.Any(i => HasFileRefInHierarchy(db, i, visited)))

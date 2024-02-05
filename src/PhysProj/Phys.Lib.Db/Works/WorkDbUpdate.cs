@@ -21,8 +21,6 @@
 
         public string? DeleteSubWork { get; set; }
 
-        public string? Original { get; set; }
-
         public string? AddFile { get; set; }
 
         public string? DeleteFile { get; set; }

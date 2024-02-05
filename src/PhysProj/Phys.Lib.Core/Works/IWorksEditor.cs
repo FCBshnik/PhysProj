@@ -20,10 +20,6 @@ namespace Phys.Lib.Core.Works
 
         WorkDbo UnlinkAuthor(WorkDbo work, string authorCode);
 
-        WorkDbo LinkOriginal(WorkDbo work, string originalCode);
-
-        WorkDbo UnlinkOriginal(WorkDbo work);
-
         WorkDbo LinkWork(WorkDbo work, string workCode);
 
         WorkDbo UnlinkWork(WorkDbo work, string workCode);

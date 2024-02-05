@@ -44,7 +44,7 @@ namespace Phys.Lib.Core.Works
                 }
 
                 // update properties
-                db.Update(work.Code, new WorkDbUpdate { Language = work.Language, Publish = work.Publish, Original = string.Empty, IsPublic = work.IsPublic });
+                db.Update(work.Code, new WorkDbUpdate { Language = work.Language, Publish = work.Publish, IsPublic = work.IsPublic });
 
                 // update refs
                 work.Infos.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddInfo = i }));

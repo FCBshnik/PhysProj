@@ -12,8 +12,6 @@
 
         public string? AuthorCode { get; set; }
 
-        public string? OriginalCode { get; set; }
-
         public string? SubWorkCode { get; set; }
 
         public int Limit { get; set; } = 1000;
