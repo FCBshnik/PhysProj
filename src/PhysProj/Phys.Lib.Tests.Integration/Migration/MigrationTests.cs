@@ -22,8 +22,7 @@ namespace Phys.Lib.Tests.Integration.Migration
 {
     public class MigrationTests : BaseTests
     {
-        private readonly IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
-            new Dictionary<string, string?> { { "ConnectionStrings:db", "mongo" } }).Build();
+        private readonly IConfiguration configuration = ConfigurationFactory.CreateTestConfiguration();
 
         private readonly PostgreSqlContainer postgres = TestContainerFactory.CreatePostgres();
 
@@ -34,8 +33,8 @@ namespace Phys.Lib.Tests.Integration.Migration
         }
 
         [Theory]
-        [InlineData("mongo-test", "postgres")]
-        [InlineData("postgres", "mongo-test")]
+        [InlineData("mongo", "postgres")]
+        [InlineData("postgres", "mongo")]
         public void Tests(string source, string destination)
         {
             using var lifetimeScope = container.BeginLifetimeScope();
@@ -58,7 +57,7 @@ namespace Phys.Lib.Tests.Integration.Migration
                 new WorkDbo { Code = "work-3", AuthorsCodes = new List<string> { "author-1", "author-2" } },
                 new WorkDbo { Code = "work-4", FilesCodes = new List<string> { "file-1", "file-2" } },
                 new WorkDbo { Code = "work-5", SubWorksCodes = new List<string> { "work-6", "work-3" } },
-                new WorkDbo { Code = "work-6", OriginalCode = "work-7" },
+                new WorkDbo { Code = "work-6", },
                 new WorkDbo { Code = "work-7" },
             }.OrderBy(u => u.Code).ToList();
             new WorksBaseWriter(srcDb, loggerFactory.CreateLogger<WorksMigrator>()).Write(works, new MigrationDto.StatsDto());
@@ -151,7 +150,7 @@ namespace Phys.Lib.Tests.Integration.Migration
             var mongoUrl = new MongoUrl(mongo.GetConnectionString());
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new PostgresDbModule(postgres.GetConnectionString(), loggerFactory));
-            builder.RegisterModule(new MongoDbModule(mongoUrl, "test", loggerFactory));
+            builder.RegisterModule(new MongoDbModule(mongoUrl, "mongo", loggerFactory));
             builder.RegisterModule(new CoreModule());
 
             builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "physlib", "history-", loggerFactory))

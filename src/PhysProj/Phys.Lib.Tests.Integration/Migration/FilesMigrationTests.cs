@@ -16,8 +16,7 @@ namespace Phys.Lib.Tests.Integration.Migration
 {
     public class FilesMigrationTests : BaseTests
     {
-        private readonly IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
-            new Dictionary<string, string?> { { "ConnectionStrings:db", "mongo" } }).Build();
+        private readonly IConfiguration configuration = ConfigurationFactory.CreateTestConfiguration();
 
         private readonly MongoDbContainer mongo = TestContainerFactory.CreateMongo();
 
@@ -64,7 +63,7 @@ namespace Phys.Lib.Tests.Integration.Migration
 
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
 
-            builder.RegisterModule(new MongoDbModule(mongoUrl, "test", loggerFactory));
+            builder.RegisterModule(new MongoDbModule(mongoUrl, "mongo", loggerFactory));
             builder.RegisterModule(new CoreModule());
 
             builder.Register(c => new LocalFileStorage("local-1", new DirectoryInfo("data/files-1"), c.Resolve<ILogger<LocalFileStorage>>()))

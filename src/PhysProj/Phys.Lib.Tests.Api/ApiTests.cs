@@ -82,9 +82,10 @@ namespace Phys.Lib.Tests.Api
             // override connection strings
             var srcSettingsFile = new FileInfo(Path.Combine(solutionDir.FullName, "appsettings.lib.dev.json"));
             var appSettings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(srcSettingsFile.FullName));
-            appSettings!["ConnectionStrings"]!["mongo"] = GetMongoUrl().ToString();
+            appSettings!["ConnectionStrings"]!["mongo-test"] = GetMongoUrl().ToString();
+            appSettings!["ConnectionStrings"]!["mongo"] = "mongo-test";
             appSettings!["ConnectionStrings"]!["postgres"] = GetPostgresUrl();
-            appSettings!["ConnectionStrings"]!["db"] = "mongo";
+            appSettings!["ConnectionStrings"]!["db"] = "mongo-test";
             appSettings!["ConnectionStrings"]!["urls"] = url;
             appSettings!["ConnectionStrings"]!["works-files"] = "data/files";
 
