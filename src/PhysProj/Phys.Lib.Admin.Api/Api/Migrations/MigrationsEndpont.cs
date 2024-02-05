@@ -17,10 +17,10 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
             }).ProducesResponse<List<MigratorModel>>("ListMigrators");
 
             builder.MapPost("/", ([FromBody]MigrationTaskModel model,
-                [FromServices]IMigrationService migrationService, [FromServices] IObjectQueue objectQueue) =>
+                [FromServices]IMigrationService migrationService, [FromServices] IQueue queue) =>
             {
                 var migration = migrationService.Create(model.Map());
-                objectQueue.Publish("migrations", migration);
+                queue.Publish("migrations", migration);
                 return Results.Ok(MigrationModel.Map(migration));
             }).ProducesResponse<MigrationModel>("StartMigration");
 

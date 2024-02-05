@@ -1,6 +1,6 @@
 ﻿namespace Phys.Queue
 {
-    public interface IObjectConsumer<T>
+    public interface IConsumer<T>
     {
         void Consume(T message);
     }

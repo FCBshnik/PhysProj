@@ -28,7 +28,7 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<RabbitQueue>()
                 .As<IMessageQueue>().SingleInstance();
             builder.RegisterType<JsonQueue>()
-                .As<IObjectQueue>().SingleInstance();
+                .As<IQueue>().SingleInstance();
         }
     }
 }

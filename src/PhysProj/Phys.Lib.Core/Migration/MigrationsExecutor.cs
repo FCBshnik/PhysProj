@@ -4,24 +4,24 @@ using Phys.Queue;
 
 namespace Phys.Lib.Core.Migration
 {
-    public class MigrationsExecutor : IHostedService, IObjectConsumer<MigrationDto>
+    public class MigrationsExecutor : IHostedService, IConsumer<MigrationDto>
     {
         private readonly ILogger<MigrationsExecutor> log;
-        private readonly IObjectQueue objectQueue;
+        private readonly IQueue queue;
         private readonly IMigrationService migrationService;
 
         private IDisposable? sub;
 
-        public MigrationsExecutor(ILogger<MigrationsExecutor> log, IObjectQueue objectQueue, IMigrationService migrationService)
+        public MigrationsExecutor(ILogger<MigrationsExecutor> log, IQueue queue, IMigrationService migrationService)
         {
             this.log = log;
-            this.objectQueue = objectQueue;
+            this.queue = queue;
             this.migrationService = migrationService;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            sub = objectQueue.Consume("migrations", this);
+            sub = queue.Consume("migrations", this);
             log.LogInformation("started");
             return Task.CompletedTask;
         }
@@ -33,7 +33,7 @@ namespace Phys.Lib.Core.Migration
             return Task.CompletedTask;
         }
 
-        void IObjectConsumer<MigrationDto>.Consume(MigrationDto message)
+        void IConsumer<MigrationDto>.Consume(MigrationDto message)
         {
             migrationService.Execute(message);
         }

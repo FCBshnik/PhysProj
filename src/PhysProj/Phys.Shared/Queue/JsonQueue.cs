@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Phys.Queue
 {
-    public class JsonQueue : IObjectQueue
+    public class JsonQueue : IQueue
     {
         private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions
         {
@@ -23,7 +23,7 @@ namespace Phys.Queue
             this.log = log;
         }
 
-        public IDisposable Consume<T>(string queueName, IObjectConsumer<T> consumer)
+        public IDisposable Consume<T>(string queueName, IConsumer<T> consumer)
         {
             ArgumentNullException.ThrowIfNull(queueName);
             ArgumentNullException.ThrowIfNull(consumer);
@@ -42,9 +42,9 @@ namespace Phys.Queue
         private class JsonConsumer<T> : IMessageConsumer
         {
             private readonly ILogger<JsonQueue> log;
-            private readonly IObjectConsumer<T> consumer;
+            private readonly IConsumer<T> consumer;
 
-            public JsonConsumer(IObjectConsumer<T> consumer, ILogger<JsonQueue> log)
+            public JsonConsumer(IConsumer<T> consumer, ILogger<JsonQueue> log)
             {
                 this.consumer = consumer;
                 this.log = log;
