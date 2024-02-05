@@ -10,9 +10,9 @@ namespace Phys.Tests.External.PCloud
 
         internal readonly static PCloudStorageSettings Settings = new PCloudStorageSettings
         {
-            Username = "fcbshnik@gmail.com",
-            Password = "e331380e840b72810ec0fe230553da22",
-            BaseFolderId = 8084200774,
+            Username = "username@gmail.com",
+            Password = "password",
+            BaseFolderId = 0,
         };
 
         internal readonly static StorageFileInfo TestFile = new StorageFileInfo
