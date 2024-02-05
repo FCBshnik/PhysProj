@@ -65,8 +65,6 @@ namespace Phys.Lib.Core.Search
             if (!root && info.HasFiles)
                 codes.Add(info.Code);
 
-            if (info.Original != null)
-                AddCodesWithFiles(codes, info.Original, false);
             foreach (var subWork in info.SubWorks)
                 AddCodesWithFiles(codes, subWork, false);
             foreach (var translation in info.Translations)

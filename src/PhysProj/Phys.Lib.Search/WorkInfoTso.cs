@@ -6,8 +6,6 @@
 
         public bool HasFiles { get; set; }
 
-        public WorkInfoTso? Original { get; set; }
-
         public List<WorkInfoTso> SubWorks { get; set; } = new List<WorkInfoTso>();
 
         public List<WorkInfoTso> Translations { get; set; } = new List<WorkInfoTso>();
