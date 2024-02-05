@@ -4,7 +4,7 @@ using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
 using Phys.Shared;
 
-namespace Phys.Lib.Core.Works
+namespace Phys.Lib.Core.Works.Migration
 {
     internal class WorksMigrator : IMigrator
     {

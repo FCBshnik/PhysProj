@@ -2,7 +2,7 @@
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Works;
 
-namespace Phys.Lib.Core.Works
+namespace Phys.Lib.Core.Works.Migration
 {
     internal class WorksBaseWriter : IMigrationWriter<WorkDbo>
     {

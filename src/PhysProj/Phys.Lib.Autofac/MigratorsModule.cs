@@ -6,10 +6,10 @@ using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Core.Search;
 using Phys.Lib.Core.Users;
-using Phys.Lib.Core.Works;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
+using Phys.Lib.Core.Works.Migration;
 
 namespace Phys.Lib.Autofac
 {
