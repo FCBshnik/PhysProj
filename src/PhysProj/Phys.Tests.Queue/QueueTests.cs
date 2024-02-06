@@ -83,7 +83,7 @@ namespace Phys.Tests.Queue
             badConsumer.Failed.Count.Should().BeGreaterThan(0);
             unsubBad.Dispose();
 
-            queue.Consume("test-1", consumer);
+            using var unsub = queue.Consume("test-1", consumer);
             Thread.Sleep(1000);
             consumer.Consumed.Should().BeEquivalentTo(new List<object> { });
         }
