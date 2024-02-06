@@ -4,16 +4,14 @@ using Microsoft.Extensions.Logging;
 using Phys.Files.Local;
 using Phys.Files;
 using Phys.Mongo.HistoryDb;
-using Phys.Queue;
-using Phys.RabbitMQ;
-using RabbitMQ.Client;
 using Phys.Files.PCloud;
 using Refit;
 using Phys.Lib.Core;
 using Phys.Mongo.Settings;
 using MongoDB.Driver;
 using Phys.Shared;
-using System.Xml.Linq;
+using Phys.Shared.Cache;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Phys.Lib.Autofac
 {
@@ -63,12 +61,18 @@ namespace Phys.Lib.Autofac
                 .As<IFileStorage>().SingleInstance();
 
             // history
-            builder.Register(c => new MongoHistoryDbFactory(mongoUrl, mongoUrl.DatabaseName ?? "phys-lib", "history-", loggerFactory))
+            builder.Register(_ => new MongoHistoryDbFactory(mongoUrl, mongoUrl.DatabaseName ?? "phys-lib", "history-", loggerFactory))
                 .SingleInstance().AsImplementedInterfaces();
 
             // settings
-            builder.Register(c => new MongoSettings(mongoUrl, mongoUrl.DatabaseName ?? "phys-lib", "settings", loggerFactory.CreateLogger<MongoSettings>()))
+            builder.Register(_ => new MongoSettings(mongoUrl, mongoUrl.DatabaseName ?? "phys-lib", "settings", loggerFactory.CreateLogger<MongoSettings>()))
                 .SingleInstance().AsImplementedInterfaces();
+
+            // cache
+            builder.Register(_ => new MemoryCache(new MemoryCacheOptions()))
+                .As<IMemoryCache>().SingleInstance();
+            builder.RegisterType<PhysMemoryCache>()
+                .As<ICache>().SingleInstance();
         }
     }
 }
