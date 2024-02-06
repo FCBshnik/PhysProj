@@ -9,15 +9,18 @@ namespace Phys.RabbitMQ
     {
         private readonly ILogger<RabbitQueue> log;
         private readonly Lazy<IConnection> connection;
+        private readonly string prefix;
 
-        public RabbitQueue(IConnectionFactory connectionFactory, ILogger<RabbitQueue> log)
+        public RabbitQueue(IConnectionFactory connectionFactory, string prefix, ILogger<RabbitQueue> log)
         {
             this.log = log;
+            this.prefix = prefix;
             connection = new Lazy<IConnection>(connectionFactory.CreateConnection);
         }
 
         public IDisposable Consume(string queueName, IMessageConsumer consumer)
         {
+            queueName = GetFullQueueName(queueName);
             var channel = EnsureChannel(queueName);
             var rabbitConsumer = new RabbitConsumer(channel, consumer, log);
             channel.BasicConsume(queueName, autoAck: false, rabbitConsumer);
@@ -27,6 +30,7 @@ namespace Phys.RabbitMQ
 
         public void Publish(string queueName, string message)
         {
+            queueName = GetFullQueueName(queueName);
             var body = Encoding.UTF8.GetBytes(message);
             using var channel = EnsureChannel(queueName);
             var properties = channel.CreateBasicProperties();
@@ -41,6 +45,11 @@ namespace Phys.RabbitMQ
             channel.QueueDeclare(queueName, durable: true, exclusive: false, autoDelete: false);
             log.LogInformation($"QueueDeclare '{queueName}'");
             return channel;
+        }
+
+        private string GetFullQueueName(string queueName)
+        {
+            return $"{prefix}.{queueName}";
         }
 
         private class RabbitConsumer : DefaultBasicConsumer, IDisposable

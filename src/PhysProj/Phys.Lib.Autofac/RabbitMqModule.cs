@@ -26,6 +26,7 @@ namespace Phys.Lib.Autofac
             builder.Register(_ => connectionFactory)
                 .As<IConnectionFactory>().SingleInstance();
             builder.RegisterType<RabbitQueue>()
+                .WithParameter(TypedParameter.From("physlib"))
                 .As<IMessageQueue>().SingleInstance();
             builder.RegisterType<JsonQueue>()
                 .As<IQueue>().SingleInstance();
