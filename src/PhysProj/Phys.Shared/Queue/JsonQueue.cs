@@ -31,7 +31,7 @@ namespace Phys.Queue
             return queue.Consume(consumer.QueueName, new JsonConsumer<T>(consumer, log));
         }
 
-        public void Publish<T>(T message) where T : IQueueMessage
+        public void Send<T>(T message) where T : IQueueMessage
         {
             ArgumentNullException.ThrowIfNull(message);
 

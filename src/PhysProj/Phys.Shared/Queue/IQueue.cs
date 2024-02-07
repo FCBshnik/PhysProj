@@ -2,9 +2,12 @@
 
 namespace Phys.Queue
 {
+    /// <summary>
+    /// Distributed message queue
+    /// </summary>
     public interface IQueue
     {
-        void Publish<TMessage>(TMessage message) where TMessage: IQueueMessage;
+        void Send<TMessage>(TMessage message) where TMessage: IQueueMessage;
 
         IDisposable Consume<TMessage>(IQueueConsumer<TMessage> consumer);
     }

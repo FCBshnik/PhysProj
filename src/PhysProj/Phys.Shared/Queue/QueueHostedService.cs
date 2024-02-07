@@ -21,7 +21,7 @@ namespace Phys.Shared.Queue
         public void AddConsumer<TMessage>(IQueueConsumer<TMessage> consumer)
         {
             subs.TryAdd(() => queue.Consume(consumer), null);
-            log.LogInformation($"added consumer {consumer.GetType()} for {consumer.QueueName}");
+            log.LogInformation($"added consumer {consumer.GetType()} with queue '{consumer.QueueName}'");
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
