@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Autofac;
@@ -24,8 +23,7 @@ namespace Phys.Lib.App
             builder.RegisterModule(new DataModule(configuration, loggerFactory));
             builder.RegisterModule(new CoreModule());
 
-            builder.RegisterType<MigrationsExecutor>()
-                .As<IHostedService>().SingleInstance();
+            builder.RegisterQueueConsumer<MigrationsExecutor, MigrationDto>();
         }
     }
 }

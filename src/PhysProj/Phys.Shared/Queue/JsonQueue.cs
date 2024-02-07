@@ -23,12 +23,11 @@ namespace Phys.Queue
             this.log = log;
         }
 
-        public IDisposable Consume<T>(string queueName, IConsumer<T> consumer)
+        public IDisposable Consume<T>(IQueueConsumer<T> consumer)
         {
-            ArgumentNullException.ThrowIfNull(queueName);
             ArgumentNullException.ThrowIfNull(consumer);
 
-            return queue.Consume(queueName, new JsonConsumer<T>(consumer, log));
+            return queue.Consume(consumer.QueueName, new JsonConsumer<T>(consumer, log));
         }
 
         public void Publish<T>(string queueName, T message)
@@ -42,9 +41,9 @@ namespace Phys.Queue
         private class JsonConsumer<T> : IMessageConsumer
         {
             private readonly ILogger<JsonQueue> log;
-            private readonly IConsumer<T> consumer;
+            private readonly IQueueConsumer<T> consumer;
 
-            public JsonConsumer(IConsumer<T> consumer, ILogger<JsonQueue> log)
+            public JsonConsumer(IQueueConsumer<T> consumer, ILogger<JsonQueue> log)
             {
                 this.consumer = consumer;
                 this.log = log;

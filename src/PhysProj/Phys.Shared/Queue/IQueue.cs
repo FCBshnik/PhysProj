@@ -2,8 +2,8 @@
 {
     public interface IQueue
     {
-        void Publish<T>(string queueName, T message);
+        void Publish<TMessage>(string queueName, TMessage message);
 
-        IDisposable Consume<T>(string queueName, IConsumer<T> consumer);
+        IDisposable Consume<TMessage>(IQueueConsumer<TMessage> consumer);
     }
 }

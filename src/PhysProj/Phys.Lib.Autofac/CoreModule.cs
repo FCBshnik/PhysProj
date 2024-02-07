@@ -12,6 +12,9 @@ using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Core.Stats;
 using Phys.Lib.Core.Search;
+using Phys.Shared.Queue;
+using System.ComponentModel.Design;
+using Microsoft.Extensions.Hosting;
 
 namespace Phys.Lib.Autofac
 {
@@ -51,7 +54,8 @@ namespace Phys.Lib.Autofac
                 .RegisterService<FileDownloadService, IFileDownloadService>()
                 .RegisterService<MigrationService, IMigrationService>()
                 .RegisterService<StatService, IStatService>()
-                .RegisterService<SearchService, ISearchService>();
+                .RegisterService<SearchService, ISearchService>()
+                .RegisterHostedService<QueueHostedService>();
         }
     }
 }
