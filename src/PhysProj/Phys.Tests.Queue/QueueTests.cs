@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Phys.NLog;
 using Phys.Queue;
+using System.Text;
 
 namespace Phys.Tests.Queue
 {
@@ -104,10 +105,10 @@ namespace Phys.Tests.Queue
         {
             public List<string> Consumed { get; } = new List<string>();
 
-            public void Consume(string message)
+            public void Consume(ReadOnlyMemory<byte> message)
             {
                 Thread.Sleep(10);
-                Consumed.Add(message);
+                Consumed.Add(Encoding.UTF8.GetString(message.Span));
             }
         }
 
@@ -115,10 +116,10 @@ namespace Phys.Tests.Queue
         {
             public List<string> Failed { get; } = new List<string>();
 
-            public void Consume(string message)
+            public void Consume(ReadOnlyMemory<byte> message)
             {
                 Thread.Sleep(10);
-                Failed.Add(message);
+                Failed.Add(Encoding.UTF8.GetString(message.Span));
                 throw new Exception($"failed to consume {message}");
             }
         }

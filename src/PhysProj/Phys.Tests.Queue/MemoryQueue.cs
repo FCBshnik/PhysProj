@@ -9,8 +9,8 @@ namespace Phys.Tests.Queue
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<int, Subscription>> subscriptions =
             new ConcurrentDictionary<string, ConcurrentDictionary<int, Subscription>>();
 
-        private readonly ConcurrentDictionary<string, ConcurrentQueue<string>> messages =
-            new ConcurrentDictionary<string, ConcurrentQueue<string>>();
+        private readonly ConcurrentDictionary<string, ConcurrentQueue<ReadOnlyMemory<byte>>> messages =
+            new ConcurrentDictionary<string, ConcurrentQueue<ReadOnlyMemory<byte>>>();
 
         private readonly ILogger<MemoryQueue> log;
 
@@ -29,9 +29,9 @@ namespace Phys.Tests.Queue
             return sub;
         }
 
-        public void Publish(string queueName, string message)
+        public void Publish(string queueName, ReadOnlyMemory<byte> message)
         {
-            var msgs = messages.GetOrAdd(queueName, _ => new ConcurrentQueue<string>());
+            var msgs = messages.GetOrAdd(queueName, _ => new ConcurrentQueue<ReadOnlyMemory<byte>>());
             msgs.Enqueue(message);
             ConsumeAsync(queueName);
         }
@@ -77,7 +77,7 @@ namespace Phys.Tests.Queue
                 this.log = log;
             }
 
-            public bool Consume(string message)
+            public bool Consume(ReadOnlyMemory<byte> message)
             {
                 try
                 {

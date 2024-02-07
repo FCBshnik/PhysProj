@@ -2,7 +2,7 @@
 {
     public interface IMessageQueue
     {
-        void Publish(string queueName, string message);
+        void Publish(string queueName, ReadOnlyMemory<byte> message);
 
         IDisposable Consume(string queueName, IMessageConsumer consumer);
     }

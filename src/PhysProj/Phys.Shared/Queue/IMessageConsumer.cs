@@ -2,6 +2,6 @@
 {
     public interface IMessageConsumer
     {
-        void Consume(string message);
+        void Consume(ReadOnlyMemory<byte> message);
     }
 }

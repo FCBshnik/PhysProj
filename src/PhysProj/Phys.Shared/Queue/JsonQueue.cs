@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Phys.Shared.Queue;
 using System.Text.Json;
 
 namespace Phys.Queue
@@ -30,12 +31,11 @@ namespace Phys.Queue
             return queue.Consume(consumer.QueueName, new JsonConsumer<T>(consumer, log));
         }
 
-        public void Publish<T>(string queueName, T message)
+        public void Publish<T>(T message) where T : IQueueMessage
         {
-            ArgumentNullException.ThrowIfNull(queueName);
             ArgumentNullException.ThrowIfNull(message);
 
-            queue.Publish(queueName, JsonSerializer.Serialize(message, serializerOptions));
+            queue.Publish(message.QueueName, JsonSerializer.SerializeToUtf8Bytes(message, serializerOptions));
         }
 
         private class JsonConsumer<T> : IMessageConsumer
@@ -49,11 +49,11 @@ namespace Phys.Queue
                 this.log = log;
             }
 
-            void IMessageConsumer.Consume(string message)
+            void IMessageConsumer.Consume(ReadOnlyMemory<byte> message)
             {
                 try
                 {
-                    var obj = JsonSerializer.Deserialize<T>(message, serializerOptions)!;
+                    var obj = JsonSerializer.Deserialize<T>(message.Span, serializerOptions)!;
                     consumer.Consume(obj);
                 }
                 catch (Exception e)

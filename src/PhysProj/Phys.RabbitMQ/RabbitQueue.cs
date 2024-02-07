@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Phys.Queue;
 using RabbitMQ.Client;
-using System.Text;
 
 namespace Phys.RabbitMQ
 {
@@ -28,14 +27,13 @@ namespace Phys.RabbitMQ
             return rabbitConsumer;
         }
 
-        public void Publish(string queueName, string message)
+        public void Publish(string queueName, ReadOnlyMemory<byte> message)
         {
             queueName = GetFullQueueName(queueName);
-            var body = Encoding.UTF8.GetBytes(message);
             using var channel = EnsureChannel(queueName);
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
-            channel.BasicPublish(exchange: string.Empty, routingKey: queueName, body: body, basicProperties: properties);
+            channel.BasicPublish(exchange: string.Empty, routingKey: queueName, body: message, basicProperties: properties);
             log.LogInformation($"BasicPublish '{queueName}'");
         }
 
@@ -68,11 +66,10 @@ namespace Phys.RabbitMQ
             public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, ReadOnlyMemory<byte> body)
             {
                 log.LogInformation($"HandleBasicDeliver: routingKey {routingKey}");
-                var msg = Encoding.UTF8.GetString(body.Span);
 
                 try
                 {
-                    consumer.Consume(msg);
+                    consumer.Consume(body);
                     channel.BasicAck(deliveryTag, false);
                 }
                 catch (Exception e)

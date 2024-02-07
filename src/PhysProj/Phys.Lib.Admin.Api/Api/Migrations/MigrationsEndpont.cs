@@ -20,7 +20,7 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
                 [FromServices]IMigrationService migrationService, [FromServices] IQueue queue) =>
             {
                 var migration = migrationService.Create(model.Map());
-                queue.Publish("migrations", migration);
+                queue.Publish(new MigrationMessage { Migration = migration });
                 return Results.Ok(MigrationModel.Map(migration));
             }).ProducesResponse<MigrationModel>("StartMigration");
 

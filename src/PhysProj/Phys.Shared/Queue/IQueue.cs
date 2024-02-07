@@ -1,8 +1,10 @@
-﻿namespace Phys.Queue
+﻿using Phys.Shared.Queue;
+
+namespace Phys.Queue
 {
     public interface IQueue
     {
-        void Publish<TMessage>(string queueName, TMessage message);
+        void Publish<TMessage>(TMessage message) where TMessage: IQueueMessage;
 
         IDisposable Consume<TMessage>(IQueueConsumer<TMessage> consumer);
     }
