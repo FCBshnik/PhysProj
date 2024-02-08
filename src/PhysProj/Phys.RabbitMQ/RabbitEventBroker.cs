@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Phys.Shared.EventBus.Broker;
-using Phys.Shared.Queue.Broker;
 using RabbitMQ.Client;
 
 namespace Phys.RabbitMQ
@@ -9,14 +8,12 @@ namespace Phys.RabbitMQ
     {
         private readonly ILogger<RabbitEventBroker> log;
         private readonly Lazy<IConnection> connection;
-        private readonly string queuePrefix;
-        private readonly string exchangePrefix;
+        private readonly string prefix;
 
-        public RabbitEventBroker(IConnectionFactory connectionFactory, string exchangePrefix, string queuePrefix, ILogger<RabbitEventBroker> log)
+        public RabbitEventBroker(IConnectionFactory connectionFactory, string prefix, ILogger<RabbitEventBroker> log)
         {
             this.log = log;
-            this.exchangePrefix = exchangePrefix;
-            this.queuePrefix = queuePrefix;
+            this.prefix = prefix;
             connection = new Lazy<IConnection>(connectionFactory.CreateConnection);
         }
 
@@ -62,12 +59,12 @@ namespace Phys.RabbitMQ
 
         private string GetFullExchangeName(string eventName)
         {
-            return $"{exchangePrefix}.{eventName}";
+            return $"{prefix}.{eventName}";
         }
 
         private string GetFullQueueName(string eventName, string handlerName)
         {
-            return $"{queuePrefix}.{eventName}.{handlerName}";
+            return $"{prefix}.{eventName}.{handlerName}";
         }
 
         private class RabbitConsumer : DefaultBasicConsumer, IDisposable

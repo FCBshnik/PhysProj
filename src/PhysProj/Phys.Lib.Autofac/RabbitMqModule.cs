@@ -5,6 +5,7 @@ using Phys.RabbitMQ;
 using RabbitMQ.Client;
 using Phys.Shared.Queue.Broker;
 using Phys.Shared.Broker;
+using Phys.Shared.EventBus.Broker;
 
 namespace Phys.Lib.Autofac
 {
@@ -30,6 +31,9 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<RabbitQueueBroker>()
                 .WithParameter(TypedParameter.From("physlib"))
                 .As<IQueueBroker>().SingleInstance();
+            builder.RegisterType<RabbitEventBroker>()
+                .WithParameter(TypedParameter.From("physlib-events"))
+                .As<IEventBroker>().SingleInstance();
             builder.RegisterType<JsonMessageBroker>()
                 .As<IMessageQueue>().SingleInstance();
         }
