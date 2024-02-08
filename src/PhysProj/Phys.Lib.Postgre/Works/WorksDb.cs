@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Postgres.Utils;
 using SqlKata;
@@ -190,17 +189,22 @@ namespace Phys.Lib.Postgres.Works
             return works.Values.ToList();
         }
 
-        IDbReaderResult<WorkDbo> IDbReader<WorkDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<WorkDbo>> IDbReader<WorkDbo>.Read(int limit)
         {
-            ArgumentNullException.ThrowIfNull(query);
+            string? cursor = null;
+            List<WorkModel>? works = null;
 
-            var works = Find(q =>
+            do
             {
-                if (query.Cursor != null)
-                    q = q.Where(WorkModel.IdColumn, ">", int.Parse(query.Cursor));
-                return q.OrderBy(WorkModel.IdColumn);
-            }, query.Limit);
-            return new DbReaderResult<WorkDbo>(works.Select(WorksMapper.Map).ToList(), works.LastOrDefault()?.Id.ToString());
+                works = Find(q =>
+                {
+                    if (cursor != null)
+                        q = q.Where(WorkModel.IdColumn, ">", int.Parse(cursor));
+                    return q.OrderBy(WorkModel.IdColumn);
+                }, limit);
+                cursor = works.LastOrDefault()?.Id.ToString();
+                yield return works.Select(WorksMapper.Map).ToList();
+            } while (works.Count >= limit);
         }
     }
 }

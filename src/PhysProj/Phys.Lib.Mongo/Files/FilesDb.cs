@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using Phys.Lib.Db.Files;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Files
 {
@@ -84,9 +83,9 @@ namespace Phys.Lib.Mongo.Files
                 throw new PhysDbException($"file '{code}' update failed");
         }
 
-        IDbReaderResult<FileDbo> IDbReader<FileDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<FileDbo>> IDbReader<FileDbo>.Read(int batchSize)
         {
-            return Read(query, FileMapper.Map);
+            return Read(batchSize, FileMapper.Map);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Db.Migrations;
-
-namespace Phys.Lib.Db.Files
+﻿namespace Phys.Lib.Db.Files
 {
     public interface IFilesDb : IDbReader<FileDbo>
     {

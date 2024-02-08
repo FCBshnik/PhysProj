@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Db.Migrations;
-
-namespace Phys.Lib.Db.Authors
+﻿namespace Phys.Lib.Db.Authors
 {
     public interface IAuthorsDb : IDbReader<AuthorDbo>
     {

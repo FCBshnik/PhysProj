@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
 using Phys.Lib.Db.Files;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Core.Files
 {
@@ -33,9 +32,9 @@ namespace Phys.Lib.Core.Files
             db.Value.Delete(code);
         }
 
-        public IDbReaderResult<FileDbo> Read(DbReaderQuery query)
+        public IEnumerable<List<FileDbo>> Read(int limit)
         {
-            return db.Value.Read(query);
+            return db.Value.Read(limit);
         }
     }
 }

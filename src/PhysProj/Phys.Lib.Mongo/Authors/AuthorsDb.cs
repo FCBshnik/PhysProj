@@ -5,7 +5,6 @@ using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Authors;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Authors
 {
@@ -94,9 +93,9 @@ namespace Phys.Lib.Mongo.Authors
             MongoCollection.DeleteOne(FilterBuilder.Eq(i => i.Code, code));
         }
 
-        IDbReaderResult<AuthorDbo> IDbReader<AuthorDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<AuthorDbo>> IDbReader<AuthorDbo>.Read(int batchSize)
         {
-            return Read(query, AuthorMapper.Map);
+            return Read(batchSize, AuthorMapper.Map);
         }
     }
 }

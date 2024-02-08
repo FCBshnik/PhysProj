@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo
 {
@@ -42,17 +41,21 @@ namespace Phys.Lib.Mongo
             this.log = log;
         }
 
-        protected IDbReaderResult<TDbo> Read<TDbo>(DbReaderQuery query, Func<TModel, TDbo> map)
+        protected IEnumerable<List<TDbo>> Read<TDbo>(int limit, Func<TModel, TDbo> map)
         {
-            ArgumentNullException.ThrowIfNull(query);
+            string? cursor = null;
+            List<TModel>? models = null;
 
-            var filter = FilterBuilder.Empty;
-            if (query.Cursor != null)
-                filter = FilterBuilder.And(filter, FilterBuilder.Gt(u => u.Id, query.Cursor));
-            var sort = SortBuilder.Ascending(i => i.Id);
-
-            var models = MongoCollection.Find(filter).Limit(query.Limit).Sort(sort).ToList();
-            return new DbReaderResult<TDbo>(models.Select(map).ToList(), models.LastOrDefault()?.Id);
+            do
+            {
+                var filter = FilterBuilder.Empty;
+                if (cursor != null)
+                    filter = FilterBuilder.And(filter, FilterBuilder.Gt(u => u.Id, cursor));
+                var sort = SortBuilder.Ascending(i => i.Id);
+                models = MongoCollection.Find(filter).Limit(limit).Sort(sort).ToList();
+                cursor = models.LastOrDefault()?.Id;
+                yield return models.Select(map).ToList();
+            } while (models.Count >= limit);
         }
 
         protected TModel Insert(TModel item)

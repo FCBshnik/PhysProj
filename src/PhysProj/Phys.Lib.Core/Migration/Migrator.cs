@@ -1,5 +1,5 @@
 ﻿using Phys.Shared;
-using Phys.Lib.Db.Migrations;
+using Phys.Lib.Db;
 
 namespace Phys.Lib.Core.Migration
 {
@@ -23,14 +23,11 @@ namespace Phys.Lib.Core.Migration
 
         public static void Migrate(IDbReader<T> source, IMigrationWriter<T> destination, MigrationDto migration, IProgress<MigrationDto> progress)
         {
-            IDbReaderResult<T> result = null!;
-
-            do
+            foreach (var values in source.Read(100))
             {
-                result = source.Read(new DbReaderQuery(100, result?.Cursor));
-                destination.Write(result.Values, migration.Stats);
+                destination.Write(values, migration.Stats);
                 progress.Report(migration);
-            } while (!result.IsCompleted);
+            }
         }
 
         public virtual void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)

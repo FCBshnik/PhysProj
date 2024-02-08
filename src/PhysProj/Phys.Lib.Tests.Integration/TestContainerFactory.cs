@@ -12,7 +12,6 @@ namespace Phys.Lib.Tests.Db
             return new MongoDbBuilder()
                 .WithDockerEndpoint(dockerHost)
                 .WithImage("mongo:4.4.18")
-                .WithName("physproj-tests-db-mongo")
                 .WithPortBinding("57017", "27017")
                 .Build();
         }
@@ -22,7 +21,6 @@ namespace Phys.Lib.Tests.Db
             return new PostgreSqlBuilder()
                 .WithDockerEndpoint(dockerHost)
                 .WithImage("postgres:15.3")
-                .WithName("physproj-tests-db-postgres")
                 .Build();
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Migration;
-using Phys.Lib.Db.Migrations;
+using Phys.Lib.Db;
 using Phys.Lib.Db.Works;
 using Phys.Shared;
 

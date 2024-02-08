@@ -2,9 +2,7 @@
 using Npgsql;
 using Phys.Lib.Db;
 using Phys.Lib.Db.Authors;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Postgres.Utils;
-using Phys.Lib.Postgres.Works;
 using SqlKata;
 using System.Text.RegularExpressions;
 
@@ -127,17 +125,22 @@ namespace Phys.Lib.Postgres.Authors
             return authors.Values.ToList();
         }
 
-        IDbReaderResult<AuthorDbo> IDbReader<AuthorDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<AuthorDbo>> IDbReader<AuthorDbo>.Read(int limit)
         {
-            ArgumentNullException.ThrowIfNull(query);
+            string? cursor = null;
+            List<AuthorModel>? authors = null;
 
-            var authors = Find(q =>
+            do
             {
-                if (query.Cursor != null)
-                    q = q.Where(AuthorModel.IdColumn, ">", int.Parse(query.Cursor));
-                return q.OrderBy(AuthorModel.IdColumn);
-            }, query.Limit);
-            return new DbReaderResult<AuthorDbo>(authors.Select(AuthorMapper.Map).ToList(), authors.LastOrDefault()?.Id.ToString());
+                authors = Find(q =>
+                {
+                    if (cursor != null)
+                        q = q.Where(AuthorModel.IdColumn, ">", int.Parse(cursor));
+                    return q.OrderBy(AuthorModel.IdColumn);
+                }, limit);
+                cursor = authors.LastOrDefault()?.Id.ToString();
+                yield return authors.Select(AuthorMapper.Map).ToList();
+            } while (authors.Count >= limit);
         }
     }
 }

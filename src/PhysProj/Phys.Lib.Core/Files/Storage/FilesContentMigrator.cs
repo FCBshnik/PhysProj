@@ -2,7 +2,6 @@
 using Phys.Files;
 using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Files;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Core.Files.Storage
 {
@@ -33,13 +32,9 @@ namespace Phys.Lib.Core.Files.Storage
             var src = storages[migration.Source];
             var dst = storages[migration.Destination];
 
-            IDbReaderResult<FileDbo> result = null!;
-
-            do
+            foreach (var files in filesDb.Read(100))
             {
-                result = filesDb.Read(new DbReaderQuery(100, result?.Cursor));
-
-                foreach (var file in result.Values)
+                foreach (var file in files)
                 {
                     var srcLink = file.Links.Find(l => l.StorageCode == src.Code);
                     var dstLink = file.Links.Find(l => l.StorageCode == dst.Code);
@@ -70,7 +65,7 @@ namespace Phys.Lib.Core.Files.Storage
                         progress.Report(migration);
                     }
                 }
-            } while (!result.IsCompleted);
+            }
         }
     }
 }

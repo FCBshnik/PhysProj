@@ -3,7 +3,6 @@ using Npgsql;
 using Phys.Lib.Db;
 using Phys.Lib.Db.Users;
 using SqlKata;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Postgres.Users
 {
@@ -89,10 +88,24 @@ namespace Phys.Lib.Postgres.Users
             }
         }
 
-        IDbReaderResult<UserDbo> IDbReader<UserDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<UserDbo>> IDbReader<UserDbo>.Read(int limit)
         {
+            string? cursor = null;
+            List<UserModel>? files = null;
             using var cnx = dataSource.Value.OpenConnection();
-            return Read<UserDbo, UserModel>(cnx, query, UserModel.IdColumn, UserMapper.Map);
+
+            do
+            {
+                var q = new Query(tableName)
+                    .OrderBy(UserModel.IdColumn)
+                    .Limit(limit);
+                if (cursor != null)
+                    q = q.Where(UserModel.IdColumn, ">", int.Parse(cursor));
+
+                files = Find<UserModel>(cnx, q);
+                cursor = files.LastOrDefault()?.Id.ToString();
+                yield return files.Select(UserMapper.Map).ToList();
+            } while (files.Count >= limit);
         }
     }
 }

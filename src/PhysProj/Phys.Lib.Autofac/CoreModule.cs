@@ -13,8 +13,6 @@ using Phys.Lib.Db.Works;
 using Phys.Lib.Core.Stats;
 using Phys.Lib.Core.Search;
 using Phys.Shared.Queue;
-using System.ComponentModel.Design;
-using Microsoft.Extensions.Hosting;
 
 namespace Phys.Lib.Autofac
 {

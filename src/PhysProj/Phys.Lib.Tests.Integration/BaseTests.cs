@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Autofac;
 using Phys.NLog;

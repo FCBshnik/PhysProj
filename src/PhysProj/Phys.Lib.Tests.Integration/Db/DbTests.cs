@@ -6,7 +6,6 @@ using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.NLog;
 using Phys.Utils;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Autofac;
 
 namespace Phys.Lib.Tests.Integration.Db

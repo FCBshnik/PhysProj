@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
 using Phys.Shared;
 using Phys.Shared.Utils;
@@ -25,12 +24,10 @@ namespace Phys.Lib.Core.Stats
             {
                 var dbStats = new DbStatsModel { Name = worksDb.Name, Library = new LibraryStatsModel() };
                 stats.Dbs.Add(dbStats);
-                IDbReaderResult<WorkDbo> result = null!;
 
-                do
+                foreach (var works in worksDb.Read(100))
                 {
-                    result = worksDb.Read(new DbReaderQuery(100, result?.Cursor));
-                    foreach (var work in result.Values)
+                    foreach (var work in works)
                     {
                         var total = dbStats.Library.Works.Total;
                         var lang = dbStats.Library.Works.PerLanguage.GetOrAdd(work.Language ?? "none", _ => new WorksStatModel.StatModel());
@@ -46,7 +43,7 @@ namespace Phys.Lib.Core.Stats
                         if (!HasFileRefInHierarchy(worksDb, work, new HashSet<string>()))
                             dbStats.Library.Works.Unreachable.Add(work.Code);
                     }
-                } while (!result.IsCompleted);
+                }
             }
 
             return stats;

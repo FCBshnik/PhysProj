@@ -1,6 +1,5 @@
 ﻿using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Authors;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Search;
 
@@ -33,20 +32,17 @@ namespace Phys.Lib.Core.Search.Migration
 
         private async Task MigrateAsync(MigrationDto migration, IProgress<MigrationDto> progress)
         {
-            IDbReaderResult<WorkDbo> result = null!;
-
             var workDb = worksDbs.First(r => r.Name == migration.Source);
             var authorsDb = authorsDbs.Value.First(r => r.Name == migration.Source);
             await textSearch.Reset(Language.AllAsStrings);
 
-            do
+            foreach (var works in workDb.Read(100))
             {
-                result = workDb.Read(new DbReaderQuery(100, result?.Cursor));
-                var values = result.Values.Where(Use).Select(w => Map(w, workDb, authorsDb)).ToList();
+                var values = works.Where(Use).Select(w => Map(w, workDb, authorsDb)).ToList();
                 await textSearch.Index(values);
-                migration.Stats.Updated += result.Values.Count;
+                migration.Stats.Updated += values.Count;
                 progress.Report(migration);
-            } while (!result.IsCompleted);
+            }
         }
 
         protected bool Use(WorkDbo work)

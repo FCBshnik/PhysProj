@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
 using Phys.Lib.Db.Authors;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Core.Authors
 {
@@ -13,9 +12,9 @@ namespace Phys.Lib.Core.Authors
         {
         }
 
-        public IDbReaderResult<AuthorDbo> Read(DbReaderQuery query)
+        public IEnumerable<List<AuthorDbo>> Read(int limit)
         {
-            return db.Value.Read(query);
+            return db.Value.Read(limit);
         }
 
         public void Create(string code)

@@ -1,12 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.Extensions.Configuration;
 using NLog.Web;
 using Phys.Lib.Core;
 using Phys.Lib.Site.Api.Pipeline;
 using Phys.NLog;
-using Phys.Shared.Utils;
 using Phys.Utils;
 using System.Reflection;
 

@@ -1,5 +1,5 @@
 ﻿using Phys.Lib.Core.Migration;
-using Phys.Lib.Db.Migrations;
+using Phys.Lib.Db;
 using Phys.Lib.Search;
 
 namespace Phys.Lib.Core.Search.Migration
@@ -24,18 +24,15 @@ namespace Phys.Lib.Core.Search.Migration
 
         public virtual void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {
-            IDbReaderResult<TDbObject> result = null!;
-
             var source = readers.First(r => r.Name == migration.Source);
             textSearch.Reset(Language.AllAsStrings);
 
-            do
+            foreach (var values in source.Read(100))
             {
-                result = source.Read(new DbReaderQuery(100, result?.Cursor));
-                textSearch.Index(result.Values.Where(Use).Select(Map).ToList());
-                migration.Stats.Updated += result.Values.Count;
+                textSearch.Index(values.Where(Use).Select(Map).ToList());
+                migration.Stats.Updated += values.Count;
                 progress.Report(migration);
-            } while (!result.IsCompleted);
+            }
         }
 
         protected abstract bool Use(TDbObject value);

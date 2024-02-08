@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Logging;
-using Phys.Lib.Db.Migrations;
 using SqlKata;
 using SqlKata.Compilers;
 using System.Data;
@@ -63,19 +62,6 @@ namespace Phys.Lib.Postgres
         {
             var sql = compiler.Compile(query);
             return cnx.Query(sql.Sql, map, sql.NamedBindings, splitOn: on).ToList();
-        }
-
-        protected IDbReaderResult<TDbo> Read<TDbo, TModel>(IDbConnection cnx, DbReaderQuery query, string idColumn, Func<TModel, TDbo> map)
-            where TModel : IPostgresModel
-        {
-            ArgumentNullException.ThrowIfNull(query);
-
-            var cmd = new Query(tableName).Limit(query.Limit).OrderBy(idColumn);
-            if (query.Cursor != null)
-                cmd = cmd.Where(idColumn, ">", int.Parse(query.Cursor));
-
-            var users = Find<TModel>(cnx, cmd);
-            return new DbReaderResult<TDbo>(users.Select(map).ToList(), users.LastOrDefault()?.Id.ToString());
         }
     }
 }

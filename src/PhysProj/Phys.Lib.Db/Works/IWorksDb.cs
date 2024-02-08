@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Db.Migrations;
-
-namespace Phys.Lib.Db.Works
+﻿namespace Phys.Lib.Db.Works
 {
     public interface IWorksDb : IDbReader<WorkDbo>
     {

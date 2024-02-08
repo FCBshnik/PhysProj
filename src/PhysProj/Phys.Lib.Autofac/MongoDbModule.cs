@@ -2,9 +2,9 @@
 using Autofac.Core;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Phys.Lib.Db;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Mongo;

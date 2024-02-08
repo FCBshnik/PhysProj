@@ -5,7 +5,6 @@ using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Works;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Works
 {
@@ -118,9 +117,9 @@ namespace Phys.Lib.Mongo.Works
                 throw new PhysDbException($"work '{code}' update failed");
         }
 
-        IDbReaderResult<WorkDbo> IDbReader<WorkDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<WorkDbo>> IDbReader<WorkDbo>.Read(int batchSize)
         {
-            return Read(query, WorkMapper.Map);
+            return Read(batchSize, WorkMapper.Map);
         }
     }
 }

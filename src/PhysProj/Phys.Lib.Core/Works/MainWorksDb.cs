@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Works;
 
 namespace Phys.Lib.Core.Works
@@ -13,9 +12,9 @@ namespace Phys.Lib.Core.Works
         {
         }
 
-        public IDbReaderResult<WorkDbo> Read(DbReaderQuery query)
+        public IEnumerable<List<WorkDbo>> Read(int limit)
         {
-            return db.Value.Read(query);
+            return db.Value.Read(limit);
         }
 
         public void Create(string code)

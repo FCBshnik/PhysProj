@@ -1,6 +1,5 @@
 ﻿using Phys.Lib.Core.Migration;
 using Phys.Lib.Db.Authors;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Search;
 
 namespace Phys.Lib.Core.Search.Migration
@@ -25,19 +24,16 @@ namespace Phys.Lib.Core.Search.Migration
 
         public virtual void Migrate(MigrationDto migration, IProgress<MigrationDto> progress)
         {
-            IDbReaderResult<AuthorDbo> result = null!;
-
             var source = authorsDbs.First(r => r.Name == migration.Source);
             textSearch.Reset(Language.AllAsStrings);
 
-            do
+            foreach (var authors in source.Read(100))
             {
-                result = source.Read(new DbReaderQuery(100, result?.Cursor));
-                var values = result.Values.Where(Use).Select(Map).ToList();
+                var values = authors.Where(Use).Select(Map).ToList();
                 textSearch.Index(values);
-                migration.Stats.Updated += result.Values.Count;
+                migration.Stats.Updated += values.Count;
                 progress.Report(migration);
-            } while (!result.IsCompleted);
+            }
         }
 
         private AuthorTso Map(AuthorDbo value)

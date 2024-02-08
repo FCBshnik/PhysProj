@@ -1,6 +1,5 @@
 ﻿using Phys.Lib.Db.Users;
 using Shouldly;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Tests.Integration.Db
 {
@@ -70,14 +69,12 @@ namespace Phys.Lib.Tests.Integration.Db
 
         private void Read(int limit, params string[] expectedNames)
         {
-            IDbReaderResult<UserDbo> res = null!;
-            List<string> actualNames = new List<string>();
+            var actualNames = new List<string>();
 
-            do
+            foreach (var users in db.Read(limit))
             {
-                res = db.Read(new DbReaderQuery(limit, res?.Cursor));
-                actualNames.AddRange(res.Values.Select(u => u.Name));
-            } while (!res.IsCompleted);
+                actualNames.AddRange(users.Select(u => u.Name));
+            }
 
             actualNames.ShouldBeEquivalentTo(expectedNames.ToList());
         }

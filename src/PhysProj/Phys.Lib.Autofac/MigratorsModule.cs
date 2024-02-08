@@ -4,7 +4,6 @@ using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Files.Storage;
 using Phys.Lib.Core.Files;
 using Phys.Lib.Core.Migration;
-using Phys.Lib.Core.Search;
 using Phys.Lib.Core.Users;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;

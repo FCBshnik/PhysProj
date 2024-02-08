@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Migrations;
 using Phys.Lib.Db.Users;
 
 namespace Phys.Lib.Core.Users
@@ -13,9 +12,9 @@ namespace Phys.Lib.Core.Users
         {
         }
 
-        public IDbReaderResult<UserDbo> Read(DbReaderQuery query)
+        public IEnumerable<List<UserDbo>> Read(int limit)
         {
-            return db.Value.Read(query);
+            return db.Value.Read(limit);
         }
 
         public void Create(UserDbo user)

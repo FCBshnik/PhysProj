@@ -1,6 +1,4 @@
-﻿using Phys.Lib.Db.Migrations;
-
-namespace Phys.Lib.Db.Users
+﻿namespace Phys.Lib.Db.Users
 {
     public interface IUsersDb : IDbReader<UserDbo>
     {

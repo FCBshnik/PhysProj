@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Npgsql;
+using Phys.Lib.Db;
 using Phys.Lib.Db.Files;
-using Phys.Lib.Db.Migrations;
 using SqlKata;
 using System.Text.RegularExpressions;
 
@@ -105,17 +105,22 @@ namespace Phys.Lib.Postgres.Files
             return files.Values.ToList();
         }
 
-        IDbReaderResult<FileDbo> IDbReader<FileDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<FileDbo>> IDbReader<FileDbo>.Read(int limit)
         {
-            ArgumentNullException.ThrowIfNull(query);
+            string? cursor = null;
+            List<FileModel>? files = null;
 
-            var files = Find(q =>
+            do
             {
-                if (query.Cursor != null)
-                    q = q.Where(FileModel.IdColumn, ">", int.Parse(query.Cursor));
-                return q.OrderBy(FileModel.IdColumn);
-            }, query.Limit);
-            return new DbReaderResult<FileDbo>(files.Select(FileMapper.Map).ToList(), files.LastOrDefault()?.Id.ToString());
+                files = Find(q =>
+                {
+                    if (cursor != null)
+                        q = q.Where(FileModel.IdColumn, ">", int.Parse(cursor));
+                    return q.OrderBy(FileModel.IdColumn);
+                }, limit);
+                cursor = files.LastOrDefault()?.Id.ToString();
+                yield return files.Select(FileMapper.Map).ToList();
+            } while (files.Count >= limit);
         }
     }
 }

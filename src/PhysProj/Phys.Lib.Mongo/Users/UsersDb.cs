@@ -4,7 +4,6 @@ using Phys.Lib.Mongo.Utils;
 using Phys.Lib.Db.Users;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Db;
-using Phys.Lib.Db.Migrations;
 
 namespace Phys.Lib.Mongo.Users
 {
@@ -67,9 +66,9 @@ namespace Phys.Lib.Mongo.Users
             return MongoCollection.Find(filter).Limit(query.Limit).Sort(sort).ToList().Select(UserMapper.Map).ToList();
         }
 
-        IDbReaderResult<UserDbo> IDbReader<UserDbo>.Read(DbReaderQuery query)
+        IEnumerable<List<UserDbo>> IDbReader<UserDbo>.Read(int batchSize)
         {
-            return Read(query, UserMapper.Map);
+            return Read(batchSize, UserMapper.Map);
         }
     }
 }

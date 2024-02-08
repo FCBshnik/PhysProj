@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace Phys.Lib.Db.Authors
+﻿namespace Phys.Lib.Db.Authors
 {
     public static class AuthorsDbExtensions
     {
