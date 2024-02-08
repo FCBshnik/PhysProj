@@ -1,34 +1,35 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Phys.NLog;
-using Phys.Queue;
 using System.Text;
+using Phys.Shared.Queue.Broker;
 
-namespace Phys.Tests.Queue
+namespace Phys.Tests.Queue.Queue
 {
-    public abstract class QueueTests
+    public abstract class QueueBrokerTests
     {
         protected static readonly LoggerFactory loggerFactory = new LoggerFactory();
 
-        private IMessageQueue queue;
+        private IQueueBroker queue;
 
-        protected abstract IMessageQueue CreateQueue();
+        protected abstract IQueueBroker CreateQueueBroker();
 
-        public QueueTests()
+        public QueueBrokerTests()
         {
             NLogConfig.Configure(loggerFactory);
-            queue = CreateQueue();
+            queue = CreateQueueBroker();
         }
 
         [Fact]
         public void ConsumeDifferent_PublishToOne_ConsumedByOne()
         {
-            var consumer1 = new Consumer();
+            var consumer1 = new GoodConsumer();
             using var unsub1 = queue.Consume("test-1", consumer1);
-            var consumer2 = new Consumer();
+            var consumer2 = new GoodConsumer();
             using var unsub2 = queue.Consume("test-2", consumer2);
 
-            queue.Publish("test-2", "message");
+            queue.Send("test-2", "message");
+
             Thread.Sleep(100);
             consumer1.Consumed.Should().BeEquivalentTo(new List<object>());
             Thread.Sleep(100);
@@ -38,23 +39,27 @@ namespace Phys.Tests.Queue
         [Fact]
         public void Consume_Publish_Consumed()
         {
-            var consumer = new Consumer();
+            var consumer = new GoodConsumer();
             using var unsub = queue.Consume("test-1", consumer);
+
             Thread.Sleep(100);
-            queue.Publish("test-1", "message");
+            queue.Send("test-1", "message");
+
             Thread.Sleep(100);
             consumer.Consumed.Should().BeEquivalentTo(new List<object> { "message" });
         }
 
         [Fact]
-        public void Consume_PublishMany_Consumed()
+        public void Consume_PublishMany_ConsumedWithOrder()
         {
-            var consumer = new Consumer();
+            var consumer = new GoodConsumer();
             using var unsub = queue.Consume("test-1", consumer);
+
             Thread.Sleep(500);
-            queue.Publish("test-1", "message-1");
+            queue.Send("test-1", "message-1");
             Thread.Sleep(500);
-            queue.Publish("test-1", "message-2");
+            queue.Send("test-1", "message-2");
+
             Thread.Sleep(500);
             consumer.Consumed.Should().BeEquivalentTo(new List<object> { "message-1", "message-2" });
         }
@@ -62,10 +67,12 @@ namespace Phys.Tests.Queue
         [Fact]
         public void Publish_Consume_Consumed()
         {
-            var consumer = new Consumer();
-            queue.Publish("test-1", "message");
+            var consumer = new GoodConsumer();
+            queue.Send("test-1", "message");
+
             Thread.Sleep(1000);
             using var unsub = queue.Consume("test-1", consumer);
+
             Thread.Sleep(1000);
             consumer.Consumed.Should().BeEquivalentTo(new List<object> { "message" });
         }
@@ -74,9 +81,9 @@ namespace Phys.Tests.Queue
         public void Publish_ConsumeFailed_NotRedelivered()
         {
             var badConsumer = new BadConsumer();
-            var consumer = new Consumer();
+            var consumer = new GoodConsumer();
 
-            queue.Publish("test-1", "message");
+            queue.Send("test-1", "message");
             Thread.Sleep(1000);
             var unsubBad = queue.Consume("test-1", badConsumer);
 
@@ -86,22 +93,24 @@ namespace Phys.Tests.Queue
 
             using var unsub = queue.Consume("test-1", consumer);
             Thread.Sleep(1000);
-            consumer.Consumed.Should().BeEquivalentTo(new List<object> { });
+            consumer.Consumed.Should().BeEquivalentTo(new List<object>());
         }
 
         [Fact]
-        public void PublishMany_Consume_Consumed()
+        public void PublishMany_Consume_ConsumedWithOrder()
         {
-            var consumer = new Consumer();
-            queue.Publish("test-1", "message-1");
-            queue.Publish("test-1", "message-2");
+            var consumer = new GoodConsumer();
+            queue.Send("test-1", "message-1");
+            queue.Send("test-1", "message-2");
+
             Thread.Sleep(1000);
             using var unsub = queue.Consume("test-1", consumer);
+
             Thread.Sleep(1000);
             consumer.Consumed.Should().BeEquivalentTo(new List<object> { "message-1", "message-2" });
         }
 
-        private class Consumer : IMessageConsumer
+        private class GoodConsumer : IQueueBrokerConsumer
         {
             public List<string> Consumed { get; } = new List<string>();
 
@@ -112,7 +121,7 @@ namespace Phys.Tests.Queue
             }
         }
 
-        private class BadConsumer : IMessageConsumer
+        private class BadConsumer : IQueueBrokerConsumer
         {
             public List<string> Failed { get; } = new List<string>();
 

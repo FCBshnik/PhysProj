@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Phys.Queue;
 using Phys.RabbitMQ;
 using RabbitMQ.Client;
+using Phys.Shared.Queue.Broker;
+using Phys.Shared.Broker;
 
 namespace Phys.Lib.Autofac
 {
@@ -25,11 +27,11 @@ namespace Phys.Lib.Autofac
 
             builder.Register(_ => connectionFactory)
                 .As<IConnectionFactory>().SingleInstance();
-            builder.RegisterType<RabbitQueue>()
+            builder.RegisterType<RabbitQueueBroker>()
                 .WithParameter(TypedParameter.From("physlib"))
+                .As<IQueueBroker>().SingleInstance();
+            builder.RegisterType<JsonMessageBroker>()
                 .As<IMessageQueue>().SingleInstance();
-            builder.RegisterType<JsonQueue>()
-                .As<IQueue>().SingleInstance();
         }
     }
 }

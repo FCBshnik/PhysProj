@@ -1,23 +1,23 @@
 ﻿using Microsoft.Extensions.Logging;
-using Phys.Queue;
 using RabbitMQ.Client;
+using Phys.Shared.Queue.Broker;
 
 namespace Phys.RabbitMQ
 {
-    public class RabbitQueue : IMessageQueue
+    public class RabbitQueueBroker : IQueueBroker
     {
-        private readonly ILogger<RabbitQueue> log;
+        private readonly ILogger<RabbitQueueBroker> log;
         private readonly Lazy<IConnection> connection;
-        private readonly string prefix;
+        private readonly string queuePrefix;
 
-        public RabbitQueue(IConnectionFactory connectionFactory, string prefix, ILogger<RabbitQueue> log)
+        public RabbitQueueBroker(IConnectionFactory connectionFactory, string queuePrefix, ILogger<RabbitQueueBroker> log)
         {
             this.log = log;
-            this.prefix = prefix;
+            this.queuePrefix = queuePrefix;
             connection = new Lazy<IConnection>(connectionFactory.CreateConnection);
         }
 
-        public IDisposable Consume(string queueName, IMessageConsumer consumer)
+        public IDisposable Consume(string queueName, IQueueBrokerConsumer consumer)
         {
             queueName = GetFullQueueName(queueName);
             var channel = EnsureChannel(queueName);
@@ -27,7 +27,7 @@ namespace Phys.RabbitMQ
             return rabbitConsumer;
         }
 
-        public void Publish(string queueName, ReadOnlyMemory<byte> message)
+        public void Send(string queueName, ReadOnlyMemory<byte> message)
         {
             queueName = GetFullQueueName(queueName);
             using var channel = EnsureChannel(queueName);
@@ -47,16 +47,16 @@ namespace Phys.RabbitMQ
 
         private string GetFullQueueName(string queueName)
         {
-            return $"{prefix}.{queueName}";
+            return $"{queuePrefix}.{queueName}";
         }
 
         private class RabbitConsumer : DefaultBasicConsumer, IDisposable
         {
-            private readonly ILogger<RabbitQueue> log;
-            private readonly IMessageConsumer consumer;
+            private readonly ILogger<RabbitQueueBroker> log;
+            private readonly IQueueBrokerConsumer consumer;
             private readonly IModel channel;
 
-            public RabbitConsumer(IModel channel, IMessageConsumer consumer, ILogger<RabbitQueue> log)
+            public RabbitConsumer(IModel channel, IQueueBrokerConsumer consumer, ILogger<RabbitQueueBroker> log)
             {
                 this.channel = channel;
                 this.consumer = consumer;

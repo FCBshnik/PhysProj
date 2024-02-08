@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Phys.Queue;
 using System.Collections.Concurrent;
+using Phys.Shared.Queue.Broker;
 
-namespace Phys.Tests.Queue
+namespace Phys.Tests.Queue.Queue
 {
-    internal class MemoryQueue : IMessageQueue
+    internal class MemoryQueue : IQueueBroker
     {
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<int, Subscription>> subscriptions =
             new ConcurrentDictionary<string, ConcurrentDictionary<int, Subscription>>();
@@ -19,7 +20,7 @@ namespace Phys.Tests.Queue
             this.log = log;
         }
 
-        public IDisposable Consume(string queueName, IMessageConsumer consumer)
+        public IDisposable Consume(string queueName, IQueueBrokerConsumer consumer)
         {
             var subs = subscriptions.GetOrAdd(queueName, _ => new ConcurrentDictionary<int, Subscription>());
             var key = consumer.GetHashCode();
@@ -29,7 +30,7 @@ namespace Phys.Tests.Queue
             return sub;
         }
 
-        public void Publish(string queueName, ReadOnlyMemory<byte> message)
+        public void Send(string queueName, ReadOnlyMemory<byte> message)
         {
             var msgs = messages.GetOrAdd(queueName, _ => new ConcurrentQueue<ReadOnlyMemory<byte>>());
             msgs.Enqueue(message);
@@ -65,12 +66,12 @@ namespace Phys.Tests.Queue
         private class Subscription : IDisposable
         {
             private readonly Action dispose;
-            private readonly IMessageConsumer consumer;
+            private readonly IQueueBrokerConsumer consumer;
             private readonly ILogger<MemoryQueue> log;
 
             public bool IsBusy { get; private set; }
 
-            public Subscription(Action dispose, IMessageConsumer consumer, ILogger<MemoryQueue> log)
+            public Subscription(Action dispose, IQueueBrokerConsumer consumer, ILogger<MemoryQueue> log)
             {
                 this.dispose = dispose;
                 this.consumer = consumer;

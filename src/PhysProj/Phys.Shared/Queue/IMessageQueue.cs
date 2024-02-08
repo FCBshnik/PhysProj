@@ -1,9 +1,14 @@
-﻿namespace Phys.Queue
+﻿using Phys.Shared.Queue;
+
+namespace Phys.Queue
 {
+    /// <summary>
+    /// Distributed message queue
+    /// </summary>
     public interface IMessageQueue
     {
-        void Publish(string queueName, ReadOnlyMemory<byte> message);
+        void Send<TMessage>(TMessage message) where TMessage: IQueueMessage;
 
-        IDisposable Consume(string queueName, IMessageConsumer consumer);
+        IDisposable Consume<TMessage>(IMessageQueueConsumer<TMessage> consumer);
     }
 }

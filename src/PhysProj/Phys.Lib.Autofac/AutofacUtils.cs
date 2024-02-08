@@ -22,16 +22,16 @@ namespace Phys.Lib.Autofac
             return builder;
         }
 
-        public static ContainerBuilder RegisterQueueConsumer<TConsumer, TMessage>(this ContainerBuilder builder) where TConsumer : IQueueConsumer<TMessage>
+        public static ContainerBuilder RegisterQueueConsumer<TConsumer, TMessage>(this ContainerBuilder builder) where TConsumer : IMessageQueueConsumer<TMessage>
         {
             builder.RegisterType<TConsumer>()
-                .As<IQueueConsumer<TMessage>>()
+                .As<IMessageQueueConsumer<TMessage>>()
                 .SingleInstance();
 
             builder.RegisterBuildCallback(c =>
             {
                 var queueService = c.Resolve<QueueHostedService>();
-                var consumer = c.Resolve<IQueueConsumer<TMessage>>();
+                var consumer = c.Resolve<IMessageQueueConsumer<TMessage>>();
                 queueService.AddConsumer(consumer);
             });
 

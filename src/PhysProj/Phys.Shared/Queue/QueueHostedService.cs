@@ -7,18 +7,18 @@ namespace Phys.Shared.Queue
 {
     public class QueueHostedService : IHostedService
     {
-        private readonly IQueue queue;
+        private readonly IMessageQueue queue;
         private readonly ILogger<QueueHostedService> log;
 
         private readonly ConcurrentDictionary<Func<IDisposable>, IDisposable?> subs = new ConcurrentDictionary<Func<IDisposable>, IDisposable?>();
 
-        public QueueHostedService(IQueue queue, ILogger<QueueHostedService> log)
+        public QueueHostedService(IMessageQueue queue, ILogger<QueueHostedService> log)
         {
             this.queue = queue;
             this.log = log;
         }
 
-        public void AddConsumer<TMessage>(IQueueConsumer<TMessage> consumer)
+        public void AddConsumer<TMessage>(IMessageQueueConsumer<TMessage> consumer)
         {
             subs.TryAdd(() => queue.Consume(consumer), null);
             log.LogInformation($"added consumer {consumer.GetType()} with queue '{consumer.QueueName}'");

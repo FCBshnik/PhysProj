@@ -17,7 +17,7 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
             }).ProducesResponse<List<MigratorModel>>("ListMigrators");
 
             builder.MapPost("/", ([FromBody]MigrationTaskModel model,
-                [FromServices]IMigrationService migrationService, [FromServices] IQueue queue) =>
+                [FromServices]IMigrationService migrationService, [FromServices] IMessageQueue queue) =>
             {
                 var migration = migrationService.Create(model.Map());
                 queue.Send(new MigrationMessage { Migration = migration });
