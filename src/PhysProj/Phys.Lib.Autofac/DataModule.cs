@@ -6,11 +6,11 @@ using Phys.Files;
 using Phys.Mongo.HistoryDb;
 using Phys.Files.PCloud;
 using Refit;
-using Phys.Lib.Core;
 using Phys.Mongo.Settings;
 using MongoDB.Driver;
 using Phys.Shared;
 using Phys.Shared.Cache;
+using Phys.Shared.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Phys.Lib.Autofac

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Phys.Queue;
 using Phys.RabbitMQ;
 using RabbitMQ.Client;
 using Phys.Shared.Queue.Broker;

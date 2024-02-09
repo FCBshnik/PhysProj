@@ -7,6 +7,9 @@ namespace Phys.Lib.Db
     /// </summary>
     public interface IDbReader<T> : INamed
     {
-        IEnumerable<List<T>> Read(int limit);
+        /// <summary>
+        /// Enumerates all values in db in batched way
+        /// </summary>
+        IEnumerable<List<T>> Read(int limit = 100);
     }
 }

@@ -5,12 +5,12 @@ using Phys.Lib.Autofac;
 
 namespace Phys.Lib.Admin.Api
 {
-    internal class ApiModule : Module
+    internal class AdminApiModule : Module
     {
         private readonly ILoggerFactory loggerFactory;
         private readonly IConfiguration configuration;
 
-        public ApiModule(ILoggerFactory loggerFactory, IConfiguration configuration)
+        public AdminApiModule(ILoggerFactory loggerFactory, IConfiguration configuration)
         {
             this.loggerFactory = loggerFactory;
             this.configuration = configuration;

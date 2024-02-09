@@ -36,13 +36,18 @@
 <article class="flex flex-col grow gap-2">
     <section class="gap-2">Works</section>
     <section class="">
+      <div class="flex flex-row gap-2 justify-end">
+          <button class="w-1/6 text-red-300" on:click={() => api.service.invalidateWorksCache()}>Invalidate cache</button>
+      </div>
+  </section>
+    <section class="">
         <!-- svelte-ignore a11y-autofocus -->
         <form class="max-w-full bg-inherit p-0" autofocus>
           <div class="flex flex-row gap-2 items-center">
             <input class="w-full" type="search" bind:value={text} placeholder="Code to create new work or text to search"/>
-            <button class="w-1/6" on:click={refresh}>Search</button>
-            <button class="w-1/6" on:click={create}>Create</button>
-            <button class="w-1/6" on:click={refresh}>Refresh</button>
+            <button class="w-1/12" on:click={refresh}>Search</button>
+            <button class="w-1/12" on:click={create}>Create</button>
+            <button class="w-1/12" on:click={refresh}>Refresh</button>
           </div>
         </form>
     </section>

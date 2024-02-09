@@ -1,6 +1,6 @@
 ﻿namespace Phys.Shared.EventBus
 {
-    public interface IBusEvent
+    public interface IEvent
     {
         string Name { get; }
     }

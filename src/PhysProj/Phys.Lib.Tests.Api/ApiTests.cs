@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Phys.NLog;
-using Phys.Utils;
+using Phys.Shared;
 using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
 
@@ -29,7 +29,7 @@ namespace Phys.Lib.Tests.Api
             try
             {
                 NLogConfig.Configure(loggerFactory);
-                AppUtils.OnRun(loggerFactory);
+                PhysAppContext.Init(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

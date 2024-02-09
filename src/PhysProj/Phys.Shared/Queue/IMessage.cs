@@ -1,6 +1,6 @@
 ﻿namespace Phys.Shared.Queue
 {
-    public interface IQueueMessage
+    public interface IMessage
     {
         string QueueName { get; }
     }

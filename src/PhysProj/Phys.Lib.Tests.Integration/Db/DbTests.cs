@@ -5,8 +5,8 @@ using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.NLog;
-using Phys.Utils;
 using Phys.Lib.Autofac;
+using Phys.Shared;
 
 namespace Phys.Lib.Tests.Integration.Db
 {
@@ -23,7 +23,7 @@ namespace Phys.Lib.Tests.Integration.Db
             try
             {
                 NLogConfig.Configure(loggerFactory);
-                AppUtils.OnRun(loggerFactory);
+                PhysAppContext.Init(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

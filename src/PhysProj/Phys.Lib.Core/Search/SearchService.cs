@@ -3,23 +3,23 @@ using Phys.Lib.Core.Files;
 using Phys.Lib.Search;
 using Phys.Shared.Utils;
 using Phys.Shared;
-using Phys.Lib.Core.Works;
+using Phys.Lib.Core.Works.Cache;
 
 namespace Phys.Lib.Core.Search
 {
     internal class SearchService : ISearchService
     {
         private readonly ITextSearch<WorkTso> worksTextSearch;
-        private readonly IWorksSearch worksSearch;
         private readonly IFilesSearch filesSearch;
         private readonly IAuthorsSearch authorsSearch;
+        private readonly IWorksCache worksCache;
 
-        public SearchService(ITextSearch<WorkTso> worksTextSearch, IWorksSearch worksSearch, IFilesSearch filesSearch, IAuthorsSearch authorsSearch)
+        public SearchService(ITextSearch<WorkTso> worksTextSearch, IFilesSearch filesSearch, IAuthorsSearch authorsSearch, IWorksCache worksCache)
         {
             this.worksTextSearch = worksTextSearch;
-            this.worksSearch = worksSearch;
             this.filesSearch = filesSearch;
             this.authorsSearch = authorsSearch;
+            this.worksCache = worksCache;
         }
 
         public async Task<SearchWorksResult> SearchWorks(string? search, int limit = 16)
@@ -41,7 +41,7 @@ namespace Phys.Lib.Core.Search
 
             codes = codes.Take(limit).ToList();
 
-            var worksMap = worksSearch.FindByCodes(codes).ToDictionary(w => w.Code);
+            var worksMap = worksCache.GetWorks(codes).ToDictionary(w => w.Code);
             if (worksMap.Count != codes.Count)
                 throw new PhysException($"works {codes.Except(worksMap.Keys).Join()} found by search but missed in db");
 

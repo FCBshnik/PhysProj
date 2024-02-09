@@ -4,7 +4,7 @@
     {
         T? Get<T>(string key);
 
-        void Set<T>(string key, T value, TimeSpan ttl);
+        void Set<T>(string key, T value, TimeSpan? ttl = null);
 
         void Delete(string key);
     }

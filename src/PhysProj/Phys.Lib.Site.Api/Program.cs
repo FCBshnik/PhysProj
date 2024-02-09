@@ -1,10 +1,10 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using NLog.Web;
-using Phys.Lib.Core;
 using Phys.Lib.Site.Api.Pipeline;
 using Phys.NLog;
-using Phys.Utils;
+using Phys.Shared;
+using Phys.Shared.Configuration;
 using System.Reflection;
 
 namespace Phys.Lib.Site.Api
@@ -20,17 +20,20 @@ namespace Phys.Lib.Site.Api
         public static void Main(string[] args)
         {
             NLogConfig.Configure(loggerFactory);
-            AppUtils.OnRun(loggerFactory);
+            PhysAppContext.Init(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
 
-            AppUtils.AddJsonConfigFromArgs(builder.Configuration);
-
+            builder.Configuration.AddJsonConfigFromArgs();
             IConfiguration config = builder.Configuration;
+
             var urls = config.GetConnectionStringOrThrow("urls");
             var elasticUrl = config.GetConnectionString("logs_elastic");
             if (elasticUrl != null)
+            {
                 NLogConfig.AddElastic(loggerFactory, "lib-site", elasticUrl);
+                PhysAppContext.HttpObserver?.IgnoreUri(new Uri(elasticUrl));
+            }
 
             builder.WebHost.UseUrls(urls);
 
@@ -40,7 +43,7 @@ namespace Phys.Lib.Site.Api
             builder.Services.AddCors();
 
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            builder.Host.ConfigureContainer<ContainerBuilder>(b => b.RegisterModule(new ApiModule(loggerFactory, config)));
+            builder.Host.ConfigureContainer<ContainerBuilder>(b => b.RegisterModule(new SiteApiModule(loggerFactory, config)));
 
             builder.Services.AddControllers(c =>
             {

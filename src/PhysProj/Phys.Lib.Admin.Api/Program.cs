@@ -14,13 +14,14 @@ using Phys.Lib.Admin.Api.Api.User;
 using Phys.Lib.Admin.Api.Api.Works;
 using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
-using Phys.Utils;
 using Phys.Lib.Admin.Api.Filters;
 using Phys.Lib.Admin.Api.Api.Migrations;
 using Phys.NLog;
-using Phys.Lib.Core;
 using Phys.Lib.Admin.Api.Api.Settings;
 using Phys.Lib.Admin.Api.Api.Stats;
+using Phys.Lib.Admin.Api.Api.System;
+using Phys.Shared.Configuration;
+using Phys.Shared;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -35,19 +36,20 @@ namespace Phys.Lib.Admin.Api
         public static void Main(string[] args)
         {
             NLogConfig.Configure(loggerFactory);
-            AppUtils.OnRun(loggerFactory);
+            PhysAppContext.Init(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
 
-            AppUtils.AddJsonConfigFromArgs(builder.Configuration);
+            var config = builder.Configuration.AddJsonConfigFromArgs().Build();
 
-            var config = builder.Configuration;
-            var urls = config.GetConnectionStringOrThrow("urls");
             var elasticUrl = config.GetConnectionString("logs_elastic");
             if (elasticUrl != null)
+            {
                 NLogConfig.AddElastic(loggerFactory, "lib-admin", elasticUrl);
+                PhysAppContext.HttpObserver?.IgnoreUri(new Uri(elasticUrl));
+            }
 
-            builder.WebHost.UseUrls(urls);
+            builder.WebHost.UseUrls(config.GetConnectionStringOrThrow("urls"));
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
 
@@ -67,7 +69,7 @@ namespace Phys.Lib.Admin.Api
             });
 
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            builder.Host.ConfigureContainer<ContainerBuilder>(b => b.RegisterModule(new ApiModule(loggerFactory, config)));
+            builder.Host.ConfigureContainer<ContainerBuilder>(b => b.RegisterModule(new AdminApiModule(loggerFactory, config)));
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(SwaggerConfig.Configure);
@@ -97,6 +99,7 @@ namespace Phys.Lib.Admin.Api
             app.MapEndpoint("migrations", MigrationsEndpont.Map).RequireAuthorization();
             app.MapEndpoint("settings", SettingsEndpoint.Map).RequireAuthorization();
             app.MapEndpoint("stats", StatsEndpoint.Map).RequireAuthorization();
+            app.MapEndpoint("system", SystemEndpoint.Map).RequireAuthorization();
 
             app.Lifetime.ApplicationStarted.Register(() => log.LogInformation("{event} at {urls}", "start", string.Join(";", app.Urls)));
             app.Lifetime.ApplicationStopped.Register(() => log.LogInformation("{event}", "stop"));

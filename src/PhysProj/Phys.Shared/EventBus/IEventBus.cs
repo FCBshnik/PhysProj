@@ -5,8 +5,8 @@
     /// </summary>
     public interface IEventBus
     {
-        void Publish<TEvent>(TEvent data) where TEvent : IBusEvent;
+        void Publish<TEvent>(TEvent data) where TEvent : IEvent;
 
-        IDisposable Subscribe<TEvent>(IEventHandler<TEvent> handler) where TEvent : IBusEvent;
+        IDisposable Subscribe<TEvent>(IEventHandler<TEvent> handler);
     }
 }

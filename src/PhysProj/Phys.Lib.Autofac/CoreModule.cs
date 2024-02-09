@@ -12,7 +12,8 @@ using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Core.Stats;
 using Phys.Lib.Core.Search;
-using Phys.Shared.Queue;
+using Phys.Shared.Broker;
+using Phys.Lib.Core.Works.Cache;
 
 namespace Phys.Lib.Autofac
 {
@@ -53,7 +54,8 @@ namespace Phys.Lib.Autofac
                 .RegisterService<MigrationService, IMigrationService>()
                 .RegisterService<StatService, IStatService>()
                 .RegisterService<SearchService, ISearchService>()
-                .RegisterHostedService<QueueHostedService>();
+                .RegisterService<WorksCache, IWorksCache>()
+                .RegisterHostedService<BrokerRegistrarService>();
         }
     }
 }

@@ -18,22 +18,20 @@ namespace Phys.Lib.Admin.Api.Api.User
                 if (user.Fail)
                     return Results.BadRequest(new ErrorModel(ErrorCode.LoginFailed, user.Error));
 
-                return Results.Ok(new LoginSuccessModel { Token = TokenGenerator.CreateToken(user.Value) });
+                return TypedResults.Ok(new LoginSuccessModel { Token = TokenGenerator.CreateToken(user.Value) });
             })
-            .ProducesOk<LoginSuccessModel>()
             .ProducesError()
             .WithName("Login");
 
             builder.MapGet("/", ([FromServices] UserDbo user) =>
             {
-                return Results.Ok(new UserModel
+                return TypedResults.Ok(new UserModel
                 {
                     Name = user.Name,
                     Roles = user.Roles,
                 });
             })
             .Authorize()
-            .ProducesOk<UserModel>()
             .WithName("GetUserInfo");
         }
     }

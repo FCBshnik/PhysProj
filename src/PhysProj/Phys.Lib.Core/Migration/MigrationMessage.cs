@@ -2,7 +2,7 @@
 
 namespace Phys.Lib.Core.Migration
 {
-    public class MigrationMessage : IQueueMessage
+    public class MigrationMessage : IMessage
     {
         public string QueueName => QueueNames.Migrations;
 

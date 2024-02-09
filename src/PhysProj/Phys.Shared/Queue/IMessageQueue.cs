@@ -7,8 +7,8 @@ namespace Phys.Queue
     /// </summary>
     public interface IMessageQueue
     {
-        void Send<TMessage>(TMessage message) where TMessage: IQueueMessage;
+        void Send<TMessage>(TMessage message) where TMessage: IMessage;
 
-        IDisposable Consume<TMessage>(IMessageQueueConsumer<TMessage> consumer);
+        IDisposable Consume<TMessage>(IMessageConsumer<TMessage> consumer);
     }
 }

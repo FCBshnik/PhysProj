@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Autofac;
 using Phys.NLog;
-using Phys.Utils;
+using Phys.Shared;
 
 namespace Phys.Lib.Tests.Integration
 {
@@ -21,7 +21,7 @@ namespace Phys.Lib.Tests.Integration
             try
             {
                 NLogConfig.Configure(loggerFactory);
-                AppUtils.OnRun(loggerFactory);
+                PhysAppContext.Init(loggerFactory);
                 Log("initializing");
                 Init().Wait();
                 Log("initialized");

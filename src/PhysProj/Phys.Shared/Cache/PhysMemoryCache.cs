@@ -21,9 +21,12 @@ namespace Phys.Shared.Cache
             return cache.Get<T>(key);
         }
 
-        public void Set<T>(string key, T value, TimeSpan ttl)
+        public void Set<T>(string key, T value, TimeSpan? ttl = null)
         {
-            cache.Set(key, value, ttl);
+            if (ttl.HasValue)
+                cache.Set(key, value, ttl.Value);
+            else
+                cache.Set(key, value);
         }
     }
 }

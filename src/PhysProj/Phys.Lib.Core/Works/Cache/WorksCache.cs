@@ -8,12 +8,10 @@ namespace Phys.Lib.Core.Works.Cache
     internal class WorksCache : IWorksCache
     {
         private readonly ICache cache;
-        private readonly IWorksSearch search;
 
-        public WorksCache(ICache cache, IWorksSearch search)
+        public WorksCache(ICache cache)
         {
             this.cache = cache;
-            this.search = search;
         }
 
         public List<WorkDbo> GetWorks(IEnumerable<string> codes)
@@ -21,7 +19,7 @@ namespace Phys.Lib.Core.Works.Cache
             var codesDistinct = codes.Distinct().ToList();
 
             var works = codesDistinct
-                .Select(c => cache.Get<WorkDbo>(CacheKey.Work(c)))
+                .Select(c => cache.Get<WorkDbo>(CacheKeys.Work(c)))
                 .Where(w => w is not null)
                 .Select(w => w!)
                 .ToList();

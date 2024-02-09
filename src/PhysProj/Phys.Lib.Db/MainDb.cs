@@ -5,6 +5,10 @@ using Phys.Shared.Configuration;
 
 namespace Phys.Lib.Db
 {
+    /// <summary>
+    /// Wrapper over all db implementations
+    /// Selects main db (which will be used by all services) based on configuration
+    /// </summary>
     public abstract class MainDb<TDb> where TDb: INamed
     {
         protected readonly Lazy<TDb> db;

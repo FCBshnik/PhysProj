@@ -1165,6 +1165,50 @@ export class AdminApiClient {
     /**
      * @return OK
      */
+    invalidateWorksCache(): Promise<OkModel> {
+        let url_ = this.baseUrl + "/api/system/cache/works/invalidate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processInvalidateWorksCache(_response));
+        });
+    }
+
+    protected processInvalidateWorksCache(response: Response): Promise<OkModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OkModel.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<OkModel>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     login(body: LoginModel): Promise<LoginSuccessModel> {
         let url_ = this.baseUrl + "/api/user/login";
         url_ = url_.replace(/[?&]$/, "");
@@ -1676,103 +1720,6 @@ export class AdminApiClient {
     }
 
     protected processUnlinkAuthorFromWork(response: Response): Promise<WorkModel> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = WorkModel.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<WorkModel>(null as any);
-    }
-
-    /**
-     * @return OK
-     */
-    linkOriginalToWork(code: string, originalCode: string): Promise<WorkModel> {
-        let url_ = this.baseUrl + "/api/works/{code}/original/{originalCode}";
-        if (code === undefined || code === null)
-            throw new Error("The parameter 'code' must be defined.");
-        url_ = url_.replace("{code}", encodeURIComponent("" + code));
-        if (originalCode === undefined || originalCode === null)
-            throw new Error("The parameter 'originalCode' must be defined.");
-        url_ = url_.replace("{originalCode}", encodeURIComponent("" + originalCode));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processLinkOriginalToWork(_response));
-        });
-    }
-
-    protected processLinkOriginalToWork(response: Response): Promise<WorkModel> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = WorkModel.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("Bad Request", status, _responseText, _headers, result400);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<WorkModel>(null as any);
-    }
-
-    /**
-     * @return OK
-     */
-    unlinkOriginalFromWork(code: string): Promise<WorkModel> {
-        let url_ = this.baseUrl + "/api/works/{code}/original";
-        if (code === undefined || code === null)
-            throw new Error("The parameter 'code' must be defined.");
-        url_ = url_.replace("{code}", encodeURIComponent("" + code));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processUnlinkOriginalFromWork(_response));
-        });
-    }
-
-    protected processUnlinkOriginalFromWork(response: Response): Promise<WorkModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -3324,7 +3271,6 @@ export class WorkModel implements IWorkModel {
     authorsCodes?: string[] | undefined;
     subWorksCodes?: string[] | undefined;
     filesCodes?: string[] | undefined;
-    originalCode?: string | undefined;
     isPublic?: boolean;
 
     constructor(data?: IWorkModel) {
@@ -3361,7 +3307,6 @@ export class WorkModel implements IWorkModel {
                 for (let item of _data["filesCodes"])
                     this.filesCodes!.push(item);
             }
-            this.originalCode = _data["originalCode"];
             this.isPublic = _data["isPublic"];
         }
     }
@@ -3398,7 +3343,6 @@ export class WorkModel implements IWorkModel {
             for (let item of this.filesCodes)
                 data["filesCodes"].push(item);
         }
-        data["originalCode"] = this.originalCode;
         data["isPublic"] = this.isPublic;
         return data;
     }
@@ -3412,7 +3356,6 @@ export interface IWorkModel {
     authorsCodes?: string[] | undefined;
     subWorksCodes?: string[] | undefined;
     filesCodes?: string[] | undefined;
-    originalCode?: string | undefined;
     isPublic?: boolean;
 }
 

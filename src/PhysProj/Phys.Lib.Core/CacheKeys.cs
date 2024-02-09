@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core
 {
-    internal static class CacheKey
+    internal static class CacheKeys
     {
         private const string prefix = "physlib";
 

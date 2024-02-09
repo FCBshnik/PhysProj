@@ -32,7 +32,7 @@ namespace Phys.Shared.Broker
             this.log = log;
         }
 
-        IDisposable IMessageQueue.Consume<T>(IMessageQueueConsumer<T> consumer)
+        IDisposable IMessageQueue.Consume<T>(IMessageConsumer<T> consumer)
         {
             ArgumentNullException.ThrowIfNull(consumer);
 
@@ -71,7 +71,7 @@ namespace Phys.Shared.Broker
                 this.handler = handler;
             }
 
-            public string Name => throw new NotImplementedException();
+            public string Name => handler.EventName;
 
             void IEventBrokerHandler.Handle(ReadOnlyMemory<byte> eventData)
             {
@@ -90,9 +90,9 @@ namespace Phys.Shared.Broker
         private class QueueConsumer<T> : IQueueBrokerConsumer
         {
             private readonly ILogger<JsonMessageBroker> log;
-            private readonly IMessageQueueConsumer<T> consumer;
+            private readonly IMessageConsumer<T> consumer;
 
-            public QueueConsumer(IMessageQueueConsumer<T> consumer, ILogger<JsonMessageBroker> log)
+            public QueueConsumer(IMessageConsumer<T> consumer, ILogger<JsonMessageBroker> log)
             {
                 this.consumer = consumer;
                 this.log = log;

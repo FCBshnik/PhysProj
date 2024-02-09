@@ -3,8 +3,9 @@ using CommandLine;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Phys.Utils;
 using Phys.NLog;
+using Phys.Shared;
+using Phys.Shared.Configuration;
 
 namespace Phys.Lib.Cli
 {
@@ -16,7 +17,7 @@ namespace Phys.Lib.Cli
         private static void Main(string[] args)
         {
             NLogConfig.Configure(loggerFactory);
-            AppUtils.OnRun(loggerFactory);
+            PhysAppContext.Init(loggerFactory);
 
             var parser = new Parser(s => s.IgnoreUnknownArguments = true);
             var result = parser.ParseArguments(args, LoadVerbs());

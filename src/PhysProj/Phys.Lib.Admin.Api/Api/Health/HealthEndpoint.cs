@@ -6,8 +6,7 @@ namespace Phys.Lib.Admin.Api.Api.Health
     {
         public static void Map(RouteGroupBuilder builder)
         {
-            builder.MapGet("check", () => Results.Ok(OkModel.Ok))
-            .ProducesOk()
+            builder.MapGet("check", () => TypedResults.Ok(OkModel.Ok))
             .ProducesError()
             .WithName("HealthCheck");
         }
