@@ -42,12 +42,14 @@ namespace Phys.NLog
 
         public static void Configure(ILoggerFactory loggerFactory)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             loggerFactory.AddNLog(new NLogProviderOptions
             {
                 CaptureMessageTemplates = true,
                 CaptureMessageProperties = true,
                 ReplaceLoggerFactory = true,
             });
+#pragma warning restore CS0618 // Type or member is obsolete
 
             LogManager.Setup().SetupExtensions(s =>
                 s.RegisterLayoutRenderer("longdate_utc", (logEvent) => logEvent.TimeStamp.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fff"))

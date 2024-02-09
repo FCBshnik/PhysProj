@@ -78,7 +78,7 @@ namespace Phys.Lib.Tests.Integration.Db
         {
             public required string Id { get; set; }
 
-            public string Data { get; set; }
+            public string? Data { get; set; }
         }
     }
 }

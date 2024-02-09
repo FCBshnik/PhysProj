@@ -2,18 +2,18 @@
 
 namespace Phys.Files.PCloud.Models
 {
-    public class GetFilePubLinkResponse
+    public class GetFilePubLinkResponse : IPCloudResponse
     {
         [JsonPropertyName("result")]
         public int Result { get; set; }
 
         [JsonPropertyName("error")]
-        public string Error { get; set; }
+        public string? Error { get; set; }
 
         [JsonPropertyName("code")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [JsonPropertyName("link")]
-        public string Link { get; set; }
+        public string? Link { get; set; }
     }
 }

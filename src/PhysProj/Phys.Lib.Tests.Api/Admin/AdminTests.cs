@@ -19,7 +19,7 @@ namespace Phys.Lib.Tests.Api.Admin
 
         private readonly AdminApiClient api;
 
-        private IFileStorage fileStorage;
+        private LocalFileStorage? fileStorage;
 
         private FileInfo AdminApiPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.Admin.Api", "Phys.Lib.Admin.Api.csproj"));
         private FileInfo AppPath => new(Path.Combine(solutionDir.FullName, "Phys.Lib.App", "Phys.Lib.App.csproj"));
@@ -29,7 +29,7 @@ namespace Phys.Lib.Tests.Api.Admin
             api = new AdminApiClient(url, http);
         }
 
-        public override async Task Init()
+        protected override async Task Init()
         {
             await base.Init();
 
@@ -276,7 +276,7 @@ namespace Phys.Lib.Tests.Api.Admin
             works.LinkFileFailed("discourse-on-method", nonExistentCode);
             // link existing file
             using (var stream = files.GetMockStream())
-                fileStorage.Upload(stream, "discourse-on-method.pdf");
+                fileStorage!.Upload(stream, "discourse-on-method.pdf");
             files.LinkStorageFile("local", "discourse-on-method.pdf");
             works.LinkFile("discourse-on-method", "discourse-on-method-pdf");
             fileStorage.Delete("discourse-on-method.pdf");
@@ -295,7 +295,7 @@ namespace Phys.Lib.Tests.Api.Admin
             // list local storage files files
             files.ListStorageFiles("local");
             using (var stream = files.GetMockStream())
-                fileStorage.Upload(stream, "works/work-1.txt");
+                fileStorage!.Upload(stream, "works/work-1.txt");
             files.RefreshStorage("local");
 
             files.ListStorageFiles("local", "works/work-1.txt");

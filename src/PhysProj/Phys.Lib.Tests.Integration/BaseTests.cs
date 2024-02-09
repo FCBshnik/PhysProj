@@ -12,7 +12,8 @@ namespace Phys.Lib.Tests.Integration
 
         protected readonly ITestOutputHelper output;
 
-        protected IContainer container;
+        protected IContainer Container => container ?? throw new ArgumentNullException(nameof(container));
+        protected IContainer? container;
 
         public BaseTests(ITestOutputHelper output)
         {
@@ -50,7 +51,6 @@ namespace Phys.Lib.Tests.Integration
             var builder = new ContainerBuilder();
             BuildContainer(builder);
             container = builder.Build();
-
             return Task.CompletedTask;
         }
 

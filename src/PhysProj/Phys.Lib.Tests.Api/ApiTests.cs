@@ -48,13 +48,13 @@ namespace Phys.Lib.Tests.Api
             Log("released");
         }
 
-        public virtual async Task Init()
+        protected virtual async Task Init()
         {
             await mongo.StartAsync();
             await postgres.StartAsync();
         }
 
-        public virtual async Task Release()
+        protected virtual async Task Release()
         {
             await cts.CancelAsync();
             await mongo.DisposeAsync().AsTask();

@@ -98,13 +98,13 @@ namespace Phys.Mongo.Settings
         {
             [BsonId]
             [BsonRepresentation(BsonType.ObjectId)]
-            public string Id { get; set; }
+            public required string Id { get; set; }
 
             [BsonElement("code")]
-            public string Code { get; set; }
+            public required string Code { get; set; }
 
             [BsonElement("value")]
-            public BsonDocument Value { get; set; }
+            public required BsonDocument Value { get; set; }
         }
     }
 }

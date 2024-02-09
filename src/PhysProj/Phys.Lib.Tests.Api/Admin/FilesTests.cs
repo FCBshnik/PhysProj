@@ -56,7 +56,7 @@ namespace Phys.Lib.Tests.Api.Admin
                 files.Select(f => f.Code).Should().NotContain(code);
             }
 
-            public Stream GetMockStream()
+            public MemoryStream GetMockStream()
             {
                 var stream = new MemoryStream();
                 var writer = new StreamWriter(stream);

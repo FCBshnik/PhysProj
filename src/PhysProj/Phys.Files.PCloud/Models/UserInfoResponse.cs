@@ -2,13 +2,13 @@
 
 namespace Phys.Files.PCloud.Models
 {
-    public class UserInfoResponse
+    public class UserInfoResponse : IPCloudResponse
     {
         [JsonPropertyName("result")]
         public int Result { get; set; }
 
         [JsonPropertyName("error")]
-        public string Error { get; set; }
+        public string? Error { get; set; }
 
         [JsonPropertyName("cryptosetup")]
         public bool Cryptosetup { get; set; }
@@ -26,13 +26,13 @@ namespace Phys.Files.PCloud.Models
         public int Userid { get; set; }
 
         [JsonPropertyName("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [JsonPropertyName("trashrevretentiondays")]
         public int Trashrevretentiondays { get; set; }
 
         [JsonPropertyName("auth")]
-        public string Auth { get; set; }
+        public string? Auth { get; set; }
 
         [JsonPropertyName("emailverified")]
         public bool Emailverified { get; set; }
@@ -41,7 +41,7 @@ namespace Phys.Files.PCloud.Models
         public bool Usedpublinkbranding { get; set; }
 
         [JsonPropertyName("currency")]
-        public string Currency { get; set; }
+        public string? Currency { get; set; }
 
         [JsonPropertyName("agreedwithpp")]
         public bool Agreedwithpp { get; set; }
@@ -68,7 +68,7 @@ namespace Phys.Files.PCloud.Models
         public int Usedquota { get; set; }
 
         [JsonPropertyName("language")]
-        public string Language { get; set; }
+        public string? Language { get; set; }
 
         [JsonPropertyName("haspaidrelocation")]
         public bool Haspaidrelocation { get; set; }
@@ -80,12 +80,12 @@ namespace Phys.Files.PCloud.Models
         public long Registered { get; set; }
 
         [JsonPropertyName("journey")]
-        public JourneyResponse Journey { get; set; }
+        public JourneyResponse? Journey { get; set; }
 
         public class JourneyResponse
         {
             [JsonPropertyName("steps")]
-            public StepsResponse Steps { get; set; }
+            public StepsResponse? Steps { get; set; }
         }
 
         public class StepsResponse

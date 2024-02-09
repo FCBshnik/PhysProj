@@ -39,6 +39,7 @@ namespace Phys.Lib.Admin.Api
             PhysAppContext.Init(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
+            builder.Logging.ClearProviders().AddNLog(global::NLog.LogManager.Configuration);
 
             var config = builder.Configuration.AddJsonConfigFromArgs().Build();
 
@@ -50,8 +51,6 @@ namespace Phys.Lib.Admin.Api
             }
 
             builder.WebHost.UseUrls(config.GetConnectionStringOrThrow("urls"));
-            builder.Logging.ClearProviders();
-            builder.Host.UseNLog();
 
             builder.Services.AddCors();
             builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>

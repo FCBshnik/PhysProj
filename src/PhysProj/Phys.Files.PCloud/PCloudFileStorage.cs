@@ -43,7 +43,9 @@ namespace Phys.Files.PCloud
             EnsureLoggedIn();
 
             var pubLink = api.GetFilePubLink(fileIdLong, accessToken!).Result;
-            var download = api.GetPubLinkDownload(pubLink.Code).Result;
+            EnsureResult(pubLink, $"GetFilePubLink {fileIdLong}");
+
+            var download = api.GetPubLinkDownload(pubLink.Code!).Result;
             var url = new UriBuilder("https", download.Hosts.First());
             url.Path = download.Path;
             return downloadHttp.GetStreamAsync(url.ToString()).Result;
@@ -94,11 +96,9 @@ namespace Phys.Files.PCloud
                 if (folder == null)
                 {
                     var folderResponse = api.CreateFolderIfNotExists(targetFolderId.ToString(), segment, accessToken!).Result;
-                    if (folderResponse.Result != 0)
-                        throw new PhysException($"pcloud returned {folderResponse.Result} {folderResponse.Error} for CreateFolderIfNotExists");
-
-                    list!.Add(folderResponse.Metadata);
-                    targetFolderId = folderResponse.Metadata.Folderid;
+                    EnsureResult(folderResponse, "CreateFolderIfNotExists");
+                    list!.Add(folderResponse.Metadata!);
+                    targetFolderId = folderResponse.Metadata!.Folderid;
                 }
                 else
                     targetFolderId = folder.Folderid;
@@ -107,10 +107,8 @@ namespace Phys.Files.PCloud
             }
 
             var response = api.UploadFile(targetFolderId, accessToken!, fileName, data).Result;
-            if (response.Result != 0)
-                throw new PhysException($"pcloud returned {response.Result} {response.Error} for upload");
-
-            var metadata = response.Metadata.First();
+            EnsureResult(response, $"UploadFile");
+            var metadata = response.Metadata!.First();
             list!.Add(metadata);
             return Map(metadata);
         }
@@ -120,10 +118,8 @@ namespace Phys.Files.PCloud
             EnsureLoggedIn();
 
             var response = api.GetFilePubLink(long.Parse(fileId), accessToken!).Result;
-            if (response.Result != 0)
-                throw new PhysException($"pcloud returned {response.Result} {response.Error} for GetFilePubLink");
-
-            return new Uri(response.Link.Replace("\\", string.Empty));
+            EnsureResult(response, $"GetFilePubLink");
+            return new Uri(response.Link!.Replace("\\", string.Empty));
         }
 
         private string NormilizePath(string path)
@@ -136,8 +132,7 @@ namespace Phys.Files.PCloud
             if (accessToken == null)
             {
                 var response = api.GetUserInfo(settings().Username, settings().Password).Result;
-                if (response.Result != 0)
-                    throw new PhysException($"pcloud returned {response.Result} {response.Error} for login");
+                EnsureResult(response, $"login");
 
                 accessToken = response.Auth;
                 log.LogInformation($"logged in");
@@ -151,12 +146,16 @@ namespace Phys.Files.PCloud
             if (list == null)
             {
                 var response = api.ListFolder(settings().BaseFolderId, accessToken!).Result;
-                if (response.Result != 0)
-                    throw new PhysException($"pcloud returned {response.Result} {response.Error} for list folder {settings().BaseFolderId}");
-
-                list = Flatten(response.Metadata);
+                EnsureResult(response, $"list folder {settings().BaseFolderId}");
+                list = Flatten(response.Metadata!);
                 log.LogInformation($"updated list");
             }
+        }
+
+        private void EnsureResult(IPCloudResponse response, string action)
+        {
+            if (response.Result != 0)
+                throw new PhysException($"pcloud returned {response.Result} {response.Error}: {action}");
         }
 
         private StorageFileInfo Map(MetadataResponse metadata)

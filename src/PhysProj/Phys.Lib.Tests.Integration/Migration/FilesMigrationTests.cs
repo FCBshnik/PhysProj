@@ -27,7 +27,7 @@ namespace Phys.Lib.Tests.Integration.Migration
         [Fact]
         public void Tests()
         {
-            using var lifetimeScope = container.BeginLifetimeScope();
+            using var lifetimeScope = Container.BeginLifetimeScope();
             var filesEditor = lifetimeScope.Resolve<IFilesEditor>();
             var filesSearch = lifetimeScope.Resolve<IFilesSearch>();
             var migrations = lifetimeScope.Resolve<IMigrationService>();

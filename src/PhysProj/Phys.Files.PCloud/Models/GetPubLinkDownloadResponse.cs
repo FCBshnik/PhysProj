@@ -5,9 +5,9 @@ namespace Phys.Files.PCloud.Models
     public class GetPubLinkDownloadResponse
     {
         [JsonPropertyName("path")]
-        public string Path { get; set; }
+        public required string Path { get; set; }
 
         [JsonPropertyName("hosts")]
-        public List<string> Hosts { get; set; }
+        public required List<string> Hosts { get; set; }
     }
 }

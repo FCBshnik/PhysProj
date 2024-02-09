@@ -5,7 +5,7 @@ namespace Phys.Files.PCloud.Models
     public class MetadataResponse
     {
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [JsonPropertyName("created")]
         public long Created { get; set; }
@@ -23,13 +23,13 @@ namespace Phys.Files.PCloud.Models
         public int Comments { get; set; }
 
         [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [JsonPropertyName("isshared")]
         public bool Isshared { get; set; }
 
         [JsonPropertyName("icon")]
-        public string Icon { get; set; }
+        public string? Icon { get; set; }
 
         [JsonPropertyName("isfolder")]
         public bool Isfolder { get; set; }
@@ -41,7 +41,7 @@ namespace Phys.Files.PCloud.Models
         public long Folderid { get; set; }
 
         [JsonPropertyName("contents")]
-        public List<MetadataResponse> Contents { get; set; }
+        public List<MetadataResponse>? Contents { get; set; }
 
         [JsonPropertyName("fileid")]
         public long Fileid { get; set; }
@@ -53,6 +53,6 @@ namespace Phys.Files.PCloud.Models
         public long Size { get; set; }
 
         [JsonPropertyName("contenttype")]
-        public string Contenttype { get; set; }
+        public string? Contenttype { get; set; }
     }
 }

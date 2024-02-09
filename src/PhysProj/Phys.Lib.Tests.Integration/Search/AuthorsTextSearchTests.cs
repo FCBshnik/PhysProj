@@ -21,7 +21,7 @@ namespace Phys.Lib.Tests.Integration.Search
         [Fact]
         public async Task Tests()
         {
-            var search = container.Resolve<ITextSearch<AuthorTso>>();
+            var search = Container.Resolve<ITextSearch<AuthorTso>>();
 
             await search.Reset(Language.AllAsStrings);
             await search.Index(new[]

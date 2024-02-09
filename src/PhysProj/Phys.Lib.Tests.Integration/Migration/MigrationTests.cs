@@ -37,7 +37,7 @@ namespace Phys.Lib.Tests.Integration.Migration
         [InlineData("postgres", "mongo")]
         public void Tests(string source, string destination)
         {
-            using var lifetimeScope = container.BeginLifetimeScope();
+            using var lifetimeScope = Container.BeginLifetimeScope();
 
             UsersTests(source, destination, lifetimeScope);
             AuthorsTests(source, destination, lifetimeScope);
