@@ -60,7 +60,6 @@
                 <th>Date</th>
                 <th>Lang</th>
                 <th>Authors</th>
-                <th>Original</th>
                 <th>Files</th>
                 <th>Public</th>
                 <th></th>
@@ -76,11 +75,6 @@
                       {#each work.authorsCodes ?? [] as authorCode}
                         <a href="/authors/{authorCode}">{authorCode}</a>
                       {/each}
-                    </td>
-                    <td>
-                      {#if work.originalCode}
-                      <a href="/works/{work.originalCode}">{work.originalCode}</a>
-                      {/if}
                     </td>
                     <td>
                       {work.filesCodes?.join(', ')}

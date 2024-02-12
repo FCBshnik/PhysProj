@@ -87,14 +87,6 @@
 		api.service.unlinkWorkFromCollectedWork(work.code, subWorkCode).finally(refresh);
 	}
 
-	function linkOriginalWork() {
-		api.service.linkOriginalToWork(work.code, originalWork?.code).finally(refresh);
-	}	
-
-	function unlinkOriginalWork() {
-		api.service.unlinkOriginalFromWork(work.code).finally(refresh);
-	}
-
   function linkFile() {
     api.service.linkFileToWork(work.code, file?.code).finally(refresh);
   }	
@@ -172,19 +164,6 @@
                 </div>
             </div>
 			{/each}
-		</section>
-		<section class="p-2 border-b-2 border-b-gray-700">
-			<div class="p-2">Original</div>
-			<div class="flex flex-row gap-2 p-2 items-center">
-				{#if work.originalCode}
-					<div class="basis-10/12">{work.originalCode}</div>
-					<button class="basis-2/12 disabled:opacity-75" on:click={unlinkOriginalWork}>Unlink</button>
-				{:else}
-					<div class="basis-6/12"><WorkSelector bind:selected={originalWork}/></div>
-					<div class="basis-4/12">{originalWork?.code ?? ''}</div>
-					<button class="basis-2/12 disabled:opacity-75" on:click={linkOriginalWork} disabled='{originalWork === undefined}'>Link</button>
-				{/if}
-			</div>
 		</section>
 		<section class="p-2 border-b-2 border-b-gray-700">
 			<div class="p-2">Sub works</div>
