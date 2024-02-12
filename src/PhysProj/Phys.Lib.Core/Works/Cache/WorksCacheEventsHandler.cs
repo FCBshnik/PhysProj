@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Works.Events;
 using Phys.Lib.Db.Works;
 using Phys.Shared.Cache;
@@ -8,7 +9,8 @@ namespace Phys.Lib.Core.Works.Cache
 {
     public class WorksCacheEventsHandler :
         IEventHandler<WorksCacheInvalidatedEvent>,
-        IEventHandler<WorkUpdatedEvent>
+        IEventHandler<WorkUpdatedEvent>,
+        IHostedService
     {
         private readonly ILogger<WorksCacheEventsHandler> log;
         private readonly IWorksDb worksDb;
@@ -25,6 +27,19 @@ namespace Phys.Lib.Core.Works.Cache
 
         void IEventHandler<WorksCacheInvalidatedEvent>.Handle(WorksCacheInvalidatedEvent data)
         {
+            PopulateCache();
+        }
+
+        string IEventHandler<WorkUpdatedEvent>.EventName => EventNames.WorkUpdated;
+
+        void IEventHandler<WorkUpdatedEvent>.Handle(WorkUpdatedEvent data)
+        {
+            var work = worksDb.GetByCode(data.Code);
+            cache.Set(CacheKeys.Work(work.Code), work);
+        }
+
+        private void PopulateCache()
+        {
             foreach (var works in worksDb.Read())
             {
                 foreach (var work in works)
@@ -36,12 +51,14 @@ namespace Phys.Lib.Core.Works.Cache
             }
         }
 
-        string IEventHandler<WorkUpdatedEvent>.EventName => EventNames.WorkUpdated;
-
-        void IEventHandler<WorkUpdatedEvent>.Handle(WorkUpdatedEvent data)
+        Task IHostedService.StartAsync(CancellationToken cancellationToken)
         {
-            var work = worksDb.GetByCode(data.Code);
-            cache.Set(CacheKeys.Work(work.Code), work);
+            return Task.Factory.StartNew(PopulateCache);
+        }
+
+        Task IHostedService.StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 }

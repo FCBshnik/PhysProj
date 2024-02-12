@@ -25,13 +25,13 @@ namespace Phys.Shared.Broker
         public void AddConsumer<TMessage>(IMessageConsumer<TMessage> consumer)
         {
             consumers.TryAdd(() => queue.Consume(consumer), null);
-            log.LogInformation($"added message consumer {consumer.GetType()} bound to queue '{consumer.QueueName}'");
+            log.LogInformation($"added message consumer {consumer.GetType()} for queue '{consumer.QueueName}'");
         }
 
         public void AddHandler<TEvent>(IEventHandler<TEvent> handler)
         {
             handlers.TryAdd(() => bus.Subscribe(handler), null);
-            log.LogInformation($"added event handler {handler.GetType()} bound to event '{handler.EventName}'");
+            log.LogInformation($"added event handler {handler.GetType()} for event '{handler.EventName}'");
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

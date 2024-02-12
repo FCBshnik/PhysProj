@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Phys.Lib.Autofac;
 using Phys.Lib.Core.Works.Cache;
+using Phys.Lib.Core.Works.Events;
 using Phys.Lib.Site.Api.Pipeline;
 
 namespace Phys.Lib.Site.Api
@@ -24,7 +25,9 @@ namespace Phys.Lib.Site.Api
 
             builder.RegisterType<StatusCodeLoggingMiddlware>().AsSelf().SingleInstance();
 
+            builder.RegisterHostedService<WorksCacheEventsHandler>();
             builder.RegisterEventHandler<WorksCacheEventsHandler, WorksCacheInvalidatedEvent>();
+            builder.RegisterEventHandler<WorksCacheEventsHandler, WorkUpdatedEvent>();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Phys.Lib.Autofac
         {
             // in app can be many handlers for same event
             // register handlers as named
-            var handlerName = typeof(THandler).FullName!;
+            var handlerName = typeof(IEventHandler<TEvent>).FullName!;
 
             builder.RegisterType<THandler>()
                 .Named<IEventHandler<TEvent>>(handlerName)

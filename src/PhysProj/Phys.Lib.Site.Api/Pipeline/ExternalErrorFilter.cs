@@ -18,7 +18,7 @@ namespace Phys.Lib.Site.Api.Pipeline
         {
             if (context.Exception is ValidationException validationException)
             {
-                log.LogInformation(validationException, $"validation error");
+                log.LogInformation($"validation error: {validationException.Message}");
                 context.Result = new ObjectResult(new ErrorModel(ErrorCode.PublicError, validationException.Message)) { StatusCode = 400 };
                 context.ExceptionHandled = true;
             }
