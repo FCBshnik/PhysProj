@@ -46,7 +46,7 @@ namespace Phys.Lib.Mongo.Authors
                 filter = FilterBuilder.And(filter, FilterBuilder.In(u => u.Code, query.Codes));
             if (query.Search != null)
             {
-                var regex = Regex.Escape(query.Search);
+                var regex = new Regex(Regex.Escape(query.Search), RegexOptions.IgnoreCase);
                 var infoFilterBuilder = Builders<AuthorModel.InfoModel>.Filter;
                 filter = FilterBuilder.And(filter, FilterBuilder.Or(
                     FilterBuilder.Regex(u => u.Code, regex),

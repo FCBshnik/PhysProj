@@ -41,10 +41,10 @@ namespace Phys.Lib.Tests.Api.Admin
             var container = BuildContainer();
             using var scope = container.BeginLifetimeScope();
             var users = scope.Resolve<IUsersService>();
-            InitUsers(users);
+            CreateUsers(users);
         }
 
-        private static void InitUsers(IUsersService users)
+        private static void CreateUsers(IUsersService users)
         {
             var user = users.Create("user", "123456");
             users.AddRole(user, UserRole.User);
@@ -133,6 +133,7 @@ namespace Phys.Lib.Tests.Api.Admin
             // search by code
             authors.Create("galileo");
             authors.Search("dec", new[] { "decartes" });
+            authors.Search("Dec", new[] { "decartes" });
             authors.Search("gal", new[] { "galileo", "galilei" });
             authors.Delete("galileo");
             // search by name
@@ -166,7 +167,9 @@ namespace Phys.Lib.Tests.Api.Admin
             authors.InfoUpdateFailed("decartes", nonExistentCode, new AuthorInfoUpdateModel(), ErrorCode.InvalidArgument);
             // update info with valid languages
             authors.InfoUpdate("decartes", "en", new AuthorInfoUpdateModel { FullName = "René Descartes", Description = "French philosopher, scientist, and mathematician" });
-            authors.InfoUpdate("decartes", "ru", new AuthorInfoUpdateModel { FullName = "Рене́ Дека́рт", Description = "французский философ, математик и естествоиспытатель" });
+            authors.InfoUpdate("decartes", "ru", new AuthorInfoUpdateModel { FullName = "Рене Декарт", Description = "французский философ, математик и естествоиспытатель" });
+            // search by full name ignore case
+            authors.Search("декарт", new[] { "decartes" });
             // delete info
             authors.InfoDelete("decartes", "en");
             // delete info is idempotent
@@ -219,6 +222,8 @@ namespace Phys.Lib.Tests.Api.Admin
             // update with valid info
             works.UpdateInfo("discourse-on-method", "en", new WorkInfoUpdateModel { Name = "Discourse on the Method", Description = "one of the most influential works in the history of modern philosophy" });
             works.UpdateInfo("discourse-on-method", "ru", new WorkInfoUpdateModel { Name = "Рассуждение о методе", Description = "Считается переломной работой, ознаменовавшей переход от философии Ренессанса и начавшей эпоху философии Нового времени" });
+            // search by name ignore case
+            works.Search("рассужд", new[] { "discourse-on-method" });
             // delete info
             works.DeleteInfo("discourse-on-method", "ru");
             // delete info is idempotent
