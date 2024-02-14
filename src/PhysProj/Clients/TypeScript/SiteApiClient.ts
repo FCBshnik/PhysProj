@@ -408,8 +408,11 @@ export interface ISearchResultModel {
 export class SearchResultWorkModel implements ISearchResultWorkModel {
     code?: string | undefined;
     name?: string | undefined;
+    language?: string | undefined;
     authors?: string[] | undefined;
+    subWorks?: SearchResultWorkModel[] | undefined;
     files?: SearchResultFileModel[] | undefined;
+    isTranslation?: boolean;
 
     constructor(data?: ISearchResultWorkModel) {
         if (data) {
@@ -424,16 +427,23 @@ export class SearchResultWorkModel implements ISearchResultWorkModel {
         if (_data) {
             this.code = _data["code"];
             this.name = _data["name"];
+            this.language = _data["language"];
             if (Array.isArray(_data["authors"])) {
                 this.authors = [] as any;
                 for (let item of _data["authors"])
                     this.authors!.push(item);
+            }
+            if (Array.isArray(_data["subWorks"])) {
+                this.subWorks = [] as any;
+                for (let item of _data["subWorks"])
+                    this.subWorks!.push(SearchResultWorkModel.fromJS(item));
             }
             if (Array.isArray(_data["files"])) {
                 this.files = [] as any;
                 for (let item of _data["files"])
                     this.files!.push(SearchResultFileModel.fromJS(item));
             }
+            this.isTranslation = _data["isTranslation"];
         }
     }
 
@@ -448,16 +458,23 @@ export class SearchResultWorkModel implements ISearchResultWorkModel {
         data = typeof data === 'object' ? data : {};
         data["code"] = this.code;
         data["name"] = this.name;
+        data["language"] = this.language;
         if (Array.isArray(this.authors)) {
             data["authors"] = [];
             for (let item of this.authors)
                 data["authors"].push(item);
+        }
+        if (Array.isArray(this.subWorks)) {
+            data["subWorks"] = [];
+            for (let item of this.subWorks)
+                data["subWorks"].push(item.toJSON());
         }
         if (Array.isArray(this.files)) {
             data["files"] = [];
             for (let item of this.files)
                 data["files"].push(item.toJSON());
         }
+        data["isTranslation"] = this.isTranslation;
         return data;
     }
 }
@@ -465,8 +482,11 @@ export class SearchResultWorkModel implements ISearchResultWorkModel {
 export interface ISearchResultWorkModel {
     code?: string | undefined;
     name?: string | undefined;
+    language?: string | undefined;
     authors?: string[] | undefined;
+    subWorks?: SearchResultWorkModel[] | undefined;
     files?: SearchResultFileModel[] | undefined;
+    isTranslation?: boolean;
 }
 
 export class ApiException extends Error {

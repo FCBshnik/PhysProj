@@ -44,6 +44,8 @@ namespace Phys.Lib.Core
         /// </summary>
         public static readonly Language Grc = new Language("grc", "Greek, Ancient");
 
+        public static readonly Language Default = Ru;
+
         private static readonly Dictionary<string, Language> languages = new List<Language>
         {
             Ru, En, Fr, It, Nl, La, Gr, Grc

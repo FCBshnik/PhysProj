@@ -27,31 +27,33 @@ namespace Phys.Lib.Core.Search
             var foundWorks = await worksTextSearch.Search(search ?? string.Empty);
 
             // first add works found by search with files
-            var codes = new List<string>();
+            var worksCodesResult = new List<string>();
             foreach (var found in foundWorks.Where(w => w.Info.HasFiles))
             {
-                codes.Add(found.Code);
+                worksCodesResult.Add(found.Code);
             }
 
             // than add all linked works with files
             foreach (var found in foundWorks)
             {
-                AddCodesWithFiles(codes, found.Info, root: true);
+                AddCodesWithFiles(worksCodesResult, found.Info, root: true);
             }
 
-            codes = codes.Take(limit).ToList();
+            worksCodesResult = worksCodesResult.Take(limit).ToList();
+            var works = worksCache.GetWorks(worksCodesResult);
 
-            var worksMap = worksCache.GetWorks(codes).ToDictionary(w => w.Code);
-            if (worksMap.Count != codes.Count)
-                throw new PhysException($"works {codes.Except(worksMap.Keys).Join()} found by search but missed in db");
+            var subWorksCodes = works.SelectMany(w => w.SubWorksCodes).Distinct().ToList();
+            var subWorks = worksCache.GetWorks(subWorksCodes);
 
-            var works = codes.Select(w => worksMap[w]).ToList();
-            var authors = authorsSearch.FindByCodes(works.SelectMany(w => w.AuthorsCodes).Distinct().ToList());
-            var files = filesSearch.FindByCodes(works.SelectMany(w => w.FilesCodes).Distinct().ToList());
+            var authorsCodes = works.SelectMany(w => w.AuthorsCodes).Concat(subWorks.SelectMany(w => w.AuthorsCodes)).Distinct().ToList();
+            var authors = authorsSearch.FindByCodes(authorsCodes);
+            var filesCodes = works.SelectMany(w => w.FilesCodes).Concat(subWorks.SelectMany(w => w.FilesCodes)).Distinct().ToList();
+            var files = filesSearch.FindByCodes(filesCodes);
 
             return new SearchWorksResult
             {
-                Works = works,
+                FoundWorksCodes = worksCodesResult,
+                Works = works.Concat(subWorks).ToList(),
                 Authors = authors,
                 Files = files,
             };

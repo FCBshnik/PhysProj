@@ -13,7 +13,7 @@ namespace Phys.Lib.Core.Library.Models
             return new SearchResultAuthorModel
             {
                 Code = author.Code,
-                Name = author.Infos.FirstOrDefault()?.FullName ?? author.Code,
+                Name = author.Infos.FirstOrDefault(i => i.Language == Language.Default)?.FullName ?? author.Infos.FirstOrDefault()?.FullName ?? author.Code,
             };
         }
     }

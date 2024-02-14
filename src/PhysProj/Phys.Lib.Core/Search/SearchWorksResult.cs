@@ -6,10 +6,12 @@ namespace Phys.Lib.Core.Search
 {
     public class SearchWorksResult
     {
-        public List<WorkDbo> Works { get; set; } = new List<WorkDbo>();
+        public required List<string> FoundWorksCodes { get; set; }
 
-        public List<AuthorDbo> Authors { get; set; } = new List<AuthorDbo>();
+        public required List<WorkDbo> Works { get; set; }
 
-        public List<FileDbo> Files { get; set; } = new List<FileDbo>();
+        public required List<AuthorDbo> Authors { get; set; }
+
+        public required List<FileDbo> Files { get; set; }
     }
 }
