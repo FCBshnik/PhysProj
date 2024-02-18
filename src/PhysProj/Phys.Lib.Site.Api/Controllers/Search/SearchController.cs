@@ -20,8 +20,8 @@ namespace Phys.Lib.Site.Api.Controllers.Search
             return new SearchResultModel
             {
                 Search = search,
-                Works = result.FoundWorksCodes.Select(w => SearchResultWorkModel.Map(works[w], files, works)).ToList(),
-                Authors = result.Authors.Select(SearchResultAuthorModel.Map).ToList(),
+                Works = result.FoundWorksCodes.Select(w => SearchResultMapper.Map(works[w], files, works)).ToList(),
+                Authors = result.Authors.Select(SearchResultMapper.Map).ToList(),
             };
         }
     }
