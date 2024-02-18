@@ -49,7 +49,7 @@
   {#if showInfo}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-    <div role="tooltip" class="absolute top-0 left-0 w-full min-h-full z-50 border-2 rounded-md text-sm dark:border-gray-600 border-gray-400 dark:bg-gray-800" on:click={() => showInfo = false}>
+    <div role="tooltip" class="absolute top-0 left-0 w-full min-h-full z-50 border-2 rounded-md text-sm bg-gray-200 border-gray-400 dark:border-gray-600 dark:bg-gray-900" on:click={() => showInfo = false}>
       <div class="p-2 rounded-t-md text-center dark:bg-gray-700" >
           {work.name}
       </div>
