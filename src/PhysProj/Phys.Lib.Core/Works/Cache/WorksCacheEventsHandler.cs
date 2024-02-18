@@ -14,9 +14,9 @@ namespace Phys.Lib.Core.Works.Cache
     {
         private readonly ILogger<WorksCacheEventsHandler> log;
         private readonly IWorksDb worksDb;
-        private readonly ICache cache;
+        private readonly IWorksCache cache;
 
-        public WorksCacheEventsHandler(ILogger<WorksCacheEventsHandler> log, IWorksDb worksDb, ICache cache)
+        public WorksCacheEventsHandler(ILogger<WorksCacheEventsHandler> log, IWorksDb worksDb, IWorksCache cache)
         {
             this.log = log;
             this.worksDb = worksDb;
@@ -35,7 +35,7 @@ namespace Phys.Lib.Core.Works.Cache
         void IEventHandler<WorkUpdatedEvent>.Handle(WorkUpdatedEvent data)
         {
             var work = worksDb.GetByCode(data.Code);
-            cache.Set(CacheKeys.Work(work.Code), work);
+            cache.Set(work);
         }
 
         private void PopulateCache()
@@ -44,7 +44,7 @@ namespace Phys.Lib.Core.Works.Cache
             {
                 foreach (var work in works)
                 {
-                    cache.Set(CacheKeys.Work(work.Code), work);
+                    cache.Set(work);
                 }
 
                 log.LogInformation($"cached {works.Count} works");

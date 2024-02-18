@@ -28,5 +28,10 @@ namespace Phys.Lib.Core.Works.Cache
 
             return works;
         }
+
+        public void Set(WorkDbo work)
+        {
+            cache.Set(CacheKeys.Work(work.Code), work);
+        }
     }
 }

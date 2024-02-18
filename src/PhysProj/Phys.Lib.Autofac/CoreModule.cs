@@ -14,6 +14,7 @@ using Phys.Lib.Core.Stats;
 using Phys.Lib.Core.Search;
 using Phys.Shared.Broker;
 using Phys.Lib.Core.Works.Cache;
+using Phys.Lib.Core.Authors.Cache;
 
 namespace Phys.Lib.Autofac
 {
@@ -55,6 +56,7 @@ namespace Phys.Lib.Autofac
                 .RegisterService<StatService, IStatService>()
                 .RegisterService<SearchService, ISearchService>()
                 .RegisterService<WorksCache, IWorksCache>()
+                .RegisterService<AuthorsCache, IAuthorsCache>()
                 .RegisterHostedService<BrokerRegistrarService>();
         }
     }

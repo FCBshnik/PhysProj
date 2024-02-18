@@ -1,9 +1,8 @@
 ﻿using Phys.Lib.Core.Authors;
 using Phys.Lib.Core.Files;
 using Phys.Lib.Search;
-using Phys.Shared.Utils;
-using Phys.Shared;
 using Phys.Lib.Core.Works.Cache;
+using Phys.Lib.Core.Authors.Cache;
 
 namespace Phys.Lib.Core.Search
 {
@@ -11,14 +10,14 @@ namespace Phys.Lib.Core.Search
     {
         private readonly ITextSearch<WorkTso> worksTextSearch;
         private readonly IFilesSearch filesSearch;
-        private readonly IAuthorsSearch authorsSearch;
+        private readonly IAuthorsCache authorsCache;
         private readonly IWorksCache worksCache;
 
-        public SearchService(ITextSearch<WorkTso> worksTextSearch, IFilesSearch filesSearch, IAuthorsSearch authorsSearch, IWorksCache worksCache)
+        public SearchService(ITextSearch<WorkTso> worksTextSearch, IFilesSearch filesSearch, IAuthorsCache authorsCache, IWorksCache worksCache)
         {
             this.worksTextSearch = worksTextSearch;
             this.filesSearch = filesSearch;
-            this.authorsSearch = authorsSearch;
+            this.authorsCache = authorsCache;
             this.worksCache = worksCache;
         }
 
@@ -46,7 +45,7 @@ namespace Phys.Lib.Core.Search
             var subWorks = worksCache.GetWorks(subWorksCodes);
 
             var authorsCodes = works.SelectMany(w => w.AuthorsCodes).Concat(subWorks.SelectMany(w => w.AuthorsCodes)).Distinct().ToList();
-            var authors = authorsSearch.FindByCodes(authorsCodes);
+            var authors = authorsCache.GetAuthors(authorsCodes);
             var filesCodes = works.SelectMany(w => w.FilesCodes).Concat(subWorks.SelectMany(w => w.FilesCodes)).Distinct().ToList();
             var files = filesSearch.FindByCodes(filesCodes);
 

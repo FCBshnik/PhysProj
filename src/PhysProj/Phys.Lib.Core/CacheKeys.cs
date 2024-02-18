@@ -8,5 +8,10 @@
         {
             return $"{prefix}:works:{workCode}";
         }
+
+        public static string Author(string authorCode)
+        {
+            return $"{prefix}:authors:{authorCode}";
+        }
     }
 }
