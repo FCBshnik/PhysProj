@@ -1,6 +1,6 @@
 <script lang="ts">
   import type * as api from "$lib/services/ApiService";
-  import IconInformation from "$lib/components/IconInformation.svelte";
+  import InformationIcon from "$lib/components/icons/Information.svelte";
   import DownloadFileButton from "$lib/components/DownloadFileButton.svelte";
 
   let showInfo = false;
@@ -33,7 +33,7 @@
     <div class="text-end text-ellipsis overflow-hidden text-xs">
       {#if work.subWorks?.length}
       <button type="button" class="" on:click={() => showInfo = !showInfo}>
-        <IconInformation></IconInformation>
+        <InformationIcon></InformationIcon>
       </button>
       {/if}
     </div>
