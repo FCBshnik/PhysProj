@@ -52,15 +52,12 @@ namespace Phys.Lib.Core.Stats
         private bool HasFileRefInHierarchy(IWorksDb db, WorkDbo work, HashSet<string> visited)
         {
             if (visited.Contains(work.Code))
-                return false;
+                return work.FilesCodes.Count > 0;
 
             visited.Add(work.Code);
 
             if (visited.Count > 50)
-                throw new PhysException($"too deep works tree detected at work {work}");
-
-            if (work.FilesCodes.Count > 0)
-                return true;
+                throw new PhysException($"too deep works tree detected for work {work}");
 
             foreach (var subWorkCode in work.SubWorksCodes)
             {
@@ -73,7 +70,7 @@ namespace Phys.Lib.Core.Stats
             if (collectedWorks.Any(i => HasFileRefInHierarchy(db, i, visited)))
                 return true;
 
-            return false;
+            return work.FilesCodes.Count > 0;
         }
     }
 }
