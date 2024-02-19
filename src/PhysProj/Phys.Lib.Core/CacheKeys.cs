@@ -13,5 +13,10 @@
         {
             return $"{prefix}:authors:{authorCode}";
         }
+
+        public static string File(string fileCode)
+        {
+            return $"{prefix}:files:{fileCode}";
+        }
     }
 }

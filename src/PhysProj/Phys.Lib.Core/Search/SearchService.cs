@@ -3,6 +3,7 @@ using Phys.Lib.Core.Files;
 using Phys.Lib.Search;
 using Phys.Lib.Core.Works.Cache;
 using Phys.Lib.Core.Authors.Cache;
+using Phys.Lib.Core.Files.Cache;
 
 namespace Phys.Lib.Core.Search
 {
