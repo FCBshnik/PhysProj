@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import * as api from '$lib/services/ApiService';
 	import { goto } from '$app/navigation';
@@ -12,14 +13,19 @@
 
 	let author: api.AuthorModel | undefined;
 	let subWork: api.WorkModel | undefined;
-	let originalWork: api.WorkModel | undefined;
 	let file: api.FileModel | undefined;
 
-	refresh();
+  $: workCode = $page.params.code
+  // call refresh when workCode changed
+  $: workCode && refresh()
+
+	onMount(() => {
+		refresh();
+	});
 
 	function refresh() {
 		api.service
-			.getWork($page.params.code)
+			.getWork(workCode)
 			.then((a) => (work = a))
 			.catch((e) => goto('/404'));
 	}
@@ -158,7 +164,7 @@
 			</div>
 			{#each work.authorsCodes ?? [] as authorCode}
             <div class="flex flex-row gap-2 p-2">
-                <div class="basis-10/12">{authorCode}</div>
+                <div class="basis-10/12"><a href="/authors/{authorCode}">{authorCode}</a></div>
                 <div class="basis-2/12 flex flex-row gap-2">
                     <button on:click={() => unlinkAuthor(authorCode)}>Unlink</button>
                 </div>
@@ -174,7 +180,7 @@
 			</div>
 			{#each work.subWorksCodes ?? [] as subWorkCode}
             <div class="flex flex-row gap-2 p-2">
-                <div class="basis-10/12">{subWorkCode}</div>
+                <div class="basis-10/12"><a href="/works/{subWorkCode}">{subWorkCode}</a></div>
                 <div class="basis-2/12 flex flex-row gap-2">
                     <button on:click={() => unlinkSubWork(subWorkCode)}>Unlink</button>
                 </div>
