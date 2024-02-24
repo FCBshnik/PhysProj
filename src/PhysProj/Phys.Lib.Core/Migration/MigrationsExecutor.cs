@@ -2,7 +2,7 @@
 
 namespace Phys.Lib.Core.Migration
 {
-    public class MigrationsExecutor : IMessageConsumer<MigrationMessage>
+    public class MigrationsExecutor : IMessageConsumer<MigrationExecuteMessage>
     {
         private readonly IMigrationService migrationService;
 
@@ -11,9 +11,9 @@ namespace Phys.Lib.Core.Migration
             this.migrationService = migrationService;
         }
 
-        string IMessageConsumer<MigrationMessage>.QueueName => QueueNames.Migrations;
+        string IMessageConsumer<MigrationExecuteMessage>.QueueName => QueueNames.MigrationsExecute;
 
-        void IMessageConsumer<MigrationMessage>.Consume(MigrationMessage message)
+        void IMessageConsumer<MigrationExecuteMessage>.Consume(MigrationExecuteMessage message)
         {
             migrationService.Execute(message.Migration);
         }

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Core.Works.Events;
 using Phys.Lib.Db.Works;
-using Phys.Shared.Cache;
 using Phys.Shared.EventBus;
 
 namespace Phys.Lib.Core.Works.Cache

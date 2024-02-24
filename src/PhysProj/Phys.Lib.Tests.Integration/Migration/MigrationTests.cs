@@ -185,7 +185,7 @@ namespace Phys.Lib.Tests.Integration.Migration
             builder.RegisterModule(new RabbitMqModule(loggerFactory, rabbit.GetConnectionString()));
             builder.RegisterModule(new CoreModule());
 
-            builder.RegisterQueueConsumer<MigrationsExecutor, MigrationMessage>();
+            builder.RegisterQueueConsumer<MigrationsExecutor, MigrationExecuteMessage>();
 
             builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "physlib", "history-", loggerFactory))
                 .SingleInstance()

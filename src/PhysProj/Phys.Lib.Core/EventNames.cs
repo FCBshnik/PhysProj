@@ -2,6 +2,7 @@
 {
     public static class EventNames
     {
+        public static readonly string StatCacheInvalidated = "stat-cache-invalidated";
         public static readonly string WorksCacheInvalidated = "works-cache-invalidated";
         public static readonly string AuthorsCacheInvalidated = "authors-cache-invalidated";
         public static readonly string FilesCacheInvalidated = "files-cache-invalidated";

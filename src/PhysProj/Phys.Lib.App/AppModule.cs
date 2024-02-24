@@ -23,7 +23,7 @@ namespace Phys.Lib.App
             builder.RegisterModule(new DataModule(configuration, loggerFactory));
             builder.RegisterModule(new CoreModule());
 
-            builder.RegisterQueueConsumer<MigrationsExecutor, MigrationMessage>();
+            builder.RegisterQueueConsumer<MigrationsExecutor, MigrationExecuteMessage>();
         }
     }
 }

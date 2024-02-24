@@ -47,6 +47,9 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<LibraryMigrator>()
                 .As<IMigrator>()
                 .SingleInstance();
+            builder.RegisterType<EventsMigrator>()
+                .As<IMigrator>()
+                .SingleInstance();
         }
     }
 }

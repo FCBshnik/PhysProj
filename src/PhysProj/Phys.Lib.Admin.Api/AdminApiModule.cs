@@ -2,6 +2,8 @@
 using Phys.Lib.Admin.Api.Api.User;
 using Phys.Lib.Admin.Api.Filters;
 using Phys.Lib.Autofac;
+using Phys.Lib.Core.Stats;
+using Phys.Lib.Core.Works.Cache;
 
 namespace Phys.Lib.Admin.Api
 {
@@ -26,6 +28,8 @@ namespace Phys.Lib.Admin.Api
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<UserResolver>().InstancePerDependency();
             builder.Register(c => c.Resolve<UserResolver>().GetUser()).InstancePerDependency();
+
+            builder.RegisterEventHandler<StatService, StatCacheInvalidatedEvent>();
         }
     }
 }

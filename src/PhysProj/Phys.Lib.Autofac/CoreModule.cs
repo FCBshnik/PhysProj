@@ -48,6 +48,12 @@ namespace Phys.Lib.Autofac
                 .As<IMessageQueue>()
                 .As<IEventBus>()
                 .SingleInstance();
+
+            builder.RegisterAssemblyTypes(typeof(Core.EventNames).Assembly)
+                .AssignableTo<IEvent>()
+                .Where(t => t.IsClass && !t.IsAbstract && t.GetProperties().Length == 1)
+                .As<IEvent>()
+                .SingleInstance();
         }
 
         private static void RegisterServices(ContainerBuilder builder)

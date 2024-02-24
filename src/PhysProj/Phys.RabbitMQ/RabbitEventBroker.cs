@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Phys.Shared.EventBus.Broker;
 using RabbitMQ.Client;
+using System.Reflection;
 
 namespace Phys.RabbitMQ
 {
@@ -19,42 +20,35 @@ namespace Phys.RabbitMQ
 
         public void Publish(string eventName, ReadOnlyMemory<byte> eventData)
         {
-            using var channel = EnsureExchange(eventName);
+            // TODO: cache declarations
+            var exchangeName = GetFullExchangeName(eventName);
+            using var channel = connection.Value.CreateModel();
+            channel.ExchangeDeclare(exchangeName, ExchangeType.Fanout, durable: true, autoDelete: false);
+            log.LogInformation($"decalre exchange '{exchangeName}' fanout");
+
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
-            channel.BasicPublish(exchange: GetFullExchangeName(eventName), routingKey: string.Empty, body: eventData, basicProperties: properties);
-            log.LogInformation($"BasicPublish '{eventName}'");
+            var exchange = GetFullExchangeName(eventName);
+            channel.BasicPublish(exchange: exchange, routingKey: string.Empty, body: eventData, basicProperties: properties);
+            log.LogInformation($"publish to exchnage '{exchange}'");
         }
 
         public IDisposable Subscribe(string eventName, IEventBrokerHandler handler)
         {
-            var channel = EnsureQueue(eventName, handler.Name);
-            var rabbitConsumer = new RabbitConsumer(channel, handler, log);
-            channel.BasicConsume(GetFullQueueName(eventName, handler.Name), autoAck: false, rabbitConsumer);
-            log.LogInformation($"BasicConsume '{eventName}'");
-            return rabbitConsumer;
-        }
-
-        private IModel EnsureExchange(string eventName)
-        {
-            var exchangeName = GetFullExchangeName(eventName);
-            var channel = connection.Value.CreateModel();
-            channel.ExchangeDeclare(exchangeName, ExchangeType.Fanout, durable: true, autoDelete: false);
-            log.LogInformation($"ExchangeDeclare '{exchangeName}'");
-            return channel;
-        }
-
-        private IModel EnsureQueue(string eventName, string handlerName)
-        {
-            var queueName = GetFullQueueName(eventName, handlerName);
+            var queueName = GetFullQueueName(eventName, Assembly.GetEntryAssembly()!.GetName().Name!.ToLowerInvariant().Replace(".", "-"));
             var exchangeName = GetFullExchangeName(eventName);
 
+            // TODO: cache declarations
             var channel = connection.Value.CreateModel();
             channel.ExchangeDeclare(exchangeName, ExchangeType.Fanout, durable: true, autoDelete: false);
             channel.QueueDeclare(queueName, durable: false, exclusive: false, autoDelete: true);
             channel.QueueBind(queueName, exchangeName, routingKey: string.Empty);
-            log.LogInformation($"QueueDeclare '{queueName}'");
-            return channel;
+            log.LogInformation($"declare queue '{queueName}' bound to exchange '{exchangeName}'");
+
+            var rabbitConsumer = new RabbitConsumer(channel, handler, log);
+            channel.BasicConsume(queueName, autoAck: false, rabbitConsumer);
+            log.LogInformation($"consume queue '{queueName}'");
+            return rabbitConsumer;
         }
 
         private string GetFullExchangeName(string eventName)

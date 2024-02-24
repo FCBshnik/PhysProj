@@ -4,6 +4,11 @@
     {
         private const string prefix = "physlib";
 
+        public static string Stats()
+        {
+            return $"{prefix}:stats";
+        }
+
         public static string Work(string workCode)
         {
             return $"{prefix}:works:{workCode}";

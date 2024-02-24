@@ -1,51 +1,61 @@
 ﻿using Microsoft.Extensions.Logging;
 using Phys.Lib.Db.Works;
 using Phys.Shared;
+using Phys.Shared.Cache;
+using Phys.Shared.EventBus;
 using Phys.Shared.Utils;
 
 namespace Phys.Lib.Core.Stats
 {
-    internal class StatService : IStatService
+    public class StatService : IStatService, IEventHandler<StatCacheInvalidatedEvent>
     {
-        private readonly List<IWorksDb> worksDbs;
         private readonly ILogger<StatService> log;
 
-        public StatService(IEnumerable<IWorksDb> worksDbs, ILogger<StatService> log)
+        private readonly IWorksDb worksDb;
+        private readonly ICache cache;
+
+        public StatService(IWorksDb worksDb, ILogger<StatService> log, ICache cache)
         {
-            this.worksDbs = worksDbs.Where(db => db.Name != "main").ToList();
             this.log = log;
+            this.worksDb = worksDb;
+            this.cache = cache;
         }
 
         public SystemStatsModel GetLibraryStats()
         {
+            return cache.GetOrAdd(CacheKeys.Stats(), CalcLibraryStats);
+        }
+
+        public SystemStatsModel CalcLibraryStats()
+        {
+            log.LogInformation("calculating");
+
             var stats = new SystemStatsModel();
 
-            foreach (var worksDb in worksDbs)
+            var dbStats = new DbStatsModel { Name = worksDb.Name, Library = new LibraryStatsModel() };
+            stats.Dbs.Add(dbStats);
+
+            foreach (var works in worksDb.Read(100))
             {
-                var dbStats = new DbStatsModel { Name = worksDb.Name, Library = new LibraryStatsModel() };
-                stats.Dbs.Add(dbStats);
-
-                foreach (var works in worksDb.Read(100))
+                foreach (var work in works)
                 {
-                    foreach (var work in works)
+                    var total = dbStats.Library.Works.Total;
+                    var lang = dbStats.Library.Works.PerLanguage.GetOrAdd(work.Language ?? "none", _ => new WorksStatModel.StatModel());
+
+                    total.Count++;
+                    lang.Count++;
+                    if (work.FilesCodes.Count > 0)
                     {
-                        var total = dbStats.Library.Works.Total;
-                        var lang = dbStats.Library.Works.PerLanguage.GetOrAdd(work.Language ?? "none", _ => new WorksStatModel.StatModel());
-
-                        total.Count++;
-                        lang.Count++;
-                        if (work.FilesCodes.Count > 0)
-                        {
-                            total.CountWithFiles++;
-                            lang.CountWithFiles++;
-                        }
-
-                        if (!HasFileRefInHierarchy(worksDb, work, new HashSet<string>()))
-                            dbStats.Library.Works.Unreachable.Add(work.Code);
+                        total.CountWithFiles++;
+                        lang.CountWithFiles++;
                     }
+
+                    if (!HasFileRefInHierarchy(worksDb, work, new HashSet<string>()))
+                        dbStats.Library.Works.Unreachable.Add(work.Code);
                 }
             }
 
+            log.LogInformation("calculated");
             return stats;
         }
 
@@ -71,6 +81,13 @@ namespace Phys.Lib.Core.Stats
                 return true;
 
             return work.FilesCodes.Count > 0;
+        }
+
+        string IEventHandler<StatCacheInvalidatedEvent>.EventName => EventNames.StatCacheInvalidated;
+
+        void IEventHandler<StatCacheInvalidatedEvent>.Handle(StatCacheInvalidatedEvent data)
+        {
+            cache.Set(CacheKeys.Stats(), CalcLibraryStats());
         }
     }
 }

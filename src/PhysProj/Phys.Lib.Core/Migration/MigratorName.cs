@@ -6,6 +6,7 @@
         public static readonly string Authors = "authors";
         public static readonly string Files = "files";
         public static readonly string Works = "works";
+        public static readonly string Events = "events";
 
         /// <summary>
         /// Aggregation migrator which aggregates authors, files links and works.

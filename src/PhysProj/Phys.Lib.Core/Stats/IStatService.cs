@@ -3,5 +3,7 @@
     public interface IStatService
     {
         SystemStatsModel GetLibraryStats();
+
+        SystemStatsModel CalcLibraryStats();
     }
 }

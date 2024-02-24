@@ -47,7 +47,7 @@ namespace Phys.Lib.Core.Migration
             migrationsHistory.Save(migration);
             log.LogInformation($"created {migration}");
 
-            queue.Send(new MigrationMessage { Migration = migration });
+            queue.Send(new MigrationExecuteMessage { Migration = migration });
 
             return migration;
         }
