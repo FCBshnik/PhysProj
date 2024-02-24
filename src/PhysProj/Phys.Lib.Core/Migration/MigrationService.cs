@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Phys.Shared;
 using Phys.HistoryDb;
 using Phys.Shared.Utils;
+using Phys.Queue;
 
 namespace Phys.Lib.Core.Migration
 {
@@ -10,18 +11,21 @@ namespace Phys.Lib.Core.Migration
     {
         private readonly List<IMigrator> migrators;
         private readonly IHistoryDb<MigrationDto> migrationsHistory;
+        private readonly IMessageQueue queue;
         private readonly ILogger<MigrationService> log;
 
         public MigrationService(IEnumerable<IMigrator> migrators,
             IHistoryDb<MigrationDto> migrationsHistory,
+            IMessageQueue queue,
             ILogger<MigrationService> log)
         {
             this.migrators = migrators.ToList();
             this.migrationsHistory = migrationsHistory;
+            this.queue = queue;
             this.log = log;
         }
 
-        public MigrationDto Create(MigrationTask task)
+        public MigrationDto Create(MigrationParams task)
         {
             ArgumentNullException.ThrowIfNull(task);
 
@@ -42,6 +46,8 @@ namespace Phys.Lib.Core.Migration
             };
             migrationsHistory.Save(migration);
             log.LogInformation($"created {migration}");
+
+            queue.Send(new MigrationMessage { Migration = migration });
 
             return migration;
         }

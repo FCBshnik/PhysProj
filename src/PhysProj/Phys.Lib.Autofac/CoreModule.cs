@@ -16,6 +16,8 @@ using Phys.Shared.Broker;
 using Phys.Lib.Core.Works.Cache;
 using Phys.Lib.Core.Authors.Cache;
 using Phys.Lib.Core.Files.Cache;
+using Phys.Queue;
+using Phys.Shared.EventBus;
 
 namespace Phys.Lib.Autofac
 {
@@ -40,6 +42,12 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<MainAuthorsDb>().As<IAuthorsDb>().SingleInstance();
             builder.RegisterType<MainWorksDb>().As<IWorksDb>().SingleInstance();
             builder.RegisterType<MainFilesDb>().As<IFilesDb>().SingleInstance();
+
+            // brokers
+            builder.RegisterType<JsonMessageBroker>()
+                .As<IMessageQueue>()
+                .As<IEventBus>()
+                .SingleInstance();
         }
 
         private static void RegisterServices(ContainerBuilder builder)

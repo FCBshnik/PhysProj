@@ -43,7 +43,7 @@ namespace Phys.Lib.Tests.Integration.Migration
             filesEditor.CreateFileFromStorage(storageSrc.Code, file2.Id);
             filesEditor.CreateFileFromStorage(storageSrc.Code, file3.Id);
 
-            var migration = migrations.Create(new MigrationTask { Migrator = "files-content", Source = storageSrc.Code, Destination = storageDst.Code });
+            var migration = migrations.Create(new MigrationParams { Migrator = MigratorName.FilesContent, Source = storageSrc.Code, Destination = storageDst.Code });
             migrations.Execute(migration);
             migration.Error.ShouldBeNull(migration.Error);
             migration.Stats.Created.ShouldBe(3);

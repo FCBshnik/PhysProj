@@ -4,7 +4,7 @@ namespace Phys.Lib.Core.Migration
 {
     public interface IMigrationService
     {
-        MigrationDto Create(MigrationTask task);
+        MigrationDto Create(MigrationParams task);
 
         MigrationDto Get(string id);
 

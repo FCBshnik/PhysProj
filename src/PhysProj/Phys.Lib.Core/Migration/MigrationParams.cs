@@ -1,6 +1,6 @@
 ﻿namespace Phys.Lib.Core.Migration
 {
-    public class MigrationTask
+    public class MigrationParams
     {
         public required string Migrator { get; set; }
 

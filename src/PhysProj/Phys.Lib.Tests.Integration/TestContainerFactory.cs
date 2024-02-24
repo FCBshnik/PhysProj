@@ -1,5 +1,6 @@
 ﻿using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 
 namespace Phys.Lib.Tests.Db
 {
@@ -21,6 +22,14 @@ namespace Phys.Lib.Tests.Db
             return new PostgreSqlBuilder()
                 .WithDockerEndpoint(dockerHost)
                 .WithImage("postgres:15.3")
+                .Build();
+        }
+
+        public static RabbitMqContainer CreateRabbit()
+        {
+            return new RabbitMqBuilder()
+                .WithDockerEndpoint(dockerHost)
+                .WithImage("rabbitmq:3.12")
                 .Build();
         }
     }

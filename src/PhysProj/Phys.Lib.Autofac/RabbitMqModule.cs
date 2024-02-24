@@ -35,10 +35,6 @@ namespace Phys.Lib.Autofac
             builder.RegisterType<RabbitEventBroker>()
                 .WithParameter(TypedParameter.From("physlib-events"))
                 .As<IEventBroker>().SingleInstance();
-            builder.RegisterType<JsonMessageBroker>()
-                .As<IMessageQueue>()
-                .As<IEventBus>()
-                .SingleInstance();
         }
     }
 }

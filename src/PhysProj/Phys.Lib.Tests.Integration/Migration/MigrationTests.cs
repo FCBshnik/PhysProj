@@ -14,9 +14,13 @@ using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
 using Phys.Lib.Tests.Db;
 using Phys.Mongo.HistoryDb;
+using Phys.Shared.Broker;
+using Phys.Shared.EventBus.Broker;
+using Phys.Shared.Queue.Broker;
 using Shouldly;
 using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 
 namespace Phys.Lib.Tests.Integration.Migration
 {
@@ -25,8 +29,8 @@ namespace Phys.Lib.Tests.Integration.Migration
         private readonly IConfiguration configuration = ConfigurationFactory.CreateTestConfiguration();
 
         private readonly PostgreSqlContainer postgres = TestContainerFactory.CreatePostgres();
-
         private readonly MongoDbContainer mongo = TestContainerFactory.CreateMongo();
+        private readonly RabbitMqContainer rabbit = TestContainerFactory.CreateRabbit();
 
         public MigrationTests(ITestOutputHelper output) : base(output)
         {
@@ -38,6 +42,8 @@ namespace Phys.Lib.Tests.Integration.Migration
         public void Tests(string source, string destination)
         {
             using var lifetimeScope = Container.BeginLifetimeScope();
+
+            lifetimeScope.Resolve<BrokerRegistrarService>().StartAsync(CancellationToken.None).Wait();
 
             UsersTests(source, destination, lifetimeScope);
             AuthorsTests(source, destination, lifetimeScope);
@@ -63,8 +69,14 @@ namespace Phys.Lib.Tests.Integration.Migration
             new WorksBaseWriter(srcDb, loggerFactory.CreateLogger<WorksMigrator>()).Write(works, new MigrationDto.StatsDto());
             new WorksLinksWriter(srcDb).Write(works, new MigrationDto.StatsDto());
 
-            var migration = migrations.Create(new MigrationTask { Migrator = "works", Source = source, Destination = destination });
-            migrations.Execute(migration);
+            var migration = migrations.Create(new MigrationParams { Migrator = MigratorName.Works, Source = source, Destination = destination });
+            while (!migration.CompletedAt.HasValue)
+            {
+                migration = migrations.Get(migration.Id);
+                if (migration.CreatedAt < DateTime.UtcNow.AddSeconds(-10))
+                    Assert.Fail("timeout");
+            }
+
             migration.Error.ShouldBeNull(migration.Error);
 
             var dstUsers = lifetimeScope.ResolveNamed<IWorksDb>(destination);
@@ -88,8 +100,14 @@ namespace Phys.Lib.Tests.Integration.Migration
             }.OrderBy(u => u.Code).ToList();
             new FilesWriter(srcDb).Write(files, new MigrationDto.StatsDto());
 
-            var migration = migrations.Create(new MigrationTask { Migrator = "files", Source = source, Destination = destination });
-            migrations.Execute(migration);
+            var migration = migrations.Create(new MigrationParams { Migrator = MigratorName.Files, Source = source, Destination = destination });
+            while (!migration.CompletedAt.HasValue)
+            {
+                migration = migrations.Get(migration.Id);
+                if (migration.CreatedAt < DateTime.UtcNow.AddSeconds(-10))
+                    Assert.Fail("timeout");
+            }
+
             migration.Error.ShouldBeNull(migration.Error);
 
             var dstUsers = lifetimeScope.ResolveNamed<IFilesDb>(destination);
@@ -113,8 +131,14 @@ namespace Phys.Lib.Tests.Integration.Migration
             }.OrderBy(u => u.Code).ToList();
             new AuthorsWriter(srcDb).Write(authors, new MigrationDto.StatsDto());
 
-            var migration = migrations.Create(new MigrationTask { Migrator = "authors", Source = source, Destination = destination });
-            migrations.Execute(migration);
+            var migration = migrations.Create(new MigrationParams { Migrator = MigratorName.Authors, Source = source, Destination = destination });
+            while (!migration.CompletedAt.HasValue)
+            {
+                migration = migrations.Get(migration.Id);
+                if (migration.CreatedAt < DateTime.UtcNow.AddSeconds(-10))
+                    Assert.Fail("timeout");
+            }
+
             migration.Error.ShouldBeNull(migration.Error);
 
             var dstAuthors = lifetimeScope.ResolveNamed<IAuthorsDb>(destination);
@@ -134,8 +158,15 @@ namespace Phys.Lib.Tests.Integration.Migration
             }.OrderBy(u => u.Name).ToList();
             new UsersWriter(srcDb).Write(users, new MigrationDto.StatsDto());
 
-            var migration = migrations.Create(new MigrationTask { Migrator = "users", Source = source, Destination = destination });
-            migrations.Execute(migration);
+            var migration = migrations.Create(new MigrationParams { Migrator = MigratorName.Users, Source = source, Destination = destination });
+            while (!migration.CompletedAt.HasValue)
+            {
+                migration = migrations.Get(migration.Id);
+                if (migration.CreatedAt < DateTime.UtcNow.AddSeconds(-10))
+                    Assert.Fail("timeout");
+                Task.Delay(500).Wait();
+            }
+
             migration.Error.ShouldBeNull(migration.Error);
 
             var dstUsers = lifetimeScope.ResolveNamed<IUsersDb>(destination);
@@ -151,7 +182,10 @@ namespace Phys.Lib.Tests.Integration.Migration
             builder.Register(_ => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterModule(new PostgresDbModule(postgres.GetConnectionString(), loggerFactory));
             builder.RegisterModule(new MongoDbModule(mongoUrl, "mongo", loggerFactory));
+            builder.RegisterModule(new RabbitMqModule(loggerFactory, rabbit.GetConnectionString()));
             builder.RegisterModule(new CoreModule());
+
+            builder.RegisterQueueConsumer<MigrationsExecutor, MigrationMessage>();
 
             builder.Register(c => new MongoHistoryDbFactory(mongoUrl, "physlib", "history-", loggerFactory))
                 .SingleInstance()
@@ -162,6 +196,7 @@ namespace Phys.Lib.Tests.Integration.Migration
         {
             await mongo.StartAsync();
             await postgres.StartAsync();
+            await rabbit.StartAsync();
 
             await base.Init();
         }
@@ -170,6 +205,7 @@ namespace Phys.Lib.Tests.Integration.Migration
         {
             await mongo.StopAsync();
             await postgres.StopAsync();
+            await rabbit.StopAsync();
 
             await base.Release();
         }

@@ -10,9 +10,9 @@ namespace Phys.Lib.Admin.Api.Api.Migrations
 
         public required string Destination { get; set; }
 
-        public MigrationTask Map()
+        public MigrationParams Map()
         {
-            return new MigrationTask
+            return new MigrationParams
             {
                 Migrator = Migrator,
                 Source = Source,
