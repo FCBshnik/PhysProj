@@ -4,6 +4,7 @@ using Phys.Shared.EventBus;
 using Phys.Shared.Queue.Broker;
 using Phys.Queue;
 using Phys.Shared.EventBus.Broker;
+using System.Reflection;
 
 namespace Phys.Shared.Broker
 {
@@ -71,7 +72,7 @@ namespace Phys.Shared.Broker
                 this.handler = handler;
             }
 
-            public string Name => handler.EventName;
+            public string Name => Assembly.GetEntryAssembly()!.GetName().Name!.ToLowerInvariant().Replace(".", "-");
 
             void IEventBrokerHandler.Handle(ReadOnlyMemory<byte> eventData)
             {

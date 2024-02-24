@@ -1,12 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using Phys.Shared.EventBus.Broker;
 using RabbitMQ.Client;
-using System.Reflection;
+using System.Collections.Concurrent;
 
 namespace Phys.RabbitMQ
 {
     public class RabbitEventBroker : IEventBroker
     {
+        private readonly ConcurrentDictionary<string, IModel> subChannels = new ConcurrentDictionary<string, IModel>();
+        private readonly ConcurrentDictionary<string, IModel> pubChannels = new ConcurrentDictionary<string, IModel>();
+
         private readonly ILogger<RabbitEventBroker> log;
         private readonly Lazy<IConnection> connection;
         private readonly string prefix;
@@ -20,35 +23,52 @@ namespace Phys.RabbitMQ
 
         public void Publish(string eventName, ReadOnlyMemory<byte> eventData)
         {
-            // TODO: cache declarations
             var exchangeName = GetFullExchangeName(eventName);
-            using var channel = connection.Value.CreateModel();
-            channel.ExchangeDeclare(exchangeName, ExchangeType.Fanout, durable: true, autoDelete: false);
-            log.LogInformation($"decalre exchange '{exchangeName}' fanout");
+            var channel = GetPubChannel(exchangeName);
 
-            var properties = channel.CreateBasicProperties();
-            properties.Persistent = true;
-            var exchange = GetFullExchangeName(eventName);
-            channel.BasicPublish(exchange: exchange, routingKey: string.Empty, body: eventData, basicProperties: properties);
-            log.LogInformation($"publish to exchnage '{exchange}'");
+            channel.BasicPublish(exchange: exchangeName, routingKey: string.Empty, body: eventData);
+            log.LogInformation($"publish to exchnage '{exchangeName}'");
         }
 
         public IDisposable Subscribe(string eventName, IEventBrokerHandler handler)
         {
-            var queueName = GetFullQueueName(eventName, Assembly.GetEntryAssembly()!.GetName().Name!.ToLowerInvariant().Replace(".", "-"));
+            var queueName = GetFullQueueName(eventName, handler.Name);
             var exchangeName = GetFullExchangeName(eventName);
 
-            // TODO: cache declarations
-            var channel = connection.Value.CreateModel();
+            var channel = GetSubChannel(exchangeName, queueName);
+            var rabbitConsumer = new RabbitConsumer(channel, handler, log);
+            channel.BasicConsume(queueName, autoAck: false, rabbitConsumer);
+            return rabbitConsumer;
+        }
+
+        private IModel GetSubChannel(string exchangeName, string queueName)
+        {
+            if (subChannels.TryGetValue(queueName, out var channel) && channel.IsOpen)
+                return channel;
+
+            channel?.Dispose();
+            channel = connection.Value.CreateModel();
             channel.ExchangeDeclare(exchangeName, ExchangeType.Fanout, durable: true, autoDelete: false);
             channel.QueueDeclare(queueName, durable: false, exclusive: false, autoDelete: true);
             channel.QueueBind(queueName, exchangeName, routingKey: string.Empty);
             log.LogInformation($"declare queue '{queueName}' bound to exchange '{exchangeName}'");
 
-            var rabbitConsumer = new RabbitConsumer(channel, handler, log);
-            channel.BasicConsume(queueName, autoAck: false, rabbitConsumer);
-            log.LogInformation($"consume queue '{queueName}'");
-            return rabbitConsumer;
+            subChannels.TryAdd(queueName, channel);
+            return channel;
+        }
+
+        private IModel GetPubChannel(string exchangeName)
+        {
+            if (pubChannels.TryGetValue(exchangeName, out var channel) && channel.IsOpen)
+                return channel;
+
+            channel?.Dispose();
+            channel = connection.Value.CreateModel();
+            channel.ExchangeDeclare(exchangeName, ExchangeType.Fanout, durable: true, autoDelete: false);
+            log.LogInformation($"decalre exchange '{exchangeName}' fanout");
+
+            pubChannels.TryAdd(exchangeName, channel);
+            return channel;
         }
 
         private string GetFullExchangeName(string eventName)
