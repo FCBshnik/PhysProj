@@ -6,7 +6,13 @@
 
         public Dictionary<string, StatModel> PerLanguage { get; set; } = new Dictionary<string, StatModel>();
 
-        public List<string> Unreachable { get; set; } = new List<string>();
+        public HashSet<string> Unreachable { get; set; } = new HashSet<string>();
+
+        public HashSet<string> NoLang { get; set; } = new HashSet<string>();
+
+        public HashSet<string> NoInfo { get; set; } = new HashSet<string>();
+
+        public HashSet<string> NoPublic { get; set; } = new HashSet<string>();
 
         public class StatModel
         {

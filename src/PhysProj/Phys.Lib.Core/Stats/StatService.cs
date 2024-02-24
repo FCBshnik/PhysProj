@@ -52,6 +52,15 @@ namespace Phys.Lib.Core.Stats
 
                     if (!HasFileRefInHierarchy(worksDb, work, new HashSet<string>()))
                         dbStats.Library.Works.Unreachable.Add(work.Code);
+
+                    if (work.Language == null)
+                        dbStats.Library.Works.NoLang.Add(work.Code);
+
+                    if (work.Infos.Count == 0)
+                        dbStats.Library.Works.NoInfo.Add(work.Code);
+
+                    if (!work.IsPublic)
+                        dbStats.Library.Works.NoPublic.Add(work.Code);
                 }
             }
 

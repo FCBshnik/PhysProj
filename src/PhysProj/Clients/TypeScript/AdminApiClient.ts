@@ -1206,10 +1206,7 @@ export class AdminApiClient {
         return Promise.resolve<OkModel>(null as any);
     }
 
-    /**
-     * @return OK
-     */
-    login(body: LoginModel): Promise<LoginSuccessModel> {
+    login(body: LoginModel): Promise<void> {
         let url_ = this.baseUrl + "/api/user/login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1220,7 +1217,6 @@ export class AdminApiClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
             }
         };
 
@@ -1229,17 +1225,10 @@ export class AdminApiClient {
         });
     }
 
-    protected processLogin(response: Response): Promise<LoginSuccessModel> {
+    protected processLogin(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = LoginSuccessModel.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status === 400) {
+        if (status === 400) {
             return response.text().then((_responseText) => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -1251,7 +1240,7 @@ export class AdminApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<LoginSuccessModel>(null as any);
+        return Promise.resolve<void>(null as any);
     }
 
     /**
@@ -2707,42 +2696,6 @@ export interface ILoginModel {
     password?: string | undefined;
 }
 
-export class LoginSuccessModel implements ILoginSuccessModel {
-    token?: string | undefined;
-
-    constructor(data?: ILoginSuccessModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.token = _data["token"];
-        }
-    }
-
-    static fromJS(data: any): LoginSuccessModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new LoginSuccessModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["token"] = this.token;
-        return data;
-    }
-}
-
-export interface ILoginSuccessModel {
-    token?: string | undefined;
-}
-
 export class MigrationModel implements IMigrationModel {
     id?: string | undefined;
     migrator?: string | undefined;
@@ -3407,6 +3360,9 @@ export class WorksStatModel implements IWorksStatModel {
     total?: StatModel;
     perLanguage?: { [key: string]: StatModel; } | undefined;
     unreachable?: string[] | undefined;
+    noLang?: string[] | undefined;
+    noInfo?: string[] | undefined;
+    noPublic?: string[] | undefined;
 
     constructor(data?: IWorksStatModel) {
         if (data) {
@@ -3431,6 +3387,21 @@ export class WorksStatModel implements IWorksStatModel {
                 this.unreachable = [] as any;
                 for (let item of _data["unreachable"])
                     this.unreachable!.push(item);
+            }
+            if (Array.isArray(_data["noLang"])) {
+                this.noLang = [] as any;
+                for (let item of _data["noLang"])
+                    this.noLang!.push(item);
+            }
+            if (Array.isArray(_data["noInfo"])) {
+                this.noInfo = [] as any;
+                for (let item of _data["noInfo"])
+                    this.noInfo!.push(item);
+            }
+            if (Array.isArray(_data["noPublic"])) {
+                this.noPublic = [] as any;
+                for (let item of _data["noPublic"])
+                    this.noPublic!.push(item);
             }
         }
     }
@@ -3457,6 +3428,21 @@ export class WorksStatModel implements IWorksStatModel {
             for (let item of this.unreachable)
                 data["unreachable"].push(item);
         }
+        if (Array.isArray(this.noLang)) {
+            data["noLang"] = [];
+            for (let item of this.noLang)
+                data["noLang"].push(item);
+        }
+        if (Array.isArray(this.noInfo)) {
+            data["noInfo"] = [];
+            for (let item of this.noInfo)
+                data["noInfo"].push(item);
+        }
+        if (Array.isArray(this.noPublic)) {
+            data["noPublic"] = [];
+            for (let item of this.noPublic)
+                data["noPublic"].push(item);
+        }
         return data;
     }
 }
@@ -3465,6 +3451,9 @@ export interface IWorksStatModel {
     total?: StatModel;
     perLanguage?: { [key: string]: StatModel; } | undefined;
     unreachable?: string[] | undefined;
+    noLang?: string[] | undefined;
+    noInfo?: string[] | undefined;
+    noPublic?: string[] | undefined;
 }
 
 export class ApiException extends Error {
