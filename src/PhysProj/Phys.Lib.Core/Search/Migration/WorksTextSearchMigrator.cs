@@ -38,19 +38,19 @@ namespace Phys.Lib.Core.Search.Migration
 
             foreach (var works in workDb.Read(100))
             {
-                var values = works.Where(Use).Select(w => Map(w, workDb, authorsDb)).ToList();
+                var values = works.Where(IsSearchable).Select(w => Map(w, workDb, authorsDb)).ToList();
                 await textSearch.Index(values);
                 migration.Stats.Updated += values.Count;
                 progress.Report(migration);
             }
         }
 
-        protected bool Use(WorkDbo work)
+        private bool IsSearchable(WorkDbo work)
         {
             return work.IsPublic && work.Infos.Count > 0;
         }
 
-        protected WorkTso Map(WorkDbo work, IWorksDb worksDb, IAuthorsDb authorsDb)
+        private WorkTso Map(WorkDbo work, IWorksDb worksDb, IAuthorsDb authorsDb)
         {
             var workTso = new WorkTso
             {
@@ -83,6 +83,7 @@ namespace Phys.Lib.Core.Search.Migration
                 return;
 
             info.HasFiles = work.FilesCodes.Count > 0;
+            info.IsPublic = work.IsPublic;
             visited[work.Code] = info;
 
             foreach (var subWorkCode in work.SubWorksCodes)

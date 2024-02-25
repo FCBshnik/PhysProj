@@ -1,9 +1,7 @@
-﻿using Phys.Lib.Core.Authors;
-using Phys.Lib.Core.Files;
+﻿using Phys.Lib.Core.Files;
 using Phys.Lib.Search;
 using Phys.Lib.Core.Works.Cache;
 using Phys.Lib.Core.Authors.Cache;
-using Phys.Lib.Core.Files.Cache;
 
 namespace Phys.Lib.Core.Search
 {
@@ -33,10 +31,10 @@ namespace Phys.Lib.Core.Search
                 worksCodesResult.Add(found.Code);
             }
 
-            // than add all linked works with files
+            // than add all linked works 
             foreach (var found in foundWorks)
             {
-                AddCodesWithFiles(worksCodesResult, found.Info, root: true);
+                AddLinkedWorks(worksCodesResult, found.Info, root: true);
             }
 
             worksCodesResult = worksCodesResult.Take(limit).ToList();
@@ -59,20 +57,19 @@ namespace Phys.Lib.Core.Search
             };
         }
 
-        private void AddCodesWithFiles(ICollection<string> codes, WorkInfoTso info, bool root)
+        private void AddLinkedWorks(ICollection<string> codes, WorkInfoTso info, bool root)
         {
             if (!root && codes.Contains(info.Code))
                 return;
 
-            if (!root && info.HasFiles)
+            if (!root && info.HasFiles && info.IsPublic)
                 codes.Add(info.Code);
 
             foreach (var subWork in info.SubWorks)
-                AddCodesWithFiles(codes, subWork, false);
-            foreach (var translation in info.Translations)
-                AddCodesWithFiles(codes, translation, false);
+                AddLinkedWorks(codes, subWork, false);
+
             foreach (var collected in info.Collected)
-                AddCodesWithFiles(codes, collected, false);
+                AddLinkedWorks(codes, collected, false);
         }
     }
 }

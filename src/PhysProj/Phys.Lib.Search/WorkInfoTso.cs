@@ -6,9 +6,9 @@
 
         public bool HasFiles { get; set; }
 
-        public List<WorkInfoTso> SubWorks { get; set; } = new List<WorkInfoTso>();
+        public bool IsPublic { get; set; }
 
-        public List<WorkInfoTso> Translations { get; set; } = new List<WorkInfoTso>();
+        public List<WorkInfoTso> SubWorks { get; set; } = new List<WorkInfoTso>();
 
         public List<WorkInfoTso> Collected { get; set; } = new List<WorkInfoTso>();
     }
