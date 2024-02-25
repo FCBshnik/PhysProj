@@ -20,8 +20,7 @@ namespace Phys.Lib.Admin.Api.Api.User
 
                 return TypedResults.Ok(new LoginSuccessModel { Token = TokenGenerator.CreateToken(user.Value) });
             })
-            .ProducesError()
-            .WithName("Login");
+            .ProducesResponse<LoginSuccessModel>("Login");
 
             builder.MapGet("/", ([FromServices] UserDbo user) =>
             {
