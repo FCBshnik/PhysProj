@@ -1,5 +1,6 @@
 ﻿using Phys.Lib.Core;
 using Phys.Lib.Core.Library.Models;
+using Phys.Lib.Core.Search;
 using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Works;
@@ -38,6 +39,19 @@ namespace Phys.Lib.Site.Api.Controllers.Search
                 Files = work.FilesCodes.Select(a => Map(files[a])).ToList(),
                 SubWorks = work.SubWorksCodes.Select(c => works[c]).Select(w => Map(w, files, works, parentWork: work)).ToList(),
                 IsTranslation = parentWork?.Language != null && work.Language != null && parentWork.Language != work.Language
+            };
+        }
+
+        public static SearchResultModel Map(SearchWorksResult result)
+        {
+            var works = result.Works.ToDictionary(f => f.Code);
+            var files = result.Files.ToDictionary(f => f.Code);
+
+            return new SearchResultModel
+            {
+                Search = string.Empty,
+                Works = result.FoundWorksCodes.Select(w => Map(works[w], files, works)).ToList(),
+                Authors = result.Authors.Select(Map).ToList(),
             };
         }
     }

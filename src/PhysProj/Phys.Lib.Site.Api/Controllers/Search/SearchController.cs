@@ -13,16 +13,7 @@ namespace Phys.Lib.Site.Api.Controllers.Search
         public async Task<SearchResultModel> ListWorks([FromQuery] string? search, [FromServices] ISearchService searchService)
         {
             var result = await searchService.SearchWorks(search);
-            var works = result.Works.ToDictionary(f => f.Code);
-            var files = result.Files.ToDictionary(f => f.Code);
-            var authors = result.Authors.ToDictionary(f => f.Code);
-
-            return new SearchResultModel
-            {
-                Search = search,
-                Works = result.FoundWorksCodes.Select(w => SearchResultMapper.Map(works[w], files, works)).ToList(),
-                Authors = result.Authors.Select(SearchResultMapper.Map).ToList(),
-            };
+            return SearchResultMapper.Map(result);
         }
     }
 }

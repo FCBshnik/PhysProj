@@ -89,5 +89,13 @@ namespace Phys.Lib.Core
         {
             return language.Code;
         }
+
+        public static explicit operator Language(string value)
+        {
+            if (languages.TryGetValue(value, out var language))
+                return language;
+
+            throw new ApplicationException($"invalid language '{value}'");
+        }
     }
 }
