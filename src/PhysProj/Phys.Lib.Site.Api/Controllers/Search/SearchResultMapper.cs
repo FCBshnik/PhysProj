@@ -28,7 +28,7 @@ namespace Phys.Lib.Site.Api.Controllers.Search
             };
         }
 
-        public static SearchResultWorkModel Map(WorkDbo work, IDictionary<string, FileDbo> files, IDictionary<string, WorkDbo> works, WorkDbo? parentWork = null)
+        public static SearchResultWorkModel Map(WorkDbo work, IDictionary<string, FileDbo> files, IDictionary<string, WorkDbo> works, int worksDepth, WorkDbo? parentWork = null)
         {
             return new SearchResultWorkModel
             {
@@ -37,7 +37,7 @@ namespace Phys.Lib.Site.Api.Controllers.Search
                 Language = work.Language,
                 Authors = work.AuthorsCodes,
                 Files = work.FilesCodes.Select(a => Map(files[a])).ToList(),
-                SubWorks = work.SubWorksCodes.Select(c => works[c]).Select(w => Map(w, files, works, parentWork: work)).ToList(),
+                SubWorks = worksDepth < 1 ? work.SubWorksCodes.Select(c => works[c]).Select(w => Map(w, files, works, worksDepth: worksDepth + 1, parentWork: work)).ToList() : new List<SearchResultWorkModel>(),
                 IsTranslation = parentWork?.Language != null && work.Language != null && parentWork.Language != work.Language
             };
         }
@@ -50,7 +50,7 @@ namespace Phys.Lib.Site.Api.Controllers.Search
             return new SearchResultModel
             {
                 Search = string.Empty,
-                Works = result.FoundWorksCodes.Select(w => Map(works[w], files, works)).ToList(),
+                Works = result.FoundWorksCodes.Select(w => Map(works[w], files, works, worksDepth: 0)).ToList(),
                 Authors = result.Authors.Select(Map).ToList(),
             };
         }
