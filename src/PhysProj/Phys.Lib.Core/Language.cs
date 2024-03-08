@@ -44,11 +44,16 @@ namespace Phys.Lib.Core
         /// </summary>
         public static readonly Language Grc = new Language("grc", "Greek, Ancient");
 
+        /// <summary>
+        /// German
+        /// </summary>
+        public static readonly Language De = new Language("de", "German");
+
         public static readonly Language Default = Ru;
 
         private static readonly Dictionary<string, Language> languages = new List<Language>
         {
-            Ru, En, Fr, It, Nl, La, Gr, Grc
+            Ru, En, Fr, It, Nl, La, Gr, Grc, De
         }.ToDictionary(l => l.Code, StringComparer.InvariantCultureIgnoreCase);
 
         public static readonly IReadOnlyCollection<Language> All = languages.Values.ToList();
