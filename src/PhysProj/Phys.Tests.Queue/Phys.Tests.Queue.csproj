@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Phys.NLog\Phys.NLog.csproj" />
     <ProjectReference Include="..\Phys.RabbitMQ\Phys.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Phys.Serilog\Phys.Serilog.csproj" />
   </ItemGroup>
 
 </Project>

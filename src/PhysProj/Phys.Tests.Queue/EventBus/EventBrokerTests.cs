@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Phys.NLog;
+using Phys.Serilog;
 using Phys.Shared.EventBus.Broker;
 using System.Text;
 
@@ -14,7 +14,7 @@ namespace Phys.Tests.Queue.EventBus
 
         protected EventBrokerTests()
         {
-            NLogConfig.Configure(loggerFactory);
+            SerilogConfig.Configure(loggerFactory);
         }
 
         [Fact]

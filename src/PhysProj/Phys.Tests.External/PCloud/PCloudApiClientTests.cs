@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Phys.Files.PCloud;
-using Phys.NLog;
+using Phys.Serilog;
 using Phys.Shared.Logging;
 using Phys.Shared.Utils;
 using System.Diagnostics;
@@ -22,7 +22,8 @@ namespace Phys.Tests.External.PCloud
         public PCloudApiClientTests(ITestOutputHelper output)
         {
             this.output = output;
-            NLogConfig.Configure(loggerFactory);
+
+            SerilogConfig.Configure(loggerFactory);
             DiagnosticListener.AllListeners.Subscribe(new HttpRequestsObserver(loggerFactory));
         }
 

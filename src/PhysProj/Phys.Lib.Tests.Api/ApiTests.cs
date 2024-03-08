@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Phys.NLog;
+using Phys.Serilog;
 using Phys.Shared;
 using Testcontainers.MongoDb;
 using Testcontainers.PostgreSql;
@@ -28,7 +28,7 @@ namespace Phys.Lib.Tests.Api
 
             try
             {
-                NLogConfig.Configure(loggerFactory);
+                SerilogConfig.Configure(loggerFactory);
                 PhysAppContext.Init(loggerFactory);
                 Log("initializing");
                 Init().Wait();

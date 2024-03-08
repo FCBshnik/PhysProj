@@ -1,8 +1,8 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Phys.NLog;
 using System.Text;
 using Phys.Shared.Queue.Broker;
+using Phys.Serilog;
 
 namespace Phys.Tests.Queue.Queue
 {
@@ -16,7 +16,7 @@ namespace Phys.Tests.Queue.Queue
 
         public QueueBrokerTests()
         {
-            NLogConfig.Configure(loggerFactory);
+            SerilogConfig.Configure(loggerFactory);
             queue = CreateQueueBroker();
         }
 

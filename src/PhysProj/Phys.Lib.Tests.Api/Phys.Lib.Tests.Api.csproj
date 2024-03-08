@@ -35,7 +35,7 @@
     <ProjectReference Include="..\Phys.Lib.Autofac\Phys.Lib.Autofac.csproj" />
     <ProjectReference Include="..\Phys.Lib.Core\Phys.Lib.Core.csproj" />
     <ProjectReference Include="..\Phys.Lib.Mongo\Phys.Lib.Mongo.csproj" />
-    <ProjectReference Include="..\Phys.NLog\Phys.NLog.csproj" />
+    <ProjectReference Include="..\Phys.Serilog\Phys.Serilog.csproj" />
   </ItemGroup>
 
   <ItemGroup>

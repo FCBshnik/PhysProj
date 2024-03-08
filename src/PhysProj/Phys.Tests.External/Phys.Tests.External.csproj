@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Phys.Files.PCloud\Phys.Files.PCloud.csproj" />
-    <ProjectReference Include="..\Phys.NLog\Phys.NLog.csproj" />
+    <ProjectReference Include="..\Phys.Serilog\Phys.Serilog.csproj" />
     <ProjectReference Include="..\Phys.Shared\Phys.Shared.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
 using Phys.Lib.Autofac;
-using Phys.NLog;
+using Phys.Serilog;
 using Phys.Shared;
 
 namespace Phys.Lib.Tests.Integration
@@ -21,7 +21,7 @@ namespace Phys.Lib.Tests.Integration
 
             try
             {
-                NLogConfig.Configure(loggerFactory);
+                SerilogConfig.Configure(loggerFactory);
                 PhysAppContext.Init(loggerFactory);
                 Log("initializing");
                 Init().Wait();

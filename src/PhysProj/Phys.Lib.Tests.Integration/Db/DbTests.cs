@@ -4,9 +4,9 @@ using Phys.Lib.Db.Authors;
 using Phys.Lib.Db.Files;
 using Phys.Lib.Db.Users;
 using Phys.Lib.Db.Works;
-using Phys.NLog;
 using Phys.Lib.Autofac;
 using Phys.Shared;
+using Phys.Serilog;
 
 namespace Phys.Lib.Tests.Integration.Db
 {
@@ -22,7 +22,7 @@ namespace Phys.Lib.Tests.Integration.Db
 
             try
             {
-                NLogConfig.Configure(loggerFactory);
+                SerilogConfig.Configure(loggerFactory);
                 PhysAppContext.Init(loggerFactory);
                 Log("initializing");
                 Init().Wait();
