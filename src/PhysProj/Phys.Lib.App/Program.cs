@@ -1,22 +1,23 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Phys.NLog;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Phys.Shared;
 using Phys.Shared.Configuration;
+using Phys.Serilog;
+using Serilog;
 
 namespace Phys.Lib.App
 {
     internal static class Program
     {
         private static readonly LoggerFactory loggerFactory = new LoggerFactory();
-        private static readonly ILogger log = loggerFactory.CreateLogger(nameof(Program));
+        private static readonly Microsoft.Extensions.Logging.ILogger log = loggerFactory.CreateLogger(nameof(Program));
 
         static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory);
+            SerilogConfig.Configure(loggerFactory);
             PhysAppContext.Init(loggerFactory);
 
             var builder = Host.CreateDefaultBuilder(args);
@@ -25,10 +26,11 @@ namespace Phys.Lib.App
 
             builder.ConfigureLogging((c, b) =>
             {
+                b.ClearProviders().AddSerilog();
+
                 var elasticUrl = c.Configuration.GetConnectionString("logs_elastic");
                 if (elasticUrl != null)
                 {
-                    NLogConfig.AddElastic(loggerFactory, "lib-app", elasticUrl);
                     PhysAppContext.HttpObserver?.IgnoreUri(new Uri(elasticUrl));
                 }
             });

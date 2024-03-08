@@ -31,7 +31,7 @@ namespace Phys.Lib.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            log.LogInformation($"meilisearch connection: {connectionString}");
+            log.LogInformation($"meilisearch server: {connectionString}");
 
             var client = new MeilisearchClient(connectionString, masterKey);
 

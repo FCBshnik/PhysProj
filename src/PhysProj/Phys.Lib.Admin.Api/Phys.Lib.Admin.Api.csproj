@@ -17,14 +17,13 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.4.23260.4" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.3" />
     <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Phys.Lib.Autofac\Phys.Lib.Autofac.csproj" />
-    <ProjectReference Include="..\Phys.NLog\Phys.NLog.csproj" />
+    <ProjectReference Include="..\Phys.Serilog\Phys.Serilog.csproj" />
   </ItemGroup>
 
 </Project>

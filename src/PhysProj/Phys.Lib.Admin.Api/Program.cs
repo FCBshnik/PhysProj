@@ -3,7 +3,6 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
-using NLog.Web;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,38 +15,39 @@ using Phys.Lib.Admin.Api.Api.Config;
 using Phys.Lib.Admin.Api.Api.Files;
 using Phys.Lib.Admin.Api.Filters;
 using Phys.Lib.Admin.Api.Api.Migrations;
-using Phys.NLog;
 using Phys.Lib.Admin.Api.Api.Settings;
 using Phys.Lib.Admin.Api.Api.Stats;
 using Phys.Lib.Admin.Api.Api.System;
 using Phys.Shared.Configuration;
 using Phys.Shared;
+using Phys.Serilog;
+using Serilog;
 
 namespace Phys.Lib.Admin.Api
 {
     public static class Program
     {
         private static readonly LoggerFactory loggerFactory = new LoggerFactory();
-        private static readonly ILogger log = loggerFactory.CreateLogger(nameof(Program));
+        private static readonly Microsoft.Extensions.Logging.ILogger log = loggerFactory.CreateLogger(nameof(Program));
 
         internal static readonly Lazy<string> version = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty);
         internal static string Version => version.Value;
 
         public static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory);
+            SerilogConfig.Configure(loggerFactory);
             PhysAppContext.Init(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
-            builder.Logging.ClearProviders().AddNLog(global::NLog.LogManager.Configuration);
+
+            builder.Logging.ClearProviders().AddSerilog(Log.Logger);
 
             var config = builder.Configuration.AddJsonConfigFromArgs().Build();
 
             var elasticUrl = config.GetConnectionString("logs_elastic");
             if (elasticUrl != null)
             {
-                NLogConfig.AddElastic(loggerFactory, "lib-admin", elasticUrl);
-                PhysAppContext.HttpObserver?.IgnoreUri(new Uri(elasticUrl));
+                PhysAppContext.HttpObserver!.IgnoreUri(new Uri(elasticUrl));
             }
 
             builder.WebHost.UseUrls(config.GetConnectionStringOrThrow("urls"));

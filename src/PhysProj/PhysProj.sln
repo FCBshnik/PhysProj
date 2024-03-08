@@ -76,7 +76,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Tests.Unit", "Phys.Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Search", "Search", "{86DC7291-3A9A-4163-B543-C1784D7870FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Lib.Search.Meilisearch", "Phys.Lib.Search.Meilisearch\Phys.Lib.Search.Meilisearch.csproj", "{63835F0A-EDDB-4E81-A27B-534AF164EE8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phys.Lib.Search.Meilisearch", "Phys.Lib.Search.Meilisearch\Phys.Lib.Search.Meilisearch.csproj", "{63835F0A-EDDB-4E81-A27B-534AF164EE8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phys.Serilog", "Phys.Serilog\Phys.Serilog.csproj", "{15BC7EA7-F67D-4D76-A1DC-F861093A8662}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,6 +178,10 @@ Global
 		{63835F0A-EDDB-4E81-A27B-534AF164EE8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63835F0A-EDDB-4E81-A27B-534AF164EE8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63835F0A-EDDB-4E81-A27B-534AF164EE8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15BC7EA7-F67D-4D76-A1DC-F861093A8662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15BC7EA7-F67D-4D76-A1DC-F861093A8662}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15BC7EA7-F67D-4D76-A1DC-F861093A8662}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15BC7EA7-F67D-4D76-A1DC-F861093A8662}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,6 +217,7 @@ Global
 		{82276E7F-1B59-4F7A-A612-88699CE4149E} = {CBC25E25-67EE-4BDD-B0D1-04B1CDA2B3BC}
 		{86DC7291-3A9A-4163-B543-C1784D7870FD} = {36DA6B64-5719-46FE-99A5-6B38F464D8BB}
 		{63835F0A-EDDB-4E81-A27B-534AF164EE8D} = {86DC7291-3A9A-4163-B543-C1784D7870FD}
+		{15BC7EA7-F67D-4D76-A1DC-F861093A8662} = {C3DE8CAF-EEC0-4CAD-8C9B-9BFBE2767B49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {616FF1DB-DD01-46E8-A34F-B45851EEE112}

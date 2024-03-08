@@ -1,10 +1,10 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using NLog.Web;
 using Phys.Lib.Site.Api.Pipeline;
-using Phys.NLog;
+using Phys.Serilog;
 using Phys.Shared;
 using Phys.Shared.Configuration;
+using Serilog;
 using System.Reflection;
 
 namespace Phys.Lib.Site.Api
@@ -12,17 +12,19 @@ namespace Phys.Lib.Site.Api
     public static class Program
     {
         private static readonly LoggerFactory loggerFactory = new LoggerFactory();
-        private static readonly ILogger log = loggerFactory.CreateLogger(nameof(Program));
+        private static readonly Microsoft.Extensions.Logging.ILogger log = loggerFactory.CreateLogger(nameof(Program));
 
         internal static readonly Lazy<string> version = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty);
         internal static string Version => version.Value;
 
         public static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory);
+            SerilogConfig.Configure(loggerFactory);
             PhysAppContext.Init(loggerFactory);
 
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Logging.ClearProviders().AddSerilog(Log.Logger);
 
             builder.Configuration.AddJsonConfigFromArgs();
             IConfiguration config = builder.Configuration;
@@ -31,14 +33,10 @@ namespace Phys.Lib.Site.Api
             var elasticUrl = config.GetConnectionString("logs_elastic");
             if (elasticUrl != null)
             {
-                NLogConfig.AddElastic(loggerFactory, "lib-site", elasticUrl);
                 PhysAppContext.HttpObserver?.IgnoreUri(new Uri(elasticUrl));
             }
 
             builder.WebHost.UseUrls(urls);
-
-            builder.Logging.ClearProviders();
-            builder.Host.UseNLog();
 
             builder.Services.AddCors();
 

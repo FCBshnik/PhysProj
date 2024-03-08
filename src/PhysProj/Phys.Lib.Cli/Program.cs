@@ -3,9 +3,9 @@ using CommandLine;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Phys.NLog;
 using Phys.Shared;
 using Phys.Shared.Configuration;
+using Phys.Serilog;
 
 namespace Phys.Lib.Cli
 {
@@ -16,7 +16,7 @@ namespace Phys.Lib.Cli
 
         private static void Main(string[] args)
         {
-            NLogConfig.Configure(loggerFactory);
+            SerilogConfig.Configure(loggerFactory);
             PhysAppContext.Init(loggerFactory);
 
             var parser = new Parser(s => s.IgnoreUnknownArguments = true);
@@ -51,7 +51,7 @@ namespace Phys.Lib.Cli
                     var commandType = typeof(ICommand<>).MakeGenericType(options.GetType());
                     var command = scope.Resolve(commandType);
                     var run = commandType.GetMethods()[0];
-                    run.Invoke(command, new[] { options });
+                    run.Invoke(command, [options]);
                     log.LogInformation("command completed");
                 }
                 catch (Exception e)

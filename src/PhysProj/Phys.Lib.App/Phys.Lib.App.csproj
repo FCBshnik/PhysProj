@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Phys.Lib.Autofac\Phys.Lib.Autofac.csproj" />
-    <ProjectReference Include="..\Phys.NLog\Phys.NLog.csproj" />
+    <ProjectReference Include="..\Phys.Serilog\Phys.Serilog.csproj" />
   </ItemGroup>
 
 </Project>
