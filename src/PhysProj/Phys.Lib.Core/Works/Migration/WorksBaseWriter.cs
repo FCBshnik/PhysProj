@@ -36,6 +36,7 @@ namespace Phys.Lib.Core.Works.Migration
                     prev.AuthorsCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { DeleteAuthor = i }));
                     prev.SubWorksCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { DeleteSubWork = i }));
                     prev.FilesCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { DeleteFile = i }));
+                    prev.SubWorksAuthorsCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { DeleteSubWorkAuthor = i }));
                 }
                 else
                 {
@@ -50,6 +51,7 @@ namespace Phys.Lib.Core.Works.Migration
                 work.Infos.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddInfo = i }));
                 work.AuthorsCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddAuthor = i }));
                 work.FilesCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddFile = i }));
+                work.SubWorksAuthorsCodes.ForEach(i => db.Update(work.Code, new WorkDbUpdate { AddSubWorkAuthor = i }));
 
                 log.LogInformation($"migrated {work}");
 
