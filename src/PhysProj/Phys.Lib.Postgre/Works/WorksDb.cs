@@ -9,18 +9,19 @@ using System.Text.RegularExpressions;
 
 namespace Phys.Lib.Postgres.Works
 {
-    internal class WorksDb : PostgresTable, IWorksDb, IDbReader<WorkDbo>
+    internal class WorksDb : PostgresTable, IWorksDb
     {
         private readonly Lazy<NpgsqlDataSource> dataSource;
         private readonly WorksInfosTable worksInfos;
         private readonly WorksAuthorsTable worksAuthors;
         private readonly WorksSubWorksTable worksSubWorks;
+        private readonly WorksSubWorksAuthorsTable worksSubWorksAuthors;
         private readonly WorksFilesTable worksFiles;
 
         public string Name => "postgres";
 
         public WorksDb(string tableName, Lazy<NpgsqlDataSource> dataSource,
-            WorksAuthorsTable worksAuthors, WorksSubWorksTable worksSubWorks, WorksFilesTable worksFiles, WorksInfosTable worksInfos, ILogger<WorksDb> logger)
+            WorksAuthorsTable worksAuthors, WorksSubWorksTable worksSubWorks, WorksFilesTable worksFiles, WorksInfosTable worksInfos, ILogger<WorksDb> logger, WorksSubWorksAuthorsTable worksSubWorksAuthors)
             : base(tableName, logger)
         {
             this.dataSource = dataSource;
@@ -28,6 +29,7 @@ namespace Phys.Lib.Postgres.Works
             this.worksSubWorks = worksSubWorks;
             this.worksFiles = worksFiles;
             this.worksInfos = worksInfos;
+            this.worksSubWorksAuthors = worksSubWorksAuthors;
         }
 
         public void Create(string code)
@@ -47,6 +49,7 @@ namespace Phys.Lib.Postgres.Works
             worksInfos.Delete(cnx, q => q.Where(WorkModel.InfoModel.WorkCodeColumn, code));
             worksAuthors.Delete(cnx, q => q.Where(WorkModel.AuthorModel.WorkCodeColumn, code));
             worksSubWorks.Delete(cnx, q => q.Where(WorkModel.SubWorkModel.WorkCodeColumn, code));
+            worksSubWorksAuthors.Delete(cnx, q => q.Where(WorkModel.AuthorModel.WorkCodeColumn, code));
             worksFiles.Delete(cnx, q => q.Where(WorkModel.FileModel.WorkCodeColumn, code));
             Delete(cnx, q => q.Where(WorkModel.CodeColumn, code));
             trx.Commit();
@@ -130,6 +133,16 @@ namespace Phys.Lib.Postgres.Works
                         AuthorCode = update.AddAuthor
                     });
 
+                if (update.DeleteSubWorkAuthor != null)
+                    worksSubWorksAuthors.Delete(cnx, q => q.Where(WorkModel.AuthorModel.WorkCodeColumn, code)
+                        .Where(WorkModel.AuthorModel.AuthorCodeColumn, update.DeleteSubWorkAuthor));
+                if (update.AddSubWorkAuthor != null)
+                    worksSubWorksAuthors.Insert(cnx, new WorkModel.AuthorModel
+                    {
+                        WorkCode = code,
+                        AuthorCode = update.AddSubWorkAuthor
+                    });
+
                 if (update.DeleteSubWork != null)
                     worksSubWorks.Delete(cnx, q => q.Where(WorkModel.SubWorkModel.WorkCodeColumn, code)
                         .Where(WorkModel.SubWorkModel.SubWorkCodeColumn, update.DeleteSubWork));
@@ -161,6 +174,7 @@ namespace Phys.Lib.Postgres.Works
                 .LeftJoin(worksAuthors.TableName, TableName + "." + WorkModel.CodeColumn, worksAuthors.TableName + "." + WorkModel.AuthorModel.WorkCodeColumn)
                 .LeftJoin(worksSubWorks.TableName, TableName + "." + WorkModel.CodeColumn, worksSubWorks.TableName + "." + WorkModel.SubWorkModel.WorkCodeColumn)
                 .LeftJoin(worksFiles.TableName, TableName + "." + WorkModel.CodeColumn, worksFiles.TableName + "." + WorkModel.FileModel.WorkCodeColumn)
+                .LeftJoin(worksSubWorksAuthors.TableName, TableName + "." + WorkModel.CodeColumn, worksSubWorksAuthors.TableName + "." + WorkModel.AuthorModel.WorkCodeColumn)
                 .Limit(limit);
 
             enrichQuery(cmd);
@@ -169,7 +183,7 @@ namespace Phys.Lib.Postgres.Works
             var sql = compiler.Compile(cmd);
             var works = new Dictionary<string, WorkModel>();
 
-            cnx.Query<WorkModel, WorkModel.InfoModel, WorkModel.AuthorModel, WorkModel.SubWorkModel, WorkModel.FileModel, WorkModel>(sql.Sql, (w, i, a, s, f) =>
+            cnx.Query<WorkModel, WorkModel.InfoModel, WorkModel.AuthorModel, WorkModel.SubWorkModel, WorkModel.FileModel, WorkModel.AuthorModel, WorkModel>(sql.Sql, (w, i, a, s, f, swa) =>
             {
                 works.TryAdd(w.Code, w);
                 var work = works[w.Code];
@@ -182,6 +196,8 @@ namespace Phys.Lib.Postgres.Works
                     work.SubWorks.TryAdd(s.SubWorkCode, s);
                 if (f != null)
                     work.Files.TryAdd(f.FileCode, f);
+                if (swa != null)
+                    work.SubWorksAuthors.TryAdd(swa.AuthorCode, swa);
 
                 return work;
             }, sql.NamedBindings, splitOn: WorkModel.InfoModel.WorkCodeColumn).ToList();

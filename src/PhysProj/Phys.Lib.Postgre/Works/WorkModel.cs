@@ -36,6 +36,9 @@ namespace Phys.Lib.Postgres.Works
         public Dictionary<string, AuthorModel> Authors { get; set; } = new Dictionary<string, AuthorModel>();
 
         [Ignore]
+        public Dictionary<string, AuthorModel> SubWorksAuthors { get; set; } = new Dictionary<string, AuthorModel>();
+
+        [Ignore]
         public Dictionary<string, FileModel> Files { get; set; } = new Dictionary<string, FileModel>();
 
         public class InfoModel

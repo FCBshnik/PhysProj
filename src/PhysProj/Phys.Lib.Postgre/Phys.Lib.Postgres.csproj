@@ -22,6 +22,9 @@
     <None Update="db\postgres\migrations\V1_0_0_1__Add_Work_Is_Public.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="db\postgres\migrations\V1_0_0_2__Add_Work_SubWorkAuthors.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="db\postgres\migrations\V1_0_0_0__Init.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

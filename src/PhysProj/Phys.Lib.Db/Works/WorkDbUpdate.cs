@@ -21,6 +21,10 @@
 
         public string? DeleteSubWork { get; set; }
 
+        public string? AddSubWorkAuthor { get; set; }
+
+        public string? DeleteSubWorkAuthor { get; set; }
+
         public string? AddFile { get; set; }
 
         public string? DeleteFile { get; set; }

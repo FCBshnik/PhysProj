@@ -52,6 +52,7 @@ namespace Phys.Lib.Autofac
             RegisterTable<WorksInfosTable, WorksInfosTable>(builder, "works_infos");
             RegisterTable<WorksSubWorksTable, WorksSubWorksTable>(builder, "works_sub_works");
             RegisterTable<WorksFilesTable, WorksFilesTable>(builder, "works_files");
+            RegisterTable<WorksSubWorksAuthorsTable, WorksSubWorksAuthorsTable>(builder, "works_sub_works_authors");
         }
 
         private void RegisterTable<ImplDb, IDb>(ContainerBuilder builder, string tableName) where ImplDb : PostgresTable where IDb : notnull

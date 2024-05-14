@@ -12,6 +12,7 @@ namespace Phys.Lib.Mongo.Works
                 Language = work.Language,
                 Publish = work.Publish,
                 AuthorsCodes = work.AuthorsCodes,
+                SubWorksAuthorsCodes = work.SubWorksAuthorsCodes,
                 FilesCodes = work.FilesCodes,
                 SubWorksCodes = work.SubWorksCodes,
                 Infos = work.Infos.Select(Map).ToList(),

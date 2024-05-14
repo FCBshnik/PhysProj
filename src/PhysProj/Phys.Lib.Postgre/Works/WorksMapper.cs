@@ -15,6 +15,7 @@ namespace Phys.Lib.Postgres.Works
                 AuthorsCodes = work.Authors.Values.Select(a => a.AuthorCode).ToList(),
                 SubWorksCodes = work.SubWorks.Values.Select(w => w.SubWorkCode).ToList(),
                 FilesCodes = work.Files.Values.Select(f => f.FileCode).ToList(),
+                SubWorksAuthorsCodes = work.SubWorksAuthors.Values.Select(a => a.AuthorCode).ToList(),
                 IsPublic = work.IsPublic,
             };
         }

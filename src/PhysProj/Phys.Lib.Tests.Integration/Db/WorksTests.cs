@@ -51,6 +51,8 @@ namespace Phys.Lib.Tests.Integration.Db
 
             authorsDb.Create("work-1-author-1");
             authorsDb.Create("work-1-author-2");
+            authorsDb.Create("work-1-sub-author-1");
+            authorsDb.Create("work-1-sub-author-2");
 
             FindByAuthor("work-1-author-1");
 
@@ -64,6 +66,12 @@ namespace Phys.Lib.Tests.Integration.Db
             DeleteAuthor("work-1", "author-3");
             DeleteAuthor("work-3", "work-1-author-1");
             FindByAuthor("work-1-author-1", "work-1");
+
+            AddSubWorkAuthor("work-1", "work-1-sub-author-1");
+            AddSubWorkAuthor("work-1", "work-1-sub-author-2");
+
+            DeleteSubWorkAuthor("work-1", "work-1-sub-author-1");
+            DeleteSubWorkAuthor("work-1", "work-1-sub-author-2");
 
             db.Create("sub-work-1");
             db.Create("sub-work-2");
@@ -197,6 +205,20 @@ namespace Phys.Lib.Tests.Integration.Db
             db.Update(code, new WorkDbUpdate { DeleteSubWork = subWorkCode });
             var work = db.GetByCode(code);
             work.SubWorksCodes.ShouldNotContain(subWorkCode);
+        }
+
+        private void AddSubWorkAuthor(string code, string authorCode)
+        {
+            db.Update(code, new WorkDbUpdate { AddSubWorkAuthor = authorCode });
+            var work = db.GetByCode(code);
+            work.SubWorksAuthorsCodes.ShouldContain(authorCode);
+        }
+
+        private void DeleteSubWorkAuthor(string code, string authorCode)
+        {
+            db.Update(code, new WorkDbUpdate { DeleteSubWorkAuthor = authorCode });
+            var work = db.GetByCode(code);
+            work.SubWorksAuthorsCodes.ShouldNotContain(authorCode);
         }
 
         private void AddFile(string code, string fileCode)

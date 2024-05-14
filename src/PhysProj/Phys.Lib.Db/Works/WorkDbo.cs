@@ -16,7 +16,7 @@ namespace Phys.Lib.Db.Works
         public string? Publish { get; set; }
 
         /// <summary>
-        /// Language the work is written on
+        /// Language the work is written on or language of translation
         /// </summary>
         public string? Language { get; set; }
 
@@ -27,7 +27,7 @@ namespace Phys.Lib.Db.Works
         public List<InfoDbo> Infos { get; set; } = new List<InfoDbo>();
 
         /// <summary>
-        /// Collection of sub works in collected work or translation[s] in collected work
+        /// Collection of sub works in collected work
         /// </summary>
         [UnorderedEquality]
         public List<string> SubWorksCodes { get; set; } = new List<string>();
@@ -37,6 +37,12 @@ namespace Phys.Lib.Db.Works
         /// </summary>
         [UnorderedEquality]
         public List<string> AuthorsCodes { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Collection of authors of sub works in collected work
+        /// </summary>
+        [UnorderedEquality]
+        public List<string> SubWorksAuthorsCodes { get; set; } = new List<string>();
 
         /// <summary>
         /// Files attachments containing text of book in various formats

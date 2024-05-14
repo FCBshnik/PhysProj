@@ -108,6 +108,11 @@ namespace Phys.Lib.Mongo.Works
             if (work.DeleteSubWork.HasValue())
                 update = update.Pull(i => i.SubWorksCodes, work.DeleteSubWork);
 
+            if (work.AddSubWorkAuthor.HasValue())
+                update = update.AddToSet(i => i.SubWorksAuthorsCodes, work.AddSubWorkAuthor);
+            if (work.DeleteSubWorkAuthor.HasValue())
+                update = update.Pull(i => i.SubWorksAuthorsCodes, work.DeleteSubWorkAuthor);
+
             if (work.AddFile.HasValue())
                 update = update.AddToSet(i => i.FilesCodes, work.AddFile);
             if (work.DeleteFile.HasValue())
