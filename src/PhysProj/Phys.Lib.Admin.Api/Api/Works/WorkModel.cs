@@ -14,6 +14,8 @@
 
         public List<string> SubWorksCodes { get; set; } = new List<string>();
 
+        public List<string> SubWorksAuthorsCodes { get; set; } = new List<string>();
+
         public List<string> FilesCodes { get; set; } = new List<string>();
 
         public bool IsPublic { get; set; }

@@ -130,6 +130,28 @@ namespace Phys.Lib.Admin.Api.Api.Works
             })
             .ProducesResponse<WorkModel>("UnlinkWorkFromCollectedWork");
 
+            builder.MapPost("/{code}/sub-works-authors/{authorCode}", (string code, string authorCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
+            {
+                var work = search.FindByCode(code);
+                if (work == null)
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
+
+                work = editor.LinkSubWorkAuthor(work, authorCode);
+                return Results.Ok(mapper.Map(work));
+            })
+            .ProducesResponse<WorkModel>("LinkSubWorkAuthorToWork");
+
+            builder.MapDelete("/{code}/sub-works-authors/{authorCode}", (string code, string authorCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
+            {
+                var work = search.FindByCode(code);
+                if (work == null)
+                    return ErrorModel.NotFound($"work '{code}' not found").ToResult();
+
+                work = editor.UnlinkSubWorkAuthor(work, authorCode);
+                return Results.Ok(mapper.Map(work));
+            })
+            .ProducesResponse<WorkModel>("UnlinkSubWorkAuthorFromWork");
+
             builder.MapPost("/{code}/files/{fileCode}", (string code, string fileCode, [FromServices] IWorksSearch search, [FromServices] IWorksEditor editor) =>
             {
                 var work = search.FindByCode(code);

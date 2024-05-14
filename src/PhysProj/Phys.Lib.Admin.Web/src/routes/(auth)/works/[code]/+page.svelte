@@ -12,6 +12,7 @@
 	let selectedLanguage: string = 'en';
 
 	let author: api.AuthorModel | undefined;
+  let subWorkAuthor: api.AuthorModel | undefined;
 	let subWork: api.WorkModel | undefined;
 	let file: api.FileModel | undefined;
 
@@ -84,6 +85,15 @@
 	function unlinkAuthor(authorCode:string) {
 		api.service.unlinkAuthorFromWork(work.code, authorCode).finally(refresh);
 	}
+
+  function linkSubWorkAuthor() {
+    console.debug('linkSubWorkAuthor');
+    api.service.linkSubWorkAuthorToWork(work.code, subWorkAuthor?.code).finally(refresh);
+  }	
+
+  function unlinkSubWorkAuthor(authorCode:string) {
+    api.service.unlinkSubWorkAuthorFromWork(work.code, authorCode).finally(refresh);
+  }
 
 	function linkSubWork() {
 		api.service.linkWorkToCollectedWork(work.code, subWork?.code).finally(refresh);
@@ -167,6 +177,22 @@
                 <div class="basis-10/12"><a href="/authors/{authorCode}">{authorCode}</a></div>
                 <div class="basis-2/12 flex flex-row gap-2">
                     <button on:click={() => unlinkAuthor(authorCode)}>Unlink</button>
+                </div>
+            </div>
+			{/each}
+		</section>
+		<section class="p-2 border-b-2 border-b-gray-700">
+			<div class="p-2">Sub Authors</div>
+			<div class="flex flex-row gap-2 p-2 items-center">
+				<div class="basis-6/12"><AuthorSelector bind:selected={subWorkAuthor}/></div>
+				<div class="basis-4/12">{subWorkAuthor?.code ?? ''}</div>
+				<button class="basis-2/12 disabled:opacity-75" on:click={linkSubWorkAuthor} disabled='{subWorkAuthor === undefined}'>Link</button>
+			</div>
+			{#each work.subWorksAuthorsCodes ?? [] as authorCode}
+            <div class="flex flex-row gap-2 p-2">
+                <div class="basis-10/12"><a href="/authors/{authorCode}">{authorCode}</a></div>
+                <div class="basis-2/12 flex flex-row gap-2">
+                    <button on:click={() => unlinkSubWorkAuthor(authorCode)}>Unlink</button>
                 </div>
             </div>
 			{/each}

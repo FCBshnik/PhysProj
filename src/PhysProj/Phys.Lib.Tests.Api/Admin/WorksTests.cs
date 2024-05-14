@@ -116,6 +116,25 @@ namespace Phys.Lib.Tests.Api.Admin
                 result.AuthorsCodes.Should().NotContain(authorCode);
             }
 
+            public void LinkSubWorkAuthorFailed(string code, string authorCode, ErrorCode errorCode = ErrorCode.InvalidArgument)
+            {
+                AdminAssert.ShouldFail(() => api.LinkSubWorkAuthorToWorkAsync(code, authorCode), errorCode);
+            }
+
+            public void LinkSubWorkAuthor(string code, string authorCode)
+            {
+                var result = api.LinkSubWorkAuthorToWorkAsync(code, authorCode).Result;
+                result.Code.Should().Be(code);
+                result.SubWorksAuthorsCodes.Should().Contain(authorCode);
+            }
+
+            public void UnlinkSubWorkAuthor(string code, string authorCode)
+            {
+                var result = api.UnlinkSubWorkAuthorFromWorkAsync(code, authorCode).Result;
+                result.Code.Should().Be(code);
+                result.SubWorksAuthorsCodes.Should().NotContain(authorCode);
+            }
+
             public void LinkFile(string code, string fileCode)
             {
                 var result = api.LinkFileToWorkAsync(code, fileCode).Result;

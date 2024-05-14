@@ -60,6 +60,7 @@
                 <th>Date</th>
                 <th>Lang</th>
                 <th>Authors</th>
+                <th>Sub Authors</th>
                 <th>Files</th>
                 <th>Public</th>
                 <th></th>
@@ -71,13 +72,20 @@
                     <td><a href="/works/{work.code}">{work.code}</a></td>
                     <td>{work.publish ?? ''}</td>
                     <td>{work.language ?? ''}</td>
-                    <td class="flex flex-col">
+                    <td class="">
                       {#each work.authorsCodes ?? [] as authorCode}
-                        <a href="/authors/{authorCode}">{authorCode}</a>
+                        <a href="/authors/{authorCode}">{authorCode}</a><br/>
+                      {/each}
+                    </td>
+                    <td class="">
+                      {#each work.subWorksAuthorsCodes ?? [] as authorCode}
+                        <a href="/authors/{authorCode}">{authorCode}</a><br/>
                       {/each}
                     </td>
                     <td>
-                      {work.filesCodes?.join(', ')}
+                      {#each work.filesCodes ?? [] as fileCode}
+                        <div>{fileCode}</div>
+                      {/each}
                     </td>
                     <td>
                       <button class="w-min text-xs" on:click={() => updateIsPublic(work, work.isPublic !== true)}>{work.isPublic}</button>

@@ -228,6 +228,7 @@ namespace Phys.Lib.Tests.Api.Admin
             works.DeleteInfo("discourse-on-method", "ru");
             // delete info is idempotent
             works.DeleteInfo("discourse-on-method", "es");
+            
             // link invalid author failed
             works.LinkAuthorFailed("discourse-on-method", nonExistentCode);
             // link valid author
@@ -241,6 +242,17 @@ namespace Phys.Lib.Tests.Api.Admin
             // unlink author is idempotent
             works.UnlinkAuthor("discourse-on-method", "decartes");
             works.UnlinkAuthor("discourse-on-method", nonExistentCode);
+
+            // link invalid sub-work author failed
+            works.LinkSubWorkAuthorFailed("discourse-on-method", nonExistentCode);
+            // link valid sub-work author
+            works.LinkSubWorkAuthor("discourse-on-method", "decartes");
+            // unlink sub-work author
+            works.UnlinkSubWorkAuthor("discourse-on-method", "decartes");
+            // unlink sub-work author is idempotent
+            works.UnlinkSubWorkAuthor("discourse-on-method", "decartes");
+            works.UnlinkSubWorkAuthor("discourse-on-method", nonExistentCode);
+
             // link with valid original
             works.Create("discourse-on-method-original");
             // link original with circular dependency failed

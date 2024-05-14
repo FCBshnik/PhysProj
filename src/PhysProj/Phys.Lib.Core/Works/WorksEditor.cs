@@ -129,6 +129,29 @@ namespace Phys.Lib.Core.Works
             return db.GetByCode(work.Code);
         }
 
+        public WorkDbo LinkSubWorkAuthor(WorkDbo work, string authorCode)
+        {
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(authorCode);
+
+            var author = authorsSearch.FindByCode(authorCode) ?? throw ValidationError($"author '{authorCode}' not found");
+            var update = new WorkDbUpdate { AddSubWorkAuthor = author.Code };
+            db.Update(work.Code, update);
+            log.Log(LogLevel.Information, "{event} work {work} sub-work author {author}", LogEvent.Linked, work.Code, author.Code);
+            return db.GetByCode(work.Code);
+        }
+
+        public WorkDbo UnlinkSubWorkAuthor(WorkDbo work, string authorCode)
+        {
+            ArgumentNullException.ThrowIfNull(work);
+            ArgumentNullException.ThrowIfNull(authorCode);
+
+            var update = new WorkDbUpdate { DeleteSubWorkAuthor = authorCode };
+            db.Update(work.Code, update);
+            log.Log(LogLevel.Information, "{event} work {work} sub-work author {author}", LogEvent.Unlinked, work.Code, authorCode);
+            return db.GetByCode(work.Code);
+        }
+
         public WorkDbo UpdateDate(WorkDbo work, string date)
         {
             ArgumentNullException.ThrowIfNull(work);
