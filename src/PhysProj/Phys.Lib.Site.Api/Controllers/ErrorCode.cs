@@ -4,6 +4,7 @@
     {
         public static string InternalError = "internal-error";
         public static string PublicError = "public-error";
+        public static string InvalidRequest = "invalid-request";
         public static string NotFound = "not-found";
     }
 }

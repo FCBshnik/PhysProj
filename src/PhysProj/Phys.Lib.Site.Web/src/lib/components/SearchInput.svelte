@@ -1,6 +1,5 @@
 <script lang="ts">
-	import postcss from 'postcss';
-  import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 
   export let searchText:string = "";
 
@@ -14,7 +13,7 @@
 <form on:submit={search}>
   <div class="flex flex-row">
     <!-- svelte-ignore a11y-autofocus -->
-    <input bind:value={searchText} autofocus type="search" placeholder="Search" class="w-full rounded-l-md p-2 dark:bg-gray-400 dark:text-gray-800 dark:placeholder-gray-500"/>
+    <input bind:value={searchText} autofocus maxlength="50" type="search" placeholder="Search" class="w-full rounded-l-md p-2 dark:bg-gray-400 dark:text-gray-800 dark:placeholder-gray-500"/>
     <button class="rounded-r p-2 dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-400 hover:bg-gray-500" type="submit">
       <svg viewBox="0 0 20 20"
         fill="currentColor"

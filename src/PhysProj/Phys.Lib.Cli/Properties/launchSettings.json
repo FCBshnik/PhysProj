@@ -5,9 +5,9 @@
       //"commandLineArgs": "test --appsettings $(SolutionDir)appsettings.lib.dev.json"
       //"commandLineArgs": "test"
       //"commandLineArgs": "user-create --name admin --password 123456 --role admin"
-      "commandLineArgs": "nswag-csharp-client",
+      //"commandLineArgs": "nswag-csharp-client",
       //"commandLineArgs": "nswag-typescript-client --name Admin --swagger-json-url \"http://localhost:7188/swagger/v1/swagger.json\" --out-directory \"../../../../Phys.Lib.Admin.Web/src/lib/api/\"",
-      //"commandLineArgs": "nswag-typescript-client --name Site --swagger-json-url \"http://localhost:7288/swagger/v1/swagger.json\" --out-directory \"../../../../Phys.Lib.Site.Web/src/lib/api/\""
+      "commandLineArgs": "nswag-typescript-client --name Site --swagger-json-url \"http://localhost:7288/swagger/v1/swagger.json\" --out-directory \"../../../../Phys.Lib.Site.Web/src/lib/api/\""
     }
   }
 }

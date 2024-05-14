@@ -5,6 +5,7 @@
 	import WorkCard from '$lib/components/WorkCard.svelte';
 	import SearchInput from '$lib/components/SearchInput.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+  import { notificationsService } from "$lib/services/NotificationsService";
 
 	let result: api.SearchResultModel | undefined;
 	let searchText: string = '';
@@ -15,7 +16,8 @@
 		loading = true;
 		api.service
 			.search(searchText)
-			.then((r) => (result = r))
+      .catch(e => notificationsService.push(e))
+			.then(r => (result = r))
 			.finally(() => (loading = false));
 	}
 

@@ -6,6 +6,8 @@ using Phys.Shared;
 using Phys.Shared.Configuration;
 using Serilog;
 using System.Reflection;
+using Microsoft.AspNetCore.RateLimiting;
+using Phys.Lib.Site.Api.Controllers;
 
 namespace Phys.Lib.Site.Api
 {
@@ -51,10 +53,28 @@ namespace Phys.Lib.Site.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddRateLimiter(o =>
+            {
+                o.OnRejected = (ctx, _) =>
+                {
+                    ctx.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    ctx.HttpContext.Response.WriteAsJsonAsync(new ErrorModel(ErrorCode.InvalidRequest, "Too many requests. Please try again in few seconds."));
+                    return new ValueTask();
+                };
+
+                o.AddFixedWindowLimiter(policyName: "search", options =>
+                {
+                    options.PermitLimit = 3;
+                    options.Window = TimeSpan.FromSeconds(10);
+                });
+            });
+
             var app = builder.Build();
 
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            app.UseRateLimiter();
 
             app.UseMiddleware<StatusCodeLoggingMiddlware>();
             app.UseAuthorization();
